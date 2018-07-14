@@ -88,6 +88,21 @@ static void can_send() {
     TXB0CONbits.TXREQ = 1;
 }
 
+static void LED_init() {
+    //first LED is on RC2
+    TRISC2 = 0; //output
+    LATC2 = 1; //turn it off
+
+    //second LED is on RC3
+    TRISC3 = 0; //output
+    LATC3 = 1; //turn off
+}
+
+#define LED_1_ON (PORTC2 = 0)
+#define LED_1_OFF (PORTC2 = 1)
+#define LED_2_ON (PORTC3 = 0)
+#define LED_2_OFF (PORTC3 = 1)
+
 static void interrupt fuck_everything() {
     while (1);
     PIR5;
@@ -108,6 +123,8 @@ void main(void) {
     INTCON0bits.GIE = 1;
 
     can_init();
+    LED_init();
+
     __delay_ms(2000);
     while (1) {
         can_send();
