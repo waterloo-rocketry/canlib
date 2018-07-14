@@ -1,5 +1,6 @@
 #define _XTAL_FREQ 1000000
 #include "../inc/config.h"  // REEEEEEEEEE
+#include <stdint.h>
 
 static void can_init() {
     // select CAN pins
@@ -67,22 +68,16 @@ static void can_init() {
     // fuck
 }
 
-static void can_send() {
+static void can_send(uint16_t sid) {
     if (TXB0CONbits.TXREQ != 0) {
         return;
     }
 
     TXB0CONbits.TXPRI = 0; // lowest priority
-    TXB0SIDH = 0xaa;
-    TXB0SIDL = 0xe0;
-    TXB0DLCbits.TXRTR = 0;
-    TXB0DLCbits.DLC = 4;    // send 4 bytes
-
-    // aaron is 12
-    TXB0D0 = 0xb1;
-    TXB0D1 = 0x6b;
-    TXB0D2 = 0x00;
-    TXB0D3 = 0xb5;
+    TXB0SIDH = (sid >> 3);
+    TXB0SIDL = ((sid & 0x7) << 5);
+    TXB0DLCbits.TXRTR = 0;  //not an RTR, whatever that means
+    TXB0DLCbits.DLC = 0;    // send no bytes, just sid
 
     // politely request a cordial transmission to the ether
     TXB0CONbits.TXREQ = 1;
@@ -98,22 +93,33 @@ static void LED_init() {
     LATC3 = 1; //turn off
 }
 
-#define LED_1_ON (PORTC2 = 0)
-#define LED_1_OFF (PORTC2 = 1)
-#define LED_2_ON (PORTC3 = 0)
-#define LED_2_OFF (PORTC3 = 1)
+#define LED_1_ON (LATC2 = 0)
+#define LED_1_OFF (LATC2 = 1)
+#define LED_2_ON (LATC3 = 0)
+#define LED_2_OFF (LATC3 = 1)
 
 static void interrupt fuck_everything() {
+    if (PIR5bits.TXB0IF) {
+        PIR5bits.TXB0IF = 0;
+        return;
+    }
+    if (PIR5bits.RXB0IF) {
+        uint16_t sid = (((uint16_t)RXB0SIDH) << 3) | (RXB0SIDL >> 5);
+        if(sid == 1) {
+            LED_1_ON;
+            LED_2_ON;
+        } else if (sid == 2) {
+            LED_1_OFF;
+            LED_2_OFF;
+        } else {
+            while(1);
+        }
+
+        RXB0CONbits.RXFUL = 0;
+        PIR5bits.RXB0IF = 0;
+        return;
+    }
     while (1);
-    PIR5;
-/*    RXB0CON;*/
-    /*RXB0SIDL;*/
-    /*RXB0SIDH;*/
-    /*RXB0DLC;*/
-    /*RXB0D0;*/
-    /*RXB0D1;*/
-    /*RXB0D2;*/
-/*    RXB0D3;*/
 }
 
 void main(void) {
@@ -125,9 +131,18 @@ void main(void) {
     can_init();
     LED_init();
 
+    LED_1_ON;
+    LED_2_ON;
+
     __delay_ms(2000);
+    LED_1_OFF;
+    LED_2_OFF;
     while (1) {
-        can_send();
+        //turn on LEDs sid
+        can_send(0x1);
+        __delay_ms(100);
+        //turn off LEDs sid
+        can_send(0x2);
         __delay_ms(100);
     }
 }
