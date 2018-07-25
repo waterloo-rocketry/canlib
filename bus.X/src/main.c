@@ -31,6 +31,7 @@ static void can_init() {
     BRGCON1bits.SJW = 0;
     BRGCON1bits.BRP = 0x3f;   // burp big is 1 khz
 
+    // these probably all default to 0 anyway?
     BRGCON2bits.SEG2PHTS = 0;
     BRGCON2bits.SAM = 0;
     BRGCON2bits.SEG1PH = 0;
@@ -49,7 +50,10 @@ static void can_init() {
     RXM1SIDL = 0;
 
     // set loopback
-    CANCONbits.REQOP = 0x2;
+    //CANCONbits.REQOP = 0x2;
+    
+    // set normal mode
+    CANCONbits.REQOP = 0;
     while (CANSTATbits.OPMODE & 0x7 != 0x2);
 
     // deal with interrupt shit
@@ -98,29 +102,37 @@ static void LED_init() {
 #define LED_2_ON (LATC3 = 0)
 #define LED_2_OFF (LATC3 = 1)
 
+/*
 static void interrupt fuck_everything() {
     if (PIR5bits.TXB0IF) {
         PIR5bits.TXB0IF = 0;
         return;
     }
+    
     if (PIR5bits.RXB0IF) {
         uint16_t sid = (((uint16_t)RXB0SIDH) << 3) | (RXB0SIDL >> 5);
-        if(sid == 1) {
+        if (sid == 1) {
             LED_1_ON;
             LED_2_ON;
         } else if (sid == 2) {
             LED_1_OFF;
             LED_2_OFF;
         } else {
-            while(1);
+            while(1) {
+                LED_1_ON;
+                __delay_ms(10);
+                LED_1_OFF;
+                __delay_ms(10);
+            }
         }
 
         RXB0CONbits.RXFUL = 0;
         PIR5bits.RXB0IF = 0;
         return;
     }
-    while (1);
+    //while (1);
 }
+*/
 
 void main(void) {
         
@@ -141,6 +153,10 @@ void main(void) {
         //turn on LEDs sid
         can_send(0x1);
         __delay_ms(100);
+        
+        COMSTAT;
+        TXB0CON;
+        PIR5;
         //turn off LEDs sid
         can_send(0x2);
         __delay_ms(100);
