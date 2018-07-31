@@ -29,7 +29,7 @@ static void can_init() {
     // set baud rate
     CIOCONbits.CLKSEL = 0;
     BRGCON1bits.SJW = 0;
-    BRGCON1bits.BRP = 0x3f;   // burp big is 1 khz
+    BRGCON1bits.BRP = 0xf;   // 1 khz is too goddamn slow
 
     // these probably all default to 0 anyway?
     BRGCON2bits.SEG2PHTS = 0;
@@ -102,7 +102,7 @@ static void LED_init() {
 #define LED_2_ON (LATC3 = 0)
 #define LED_2_OFF (LATC3 = 1)
 
-/*
+
 static void interrupt fuck_everything() {
     if (PIR5bits.TXB0IF) {
         PIR5bits.TXB0IF = 0;
@@ -132,7 +132,7 @@ static void interrupt fuck_everything() {
     }
     //while (1);
 }
-*/
+
 
 void main(void) {
         
@@ -151,6 +151,7 @@ void main(void) {
     LED_2_OFF;
     while (1) {
         //turn on LEDs sid
+        /*
         can_send(0x1);
         __delay_ms(100);
         
@@ -160,6 +161,7 @@ void main(void) {
         //turn off LEDs sid
         can_send(0x2);
         __delay_ms(100);
+         */
     }
 }
 

@@ -20,6 +20,9 @@
 #define RX_STAT     0b10110000
 #define BIT_MOD     0b00000101
 
+#define LED_ON (LATD2 = 0)
+#define LED_OFF (LATD2 = 1)
+
 static void mcp_write_reg(uint8_t addr, uint8_t data) {
     LATD3 = 0;
     WriteSPI(WRITE);
@@ -80,10 +83,7 @@ static void can_init_spi(char sjw, char brp) {
     mcp_read_reg(0x30);
     mcp_read_reg(0x2d);
      */
-    
-    mcp_read_reg(0x30);     // txb0ctrl
-    mcp_read_reg(0x2d); 
-    
+
     //mcp_write_reg(0xf, 0b01000110);     // set loopback
     mcp_write_reg(0xf, 0x7);
     while (!(mcp_read_reg(0xf) & 0x7));   // wait for normal mode
@@ -93,14 +93,23 @@ static void can_init_spi(char sjw, char brp) {
 static void can_send(uint16_t sid) {
     mcp_write_reg(0x2c, 0);     // clear interrupt flag register
     mcp_write_reg(0x2d, 0);
-    mcp_write_reg(0x20, sid >> 3);          // set sid
-    mcp_write_reg(0x21, (sid & 0x7) << 5);  // set sid
+    
+    // 0x31 = txb0sidh
+    // TODO stick all those in a header somewhere
+    mcp_write_reg(0x31, sid >> 3);          // set sid
+    mcp_write_reg(0x32, (sid & 0x7) << 5);  // set sid
+    
     mcp_write_reg(0x35, 0);                 // length = 0, data message
     mcp_write_reg(0x30, 1 << 3);            // set txreq
+    
     mcp_read_reg(0x30);
     mcp_read_reg(0x2d);
+    if (mcp_read_reg(0x2d)) {
+        LED_ON; // turn on if error
+    } else {
+        LED_OFF;
+    }
 }
-
 
 void main(void) {
     // set up clock
@@ -110,24 +119,21 @@ void main(void) {
     // set an led for testing
     // led is on RD2
     TRISD2 = 0;     // output
-    LATD2 = 1;
+    LED_OFF;
 
     // sync mode, bus mode, phase
     OpenSPI(SPI_FOSC_64, MODE_11, SMPMID);
     
-    can_init_spi(0, 0x3f);
+    can_init_spi(0, 0xf);
     mcp_read_reg(0x30);     // txb0ctrl
     mcp_read_reg(0x2d);     // eflg
     
-    /*
     while (1) {
         can_send(0x1);
-        mcp_read_reg(0x30);     // txb0ctrl
-        mcp_read_reg(0x2d);     // eflg
+        __delay_ms(50);
         
-        __delay_ms(500);
         can_send(0x2);
-        __delay_ms(500);      
+        __delay_ms(50);
     }
     
     while (1) {
@@ -136,7 +142,7 @@ void main(void) {
         LATD2 = 1;
         __delay_ms(100);
     }
-     */
+    
     
     // try to just write for a while
 //    while (1) {
