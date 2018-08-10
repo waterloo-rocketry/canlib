@@ -48,6 +48,9 @@ static void can_init() {
     RXM0SIDL = 0;
     RXM1SIDH = 0;
     RXM1SIDL = 0;
+    
+    // accept all messages for now
+    RXB0CON = 0x60;
 
     // set loopback
     //CANCONbits.REQOP = 0x2;
@@ -95,15 +98,22 @@ static void LED_init() {
     //second LED is on RC3
     TRISC3 = 0; //output
     LATC3 = 1; //turn off
+    
+    TRISC4 = 0;
+    LATC4 = 1;
 }
 
 #define LED_1_ON (LATC2 = 0)
 #define LED_1_OFF (LATC2 = 1)
 #define LED_2_ON (LATC3 = 0)
 #define LED_2_OFF (LATC3 = 1)
-
+#define LED_3_ON (LATC4 = 0)
+#define LED_3_OFF (LATC4 = 1)
 
 static void interrupt fuck_everything() {
+    LED_1_ON;
+    LED_2_ON;
+    
     if (PIR5bits.TXB0IF) {
         PIR5bits.TXB0IF = 0;
         return;
@@ -112,10 +122,10 @@ static void interrupt fuck_everything() {
     if (PIR5bits.RXB0IF) {
         uint16_t sid = (((uint16_t)RXB0SIDH) << 3) | (RXB0SIDL >> 5);
         if (sid == 1) {
-            LED_1_ON;
+            LED_1_OFF;
             LED_2_ON;
         } else if (sid == 2) {
-            LED_1_OFF;
+            LED_1_ON;
             LED_2_OFF;
         } else {
             while(1) {
@@ -143,14 +153,14 @@ void main(void) {
     can_init();
     LED_init();
 
-    LED_1_ON;
-    LED_2_ON;
-
-    __delay_ms(2000);
-    LED_1_OFF;
-    LED_2_OFF;
     while (1) {
         //turn on LEDs sid
+        if (COMSTAT) {
+            LED_3_ON;
+        } else {
+            LED_3_OFF;
+        }
+        RXERRCNT;
         /*
         can_send(0x1);
         __delay_ms(100);
