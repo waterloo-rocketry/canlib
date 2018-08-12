@@ -42,51 +42,37 @@ static uint8_t mcp_read_reg(uint8_t addr) {
 
 // CNF1 SJW = 0
 // CNF1 BRP = 0b11111
-static void can_init_spi(char sjw, char brp) {
+static void can_init_spi() {
     TRISD3 = 0;
     LATD3 = 1;
     __delay_ms(100);    // yeah yeah
     
-    mcp_write_reg(0xf, 0x4 << 5 | 7);
+    // set to config mode and wait
+    mcp_write_reg(0xf, (0x4 << 5) | 4);
     while (!(mcp_read_reg(0xf))) {
         __delay_ms(5);
     }
+    
+    // hard code timing params for now until shit works
+    
+    // CNF1
+    uint8_t sjw = 0b11;
+    uint8_t brp = 0;
+    mcp_write_reg(0x2a, sjw << 6 | brp);
 
-    __delay_ms(10);
-    uint8_t cmd = sjw << 5 | brp;
-    mcp_write_reg(0x2a, cmd);
+    // CNF2
+    uint8_t btlmode = 1;
+    uint8_t sam = 0;
+    uint8_t phseg1 = 0b100;
+    uint8_t prseg1 = 0;
+    mcp_write_reg(0x29, btlmode << 7 | sam << 6 | phseg1 << 3 | prseg1);
     
-    // set up filters and masks
-    /*
-    mcp_write_reg(0x28, 1);
-    mcp_write_reg(0x0, 0xff);
-    mcp_write_reg(0x1, 0xe0);
-    mcp_write_reg(0x4, 0xff);
-    mcp_write_reg(0x5, 0xe0);
-    mcp_write_reg(0x8, 0xff);
-    mcp_write_reg(0x9, 0xe0);
-    mcp_write_reg(0x10, 0xff);
-    mcp_write_reg(0x11, 0xe0);
-    mcp_write_reg(0x14, 0xff);
-    mcp_write_reg(0x15, 0xe0);
-    mcp_write_reg(0x18, 0xff);
-    mcp_write_reg(0x19, 0xe0);
+    // CNF3
+    uint8_t phseg2 = 0b100;
+    mcp_write_reg(0x28, phseg2);
     
-    // debug
-    mcp_read_reg(0x30);
-    mcp_read_reg(0x2d);
-    
-    mcp_write_reg(0x20, 0xff);
-    mcp_write_reg(0x24, 0xff);
-    
-    // debug
-    mcp_read_reg(0x30);
-    mcp_read_reg(0x2d);
-     */
-
-    //mcp_write_reg(0xf, 0b01000110);     // set loopback
-    mcp_write_reg(0xf, 0x7);
-    while (!(mcp_read_reg(0xf) & 0x7));   // wait for normal mode
+    mcp_write_reg(0xf, 0x4);
+    while (mcp_read_reg(0xf) != 0x4);   // wait for normal mode
 }
 
 // quick and dirty and completely garbage
@@ -96,15 +82,23 @@ static void can_send(uint16_t sid) {
     
     // 0x31 = txb0sidh
     // TODO stick all those in a header somewhere
-    mcp_write_reg(0x31, sid >> 3);          // set sid
+    mcp_write_reg(0x31, (uint8_t) (sid >> 3));          // set sid
     mcp_write_reg(0x32, (sid & 0x7) << 5);  // set sid
-    
-    mcp_write_reg(0x35, 0);                 // length = 0, data message
+    //mcp_write_reg(0x31, 0x55);
+    //mcp_write_reg(0x32, 0x40);
+    mcp_write_reg(0x35, 8);                 // length = 0, data message
+    mcp_write_reg(0x36, 0xAA);
+    mcp_write_reg(0x37, 0xAA);
+    mcp_write_reg(0x38, 0xAA);
+    mcp_write_reg(0x39, 0xAA);
+    mcp_write_reg(0x3A, 0xAA);
+    mcp_write_reg(0x3b, 0xAA);
+    mcp_write_reg(0x3c, 0xAA);
+    mcp_write_reg(0x3d, 0xAA);
     mcp_write_reg(0x30, 1 << 3);            // set txreq
     
     mcp_read_reg(0x30);
-    mcp_read_reg(0x2d);
-    if (mcp_read_reg(0x2d)) {
+    if (mcp_read_reg(0x2d)) {   // elfg
         LED_ON; // turn on if error
     } else {
         LED_OFF;
@@ -123,17 +117,17 @@ void main(void) {
 
     // sync mode, bus mode, phase
     OpenSPI(SPI_FOSC_64, MODE_11, SMPMID);
-    
-    can_init_spi(0, 0xf);
+   
+    can_init_spi();
     mcp_read_reg(0x30);     // txb0ctrl
-    mcp_read_reg(0x2d);     // eflg
-    
+    mcp_read_reg(0x2d); // eflg
+
     while (1) {
-        can_send(0x1);
-        __delay_ms(50);
-//        
-//        can_send(0x2);
-//        __delay_ms(50);
+        can_send(0x2aa);
+        __delay_ms(200);
+        
+        can_send(0x444);
+        __delay_ms(200);
     }
     
     while (1) {

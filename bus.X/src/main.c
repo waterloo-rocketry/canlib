@@ -20,7 +20,7 @@ static void can_init() {
     
     // set can config mode
     CANCONbits.REQOP = 0b100;
-    while (CANSTATbits.OPMODE & 0x7 != 0x4);
+    while (CANSTATbits.OPMODE != 0x4);
 
     // select functional mode
     // L E G A C Y
@@ -28,18 +28,18 @@ static void can_init() {
 
     // set baud rate
     CIOCONbits.CLKSEL = 0;
-    BRGCON1bits.SJW = 0;
-    BRGCON1bits.BRP = 0xf;   // 1 khz is too goddamn slow
-
+    BRGCON1bits.SJW = 0b11;
+    BRGCON1bits.BRP = 0x0;
+    
     // these probably all default to 0 anyway?
-    BRGCON2bits.SEG2PHTS = 0;
+    BRGCON2bits.SEG2PHTS = 1;
     BRGCON2bits.SAM = 0;
-    BRGCON2bits.SEG1PH = 0;
-    BRGCON2bits.PRSEG = 0;
+    BRGCON2bits.SEG1PH = 0b100;
+    BRGCON2bits.PRSEG = 0b010;
 
     BRGCON3bits.WAKDIS = 1; // we'll eventually want this but not now
     BRGCON3bits.WAKFIL = 0;
-    BRGCON3bits.SEG2PH2 = 0;
+    BRGCON3bits.SEG2PH2 = 0b100;
     
     // set filters and masks
     // masks
@@ -57,7 +57,7 @@ static void can_init() {
     
     // set normal mode
     CANCONbits.REQOP = 0;
-    while (CANSTATbits.OPMODE & 0x7 != 0x2);
+    while (CANSTATbits.OPMODE != 0x0);
 
     // deal with interrupt shit
     CANSTATbits.ICODE = 0;
@@ -111,20 +111,19 @@ static void LED_init() {
 #define LED_3_OFF (LATC4 = 1)
 
 static void interrupt fuck_everything() {
-    LED_1_ON;
-    LED_2_ON;
     
     if (PIR5bits.TXB0IF) {
         PIR5bits.TXB0IF = 0;
         return;
     }
     
-    if (PIR5bits.RXB0IF) {
+    if (PIR5bits.RXB0IF || PIR5bits.RXB1IF) {
         uint16_t sid = (((uint16_t)RXB0SIDH) << 3) | (RXB0SIDL >> 5);
-        if (sid == 1) {
+        RXB0CONbits.RXFUL = 0;
+        if (sid == 0x2aa) {
             LED_1_OFF;
             LED_2_ON;
-        } else if (sid == 2) {
+        } else if (sid == 0x444) {
             LED_1_ON;
             LED_2_OFF;
         } else {
@@ -136,11 +135,24 @@ static void interrupt fuck_everything() {
             }
         }
 
-        RXB0CONbits.RXFUL = 0;
         PIR5bits.RXB0IF = 0;
+        PIR5bits.RXB1IF = 0;
         return;
     }
-    //while (1);
+    
+    if (PIR5bits.IRXIF) {
+        PIR5bits.IRXIF = 0;
+        return;
+    }
+    
+    if (PIR5bits.ERRIF) {
+        PIR5bits.ERRIF = 0;
+        return;
+    }
+
+    PIR5;
+    COMSTAT;
+    while (1);
 }
 
 
