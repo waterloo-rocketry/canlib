@@ -19,8 +19,8 @@ static void can_init_spi() {
     __delay_ms(100);    // yeah yeah
     
     // set to config mode. top 3 bits are 0b100
-    mcp_write_reg(0xf, 0x4 << 5);
-    while (!(mcp_read_reg(0xf))) {
+    mcp_write_reg(CANCTRL, 0x4 << 5);
+    while (!(mcp_read_reg(CANCTRL))) {
         __delay_ms(5);
     }
     
@@ -29,40 +29,38 @@ static void can_init_spi() {
     // CNF1
     uint8_t sjw = 0b11;
     uint8_t brp = 0;
-    mcp_write_reg(0x2a, sjw << 6 | brp);
+    mcp_write_reg(CNF1, sjw << 6 | brp);
 
     // CNF2
     uint8_t btlmode = 1;
     uint8_t sam = 0;
     uint8_t phseg1 = 0b100;
     uint8_t prseg1 = 0;
-    mcp_write_reg(0x29, btlmode << 7 | sam << 6 | phseg1 << 3 | prseg1);
+    mcp_write_reg(CNF2, btlmode << 7 | sam << 6 | phseg1 << 3 | prseg1);
     
     // CNF3
     uint8_t phseg2 = 0b100;
-    mcp_write_reg(0x28, phseg2);
+    mcp_write_reg(CNF3, phseg2);
     
     // set normal mode (top 3 bits = 0, set clock output)
     // set one shot mode - no retransmission
-    mcp_write_reg(0xf, 0xc);
+    mcp_write_reg(CANCTRL, 0xc);
 
     // normal mode: top 3 bits are 0
-    while (mcp_read_reg(0xf) & 0xe0 != 0);   // wait for normal mode
+    while (mcp_read_reg(CANCTRL) & 0xe0 != 0);   // wait for normal mode
 }
 
 // quick and dirty and completely garbage
 static void can_send(uint16_t sid) {
-    mcp_write_reg(0x2c, 0);     // clear interrupt flag register
-    mcp_write_reg(0x2d, 0);
+    mcp_write_reg(CANINTF, 0);     // clear interrupt flag register
+    mcp_write_reg(EFLG, 0);
     
-    // 0x31 = txb0sidh
-    // TODO stick all those in a header somewhere
-    mcp_write_reg(0x31, (uint8_t) (sid >> 3));          // set sid
-    mcp_write_reg(0x32, (sid & 0x7) << 5);  // set sid
+    mcp_write_reg(TXB0SIDH, (uint8_t) (sid >> 3));          // set sid
+    mcp_write_reg(TXB0SIDL, (sid & 0x7) << 5);              // set sid
 
     // data message w/ some number of bytes
-    mcp_write_reg(0x35, 0);
-    while (mcp_read_reg(0x35) != 0) {
+    mcp_write_reg(TXB0DLC, 0);
+    while (mcp_read_reg(TXB0DLC) != 0) {
         LED_ON;
         __delay_ms(100);
         LED_OFF;
@@ -76,10 +74,10 @@ static void can_send(uint16_t sid) {
     /*mcp_write_reg(0x3b, 0xAA);*/
     /*mcp_write_reg(0x3c, 0xAA);*/
     /*mcp_write_reg(0x3d, 0xAA);*/
-    mcp_write_reg(0x30, 1 << 3);            // set txreq
+    mcp_write_reg(TXB0CTRL, 1 << 3);            // set txreq
     
-    mcp_read_reg(0x30);
-    if (mcp_read_reg(0x2d)) {   // elfg
+    mcp_read_reg(TXB0CTRL);
+    if (mcp_read_reg(EFLG)) {   // elfg
         LED_ON; // turn on if error
     } else {
         LED_OFF;
@@ -100,8 +98,8 @@ void main(void) {
     OpenSPI(SPI_FOSC_64, MODE_11, SMPMID);
    
     can_init_spi();
-    mcp_read_reg(0x30);     // txb0ctrl
-    mcp_read_reg(0x2d); // eflg
+    mcp_read_reg(TXB0CTRL);     // txb0ctrl
+    mcp_read_reg(EFLG); // eflg
 
     while (1) {
         can_send(0x2aa);

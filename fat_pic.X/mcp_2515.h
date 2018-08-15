@@ -7,8 +7,6 @@ void mcp_init();
 void mcp_write_reg(uint8_t addr, uint8_t data);
 uint8_t mcp_read_reg(uint8_t addr);
 
-//macros for addresses. Are these available in a lib somewhere? yes.
-//Do I care? Not particularly
 #define RXF0SIDH  0x00
 #define RXF3SIDH  0x10
 #define RXM0SIDH  0x20
@@ -136,6 +134,6 @@ uint8_t mcp_read_reg(uint8_t addr);
 #define RXB1D7    0x7D
 
 #define CANSTAT   0x0E
-#define CANCTRL   0x1F
+#define CANCTRL   0x0F
 
 #endif //MC_2515_H_
