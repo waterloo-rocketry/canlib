@@ -47,8 +47,8 @@ static void can_init_spi() {
     LATD3 = 1;
     __delay_ms(100);    // yeah yeah
     
-    // set to config mode and wait
-    mcp_write_reg(0xf, (0x4 << 5) | 4);
+    // set to config mode. top 3 bits are 0b100
+    mcp_write_reg(0xf, 0x4 << 5);
     while (!(mcp_read_reg(0xf))) {
         __delay_ms(5);
     }
@@ -71,8 +71,12 @@ static void can_init_spi() {
     uint8_t phseg2 = 0b100;
     mcp_write_reg(0x28, phseg2);
     
-    mcp_write_reg(0xf, 0x4);
-    while (mcp_read_reg(0xf) != 0x4);   // wait for normal mode
+    // set normal mode (top 3 bits = 0, set clock output)
+    // set one shot mode - no retransmission
+    mcp_write_reg(0xf, 0xc);
+
+    // normal mode: top 3 bits are 0
+    while (mcp_read_reg(0xf) & 0xe0 != 0);   // wait for normal mode
 }
 
 // quick and dirty and completely garbage
@@ -84,17 +88,23 @@ static void can_send(uint16_t sid) {
     // TODO stick all those in a header somewhere
     mcp_write_reg(0x31, (uint8_t) (sid >> 3));          // set sid
     mcp_write_reg(0x32, (sid & 0x7) << 5);  // set sid
-    //mcp_write_reg(0x31, 0x55);
-    //mcp_write_reg(0x32, 0x40);
-    mcp_write_reg(0x35, 8);                 // length = 0, data message
-    mcp_write_reg(0x36, 0xAA);
-    mcp_write_reg(0x37, 0xAA);
-    mcp_write_reg(0x38, 0xAA);
-    mcp_write_reg(0x39, 0xAA);
-    mcp_write_reg(0x3A, 0xAA);
-    mcp_write_reg(0x3b, 0xAA);
-    mcp_write_reg(0x3c, 0xAA);
-    mcp_write_reg(0x3d, 0xAA);
+
+    // data message w/ some number of bytes
+    mcp_write_reg(0x35, 0);
+    while (mcp_read_reg(0x35) != 0) {
+        LED_ON;
+        __delay_ms(100);
+        LED_OFF;
+        __delay_ms(100);
+    }
+    
+    /*mcp_write_reg(0x37, 0xAA);*/
+    /*mcp_write_reg(0x38, 0xAA);*/
+    /*mcp_write_reg(0x39, 0xAA);*/
+    /*mcp_write_reg(0x3A, 0xAA);*/
+    /*mcp_write_reg(0x3b, 0xAA);*/
+    /*mcp_write_reg(0x3c, 0xAA);*/
+    /*mcp_write_reg(0x3d, 0xAA);*/
     mcp_write_reg(0x30, 1 << 3);            // set txreq
     
     mcp_read_reg(0x30);
@@ -137,11 +147,5 @@ void main(void) {
         __delay_ms(100);
     }
     
-    
-    // try to just write for a while
-//    while (1) {
-//        WriteSPI(RTS_B0);
-//    }
-//    
     return;
 }

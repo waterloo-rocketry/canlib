@@ -119,7 +119,8 @@ static void interrupt fuck_everything() {
     
     if (PIR5bits.RXB0IF || PIR5bits.RXB1IF) {
         uint16_t sid = (((uint16_t)RXB0SIDH) << 3) | (RXB0SIDL >> 5);
-        RXB0CONbits.RXFUL = 0;
+        RXB0SIDH;
+        RXB0SIDL;
         if (sid == 0x2aa) {
             LED_1_OFF;
             LED_2_ON;
@@ -127,16 +128,14 @@ static void interrupt fuck_everything() {
             LED_1_ON;
             LED_2_OFF;
         } else {
-            while(1) {
-                LED_1_ON;
-                __delay_ms(10);
-                LED_1_OFF;
-                __delay_ms(10);
-            }
+            LED_1_ON;
+            LED_2_ON;
         }
 
         PIR5bits.RXB0IF = 0;
         PIR5bits.RXB1IF = 0;
+        RXB0CONbits.RXFUL = 0;
+
         return;
     }
     
@@ -149,9 +148,12 @@ static void interrupt fuck_everything() {
         PIR5bits.ERRIF = 0;
         return;
     }
+    
 
     PIR5;
     COMSTAT;
+    CANSTAT;
+    RXB0CON;
     while (1);
 }
 
@@ -164,6 +166,10 @@ void main(void) {
 
     can_init();
     LED_init();
+    
+    LED_1_OFF;
+    LED_2_OFF;
+    LED_3_OFF;
 
     while (1) {
         //turn on LEDs sid
