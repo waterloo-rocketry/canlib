@@ -8,37 +8,8 @@
 #define _XTAL_FREQ 4000000
 #include "config.h"
 #include "plib.h"
+#include "mcp_2515.h"
 #include <stdint.h>
-
-#define RESET       0b11000000
-#define READ        0b00000011
-#define READ_RX_B0  0b10010000  // read rx buffer 0
-#define WRITE       0b00000010
-#define LD_TX_B0    0b01000000  // read tx buffer 0
-#define RTS_B0      0b10000000  // request to send on buff 0
-#define READ_STAT   0b10100000
-#define RX_STAT     0b10110000
-#define BIT_MOD     0b00000101
-
-#define LED_ON (LATD2 = 0)
-#define LED_OFF (LATD2 = 1)
-
-static void mcp_write_reg(uint8_t addr, uint8_t data) {
-    LATD3 = 0;
-    WriteSPI(WRITE);
-    WriteSPI(addr);
-    WriteSPI(data);
-    LATD3 = 1;
-}
-
-static uint8_t mcp_read_reg(uint8_t addr) {
-    LATD3 = 0;
-    WriteSPI(READ);
-    WriteSPI(addr);
-    uint8_t ret =  ReadSPI();
-    LATD3 = 1;
-    return ret;
-}
 
 // CNF1 SJW = 0
 // CNF1 BRP = 0b11111
@@ -139,13 +110,5 @@ void main(void) {
         can_send(0x444);
         __delay_ms(200);
     }
-    
-    while (1) {
-        LATD2 = 0;
-        __delay_ms(100);
-        LATD2 = 1;
-        __delay_ms(100);
-    }
-    
     return;
 }
