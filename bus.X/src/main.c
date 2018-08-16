@@ -35,11 +35,11 @@ static void can_init() {
     BRGCON2bits.SEG2PHTS = 1;
     BRGCON2bits.SAM = 0;
     BRGCON2bits.SEG1PH = 0b100;
-    BRGCON2bits.PRSEG = 0b010;
+    BRGCON2bits.PRSEG = 0;  // 1 tq
 
     BRGCON3bits.WAKDIS = 1; // we'll eventually want this but not now
     BRGCON3bits.WAKFIL = 0;
-    BRGCON3bits.SEG2PH2 = 0b100;
+    BRGCON3bits.SEG2PH = 0b100;
     
     // set filters and masks
     // masks
@@ -51,9 +51,6 @@ static void can_init() {
     
     // accept all messages for now
     RXB0CON = 0x60;
-
-    // set loopback
-    //CANCONbits.REQOP = 0x2;
     
     // set normal mode
     CANCONbits.REQOP = 0;
@@ -138,6 +135,9 @@ static void interrupt fuck_everything() {
 
         return;
     }
+    BRGCON1;
+    BRGCON2;
+    BRGCON3;
     
     if (PIR5bits.IRXIF) {
         PIR5bits.IRXIF = 0;
@@ -179,13 +179,11 @@ void main(void) {
             LED_3_OFF;
         }
         RXERRCNT;
-        /*
-        can_send(0x1);
-        __delay_ms(100);
         
         COMSTAT;
         TXB0CON;
         PIR5;
+        /*
         //turn off LEDs sid
         can_send(0x2);
         __delay_ms(100);

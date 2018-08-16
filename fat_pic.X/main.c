@@ -6,10 +6,13 @@
  */
 
 #define _XTAL_FREQ 4000000
+#include "mcp_2515.h"
 #include "config.h"
 #include "plib.h"
-#include "mcp_2515.h"
 #include <stdint.h>
+
+#define LED_ON (TRISD2 = 0)
+#define LED_OFF (TRISD2 = 1)
 
 // CNF1 SJW = 0
 // CNF1 BRP = 0b11111
