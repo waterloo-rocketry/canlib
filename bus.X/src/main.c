@@ -2,6 +2,14 @@
 #include "../inc/config.h"  // REEEEEEEEEE
 #include <stdint.h>
 
+
+#define LED_1_ON (LATC2 = 0)
+#define LED_1_OFF (LATC2 = 1)
+#define LED_2_ON (LATC3 = 0)
+#define LED_2_OFF (LATC3 = 1)
+#define LED_3_ON (LATC4 = 0)
+#define LED_3_OFF (LATC4 = 1)
+
 static void can_init() {
     // select CAN pins
     CANRXPPS = 0x11;    // CAN receive pin = RC1
@@ -51,10 +59,6 @@ static void can_init() {
     
     // accept all messages for now
     RXB0CON = 0x60;
-    
-    // set normal mode
-    CANCONbits.REQOP = 0;
-    while (CANSTATbits.OPMODE != 0x0);
 
     // deal with interrupt shit
     CANSTATbits.ICODE = 0;
@@ -69,6 +73,13 @@ static void can_init() {
     PIE5bits.RXB1IE = 1;
     PIE5bits.RXB0IE = 1;
 
+    // set normal mode
+    CANCONbits.REQOP = 0;
+    while (CANSTATbits.OPMODE != 0x0);
+    
+    // set loopback mode
+//    CANCONbits.REQOP = 0x2;
+//    while (CANSTATbits.OPMODE != 0x2);
     // fuck
 }
 
@@ -81,10 +92,19 @@ static void can_send(uint16_t sid) {
     TXB0SIDH = (sid >> 3);
     TXB0SIDL = ((sid & 0x7) << 5);
     TXB0DLCbits.TXRTR = 0;  //not an RTR, whatever that means
-    TXB0DLCbits.DLC = 0;    // send no bytes, just sid
+    TXB0DLCbits.DLC = 4;
+    
+    // let's send some data
+    TXB0D0 = 0xca;
+    TXB0D1 = 0xfe;
+    TXB0D2 = 0xba;
+    TXB0D3 = 0xbe;
 
     // politely request a cordial transmission to the ether
     TXB0CONbits.TXREQ = 1;
+    LED_1_ON;
+    __delay_ms(100);
+    LED_1_OFF;
 }
 
 static void LED_init() {
@@ -100,13 +120,6 @@ static void LED_init() {
     LATC4 = 1;
 }
 
-#define LED_1_ON (LATC2 = 0)
-#define LED_1_OFF (LATC2 = 1)
-#define LED_2_ON (LATC3 = 0)
-#define LED_2_OFF (LATC3 = 1)
-#define LED_3_ON (LATC4 = 0)
-#define LED_3_OFF (LATC4 = 1)
-
 static void interrupt fuck_everything() {
     
     if (PIR5bits.TXB0IF) {
@@ -116,37 +129,46 @@ static void interrupt fuck_everything() {
     
     if (PIR5bits.RXB0IF || PIR5bits.RXB1IF) {
         uint16_t sid = (((uint16_t)RXB0SIDH) << 3) | (RXB0SIDL >> 5);
-        RXB0SIDH;
-        RXB0SIDL;
+
+        RXB0CON;
+        RXB0DLC;
+        RXB0D0;
+        RXB0D1;
+        RXB0D2;
+        RXB0D3;
+        
+        RXB0D4;
+        RXB0D5;
+        RXB0D6;
+        RXB0D7;
+        
         if (sid == 0x2aa) {
             LED_1_OFF;
             LED_2_ON;
         } else if (sid == 0x444) {
             LED_1_ON;
             LED_2_OFF;
-        } else {
-            LED_1_ON;
-            LED_2_ON;
         }
 
-        PIR5bits.RXB0IF = 0;
         PIR5bits.RXB1IF = 0;
         RXB0CONbits.RXFUL = 0;
-
-        return;
+        PIR5bits.RXB0IF = 0;
+        
+        //return;
     }
-    BRGCON1;
-    BRGCON2;
-    BRGCON3;
     
     if (PIR5bits.IRXIF) {
         PIR5bits.IRXIF = 0;
-        return;
+        //return;
     }
     
     if (PIR5bits.ERRIF) {
         PIR5bits.ERRIF = 0;
-        return;
+        //return;
+    }
+    
+    if (COMSTATbits.RXB0OVFL) {
+        COMSTATbits.RXB0OVFL = 0;
     }
     
 
@@ -154,7 +176,6 @@ static void interrupt fuck_everything() {
     COMSTAT;
     CANSTAT;
     RXB0CON;
-    while (1);
 }
 
 
@@ -172,22 +193,20 @@ void main(void) {
     LED_3_OFF;
 
     while (1) {
-        //turn on LEDs sid
         if (COMSTAT) {
             LED_3_ON;
         } else {
             LED_3_OFF;
         }
-        RXERRCNT;
+
+        can_send(0x2aa);
+        __delay_ms(1000);
+
+        can_send(0x444);
+        __delay_ms(1000);
         
+        CANSTAT;
         COMSTAT;
-        TXB0CON;
-        PIR5;
-        /*
-        //turn off LEDs sid
-        can_send(0x2);
-        __delay_ms(100);
-         */
     }
 }
 

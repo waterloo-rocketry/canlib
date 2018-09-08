@@ -4,8 +4,7 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <itemPath>LED.h</itemPath>
-      <itemPath>mcp_2515.h</itemPath>
+      <itemPath>../mcp2515/mcp_2515.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -15,7 +14,7 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>main.c</itemPath>
-      <itemPath>mcp_2515.c</itemPath>
+      <itemPath>../mcp2515/mcp_2515.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -26,6 +25,7 @@
   <sourceRootList>
     <Elem>/Applications/microchip/xc8/v1.44/include</Elem>
     <Elem>/Applications/microchip/xc8/v1.44/include/plib</Elem>
+    <Elem>../mcp2515</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -142,7 +142,6 @@
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
-        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="true"/>
@@ -182,13 +181,11 @@
         <property key="gcc-opt-driver-new" value="false"/>
         <property key="gcc-opt-std" value="-std=c90"/>
         <property key="gcc-output-file-format" value="dwarf-3"/>
-        <property key="omit-pack-options" value="false"/>
         <property key="output-file-format" value="-mcof,+elf"/>
         <property key="stack-size-high" value="auto"/>
         <property key="stack-size-low" value="auto"/>
         <property key="stack-size-main" value="auto"/>
         <property key="stack-type" value="compiled"/>
-        <property key="user-pack-device-support" value=""/>
       </XC8-config-global>
     </conf>
     <conf name="aarons_setup" type="2">
@@ -199,8 +196,8 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>PICkit3PlatformTool</platformTool>
         <languageToolchain>XC8</languageToolchain>
-        <languageToolchainVersion>2.00</languageToolchainVersion>
-        <platform>2</platform>
+        <languageToolchainVersion>1.44</languageToolchainVersion>
+        <platform>4</platform>
       </toolsSet>
       <compileType>
         <linkerTool>
@@ -278,7 +275,6 @@
         <property key="display-hex-usage" value="false"/>
         <property key="display-overall-usage" value="true"/>
         <property key="display-psect-usage" value="false"/>
-        <property key="extra-lib-directories" value=""/>
         <property key="fill-flash-options-addr" value=""/>
         <property key="fill-flash-options-const" value=""/>
         <property key="fill-flash-options-how" value="0"/>
@@ -288,7 +284,6 @@
         <property key="fill-flash-options-what" value="0"/>
         <property key="format-hex-file-for-download" value="false"/>
         <property key="initialize-data" value="true"/>
-        <property key="input-libraries" value="libm"/>
         <property key="keep-generated-startup.as" value="false"/>
         <property key="link-in-c-library" value="true"/>
         <property key="link-in-c-library-gcc" value=""/>
@@ -346,13 +341,11 @@
         <property key="gcc-opt-driver-new" value="false"/>
         <property key="gcc-opt-std" value="-std=c90"/>
         <property key="gcc-output-file-format" value="dwarf-3"/>
-        <property key="omit-pack-options" value="false"/>
         <property key="output-file-format" value="-mcof,+elf"/>
         <property key="stack-size-high" value="auto"/>
         <property key="stack-size-low" value="auto"/>
         <property key="stack-size-main" value="auto"/>
         <property key="stack-type" value="compiled"/>
-        <property key="user-pack-device-support" value=""/>
       </XC8-config-global>
     </conf>
   </confs>

@@ -3,10 +3,33 @@
 
 #include <stdint.h>
 
-void mcp_init();
-void mcp_write_reg(uint8_t addr, uint8_t data);
-uint8_t mcp_read_reg(uint8_t addr);
+typedef struct {
+    // Timing params
+    // CNF1
+    uint8_t brp;
+    uint8_t sjw;
 
+    // CNF2
+    uint8_t btlmode;
+    uint8_t sam;
+    uint8_t seg1ph;
+    uint8_t prseg1;
+
+    // CNF3
+    uint8_t seg2ph;
+} can_t;
+
+typedef struct {
+    uint8_t data[8];
+    uint16_t sid;
+    uint8_t data_len;
+} can_msg_t;
+
+void mcp_can_init(can_t *can_params, uint8_t (*spi_read_fcn)(void), void (*spi_write_fcn)(uint8_t data));
+void mcp_can_send(can_msg_t *msg);
+void mcp_can_receive(can_msg_t *msg);
+
+// register addresses
 #define RXF0SIDH  0x00
 #define RXF3SIDH  0x10
 #define RXM0SIDH  0x20
@@ -136,4 +159,4 @@ uint8_t mcp_read_reg(uint8_t addr);
 #define CANSTAT   0x0E
 #define CANCTRL   0x0F
 
-#endif //MC_2515_H_
+#endif //MCP_2515_H_
