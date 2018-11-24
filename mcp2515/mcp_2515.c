@@ -34,7 +34,7 @@ static uint8_t mcp_read_reg(uint8_t addr) {
     return ret;
 }
 
-void mcp_can_init(can_t *can_params, uint8_t (*spi_read_fcn)(void), void (*spi_write_fcn)(uint8_t data)) {
+void mcp_can_init(can_timing_t *can_params, uint8_t (*spi_read_fcn)(void), void (*spi_write_fcn)(uint8_t data)) {
     spi_read = spi_read_fcn;
     spi_write= spi_write_fcn;
 
@@ -54,8 +54,8 @@ void mcp_can_init(can_t *can_params, uint8_t (*spi_read_fcn)(void), void (*spi_w
     mcp_write_reg(RXB0CTRL, 0b0110000);
     mcp_write_reg(CANINTF, 0);      // fix later
     mcp_write_reg(CANINTE, 1);      // enable rxb0 interrupt
-    mcp_write_reg(BFPCTRL, 0b101);      // set rxb0 interrupt output    
-    
+    mcp_write_reg(BFPCTRL, 0b101);      // set rxb0 interrupt output
+
     // set normal mode (top 3 bits = 0, set clock output)
     // set one shot mode
     mcp_write_reg(CANCTRL, 0xc);
@@ -85,7 +85,7 @@ void mcp_can_send(can_msg_t *msg) {
 void mcp_can_receive(can_msg_t *msg) {
     if (mcp_read_reg(CANINTF) & 0x1) {
         // rxb0 is full
-        
+
         uint8_t sid_h = mcp_read_reg(RXB0SIDH);
         uint8_t sid_l = mcp_read_reg(RXB0SIDL);
         msg->sid = ((uint16_t)sid_h << 3) | sid_l >> 5;
