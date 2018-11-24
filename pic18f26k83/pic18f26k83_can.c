@@ -1,212 +1,160 @@
-#define _XTAL_FREQ 1000000
-#include "../inc/config.h"  // REEEEEEEEEE
-#include <stdint.h>
+#include "pic18f26k83.h"
 
+static void (*can_rcv_cb)(const can_msg_t *message);
 
-#define LED_1_ON (LATC2 = 0)
-#define LED_1_OFF (LATC2 = 1)
-#define LED_2_ON (LATC3 = 0)
-#define LED_2_OFF (LATC3 = 1)
-#define LED_3_ON (LATC4 = 0)
-#define LED_3_OFF (LATC4 = 1)
-
-static void can_init() {
-    // select CAN pins
-    CANRXPPS = 0x11;    // CAN receive pin = RC1
-    RC0PPS = 0x33;      // CAN transmit pin = RC0
-
-    // init gpio pins
-    // tx
-    TRISC0 = 0; // out
-    LATC0 = 1;
-    ODCC0 = 1;
-    ANSELC0 = 0;
-
-    // rx
-    TRISC1 = 1; // in
-    ANSELC1 = 0;
-    
-    // set can config mode
+/*
+ * Initialie the CAN driver on a PIC26fk83. Note that this function
+ * DOES NOT setup the inputs and outputs from the CAN module to the
+ * output pins, application code must do that. In order to do that,
+ * CANRXPPS must be set to the proper pin value for the CANRX pin, and
+ * ___PPS must be set to 0x33 to mark it as outputting from the CAN
+ * module. In addition, TRIS and ANSEL registers for whatever pin
+ * you're using must be set to the right values.
+ */
+void can_init(const can_timing_t *timing,
+              void (*receive_callback)(const can_msg_t *message)) {
+    //set can module to config mode
     CANCONbits.REQOP = 0b100;
+    //wait until that mode takes effect
     while (CANSTATbits.OPMODE != 0x4);
 
-    // select functional mode
-    // L E G A C Y
+    //put the can module into legacy mode, which is easier to work
+    //with. As this driver improves, this should change in order to
+    //take advantage of the features of the enhanced can module
     ECANCONbits.MDSEL = 0;
 
-    // set baud rate
+    //set baud rate
+    //this sets the CAN module to run off of the system clock
     CIOCONbits.CLKSEL = 0;
-    BRGCON1bits.SJW = 0b11;
-    BRGCON1bits.BRP = 0x0;
-    
-    // these probably all default to 0 anyway?
-    BRGCON2bits.SEG2PHTS = 1;
-    BRGCON2bits.SAM = 0;
-    BRGCON2bits.SEG1PH = 0b100;
-    BRGCON2bits.PRSEG = 0;  // 1 tq
 
+    //these values are all controlled by the can_timing_t passed to
+    //this function
+    BRGCON1bits.SJW = timing->sjw;
+    BRGCON1bits.BRP = timing->brp;
+    BRGCON2bits.SEG2PHTS = timing->btlmode;
+    BRGCON2bits.SAM = timing->sam;
+    BRGCON2bits.SEG1PH = timing->seg1ph;
+    BRGCON2bits.PRSEG = timing->prseg;
+    BRGCON3bits.SEG2PH = timing->seg2ph;
+
+    //the can module has the ability to wake the microcontroller up
+    //from sleep when it sees activity on the bus. To enable this
+    //feature, set WAKDIS bit to 0. Driver does not currently support
+    //this.
     BRGCON3bits.WAKDIS = 1; // we'll eventually want this but not now
     BRGCON3bits.WAKFIL = 0;
-    BRGCON3bits.SEG2PH = 0b100;
-    
-    // set filters and masks
-    // masks
-    // we don't give a fuck about filters
+
+    //This driver does not currently support hardware filtering of
+    //incoming messages. There is no plan to add this support.
     RXM0SIDH = 0;
     RXM0SIDL = 0;
     RXM1SIDH = 0;
     RXM1SIDL = 0;
-    
-    // accept all messages for now
-    RXB0CON = 0x60;
 
-    // deal with interrupt shit
-    CANSTATbits.ICODE = 0;
-    PIE5bits.IRXIE = 1; // invalid massage
+    //ignore all receive message mask behaviour
+    RXB0CON.RXM = 0b11;
+
+    //enable interrupts for all useful CAN interrupts
+    // interrupt triggered on invalid message received
+    PIE5bits.IRXIE = 1;
+    // disable wakeup interrupts
     PIE5bits.WAKIE = 0;
+    // CAN module error interrupt
     PIE5bits.ERRIE = 1;
-
-    PIE5bits.TXB2IE = 1;
-    PIE5bits.TXB1IE = 1;
-    PIE5bits.TXB0IE = 1;
-
+    // interrupt not generated whenever a CAN message is sent
+    PIE5bits.TXB2IE = 0;
+    PIE5bits.TXB1IE = 0;
+    PIE5bits.TXB0IE = 0;
+    // interrupt generated everytime that a CAN message is received
     PIE5bits.RXB1IE = 1;
     PIE5bits.RXB0IE = 1;
 
-    // set normal mode
+    //set normal mode
     CANCONbits.REQOP = 0;
+    //wait until change is applied
     while (CANSTATbits.OPMODE != 0x0);
-    
-    // set loopback mode
-//    CANCONbits.REQOP = 0x2;
-//    while (CANSTATbits.OPMODE != 0x2);
-    // fuck
 }
 
-static void can_send(uint16_t sid) {
+//priority is in [0,3]
+void can_send(const can_msg_t* message, uint8_t priority) {
+    //at present, this fails if transmit buffer 0 isn't available
     if (TXB0CONbits.TXREQ != 0) {
         return;
     }
 
-    TXB0CONbits.TXPRI = 0; // lowest priority
-    TXB0SIDH = (sid >> 3);
-    TXB0SIDL = ((sid & 0x7) << 5);
-    TXB0DLCbits.TXRTR = 0;  //not an RTR, whatever that means
-    TXB0DLCbits.DLC = 4;
-    
-    // let's send some data
-    TXB0D0 = 0xca;
-    TXB0D1 = 0xfe;
-    TXB0D2 = 0xba;
-    TXB0D3 = 0xbe;
-
-    // politely request a cordial transmission to the ether
-    TXB0CONbits.TXREQ = 1;
-    LED_1_ON;
-    __delay_ms(100);
-    LED_1_OFF;
-}
-
-static void LED_init() {
-    //first LED is on RC2
-    TRISC2 = 0; //output
-    LATC2 = 1; //turn it off
-
-    //second LED is on RC3
-    TRISC3 = 0; //output
-    LATC3 = 1; //turn off
-    
-    TRISC4 = 0;
-    LATC4 = 1;
-}
-
-static void interrupt fuck_everything() {
-    
-    if (PIR5bits.TXB0IF) {
-        PIR5bits.TXB0IF = 0;
+    //argument checking
+    if(message->data_len > 8 || message->sid > 0x7FF || priority > 3) {
         return;
     }
-    
-    if (PIR5bits.RXB0IF || PIR5bits.RXB1IF) {
-        uint16_t sid = (((uint16_t)RXB0SIDH) << 3) | (RXB0SIDL >> 5);
 
-        RXB0CON;
-        RXB0DLC;
-        RXB0D0;
-        RXB0D1;
-        RXB0D2;
-        RXB0D3;
-        
-        RXB0D4;
-        RXB0D5;
-        RXB0D6;
-        RXB0D7;
-        
-        if (sid == 0x2aa) {
-            LED_1_OFF;
-            LED_2_ON;
-        } else if (sid == 0x444) {
-            LED_1_ON;
-            LED_2_OFF;
-        }
+    TXB0CONbits.TXPRI = priority;
+    TXB0SIDH = ((message->sid) >> 3);
+    TXB0SIDL = (((message->sid) & 0x7) << 5);
 
-        PIR5bits.RXB1IF = 0;
-        RXB0CONbits.RXFUL = 0;
-        PIR5bits.RXB0IF = 0;
-        
-        //return;
-    }
-    
-    if (PIR5bits.IRXIF) {
-        PIR5bits.IRXIF = 0;
-        //return;
-    }
-    
-    if (PIR5bits.ERRIF) {
-        PIR5bits.ERRIF = 0;
-        //return;
-    }
-    
+    //not an RTR message, we don't support those
+    TXB0DLCbits.TXRTR = 0;
+    //set message length
+    TXB0DLCbits.DLC = message->data_len;
+
+    //copy data over. TXB0D1 is immediately after TXB0D0, which is why
+    //this is legal
+    memcpy(&TXB0D0, message->data, message->data_len);
+
+    //Mark transmit buffer 0 ready to transmit
+    TXB0CONbits.TXREQ = 1;
+}
+
+//if any bit is set in PIR5 during an interrupt service routine, call
+//this funtion, and it will handle it
+void can_handle_interrupt() {
+    //if there was already a message in the receive buffer and we
+    //received another message, just drop that message. Apparently
+    //your code isn't fast enough.
     if (COMSTATbits.RXB0OVFL) {
         COMSTATbits.RXB0OVFL = 0;
     }
-    
 
-    PIR5;
-    COMSTAT;
-    CANSTAT;
-    RXB0CON;
-}
+    //handle a received message by stuffing it into a can_message_t
+    //and calling the application code provided callback
+    if (PIR5bits.RXB0IF) {
+        can_msg_t rcvd_msg;
+        rcvd_msg->sid = (((uint16_t)RXB0SIDH) << 3) | (RXB0SIDL >> 5);
+        rcvd_msg->data_len = RXB0DLCbits.DLC;
+        memcpy(rcvd_msg->data, &RXB0D0, rcvd_msg->data_len);
 
+        //call application code callback
+        can_rcv_cb(&rcvd_msg);
 
-void main(void) {
-        
-    // enable global peripheral interrupts
-    INTCON0bits.IPEN = 0;
-    INTCON0bits.GIE = 1;
+        PIR5bits.RXB0IF = 0;
+        RXB0CONbits.RXFUL = 0;
+        return;
+    } else if (PIR5bits.RXB1IF) {
+        uint16_t sid = (((uint16_t)RXB0SIDH) << 3) | (RXB0SIDL >> 5);
 
-    can_init();
-    LED_init();
-    
-    LED_1_OFF;
-    LED_2_OFF;
-    LED_3_OFF;
+        PIR5bits.RXB1IF = 0;
+        RXB1CONbits.RXFUL = 0;
+    }
 
-    while (1) {
-        if (COMSTAT) {
-            LED_3_ON;
-        } else {
-            LED_3_OFF;
-        }
-
-        can_send(0x2aa);
-        __delay_ms(1000);
-
-        can_send(0x444);
-        __delay_ms(1000);
-        
-        CANSTAT;
-        COMSTAT;
+    // A message was transmitted. We don't currently care about this,
+    // so ignore it
+    else if (PIR5bits.TXB0IF) {
+        PIR5bits.TXB0IF = 0;
+        return;
+    } else if (PIR5bits.TXB1IF) {
+        PIR5bits.TXB1IF = 0;
+        return;
+    } else if (PIR5bits.TXB2IF) {
+        PIR5bits.TXB2IF = 0;
+        return;
+    } else if (PIR5bits.IRXIF) {
+        //I don't actually know how to handle an invalid message
+        //receive. So we don't handle it.
+        PIR5bits.IRXIF = 0;
+        return;
+    } else if (PIR5bits.ERRIF) {
+        //No idea how to handle an error. So ignore it, what's the
+        //worst that can happen?
+        PIR5bits.ERRIF = 0;
+        return;
     }
 }
-
