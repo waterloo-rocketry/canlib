@@ -1,7 +1,7 @@
 #ifndef PIC18F26K83_CAN_H_
 #define PIC18F26K83_CAN_H_
 
-#include "can.h"
+#include "../can.h"
 
 /*
  * Initialie the CAN driver on a PIC26fk83. Note that this function

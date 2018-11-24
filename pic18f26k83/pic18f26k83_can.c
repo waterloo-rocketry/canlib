@@ -1,4 +1,6 @@
-#include "pic18f26k83.h"
+#include "pic18f26k83_can.h"
+#include <xc.h>
+#include <string.h>
 
 static void (*can_rcv_cb)(const can_msg_t *message);
 
@@ -52,7 +54,8 @@ void can_init(const can_timing_t *timing,
     RXM1SIDL = 0;
 
     //ignore all receive message mask behaviour
-    RXB0CON.RXM = 0b11;
+    RXB0CONbits.RXM0 = 1;
+    RXB0CONbits.RXM1 = 1;
 
     //enable interrupts for all useful CAN interrupts
     // interrupt triggered on invalid message received
@@ -98,7 +101,7 @@ void can_send(const can_msg_t* message, uint8_t priority) {
 
     //copy data over. TXB0D1 is immediately after TXB0D0, which is why
     //this is legal
-    memcpy(&TXB0D0, message->data, message->data_len);
+    memcpy((void*) &TXB0D0, message->data, message->data_len);
 
     //Mark transmit buffer 0 ready to transmit
     TXB0CONbits.TXREQ = 1;
@@ -118,9 +121,9 @@ void can_handle_interrupt() {
     //and calling the application code provided callback
     if (PIR5bits.RXB0IF) {
         can_msg_t rcvd_msg;
-        rcvd_msg->sid = (((uint16_t)RXB0SIDH) << 3) | (RXB0SIDL >> 5);
-        rcvd_msg->data_len = RXB0DLCbits.DLC;
-        memcpy(rcvd_msg->data, &RXB0D0, rcvd_msg->data_len);
+        rcvd_msg.sid = (((uint16_t)RXB0SIDH) << 3) | (RXB0SIDL >> 5);
+        rcvd_msg.data_len = RXB0DLCbits.DLC;
+        memcpy(rcvd_msg.data, (const void *) &RXB0D0, rcvd_msg.data_len);
 
         //call application code callback
         can_rcv_cb(&rcvd_msg);
