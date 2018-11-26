@@ -9,35 +9,35 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-//Timing parameters
+// Timing parameters
 typedef struct {
-    //BaudRate Prescaler
+    // BaudRate Prescaler
     uint8_t brp;
-    //Synchronization Jump Width
+    // Synchronization Jump Width
     uint8_t sjw;
 
-    //sample once or three times
+    // sample once or three times
     uint8_t sam;
-    //phase segment 1 bits
+    // phase segment 1 bits
     uint8_t seg1ph;
-    //phase segment 2 bits
+    // phase segment 2 bits
     uint8_t seg2ph;
-    //propagation time segment bits
+    // propagation time segment bits
     uint8_t prseg;
 
-    //Phase segment 2 time select bit. If true, then use seg2ph,
-    //otherwise take minimum viable phase length
+    // Phase segment 2 time select bit. If true, then use seg2ph,
+    // otherwise take minimum viable phase length
     bool btlmode;
 } can_timing_t;
 
-//Things that are in a CAN message
+// Things that are in a CAN message
 typedef struct {
-    //Standard Identifier - 11 bits long
+    // Standard Identifier - 11 bits long
     uint16_t sid;
-    //How many bytes are used in data
+    // How many bytes are used in data
     uint8_t data_len;
-    //the data you want to transmit
+    // the data you want to transmit
     uint8_t data[8];
 } can_msg_t;
 
-#endif //CAN_H_
+#endif // CAN_H_

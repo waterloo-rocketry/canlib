@@ -5,32 +5,29 @@
 static void (*can_rcv_cb)(const can_msg_t *message);
 
 /*
- * Initialie the CAN driver on a PIC26fk83. Note that this function
+ * Initialize the CAN driver on a PIC18F26fk83. Note that this function
  * DOES NOT setup the inputs and outputs from the CAN module to the
  * output pins, application code must do that. In order to do that,
  * CANRXPPS must be set to the proper pin value for the CANRX pin, and
  * ___PPS must be set to 0x33 to mark it as outputting from the CAN
  * module. In addition, TRIS and ANSEL registers for whatever pin
- * you're using must be set to the right values.
+ * is being used must be set to the right values.
  */
 void can_init(const can_timing_t *timing,
               void (*receive_callback)(const can_msg_t *message)) {
-    //set can module to config mode
+    // set can module to config mode
     CANCONbits.REQOP = 0b100;
-    //wait until that mode takes effect
+    // wait until that mode takes effect
     while (CANSTATbits.OPMODE != 0x4);
 
-    //put the can module into legacy mode, which is easier to work
-    //with. As this driver improves, this should change in order to
-    //take advantage of the features of the enhanced can module
+    // put the can module into legacy mode, which is easier to work
+    // with
     ECANCONbits.MDSEL = 0;
 
-    //set baud rate
-    //this sets the CAN module to run off of the system clock
+    // set baud rate
+    // this sets the CAN module to run off of the system clock
     CIOCONbits.CLKSEL = 0;
 
-    //these values are all controlled by the can_timing_t passed to
-    //this function
     BRGCON1bits.SJW = timing->sjw;
     BRGCON1bits.BRP = timing->brp;
     BRGCON2bits.SEG2PHTS = timing->btlmode;
@@ -39,53 +36,57 @@ void can_init(const can_timing_t *timing,
     BRGCON2bits.PRSEG = timing->prseg;
     BRGCON3bits.SEG2PH = timing->seg2ph;
 
-    //the can module has the ability to wake the microcontroller up
-    //from sleep when it sees activity on the bus. To enable this
-    //feature, set WAKDIS bit to 0. Driver does not currently support
-    //this.
+    // the can module has the ability to wake the microcontroller up
+    // from sleep when it sees activity on the bus. To enable this
+    // feature, set WAKDIS bit to 0. Driver does not currently support
+    // this.
     BRGCON3bits.WAKDIS = 1; // we'll eventually want this but not now
     BRGCON3bits.WAKFIL = 0;
 
-    //This driver does not currently support hardware filtering of
-    //incoming messages. There is no plan to add this support.
+    // This driver does not currently support hardware filtering of
+    // incoming messages
     RXM0SIDH = 0;
     RXM0SIDL = 0;
     RXM1SIDH = 0;
     RXM1SIDL = 0;
 
     //ignore all receive message mask behaviour
+    // ignore all receive message mask behaviour
     RXB0CONbits.RXM0 = 1;
     RXB0CONbits.RXM1 = 1;
 
-    //enable interrupts for all useful CAN interrupts
-    // interrupt triggered on invalid message received
+
+    // enable interrupts for all useful CAN interrupts
+    //  interrupt triggered on invalid message received
     PIE5bits.IRXIE = 1;
-    // disable wakeup interrupts
+    //  disable wakeup interrupts
     PIE5bits.WAKIE = 0;
-    // CAN module error interrupt
+    //  CAN module error interrupt
     PIE5bits.ERRIE = 1;
-    // interrupt not generated whenever a CAN message is sent
+    //  interrupt not generated whenever a CAN message is sent
     PIE5bits.TXB2IE = 0;
     PIE5bits.TXB1IE = 0;
     PIE5bits.TXB0IE = 0;
-    // interrupt generated everytime that a CAN message is received
+    //  interrupt generated everytime that a CAN message is received
     PIE5bits.RXB1IE = 1;
     PIE5bits.RXB0IE = 1;
 
-    //set normal mode
+    // set normal mode
     CANCONbits.REQOP = 0;
-    //wait until change is applied
+    // wait until change is applied
     while (CANSTATbits.OPMODE != 0x0);
 }
 
-//priority is in [0,3]
+// Priority must be a 2 bit number defining how high the priority of
+// this message is vs the other ones queued to be sent. 0 is lowest
+// priority, 3 is highest
 void can_send(const can_msg_t* message, uint8_t priority) {
-    //at present, this fails if transmit buffer 0 isn't available
+    // at present, this fails if transmit buffer 0 isn't available
     if (TXB0CONbits.TXREQ != 0) {
         return;
     }
 
-    //argument checking
+    // argument checking
     if(message->data_len > 8 || message->sid > 0x7FF || priority > 3) {
         return;
     }
@@ -94,38 +95,38 @@ void can_send(const can_msg_t* message, uint8_t priority) {
     TXB0SIDH = ((message->sid) >> 3);
     TXB0SIDL = (((message->sid) & 0x7) << 5);
 
-    //not an RTR message, we don't support those
+    // not an RTR message, we don't support those
     TXB0DLCbits.TXRTR = 0;
-    //set message length
+    // set message length
     TXB0DLCbits.DLC = message->data_len;
 
-    //copy data over. TXB0D1 is immediately after TXB0D0, which is why
-    //this is legal
+    // copy data over. TXB0D1 is immediately after TXB0D0, which is why
+    // this is legal
     memcpy((void*) &TXB0D0, message->data, message->data_len);
 
-    //Mark transmit buffer 0 ready to transmit
+    // Mark transmit buffer 0 ready to transmit
     TXB0CONbits.TXREQ = 1;
 }
 
-//if any bit is set in PIR5 during an interrupt service routine, call
-//this funtion, and it will handle it
+// if any bit is set in PIR5 during an interrupt service routine, call
+// this funtion, and it will handle it
 void can_handle_interrupt() {
-    //if there was already a message in the receive buffer and we
-    //received another message, just drop that message. Apparently
-    //your code isn't fast enough.
+    // if there was already a message in the receive buffer and we
+    // received another message, just drop that message. Apparently
+    // your code isn't fast enough.
     if (COMSTATbits.RXB0OVFL) {
         COMSTATbits.RXB0OVFL = 0;
     }
 
-    //handle a received message by stuffing it into a can_message_t
-    //and calling the application code provided callback
+    // handle a received message by stuffing it into a can_message_t
+    // and calling the application code provided callback
     if (PIR5bits.RXB0IF) {
         can_msg_t rcvd_msg;
         rcvd_msg.sid = (((uint16_t)RXB0SIDH) << 3) | (RXB0SIDL >> 5);
         rcvd_msg.data_len = RXB0DLCbits.DLC;
         memcpy(rcvd_msg.data, (const void *) &RXB0D0, rcvd_msg.data_len);
 
-        //call application code callback
+        // call application code callback
         can_rcv_cb(&rcvd_msg);
 
         PIR5bits.RXB0IF = 0;
@@ -150,13 +151,13 @@ void can_handle_interrupt() {
         PIR5bits.TXB2IF = 0;
         return;
     } else if (PIR5bits.IRXIF) {
-        //I don't actually know how to handle an invalid message
-        //receive. So we don't handle it.
+        // I don't actually know how to handle an invalid message
+        // receive. So we don't handle it.
         PIR5bits.IRXIF = 0;
         return;
     } else if (PIR5bits.ERRIF) {
-        //No idea how to handle an error. So ignore it, what's the
-        //worst that can happen?
+        // No idea how to handle an error. So ignore it, what's the
+        // worst that can happen?
         PIR5bits.ERRIF = 0;
         return;
     }

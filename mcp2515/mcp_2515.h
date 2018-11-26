@@ -140,4 +140,4 @@ void mcp_can_receive(can_msg_t *msg);
 #define CANSTAT   0x0E
 #define CANCTRL   0x0F
 
-#endif //MCP_2515_H_
+#endif // MCP_2515_H_

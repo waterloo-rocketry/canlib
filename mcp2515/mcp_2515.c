@@ -3,7 +3,7 @@
 
 // FIXME: chip select pin handling
 
-//SPI command macros
+// SPI command macros
 #define RESET       0b11000000
 #define READ        0b00000011
 #define READ_RX_B0  0b10010000  // read rx buffer 0
@@ -14,12 +14,14 @@
 #define RX_STAT     0b10110000
 #define BIT_MOD     0b00000101
 
-//read a byte from the SPI module
+// read a byte from the SPI module
 static uint8_t (*spi_read)(void);
-//write a byte through the spi module
+
+// write a byte through the spi module
 static void (*spi_write)(uint8_t data);
-//drive the chip select pin for the MCP2562
-//1: drive pin high, 0: drive pin low
+
+// drive the chip select pin for the MCP2562
+// 1: drive pin high, 0: drive pin low
 static void (*cs_drive)(uint8_t state);
 
 static void mcp_write_reg(uint8_t addr, uint8_t data) {
