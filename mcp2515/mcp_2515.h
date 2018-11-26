@@ -1,7 +1,7 @@
 #ifndef MCP_2515_H_
 #define MCP_2515_H_
 
-#include "can.h"
+#include "../can.h"
 
 void mcp_can_init(can_timing_t *can_params,
                   uint8_t (*spi_read_fcn)(void),

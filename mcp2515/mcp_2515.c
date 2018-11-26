@@ -1,5 +1,4 @@
 #include "mcp_2515.h"
-#include "plib.h"
 
 // FIXME: chip select pin handling
 
@@ -57,7 +56,7 @@ void mcp_can_init(can_timing_t *can_params,
 
     mcp_write_reg(CNF1, can_params->sjw << 6 | can_params->brp);
     mcp_write_reg(CNF2, can_params->btlmode << 7 | can_params->sam << 6
-        | can_params->seg1ph << 3 | can_params->prseg1);
+        | can_params->seg1ph << 3 | can_params->prseg);
     mcp_write_reg(CNF3, can_params->seg2ph);
 
     // receive mode interrupts
