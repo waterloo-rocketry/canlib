@@ -71,7 +71,7 @@ void mcp_can_init(can_timing_t *can_params,
     // mcp_write_reg(CANCTRL, 0x4);
 
     // normal mode: top 3 bits are 0
-    while (mcp_read_reg(CANCTRL) & 0xe0 != 0);   // wait for normal mode
+    while ((mcp_read_reg(CANCTRL) & 0xe0) != 0);   // wait for normal mode
 }
 
 void mcp_can_send(can_msg_t *msg) {
