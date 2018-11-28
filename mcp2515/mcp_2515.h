@@ -1,31 +1,12 @@
 #ifndef MCP_2515_H_
 #define MCP_2515_H_
 
-#include <stdint.h>
+#include "../can.h"
 
-typedef struct {
-    // Timing params
-    // CNF1
-    uint8_t brp;
-    uint8_t sjw;
-
-    // CNF2
-    uint8_t btlmode;
-    uint8_t sam;
-    uint8_t seg1ph;
-    uint8_t prseg1;
-
-    // CNF3
-    uint8_t seg2ph;
-} can_t;
-
-typedef struct {
-    uint8_t data[8];
-    uint16_t sid;
-    uint8_t data_len;
-} can_msg_t;
-
-void mcp_can_init(can_t *can_params, uint8_t (*spi_read_fcn)(void), void (*spi_write_fcn)(uint8_t data));
+void mcp_can_init(can_timing_t *can_params,
+                  uint8_t (*spi_read_fcn)(void),
+                  void (*spi_write_fcn)(uint8_t data),
+                  void (*cs_drive_fcn)(uint8_t state));
 void mcp_can_send(can_msg_t *msg);
 void mcp_can_receive(can_msg_t *msg);
 
@@ -159,4 +140,4 @@ void mcp_can_receive(can_msg_t *msg);
 #define CANSTAT   0x0E
 #define CANCTRL   0x0F
 
-#endif //MCP_2515_H_
+#endif // MCP_2515_H_

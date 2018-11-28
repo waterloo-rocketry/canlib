@@ -1,10 +1,9 @@
 #include "mcp_2515.h"
-#include "plib.h"
 #include <stdbool.h>
 
 // FIXME: chip select pin handling
 
-//SPI command macros
+// SPI command macros
 #define RESET       0b11000000
 #define READ        0b00000011
 #define READ_RX_B0  0b10010000  // read rx buffer 0
@@ -15,32 +14,42 @@
 #define RX_STAT     0b10110000
 #define BIT_MOD     0b00000101
 
+// read a byte from the SPI module
 static uint8_t (*spi_read)(void);
+
+// write a byte through the spi module
 static void (*spi_write)(uint8_t data);
 
+// drive the chip select pin for the MCP2562
+// 1: drive pin high, 0: drive pin low
+static void (*cs_drive)(uint8_t state);
+
 static void mcp_write_reg(uint8_t addr, uint8_t data) {
-    LATD3 = 0;
+    cs_drive(0);
     spi_write(WRITE);
     spi_write(addr);
     spi_write(data);
-    LATD3 = 1;
+    cs_drive(1);
 }
 
 static uint8_t mcp_read_reg(uint8_t addr) {
-    LATD3 = 0;
+    cs_drive(0);
     spi_write(READ);
     spi_write(addr);
     uint8_t ret =  spi_read();
-    LATD3 = 1;
+    cs_drive(1);
     return ret;
 }
 
-void mcp_can_init(can_t *can_params, uint8_t (*spi_read_fcn)(void), void (*spi_write_fcn)(uint8_t data)) {
+void mcp_can_init(can_timing_t *can_params,
+                  uint8_t (*spi_read_fcn)(void),
+                  void (*spi_write_fcn)(uint8_t data),
+                  void (*cs_drive_fcn)(uint8_t state)) {
     spi_read = spi_read_fcn;
     spi_write= spi_write_fcn;
+    cs_drive = cs_drive_fcn;
 
-    TRISD3 = 0;
-    LATD3 = 1;
+    cs_drive(1);
 
     // set to config mode. top 3 bits are 0b100
     mcp_write_reg(CANCTRL, 0x4 << 5);
@@ -48,7 +57,7 @@ void mcp_can_init(can_t *can_params, uint8_t (*spi_read_fcn)(void), void (*spi_w
 
     mcp_write_reg(CNF1, can_params->sjw << 6 | can_params->brp);
     mcp_write_reg(CNF2, can_params->btlmode << 7 | can_params->sam << 6
-        | can_params->seg1ph << 3 | can_params->prseg1);
+        | can_params->seg1ph << 3 | can_params->prseg);
     mcp_write_reg(CNF3, can_params->seg2ph);
 
     // receive mode interrupts
@@ -56,14 +65,13 @@ void mcp_can_init(can_t *can_params, uint8_t (*spi_read_fcn)(void), void (*spi_w
     mcp_write_reg(CANINTF, 0);      // fix later
     mcp_write_reg(CANINTE, 0b100011);   // enable rxb0, rxb1, errib5 interrupts
     mcp_write_reg(BFPCTRL, 0b1111);     // set rxb0, rxb1 interrupt output
-    
     // set normal mode (top 3 bits = 0, set clock output)
     // set one shot mode
     mcp_write_reg(CANCTRL, 0xc);
     // mcp_write_reg(CANCTRL, 0x4);
 
     // normal mode: top 3 bits are 0
-    while (mcp_read_reg(CANCTRL) & 0xe0 != 0);   // wait for normal mode
+    while ((mcp_read_reg(CANCTRL) & 0xe0) != 0);   // wait for normal mode
 }
 
 void mcp_can_send(can_msg_t *msg) {
@@ -86,7 +94,7 @@ void mcp_can_send(can_msg_t *msg) {
 void mcp_can_receive(can_msg_t *msg) {
     if (mcp_read_reg(CANINTF) & 0x1) {
         // rxb0 is full
-        
+
         uint8_t sid_h = mcp_read_reg(RXB0SIDH);
         uint8_t sid_l = mcp_read_reg(RXB0SIDL);
         msg->sid = ((uint16_t)sid_h << 3) | sid_l >> 5;
@@ -103,4 +111,3 @@ void mcp_can_receive(can_msg_t *msg) {
     // should fix this in the future
     mcp_write_reg(CANINTF, 0);
 }
-

@@ -1,3 +1,8 @@
 **/nbproject/private/
 **/build/default/
 **/dist/default/
+/tests/pic18f26k83_picdev.X/nbproject/private/
+/tests/pic18f26k83_picdev.X/dist/default/
+/tests/mcp2515_picdev.X/nbproject/private/
+/tests/mcp2515_picdev.X/build/default/
+/tests/mcp2515_picdev.X/dist/default/
