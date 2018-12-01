@@ -17,7 +17,8 @@ static void buffer_to_msg(const unsigned int *buffer, can_msg_t *received);
 // callback mode, and that callback will be triggered in an interrupt
 // context. Please make the callback as short (in time) as possible.
 void init_can(const can_timing_t *timing,
-              void (*receive_callback)(const can_msg_t *message)) {
+              void (*receive_callback)(const can_msg_t *message),
+              bool run_in_loopback) {
     // store pointer to the receive callback
     can_rcv_cb = receive_callback;
 
@@ -63,11 +64,18 @@ void init_can(const can_timing_t *timing,
     // so don't use those elsewhere
     init_dma_channels();
 
-    // set loopback mode. THIS MUST CHANGE TO NORMAL MODE BEFORE
-    // MERGING
-    C1CTRL1bits.REQOP = 2;
-    // wait until change is applied
-    while (C1CTRL1bits.OPMODE != 0x2);
+    // if you wanna run this driver in loopback mode, we can
+    // accomodate that
+    if(run_in_loopback) {
+        // set loopback mode. THIS MUST CHANGE TO NORMAL MODE BEFORE
+        // MERGING
+        C1CTRL1bits.REQOP = 2;
+        // wait until change is applied
+        while (C1CTRL1bits.OPMODE != 0x2);
+    } else {
+        C1CTRL1bits.REQOP = 0;
+        while(C1CTRL1bits.OPMODE != 0);
+    }
 
     // initialize the interrupts
     init_can_interrupts();

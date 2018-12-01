@@ -77,7 +77,7 @@ int main() {
     timing.sam = 0;
     timing.seg1ph = 0;
     timing.seg2ph = 0;
-    init_can(&timing, can_callback_function);
+    init_can(&timing, can_callback_function, true);
 
     // create 2 CAN messages: 1 turns on LED1, the other turns on LED2
     can_msg_t led1, led2;
@@ -100,6 +100,5 @@ int main() {
         can_send(&led2, 0);
         __delay32(1000000);
     }
-    
-}
 
+}

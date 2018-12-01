@@ -13,7 +13,8 @@
  * is being used must be set to the right values.
  */
 void init_can(const can_timing_t *timing,
-              void (*receive_callback)(const can_msg_t *message));
+              void (*receive_callback)(const can_msg_t *message),
+              bool run_in_loopback);
 
 // send a CAN message. Priority is 3 or less, higher means higher
 // priority
