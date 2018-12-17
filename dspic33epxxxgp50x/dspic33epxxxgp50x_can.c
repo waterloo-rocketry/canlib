@@ -67,8 +67,7 @@ void init_can(const can_timing_t *timing,
     // if you wanna run this driver in loopback mode, we can
     // accomodate that
     if(run_in_loopback) {
-        // set loopback mode. THIS MUST CHANGE TO NORMAL MODE BEFORE
-        // MERGING
+        // set loopback mode
         C1CTRL1bits.REQOP = 2;
         // wait until change is applied
         while (C1CTRL1bits.OPMODE != 0x2);
@@ -94,7 +93,10 @@ void can_send(const can_msg_t* message, uint8_t priority) {
     // set the length, other bits are zero because no EID
     can_msg_buf[0][2] = message->data_len;
 
-    // copy data over
+    // copy data over. Note that this is a 16 bit part, so we
+    // interlace the bytes of data. To see the structure that the CAN
+    // module wants a CAN message to be in, look at datasheet section
+    // 21.5
     can_msg_buf[0][3] = ((message->data[1] << 8) | message->data[0]);
     can_msg_buf[0][4] = ((message->data[3] << 8) | message->data[2]);
     can_msg_buf[0][5] = ((message->data[5] << 8) | message->data[4]);
