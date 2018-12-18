@@ -15,6 +15,9 @@ static void (*can_rcv_cb)(const can_msg_t *message);
  */
 void can_init(const can_timing_t *timing,
               void (*receive_callback)(const can_msg_t *message)) {
+    //keep track of callback, we use it in interrupts
+    can_rcv_cb = receive_callback;
+
     // set can module to config mode
     CANCONbits.REQOP = 0b100;
     // wait until that mode takes effect
@@ -127,7 +130,9 @@ void can_handle_interrupt() {
         memcpy(rcvd_msg.data, (const void *) &RXB0D0, rcvd_msg.data_len);
 
         // call application code callback
-        can_rcv_cb(&rcvd_msg);
+        if (NULL != can_rcv_cb) {
+            can_rcv_cb(&rcvd_msg);
+        }
 
         PIR5bits.RXB0IF = 0;
         RXB0CONbits.RXFUL = 0;
