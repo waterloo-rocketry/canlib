@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include "build_can_message.h"
+#include "can_common_tests.h"
 
 int main() {
     int retval = 0;
@@ -17,6 +18,15 @@ int main() {
         retval = 1;
     } else {
         printf("test_build_can_message PASSED\n");
+    }
+
+    number_of_tests++;
+    if(!test_can_common_functions()) {
+        number_of_failures++;
+        printf("test_can_common_functions FAILURE\n");
+        retval = 1;
+    } else {
+        printf("test_can_common_functions PASSED\n");
     }
 
     printf("%i Tests, %i passed, %i failed\n",

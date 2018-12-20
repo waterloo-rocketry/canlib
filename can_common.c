@@ -113,3 +113,28 @@ bool build_can_message(uint16_t message_type,
     // all the data we need to set. We're done
     return true;
 }
+
+uint16_t get_message_type(const can_msg_t *msg) {
+    return (msg->sid & 0x7E0);
+}
+
+bool is_sensor_data(const can_msg_t *msg) {
+    uint16_t type = get_message_type(msg);
+    if (type == MSG_SENSOR_ACC ||
+        type == MSG_SENSOR_GYRO ||
+        type == MSG_SENSOR_MAG ||
+        type == MSG_SENSOR_ANALOG) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+can_debug_level_t debug_level_message(const can_msg_t *msg) {
+    uint16_t type = get_message_type(msg);
+    if(type != MSG_DEBUG_MSG) {
+        return NONE;
+    } else {
+        return ((msg->data[3] >> 4) & 0xf);
+    }
+}

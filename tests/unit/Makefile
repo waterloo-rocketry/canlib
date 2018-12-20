@@ -3,6 +3,7 @@ CC=gcc
 objects  =unit_tests.o
 objects +=build_can_message.o
 objects +=can_common.o
+objects +=can_common_tests.o
 
 VPATH +=../../
 
