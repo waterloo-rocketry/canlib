@@ -1,4 +1,6 @@
 #include "can_common.h"
+#include "message_types.h"
+#include <stddef.h>
 
 // this symbol should be defined in the project's Makefile, but if it
 // isn't, issue a warning and set it to 0

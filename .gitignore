@@ -9,3 +9,5 @@
 /tests/dspic33ep256gp502.X/nbproject/private/
 /tests/dspic33ep256gp502.X/build/default/
 /tests/dspic33ep256gp502.X/dist/default/
+*.o
+unit_tests
