@@ -138,3 +138,19 @@ can_debug_level_t debug_level_message(const can_msg_t *msg) {
         return ((msg->data[3] >> 4) & 0xf);
     }
 }
+
+const char *build_printf_can_message(const char *string, can_msg_t *output) {
+    // set the SID of ouput
+    output->sid = (MSG_DEBUG_PRINTF | BOARD_UNIQUE_ID);
+    uint8_t i;
+    for(i = 0; i < 8; ++i) {
+        if(*string == '\0') {
+            output->data_len = i;
+            return string;
+        }
+        output->data[i] = *string;
+        string++;
+    }
+    output->data_len = i;
+    return string;
+}

@@ -3,6 +3,7 @@
 #include "message_types.h"
 
 #include <stdio.h>
+#include <string.h>
 
 static bool test_get_message_type(void) {
     can_msg_t output;
@@ -157,6 +158,92 @@ static bool test_debug_level_message(void) {
     return true;
 }
 
+static bool test_debug_printf(void) {
+    // test that debug printf works, and can write out "does this work lol?" (which should take 3 messages to write)
+    can_msg_t output;
+    const char *message = "does this work lol?";
+
+    // this call should put "does thi" in output, and should set message to "s work lol?"
+    message = build_printf_can_message(message, &output);
+    if(output.data_len != 8) {
+        printf("First call to build_printf_can_message didn't set data_len properly\n");
+        return false;
+    } else if (output.data[0] != 'd' ||
+               output.data[1] != 'o' ||
+               output.data[2] != 'e' ||
+               output.data[3] != 's' ||
+               output.data[4] != ' ' ||
+               output.data[5] != 't' ||
+               output.data[6] != 'h' ||
+               output.data[7] != 'i') {
+        printf("First call to build_printf_can_message didn't set data properly\n");
+        return false;
+    } else if (strcmp(message, "s work lol?")) {
+        printf("First call to build_printf_can_message didn't set message properly\n");
+        return false;
+    } else if (output.sid != 0x1E3) {
+        printf("First call to build_printf_can_message didn't set sid properly\n");
+        return false;
+    }
+
+    // this call should put "s work l" in output, and should set message to "ol?"
+    message = build_printf_can_message(message, &output);
+    if(output.data_len != 8) {
+        printf("Second call to build_printf_can_message didn't set data_len properly\n");
+        return false;
+    } else if (output.data[0] != 's' ||
+               output.data[1] != ' ' ||
+               output.data[2] != 'w' ||
+               output.data[3] != 'o' ||
+               output.data[4] != 'r' ||
+               output.data[5] != 'k' ||
+               output.data[6] != ' ' ||
+               output.data[7] != 'l') {
+        printf("Second call to build_printf_can_message didn't set data properly\n");
+        return false;
+    } else if (strcmp(message, "ol?")) {
+        printf("Second call to build_printf_can_message didn't set message properly\n");
+        return false;
+    } else if (output.sid != 0x1E3) {
+        printf("Second call to build_printf_can_message didn't set sid properly\n");
+        return false;
+    }
+
+    // this call should put "ol?" in output, and should set message to '\0'
+    message = build_printf_can_message(message, &output);
+    if(output.data_len != 3) {
+        printf("Third call to build_printf_can_message didn't set data_len properly\n");
+        return false;
+    } else if (output.data[0] != 'o' ||
+               output.data[1] != 'l' ||
+               output.data[2] != '?') {
+        printf("Third call to build_printf_can_message didn't set data properly\n");
+        return false;
+    } else if (*message != '\0') {
+        printf("Third call to build_printf_can_message didn't set message properly\n");
+        return false;
+    } else if (output.sid != 0x1E3) {
+        printf("Third call to build_printf_can_message didn't set sid properly\n");
+        return false;
+    }
+
+    // this call should put nothing in output, and shouldn't change message
+    message = build_printf_can_message(message, &output);
+    if(output.data_len != 0) {
+        printf("Fourth call to build_printf_can_message didn't set data_len properly\n");
+        return false;
+    } else if (*message != '\0') {
+        printf("Fourth call to build_printf_can_message didn't set message properly\n");
+        return false;
+    } else if (output.sid != 0x1E3) {
+        printf("Fourth call to build_printf_can_message didn't set sid properly\n");
+        return false;
+    }
+
+
+    return true;
+}
+
 bool test_can_common_functions(void) {
     if(!test_get_message_type()) {
         printf(__FILE__ ": Error, test_get_message_type returned false\n");
@@ -166,6 +253,9 @@ bool test_can_common_functions(void) {
         return false;
     } else if(!test_debug_level_message()) {
         printf(__FILE__ ": Error, test_debug_level_message returned false\n");
+        return false;
+    } else if(!test_debug_printf()) {
+        printf(__FILE__ ": Error, test_debug_printf returned false\n");
         return false;
     }
 

@@ -53,5 +53,10 @@ bool is_sensor_data(const can_msg_t *msg);
  */
 can_debug_level_t debug_level_message(const can_msg_t *msg);
 
+/*
+ *  TODO, add comments. The code is written, comments are still needed
+ */
+const char *build_printf_can_message(const char *string, can_msg_t *output);
+
 
 #endif // compile guard
