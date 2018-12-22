@@ -246,16 +246,54 @@ static bool test_debug_printf(void) {
 
 bool test_can_common_functions(void) {
     if(!test_get_message_type()) {
-        printf(__FILE__ ": Error, test_get_message_type returned false\n");
+        printf("%s: Error, test_get_message_type returned false\n", __FUNCTION__);
         return false;
     } else if(!test_is_sensor_data()) {
-        printf(__FILE__ ": Error, test_is_sensor_data returned false\n");
+        printf("%s: Error, test_is_sensor_data returned false\n", __FUNCTION__);
         return false;
     } else if(!test_debug_level_message()) {
-        printf(__FILE__ ": Error, test_debug_level_message returned false\n");
+        printf("%s: Error, test_debug_level_message returned false\n", __FUNCTION__);
         return false;
     } else if(!test_debug_printf()) {
-        printf(__FILE__ ": Error, test_debug_printf returned false\n");
+        printf("%s: Error, test_debug_printf returned false\n", __FUNCTION__);
+        return false;
+    }
+
+    return true;
+}
+
+bool test_debug_macro(void) {
+    // run the debug macro, and check that it puts in the line number
+    // right
+    can_msg_t output;
+    int linum = __LINE__ + 1;
+    DEBUG(ERROR, 0, output);
+
+    if(output.sid != 0x183) {
+        // Check that the SID was set correctly. Note this assumes
+        // that the unit tests assign BOARD_UNIQUE_ID to 0x03
+        return false;
+    } else if (output.data_len != 8) {
+        // Check that the proper amount of data was written out
+        return false;
+    } else if (output.data[3] != (0x10 + ((linum >> 8) & 0xF))) {
+        // Check that ERROR (0x01) was put in the top nibble, and that
+        // bits [11:8] of linum (the line number of where that DEBUG
+        // call is above) was put in the bottom nibble
+        return false;
+    } else if (output.data[4] != (linum & 0xFF)) {
+        // check that the bottom byte of linum was put in this byte of
+        // the data
+        return false;
+    } else if (debug_level_message(&output) != ERROR) {
+        // Check the debug level. This is more of a test that the
+        // debug_level_message function works, since we already
+        // checked that the top nibble of data[3] was 0x01
+        return false;
+    } else if (get_message_type(&output) != MSG_DEBUG_MSG) {
+        // Check the message type. Again, we've already checked the
+        // SID, so this is more of a check of the get_message_type
+        // function
         return false;
     }
 

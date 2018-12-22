@@ -4,5 +4,6 @@
 #include <stdbool.h>
 
 bool test_can_common_functions(void);
+bool test_debug_macro(void);
 
 #endif

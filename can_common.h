@@ -18,6 +18,25 @@ typedef enum {
 } can_debug_level_t;
 
 /*
+ * This macro creates a new debug message, and stores it in
+ * debug_macro_output. The reason that this is a macro and not a
+ * function is that debug messages have the line number at which they
+ * are created embedded in their data. This is so that we can review
+ * the code later to see where the debug was issued from, and
+ * hopefully find the cause of the problem
+ */
+#define DEBUG(debug_macro_level, debug_macro_timestamp, debug_macro_output) \
+    do {                                                                \
+        uint8_t debug_macro_data[5] = {debug_macro_level << 4 | ((__LINE__ >> 8)) & 0xF, \
+                                       __LINE__ & 0xFF,                 \
+                                       0,0,0};                          \
+        build_can_message(MSG_DEBUG_MSG,                                \
+                          debug_macro_timestamp,                        \
+                          debug_macro_data,                             \
+                          &debug_macro_output);                         \
+    } while(0)
+
+/*
  * Creates a new CAN message. It is the caller's responsibility to
  * ensure that input_data contains the correct amount and order of
  * data to be sent. Function returns true if CAN message was
