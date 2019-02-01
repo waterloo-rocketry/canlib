@@ -1,4 +1,5 @@
 #include "mcp_2515.h"
+#include <stdbool.h>
 
 // FIXME: chip select pin handling
 
@@ -63,7 +64,8 @@ void mcp_can_init(can_timing_t *can_params,
     mcp_write_reg(RXB0CTRL, 0b0110000);
     mcp_write_reg(RXB1CTRL, 0b0110000); // turns masks/filters off
     mcp_write_reg(CANINTF, 0);      // fix later
-    mcp_write_reg(CANINTE, 0b100011);   // enable rxb0, rxb1, and error interrupts
+
+    mcp_write_reg(CANINTE, 0b100011);   // enable rxb0, rxb1, errib5 interrupts
     mcp_write_reg(BFPCTRL, 0b1111);     // set rxb0, rxb1 interrupt output
 
     // set normal mode (top 3 bits = 0, set clock output)
