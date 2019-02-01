@@ -13,7 +13,7 @@ bool build_can_message(uint16_t message_type,
                        uint32_t timestamp,
                        const uint8_t *input_data,
                        can_msg_t *output) {
-    if(input_data == NULL || output == NULL) {
+    if (input_data == NULL || output == NULL) {
         // illegal argument results in false return value
         return false;
     }
@@ -21,88 +21,88 @@ bool build_can_message(uint16_t message_type,
     // consult spreadsheet linked in message_types.h to see where
     // these values come from
     switch(message_type) {
-    case MSG_LEDS_ON:
-    case MSG_LEDS_OFF:
-        // these two message types have no data in them, so can be
-        // handled the same
-        output->data_len = 0;
-        break;
+        case MSG_LEDS_ON:
+        case MSG_LEDS_OFF:
+            // these two message types have no data in them, so can be
+            // handled the same
+            output->data_len = 0;
+            break;
 
-    case MSG_GENERAL_CMD:
-    case MSG_VENT_VALVE_CMD:
-    case MSG_INJ_VALVE_CMD:
-    case MSG_VENT_VALVE_STATUS:
-    case MSG_INJ_VALVE_STATUS:
-        // these five message types all have three bytes of timestamp,
-        // then a single byte of data, and thus can be handled the same
-        output->data_len = 4;
-        // first byte of data is highest nibble of timestamp
-        output->data[0] = ((timestamp >> 16) & 0xFF);
-        output->data[1] = ((timestamp >> 8)  & 0xFF);
-        output->data[2] = ((timestamp >> 0)  & 0xFF);
-        // copy over the one byte of data that this command takes
-        output->data[3] = input_data[0];
-        break;
+        case MSG_GENERAL_CMD:
+        case MSG_VENT_VALVE_CMD:
+        case MSG_INJ_VALVE_CMD:
+        case MSG_VENT_VALVE_STATUS:
+        case MSG_INJ_VALVE_STATUS:
+            // these five message types all have three bytes of timestamp,
+            // then a single byte of data, and thus can be handled the same
+            output->data_len = 4;
+            // first byte of data is highest nibble of timestamp
+            output->data[0] = ((timestamp >> 16) & 0xFF);
+            output->data[1] = ((timestamp >> 8)  & 0xFF);
+            output->data[2] = ((timestamp >> 0)  & 0xFF);
+            // copy over the one byte of data that this command takes
+            output->data[3] = input_data[0];
+            break;
 
-    case MSG_SENSOR_ACC:
-    case MSG_SENSOR_GYRO:
-    case MSG_SENSOR_MAG:
-        // these three message types all have two bytes of timestamp,
-        // then six bytes of data
-        output->data_len = 8;
-        output->data[0] = ((timestamp >> 8) & 0xFF);
-        output->data[1] = ((timestamp >> 0) & 0xFF);
-        // copy six bytes of data from input_data
-        output->data[2] = input_data[0];
-        output->data[3] = input_data[1];
-        output->data[4] = input_data[2];
-        output->data[5] = input_data[3];
-        output->data[6] = input_data[4];
-        output->data[7] = input_data[5];
-        break;
+        case MSG_SENSOR_ACC:
+        case MSG_SENSOR_GYRO:
+        case MSG_SENSOR_MAG:
+            // these three message types all have two bytes of timestamp,
+            // then six bytes of data
+            output->data_len = 8;
+            output->data[0] = ((timestamp >> 8) & 0xFF);
+            output->data[1] = ((timestamp >> 0) & 0xFF);
+            // copy six bytes of data from input_data
+            output->data[2] = input_data[0];
+            output->data[3] = input_data[1];
+            output->data[4] = input_data[2];
+            output->data[5] = input_data[3];
+            output->data[6] = input_data[4];
+            output->data[7] = input_data[5];
+            break;
 
-    case MSG_SENSOR_ANALOG:
-        // this message type has two bytes of timestamp, then two
-        // bytes of data
-        output->data_len = 4;
-        output->data[0] = ((timestamp >> 8) & 0xFF);
-        output->data[1] = ((timestamp >> 0) & 0xFF);
-        output->data[2] = input_data[0];
-        output->data[3] = input_data[1];
-        break;
+        case MSG_SENSOR_ANALOG:
+            // this message type has two bytes of timestamp, then two
+            // bytes of data
+            output->data_len = 4;
+            output->data[0] = ((timestamp >> 8) & 0xFF);
+            output->data[1] = ((timestamp >> 0) & 0xFF);
+            output->data[2] = input_data[0];
+            output->data[3] = input_data[1];
+            break;
 
-    case MSG_DEBUG_MSG:
-    case MSG_GENERAL_BOARD_STATUS:
-        // these two message types have three bytes of timestamp, then
-        // 5 bytes of data
-        output->data_len = 8;
-        output->data[0] = ((timestamp >> 16) & 0xFF);
-        output->data[1] = ((timestamp >> 8)  & 0xFF);
-        output->data[2] = ((timestamp >> 0)  & 0xFF);
-        output->data[3] = input_data[0];
-        output->data[4] = input_data[1];
-        output->data[5] = input_data[2];
-        output->data[6] = input_data[3];
-        output->data[7] = input_data[4];
-        break;
+        case MSG_DEBUG_MSG:
+        case MSG_GENERAL_BOARD_STATUS:
+            // these two message types have three bytes of timestamp, then
+            // 5 bytes of data
+            output->data_len = 8;
+            output->data[0] = ((timestamp >> 16) & 0xFF);
+            output->data[1] = ((timestamp >> 8)  & 0xFF);
+            output->data[2] = ((timestamp >> 0)  & 0xFF);
+            output->data[3] = input_data[0];
+            output->data[4] = input_data[1];
+            output->data[5] = input_data[2];
+            output->data[6] = input_data[3];
+            output->data[7] = input_data[4];
+            break;
 
-    case MSG_DEBUG_PRINTF:
-        // this message type just has eight bytes of data
-        output->data_len = 8;
-        output->data[0] = input_data[0];
-        output->data[1] = input_data[1];
-        output->data[2] = input_data[2];
-        output->data[3] = input_data[3];
-        output->data[4] = input_data[4];
-        output->data[5] = input_data[5];
-        output->data[6] = input_data[6];
-        output->data[7] = input_data[7];
-        break;
+        case MSG_DEBUG_PRINTF:
+            // this message type just has eight bytes of data
+            output->data_len = 8;
+            output->data[0] = input_data[0];
+            output->data[1] = input_data[1];
+            output->data[2] = input_data[2];
+            output->data[3] = input_data[3];
+            output->data[4] = input_data[4];
+            output->data[5] = input_data[5];
+            output->data[6] = input_data[6];
+            output->data[7] = input_data[7];
+            break;
 
-    default:
-        // message is not one of the types defined in message_types.h,
-        // so we should return false (illegal argument)
-        return false;
+        default:
+            // message is not one of the types defined in message_types.h,
+            // so we should return false (illegal argument)
+            return false;
     }
 
     // set output's SID. By our team's convention, a message's SID is
@@ -130,21 +130,44 @@ bool is_sensor_data(const can_msg_t *msg) {
     }
 }
 
-can_debug_level_t debug_level_message(const can_msg_t *msg) {
+can_debug_level_t message_debug_level(const can_msg_t *msg) {
     uint16_t type = get_message_type(msg);
-    if(type != MSG_DEBUG_MSG) {
+    if (type != MSG_DEBUG_MSG) {
         return NONE;
     } else {
+        // As per the spreadsheet, the debug level of a DEBUG_MSG is
+        // stored in the top nibble of the 4th data byte (yeah, I
+        // know, I'm sorry). To get at it, you right shift the 4th
+        // data byte by 4. bitwise anding with 0xf probably isn't
+        // necessary, but it ensures that the returned data is no more
+        // than 4 bits.
         return ((msg->data[3] >> 4) & 0xf);
     }
 }
 
+/* In the grand tradition of C programmers, string handling funcitons
+ * must be as convoluted as possible.  If you call this function with
+ * a string that is longer than 8 bytes, it's impossible to fit all of
+ * that into one CAN message. So what this function does is it puts
+ * the first 8 bytes of the string into the CAN message output, then
+ * returns a pointer that's 8 bytes ahead of the string (string +
+ * 8). If it's called with less than 8 characters of data, it returns
+ * a pointer to '\0' (the null terminator in string). This lets you
+ * write code like the following:
+ *
+ * const char *string = "a really long message to be sent on CAN";
+ * can_msg_t to_send;
+ * while (*string) {
+ *     string = build_printf_can_message(string, &to_send);
+ *     can_send(&to_send);
+ * }
+ */
 const char *build_printf_can_message(const char *string, can_msg_t *output) {
     // set the SID of ouput
     output->sid = (MSG_DEBUG_PRINTF | BOARD_UNIQUE_ID);
     uint8_t i;
-    for(i = 0; i < 8; ++i) {
-        if(*string == '\0') {
+    for (i = 0; i < 8; ++i) {
+        if (*string == '\0') {
             output->data_len = i;
             return string;
         }

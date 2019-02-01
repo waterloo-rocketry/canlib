@@ -70,7 +70,7 @@ bool is_sensor_data(const can_msg_t *msg);
  * If MSG is a DEBUG_MSG message, return its debug level, else return
  * NONE
  */
-can_debug_level_t debug_level_message(const can_msg_t *msg);
+can_debug_level_t message_debug_level(const can_msg_t *msg);
 
 /*
  *  TODO, add comments. The code is written, comments are still needed

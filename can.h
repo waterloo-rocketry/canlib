@@ -9,6 +9,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#define CANLIB_VERSION            "v0.0.2"
+#define CANLIB_BIT_TIME_US        24
+
 // Timing parameters
 typedef struct {
     // BaudRate Prescaler

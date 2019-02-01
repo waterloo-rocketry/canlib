@@ -3,13 +3,13 @@
 
 /* The defines in this file track the information in this spreadsheet:
  * https://docs.google.com/spreadsheets/d/1sXmhBklBM_79vqq_NNaoq-xuxz7BbkHtFnsmBFPSksc/
+ *
+ * Message SID's are 11 bit unique identifiers. The bottom 5 bits of
+ * the SID are ID's that are unique to the board sending the message,
+ * and the top 6 bits are the message type. These defines all have the
+ * bottom 5 bits set to 0, so to create a complete message SID,
+ * bitwise or one of these defines with a board unique ID
  */
-
-/* Version number and bit time defined here since they're also written
- * in the spreadsheet, these shouldn't really be used for anything
- */
-#define CANLIB_VERSION            "v0.0.2"
-#define CANLIB_BIT_TIME_US        24
 
 #define MSG_GENERAL_CMD           0x060
 #define MSG_VENT_VALVE_CMD        0x0C0

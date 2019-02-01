@@ -86,7 +86,7 @@ static bool test_is_sensor_data(void) {
     return true;
 }
 
-static bool test_debug_level_message(void) {
+static bool test_message_debug_level(void) {
     can_msg_t output;
     uint8_t input_data[8];
 #define CHECK_IS_NOT_DEBUG_MSG(x)                                       \
@@ -95,8 +95,8 @@ static bool test_debug_level_message(void) {
             printf("fail on build_can_message when msg_type = 0x%x\n", (x)); \
             return false;                                               \
         }                                                               \
-        if (NONE != debug_level_message(&output)) {                             \
-            printf("fail on debug_level_message when msg_type = 0x%x\n", (x)); \
+        if (NONE != message_debug_level(&output)) {                             \
+            printf("fail on message_debug_level when msg_type = 0x%x\n", (x)); \
             return false;                                               \
         }                                                               \
     } while(0)
@@ -121,8 +121,8 @@ static bool test_debug_level_message(void) {
         printf("fail on build_can_message when level is ERROR\n");
         return false;
     }
-    if (ERROR != debug_level_message(&output)) {
-        printf("fail on debug_level_message when level is ERROR\n");
+    if (ERROR != message_debug_level(&output)) {
+        printf("fail on message_debug_level when level is ERROR\n");
         return false;
     }
     // Check for WARN
@@ -131,8 +131,8 @@ static bool test_debug_level_message(void) {
         printf("fail on build_can_message when level is WARN\n");
         return false;
     }
-    if (WARN != debug_level_message(&output)) {
-        printf("fail on debug_level_message when level is WARN\n");
+    if (WARN != message_debug_level(&output)) {
+        printf("fail on message_debug_level when level is WARN\n");
         return false;
     }
     // Check for INFO
@@ -141,8 +141,8 @@ static bool test_debug_level_message(void) {
         printf("fail on build_can_message when level is INFO\n");
         return false;
     }
-    if (INFO != debug_level_message(&output)) {
-        printf("fail on debug_level_message when level is INFO\n");
+    if (INFO != message_debug_level(&output)) {
+        printf("fail on message_debug_level when level is INFO\n");
         return false;
     }
     // Check for DEBUG
@@ -151,8 +151,8 @@ static bool test_debug_level_message(void) {
         printf("fail on build_can_message when level is DEBUG\n");
         return false;
     }
-    if (DEBUG != debug_level_message(&output)) {
-        printf("fail on debug_level_message when level is DEBUG\n");
+    if (DEBUG != message_debug_level(&output)) {
+        printf("fail on message_debug_level when level is DEBUG\n");
         return false;
     }
     return true;
@@ -251,8 +251,8 @@ bool test_can_common_functions(void) {
     } else if(!test_is_sensor_data()) {
         printf("%s: Error, test_is_sensor_data returned false\n", __FUNCTION__);
         return false;
-    } else if(!test_debug_level_message()) {
-        printf("%s: Error, test_debug_level_message returned false\n", __FUNCTION__);
+    } else if(!test_message_debug_level()) {
+        printf("%s: Error, test_message_debug_level returned false\n", __FUNCTION__);
         return false;
     } else if(!test_debug_printf()) {
         printf("%s: Error, test_debug_printf returned false\n", __FUNCTION__);
@@ -285,9 +285,9 @@ bool test_debug_macro(void) {
         // check that the bottom byte of linum was put in this byte of
         // the data
         return false;
-    } else if (debug_level_message(&output) != ERROR) {
+    } else if (message_debug_level(&output) != ERROR) {
         // Check the debug level. This is more of a test that the
-        // debug_level_message function works, since we already
+        // message_debug_level function works, since we already
         // checked that the top nibble of data[3] was 0x01
         return false;
     } else if (get_message_type(&output) != MSG_DEBUG_MSG) {
