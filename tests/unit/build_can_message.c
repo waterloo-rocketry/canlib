@@ -5,7 +5,8 @@
 
 #define REPORT_FAIL(x) printf("%s: Fail: %s\n", __FUNCTION__, x)
 
-static bool test_illegal_arguments(void) {
+static bool test_illegal_arguments(void)
+{
     can_msg_t output;
     uint8_t input_data[8];
     // make sure illegal message type generates error
@@ -30,7 +31,8 @@ static bool test_illegal_arguments(void) {
     return true;
 }
 
-static bool test_general_command(void) {
+static bool test_general_command(void)
+{
     // make sure that a MSG_GENERAL_CMD message works properly
     uint32_t timestamp = 0xcafebabe;
     uint8_t input_data[1] = { 0x74 };
@@ -61,11 +63,13 @@ static bool test_general_command(void) {
     return true;
 }
 
-static bool test_debug_printf(void) {
+static bool test_debug_printf(void)
+{
     // put the string "unittest" into a can message
     uint8_t input_data[8] = {
         'u', 'n', 'i', 't',
-        't', 'e', 's', 't'};
+        't', 'e', 's', 't'
+    };
     can_msg_t output;
     if (!build_can_message(MSG_DEBUG_PRINTF, 0, input_data, &output)) {
         REPORT_FAIL("Error building message");
@@ -91,7 +95,8 @@ static bool test_debug_printf(void) {
     return true;
 }
 
-static bool test_sensor_acc(void) {
+static bool test_sensor_acc(void)
+{
     uint8_t input_data[6] = {
         177, 107, 0, 189, 186, 190
     };
@@ -123,17 +128,18 @@ static bool test_sensor_acc(void) {
 }
 
 
-bool test_build_can_message(void) {
-    if(!test_illegal_arguments()) {
+bool test_build_can_message(void)
+{
+    if (!test_illegal_arguments()) {
         printf(__FILE__ ": Error, test_illegal_arguments returned false\n");
         return false;
-    } else if(!test_general_command()) {
+    } else if (!test_general_command()) {
         printf(__FILE__ ": Error, test_general_command returned false\n");
         return false;
-    } else if(!test_debug_printf()) {
+    } else if (!test_debug_printf()) {
         printf(__FILE__ ": Error, test_debug_printf returned false\n");
         return false;
-    } else if(!test_sensor_acc()) {
+    } else if (!test_sensor_acc()) {
         printf(__FILE__ ": Error, test_sensor_acc returned false\n");
         return false;
     }

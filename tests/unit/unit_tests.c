@@ -15,7 +15,8 @@
     }
 
 
-int main() {
+int main()
+{
     int retval = 0;
     int number_of_tests = 0;
     int number_of_failures = 0;

@@ -5,7 +5,8 @@
 #include <stdio.h>
 #include <string.h>
 
-static bool test_get_message_type(void) {
+static bool test_get_message_type(void)
+{
     can_msg_t output;
     uint8_t input_data[8];
     // for each type of message, generate a message of that type, then
@@ -41,7 +42,8 @@ static bool test_get_message_type(void) {
     return true;
 }
 
-static bool test_is_sensor_data(void) {
+static bool test_is_sensor_data(void)
+{
     can_msg_t output;
     uint8_t input_data[8];
 #define CHECK_IS_NOT_SENSOR_DATA(x)                                     \
@@ -86,7 +88,8 @@ static bool test_is_sensor_data(void) {
     return true;
 }
 
-static bool test_message_debug_level(void) {
+static bool test_message_debug_level(void)
+{
     can_msg_t output;
     uint8_t input_data[8];
 #define CHECK_IS_NOT_DEBUG_MSG(x)                                       \
@@ -117,7 +120,7 @@ static bool test_message_debug_level(void) {
 
     // Check for ERROR
     input_data[0] = 0x10;
-    if(!build_can_message(MSG_DEBUG_MSG, 0, input_data, &output)) {
+    if (!build_can_message(MSG_DEBUG_MSG, 0, input_data, &output)) {
         printf("fail on build_can_message when level is ERROR\n");
         return false;
     }
@@ -127,7 +130,7 @@ static bool test_message_debug_level(void) {
     }
     // Check for WARN
     input_data[0] = 0x20;
-    if(!build_can_message(MSG_DEBUG_MSG, 0, input_data, &output)) {
+    if (!build_can_message(MSG_DEBUG_MSG, 0, input_data, &output)) {
         printf("fail on build_can_message when level is WARN\n");
         return false;
     }
@@ -137,7 +140,7 @@ static bool test_message_debug_level(void) {
     }
     // Check for INFO
     input_data[0] = 0x30;
-    if(!build_can_message(MSG_DEBUG_MSG, 0, input_data, &output)) {
+    if (!build_can_message(MSG_DEBUG_MSG, 0, input_data, &output)) {
         printf("fail on build_can_message when level is INFO\n");
         return false;
     }
@@ -147,7 +150,7 @@ static bool test_message_debug_level(void) {
     }
     // Check for DEBUG
     input_data[0] = 0x40;
-    if(!build_can_message(MSG_DEBUG_MSG, 0, input_data, &output)) {
+    if (!build_can_message(MSG_DEBUG_MSG, 0, input_data, &output)) {
         printf("fail on build_can_message when level is DEBUG\n");
         return false;
     }
@@ -158,14 +161,15 @@ static bool test_message_debug_level(void) {
     return true;
 }
 
-static bool test_debug_printf(void) {
+static bool test_debug_printf(void)
+{
     // test that debug printf works, and can write out "does this work lol?" (which should take 3 messages to write)
     can_msg_t output;
     const char *message = "does this work lol?";
 
     // this call should put "does thi" in output, and should set message to "s work lol?"
     message = build_printf_can_message(message, &output);
-    if(output.data_len != 8) {
+    if (output.data_len != 8) {
         printf("First call to build_printf_can_message didn't set data_len properly\n");
         return false;
     } else if (output.data[0] != 'd' ||
@@ -188,7 +192,7 @@ static bool test_debug_printf(void) {
 
     // this call should put "s work l" in output, and should set message to "ol?"
     message = build_printf_can_message(message, &output);
-    if(output.data_len != 8) {
+    if (output.data_len != 8) {
         printf("Second call to build_printf_can_message didn't set data_len properly\n");
         return false;
     } else if (output.data[0] != 's' ||
@@ -211,7 +215,7 @@ static bool test_debug_printf(void) {
 
     // this call should put "ol?" in output, and should set message to '\0'
     message = build_printf_can_message(message, &output);
-    if(output.data_len != 3) {
+    if (output.data_len != 3) {
         printf("Third call to build_printf_can_message didn't set data_len properly\n");
         return false;
     } else if (output.data[0] != 'o' ||
@@ -229,7 +233,7 @@ static bool test_debug_printf(void) {
 
     // this call should put nothing in output, and shouldn't change message
     message = build_printf_can_message(message, &output);
-    if(output.data_len != 0) {
+    if (output.data_len != 0) {
         printf("Fourth call to build_printf_can_message didn't set data_len properly\n");
         return false;
     } else if (*message != '\0') {
@@ -244,17 +248,18 @@ static bool test_debug_printf(void) {
     return true;
 }
 
-bool test_can_common_functions(void) {
-    if(!test_get_message_type()) {
+bool test_can_common_functions(void)
+{
+    if (!test_get_message_type()) {
         printf("%s: Error, test_get_message_type returned false\n", __FUNCTION__);
         return false;
-    } else if(!test_is_sensor_data()) {
+    } else if (!test_is_sensor_data()) {
         printf("%s: Error, test_is_sensor_data returned false\n", __FUNCTION__);
         return false;
-    } else if(!test_message_debug_level()) {
+    } else if (!test_message_debug_level()) {
         printf("%s: Error, test_message_debug_level returned false\n", __FUNCTION__);
         return false;
-    } else if(!test_debug_printf()) {
+    } else if (!test_debug_printf()) {
         printf("%s: Error, test_debug_printf returned false\n", __FUNCTION__);
         return false;
     }
@@ -262,14 +267,15 @@ bool test_can_common_functions(void) {
     return true;
 }
 
-bool test_debug_macro(void) {
+bool test_debug_macro(void)
+{
     // run the debug macro, and check that it puts in the line number
     // right
     can_msg_t output;
     int linum = __LINE__ + 1;
     DEBUG(ERROR, 0, output);
 
-    if(output.sid != 0x183) {
+    if (output.sid != 0x183) {
         // Check that the SID was set correctly. Note this assumes
         // that the unit tests assign BOARD_UNIQUE_ID to 0x03
         return false;

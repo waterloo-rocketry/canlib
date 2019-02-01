@@ -12,7 +12,8 @@
 bool build_can_message(uint16_t message_type,
                        uint32_t timestamp,
                        const uint8_t *input_data,
-                       can_msg_t *output) {
+                       can_msg_t *output)
+{
     if (input_data == NULL || output == NULL) {
         // illegal argument results in false return value
         return false;
@@ -20,7 +21,7 @@ bool build_can_message(uint16_t message_type,
 
     // consult spreadsheet linked in message_types.h to see where
     // these values come from
-    switch(message_type) {
+    switch (message_type) {
         case MSG_LEDS_ON:
         case MSG_LEDS_OFF:
             // these two message types have no data in them, so can be
@@ -114,11 +115,13 @@ bool build_can_message(uint16_t message_type,
     return true;
 }
 
-uint16_t get_message_type(const can_msg_t *msg) {
+uint16_t get_message_type(const can_msg_t *msg)
+{
     return (msg->sid & 0x7E0);
 }
 
-bool is_sensor_data(const can_msg_t *msg) {
+bool is_sensor_data(const can_msg_t *msg)
+{
     uint16_t type = get_message_type(msg);
     if (type == MSG_SENSOR_ACC ||
         type == MSG_SENSOR_GYRO ||
@@ -130,7 +133,8 @@ bool is_sensor_data(const can_msg_t *msg) {
     }
 }
 
-can_debug_level_t message_debug_level(const can_msg_t *msg) {
+can_debug_level_t message_debug_level(const can_msg_t *msg)
+{
     uint16_t type = get_message_type(msg);
     if (type != MSG_DEBUG_MSG) {
         return NONE;
@@ -162,7 +166,8 @@ can_debug_level_t message_debug_level(const can_msg_t *msg) {
  *     can_send(&to_send);
  * }
  */
-const char *build_printf_can_message(const char *string, can_msg_t *output) {
+const char *build_printf_can_message(const char *string, can_msg_t *output)
+{
     // set the SID of ouput
     output->sid = (MSG_DEBUG_PRINTF | BOARD_UNIQUE_ID);
     uint8_t i;
