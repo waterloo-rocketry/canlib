@@ -44,9 +44,6 @@ typedef enum {
  * function to return false is if message_type is not one of the
  * message types defined in message_types.h, or input_data or output
  * are NULL pointers.
- *
- * Try to avoid calling this function from application code if you
- * can, TODO write out some wrapper functions
  */
 bool build_can_message(uint16_t message_type,
                        uint32_t timestamp,
