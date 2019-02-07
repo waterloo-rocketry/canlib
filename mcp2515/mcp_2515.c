@@ -1,5 +1,4 @@
 #include "mcp_2515.h"
-#include <stdbool.h>
 
 // FIXME: chip select pin handling
 
@@ -95,8 +94,8 @@ void mcp_can_send(can_msg_t *msg) {
 }
 
 bool mcp_can_receive(can_msg_t *msg) {
-    uint8_t set;
-    if (mcp_read_reg(CANINTF) & 0b1) {
+    uint8_t set = mcp_read_reg(CANINTF);
+    if (set & 0b1) {
         // rxb0 is full
         uint8_t sid_h = mcp_read_reg(RXB0SIDH);
         uint8_t sid_l = mcp_read_reg(RXB0SIDL);
@@ -106,7 +105,7 @@ bool mcp_can_receive(can_msg_t *msg) {
         for (int i = 0; i < msg->data_len; ++i) {
             msg->data[i] = mcp_read_reg(RXB0D0 + i);
         }
-        set = mcp_read_reg(CANINTF) ^ 0b1;
+        set ^= 0b1;
         mcp_write_reg(CANINTF, set);
         return true;
     } else if (mcp_read_reg(CANINTF) & 0b10) {
@@ -119,11 +118,11 @@ bool mcp_can_receive(can_msg_t *msg) {
         for (int i = 0; i < msg->data_len; ++i) {
             msg->data[i] = mcp_read_reg(RXB1D0 + i);
         }
-        set = mcp_read_reg(CANINTF) ^ 0b10;
+        set ^= 0b10;
         mcp_write_reg(CANINTF, set);
         return true;
     }
-    set = mcp_read_reg(CANINTF) ^ 0b100000;
+    set &= (~0b10100000)
     mcp_write_reg(CANINTF, set);
     return false;
 }
