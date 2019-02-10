@@ -40,6 +40,15 @@ static uint8_t mcp_read_reg(uint8_t addr) {
     return ret;
 }
 
+static void mcp_bit_modify(uint8_t addr, uint8_t mask, uint8_t data) {
+    cs_drive(0);
+    spi_write(BIT_MOD);
+    spi_write(addr);
+    spi_write(mask);
+    spi_write(data);
+    cs_drive(1);
+}
+
 void mcp_can_init(can_timing_t *can_params,
                   uint8_t (*spi_read_fcn)(void),
                   void (*spi_write_fcn)(uint8_t data),
@@ -105,10 +114,9 @@ bool mcp_can_receive(can_msg_t *msg) {
         for (int i = 0; i < msg->data_len; ++i) {
             msg->data[i] = mcp_read_reg(RXB0D0 + i);
         }
-        set ^= 0b1;
-        mcp_write_reg(CANINTF, set);
+        mcp_bit_modify(CANINTF, 0b1, 0);
         return true;
-    } else if (mcp_read_reg(CANINTF) & 0b10) {
+    } else if (set & 0b10) {
         // rxb1 is full - lower priority
         uint8_t sid_h = mcp_read_reg(RXB1SIDH);
         uint8_t sid_l = mcp_read_reg(RXB1SIDL);
@@ -118,11 +126,9 @@ bool mcp_can_receive(can_msg_t *msg) {
         for (int i = 0; i < msg->data_len; ++i) {
             msg->data[i] = mcp_read_reg(RXB1D0 + i);
         }
-        set ^= 0b10;
-        mcp_write_reg(CANINTF, set);
+        mcp_bit_modify(CANINTF, 0b10, 0);
         return true;
     }
-    set &= (~0b10100000)
-    mcp_write_reg(CANINTF, set);
+    mcp_bit_modify(CANINTF, 0b10100000, 0);
     return false;
 }
