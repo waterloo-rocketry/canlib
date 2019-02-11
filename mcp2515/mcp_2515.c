@@ -40,6 +40,15 @@ static uint8_t mcp_read_reg(uint8_t addr) {
     return ret;
 }
 
+static void mcp_bit_modify(uint8_t addr, uint8_t mask, uint8_t data) {
+    cs_drive(0);
+    spi_write(BIT_MOD);
+    spi_write(addr);
+    spi_write(mask);
+    spi_write(data);
+    cs_drive(1);
+}
+
 void mcp_can_init(can_timing_t *can_params,
                   uint8_t (*spi_read_fcn)(void),
                   void (*spi_write_fcn)(uint8_t data),
@@ -61,9 +70,11 @@ void mcp_can_init(can_timing_t *can_params,
 
     // receive mode interrupts
     mcp_write_reg(RXB0CTRL, 0b0110000);
+    mcp_write_reg(RXB1CTRL, 0b0110000); // turns masks/filters off
     mcp_write_reg(CANINTF, 0);      // fix later
-    mcp_write_reg(CANINTE, 1);      // enable rxb0 interrupt
-    mcp_write_reg(BFPCTRL, 0b101);      // set rxb0 interrupt output
+
+    mcp_write_reg(CANINTE, 0b100011);   // enable rxb0, rxb1, errib5 interrupts
+    mcp_write_reg(BFPCTRL, 0b1111);     // set rxb0, rxb1 interrupt output
 
     // set normal mode (top 3 bits = 0, set clock output)
     // set one shot mode
@@ -91,10 +102,10 @@ void mcp_can_send(can_msg_t *msg) {
     mcp_write_reg(TXB0CTRL, 1 << 3);            // set txreq
 }
 
-void mcp_can_receive(can_msg_t *msg) {
-    if (mcp_read_reg(CANINTF) & 0x1) {
+bool mcp_can_receive(can_msg_t *msg) {
+    uint8_t set = mcp_read_reg(CANINTF);
+    if (set & 0b1) {
         // rxb0 is full
-
         uint8_t sid_h = mcp_read_reg(RXB0SIDH);
         uint8_t sid_l = mcp_read_reg(RXB0SIDL);
         msg->sid = ((uint16_t)sid_h << 3) | sid_l >> 5;
@@ -103,12 +114,21 @@ void mcp_can_receive(can_msg_t *msg) {
         for (int i = 0; i < msg->data_len; ++i) {
             msg->data[i] = mcp_read_reg(RXB0D0 + i);
         }
-
-    } else if (mcp_read_reg(CANINTF) & 0x2) {
+        mcp_bit_modify(CANINTF, 0b1, 0);
+        return true;
+    } else if (set & 0b10) {
         // rxb1 is full - lower priority
+        uint8_t sid_h = mcp_read_reg(RXB1SIDH);
+        uint8_t sid_l = mcp_read_reg(RXB1SIDL);
+        msg->sid = ((uint16_t)sid_h << 3) | sid_l >> 5;
+
+        msg->data_len = mcp_read_reg(RXB1DLC) & 0xf;
+        for (int i = 0; i < msg->data_len; ++i) {
+            msg->data[i] = mcp_read_reg(RXB1D0 + i);
+        }
+        mcp_bit_modify(CANINTF, 0b10, 0);
+        return true;
     }
-
-    // should fix this in the future
-    mcp_write_reg(CANINTF, 0);
+    mcp_bit_modify(CANINTF, 0b10100000, 0);
+    return false;
 }
-
