@@ -26,4 +26,17 @@
 #define MSG_LEDS_ON               0x7E0
 #define MSG_LEDS_OFF              0x7C0
 
+#define BOARD_ID_INJECTOR         0x01
+#define BOARD_ID_INJECTOR_SPARE   0x02
+#define BOARD_ID_LOGGER           0x03
+#define BOARD_ID_LOGGER_SPARE     0x04
+#define BOARD_ID_RADIO            0x05
+#define BOARD_ID_RADIO_SPARE      0x06
+#define BOARD_ID_SENSOR           0x07
+#define BOARD_ID_SENSOR_SPARE     0x08
+#define BOARD_ID_USB              0x09
+#define BOARD_ID_USB_SPARE        0x0A
+#define BOARD_ID_VENT             0x0B
+#define BOARD_ID_VENT_SPARE       0x0C
+
 #endif // compile guard
