@@ -20,6 +20,6 @@ void can_init(const can_timing_t *timing,
 void can_send(const can_msg_t* message, uint8_t priority);
 
 // call this function in an interrupt context whenever PIR5 is nonzero
-void can_handle_interrupt();
+void can_handle_interrupt(void);
 
 #endif // compile guard
