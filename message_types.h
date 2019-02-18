@@ -4,11 +4,30 @@
 /* The defines in this file track the information in this spreadsheet:
  * https://docs.google.com/spreadsheets/d/1sXmhBklBM_79vqq_NNaoq-xuxz7BbkHtFnsmBFPSksc/
  *
- * Message SID's are 11 bit unique identifiers. The bottom 5 bits of
- * the SID are ID's that are unique to the board sending the message,
- * and the top 6 bits are the message type. These defines all have the
- * bottom 5 bits set to 0, so to create a complete message SID,
- * bitwise or one of these defines with a board unique ID
+ * Message SIDs are 11 bit unique identifiers.
+ * Bottom 5 bits: IDs that are unique to the board sending the message
+ * Top 6 bits: message types. The message types defined here therefore 
+ * have the bottom 5 bits set to 0.
+ *
+ * MESSAGE_SID = MESSAGE_TYPE | BOARD_UNIQUE_ID
+ *
+ * Message type format (from spreadsheet):
+ * (Version 0.0.3)
+ *
+ * GENERAL CMD:     TSTAMP_MS_H	TSTAMP_MS_M	 TSTAMP_MS_L    COMMAND_TYPE	        None	        None	        None	        None
+ * VENT_VALVE_CMD:  TSTAMP_MS_H	TSTAMP_MS_M	 TSTAMP_MS_L	VENT_VALVE_STATE	    None	        None	        None	        None
+ * INJ_VALVE_CMD:   TSTAMP_MS_H	TSTAMP_MS_M	 TSTAMP_MS_L	INJ_VALVE_STATE	        None	        None	        None	        None
+ * DEBUG_MSG:       TSTAMP_MS_H	TSTAMP_MS_M	 TSTAMP_MS_L	DEBUG_LEVEL | LINUM_H	LINUM_L	        MESSAGE_DEFINED	MESSAGE_DEFINED	MESSAGE_DEFINED
+ * DEBUG_PRINTF:    ASCII	    ASCII	     ASCII	        ASCII	                ASCII	        ASCII	        ASCII	        ASCII
+ * VENT_VALVE_STAT: TSTAMP_MS_H	TSTAMP_MS_M	 TSTAMP_MS_L	VENT_VALVE_STATE	    None	        None	        None	        None
+ * INJ_VALVE_STAT:  TSTAMP_MS_H	TSTAMP_MS_M	 TSTAMP_MS_L	INJ_VALVE_STATE	        None	        None	        None	        None
+ * BOARD_STAT:      TSTAMP_MS_H	TSTAMP_MS_M	 TSTAMP_MS_L	ERROR_CODE	            BOARD_DEFINED	BOARD_DEFINED	BOARD_DEFINED	BOARD_DEFINED
+ * SENSOR_ACC:      TSTAMP_MS_M	TSTAMP_MS_L	 VALUE_X_H	    VALUE_X_L	            VALUE_Y_H	    VALUE_Y_L	    VALUE_Z_H	    VALUE_Z_L
+ * SENSOR_GYRO:     TSTAMP_MS_M	TSTAMP_MS_L	 VALUE_X_H	    VALUE_X_L	            VALUE_Y_H	    VALUE_Y_L	    VALUE_Z_H	    VALUE_Z_L
+ * SENSOR_MAG:      TSTAMP_MS_M	TSTAMP_MS_L	 VALUE_X_H	    VALUE_X_L	            VALUE_Y_H	    VALUE_Y_L	    VALUE_Z_H	    VALUE_Z_L
+ * SENSOR_ANALOG:   TSTAMP_MS_M	TSTAMP_MS_L	 SENSOR_ID      VALUE_H	                VALUE_L	        None	        None	        None
+ * LEDS_ON:         None	    None	     None	        None	                None	        None	        None	        None
+ * LEDS_OFF:        None	    None	     None	        None	                None	        None	        None	        None
  */
 
 #define MSG_GENERAL_CMD           0x060
