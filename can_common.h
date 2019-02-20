@@ -58,6 +58,12 @@ bool build_can_message(uint16_t message_type,
 uint16_t get_message_type(const can_msg_t *msg);
 
 /*
+ * Strips the message type from msg, and returns the SID. Basically
+ * the opposite of get_message_type
+ */
+uint8_t get_board_unique_id(const can_msg_t *msg);
+
+/*
  * Returns true if msg is of type SENSOR_ACC, SENSOR_GYRO, SENSOR_MAG,
  * or SENSOR_ANALOG. Otherwise it returns false
  */

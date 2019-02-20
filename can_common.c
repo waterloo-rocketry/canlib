@@ -120,6 +120,11 @@ uint16_t get_message_type(const can_msg_t *msg)
     return (msg->sid & 0x7E0);
 }
 
+uint8_t get_board_unique_id(const can_msg_t *msg)
+{
+    return ((uint8_t) (msg->sid & 0x1F));
+}
+
 bool is_sensor_data(const can_msg_t *msg)
 {
     uint16_t type = get_message_type(msg);
