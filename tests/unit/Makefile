@@ -4,14 +4,18 @@ objects  =unit_tests.o
 objects +=build_can_message.o
 objects +=can_common.o
 objects +=can_common_tests.o
+objects +=can_buffering_layer.o
+objects +=buffer_received_can_message.o
 
 VPATH +=../../
+VPATH +=../../util/
 
 DEFINES+=-DBOARD_UNIQUE_ID=3
 
 program_name=unit_tests
 
 INCLUDES+=-I../../
+INCLUDES+=-I../../util/
 INCLUDES+=-I.
 
 all: $(objects)
@@ -23,4 +27,4 @@ clean:
 	-rm $(objects)
 
 %.o: %.c
-	@$(CC) $(INCLUDES) $(DEFINES) -c $< -o $@
+	$(CC) $(INCLUDES) $(DEFINES) -c $< -o $@
