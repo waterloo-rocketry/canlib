@@ -2,7 +2,12 @@
 #include "buffer_received_can_message.h"
 #include <stdio.h>
 
+//if this test is running on hardware, don't actually print anything
+#ifndef NO_PRINTF
 #define REPORT_FAIL(x) printf("%s: Fail: %s\n", __FUNCTION__, x)
+#else
+#define REPORT_FAIL(x)
+#endif
 
 //Utility function, returns true if both messages are the same, else false
 static bool can_msg_compare(const can_msg_t *s, const can_msg_t *p)
