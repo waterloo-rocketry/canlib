@@ -56,6 +56,8 @@
 
 #include <xc.h>
 #include <stdbool.h>
+#include "build_can_message.h"
+#include "can_common_tests.h"
 #include "can_buffering_layer.h"
 
 // These LEDs are the ones that exist on radio board. So run these tests
@@ -80,6 +82,15 @@ int main()
     // while we're running the tests, turn LED 2 on
     LATA4 = 0;
 
+    if (!test_build_can_message()) {
+        all_tests_passed = false;
+    }
+    if (!test_can_common_functions()) {
+        all_tests_passed = false;
+    }
+    if (!test_debug_macro()) {
+        all_tests_passed = false;
+    }
     if (!test_can_buffering_layer()) {
         all_tests_passed = false;
     }

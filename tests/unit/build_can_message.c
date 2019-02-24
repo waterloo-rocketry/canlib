@@ -3,7 +3,12 @@
 #include "message_types.h"
 #include <stdio.h>
 
+//if this test is running on hardware, don't actually print anything
+#ifndef NO_PRINTF
 #define REPORT_FAIL(x) printf("%s: Fail: %s\n", __FUNCTION__, x)
+#else
+#define REPORT_FAIL(x)
+#endif
 
 static bool test_illegal_arguments(void)
 {
@@ -131,16 +136,16 @@ static bool test_sensor_acc(void)
 bool test_build_can_message(void)
 {
     if (!test_illegal_arguments()) {
-        printf(__FILE__ ": Error, test_illegal_arguments returned false\n");
+        REPORT_FAIL("test_illegal_arguments returned false");
         return false;
     } else if (!test_general_command()) {
-        printf(__FILE__ ": Error, test_general_command returned false\n");
+        REPORT_FAIL("test_general_command returned false");
         return false;
     } else if (!test_debug_printf()) {
-        printf(__FILE__ ": Error, test_debug_printf returned false\n");
+        REPORT_FAIL("test_debug_printf returned false");
         return false;
     } else if (!test_sensor_acc()) {
-        printf(__FILE__ ": Error, test_sensor_acc returned false\n");
+        REPORT_FAIL("test_sensor_acc returned false");
         return false;
     }
 
