@@ -31,6 +31,7 @@ void inc_tx_error_count(uint32_t current_time) {
 
     // update the average
     tx_avg_error_time = current_time / tx_error_count;
+    tx_last_error_time = current_time;
 }
 
 void inc_rx_count(void) {
@@ -47,5 +48,6 @@ void inc_rx_error_count(uint32_t current_time) {
 
     // update the average
     rx_avg_error_time = current_time / rx_error_count;
+    rx_last_error_time = current_time;
 }
 
