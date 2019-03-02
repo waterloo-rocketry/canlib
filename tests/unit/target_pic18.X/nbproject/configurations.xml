@@ -7,7 +7,7 @@
       <itemPath>../can_buffering_layer.h</itemPath>
       <itemPath>../build_can_message.h</itemPath>
       <itemPath>../can_common_tests.h</itemPath>
-      <itemPath>../../../util/buffer_received_can_message.h</itemPath>
+      <itemPath>../../../util/can_rcv_buffer.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -18,10 +18,10 @@
                    projectFiles="true">
       <itemPath>pic18_main.c</itemPath>
       <itemPath>../can_buffering_layer.c</itemPath>
-      <itemPath>../../../util/buffer_received_can_message.c</itemPath>
       <itemPath>../build_can_message.c</itemPath>
       <itemPath>../can_common_tests.c</itemPath>
       <itemPath>../../../can_common.c</itemPath>
+      <itemPath>../../../util/can_rcv_buffer.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

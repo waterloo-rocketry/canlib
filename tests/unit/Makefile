@@ -5,7 +5,7 @@ objects +=build_can_message.o
 objects +=can_common.o
 objects +=can_common_tests.o
 objects +=can_buffering_layer.o
-objects +=buffer_received_can_message.o
+objects +=can_rcv_buffer.o
 
 VPATH +=../../
 VPATH +=../../util/

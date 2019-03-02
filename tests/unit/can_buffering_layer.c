@@ -1,5 +1,5 @@
 #include "can_buffering_layer.h"
-#include "buffer_received_can_message.h"
+#include "can_rcv_buffer.h"
 #include <stdio.h>
 
 //if this test is running on hardware, don't actually print anything
@@ -31,7 +31,7 @@ static bool can_msg_compare(const can_msg_t *s, const can_msg_t *p)
 static bool test_buffer_single_message(void)
 {
     uint8_t memory[100];
-    receive_buffer_init((void *) memory, sizeof(memory));
+    rcvb_init((void *) memory, sizeof(memory));
     can_msg_t rcv, send = {
         .sid = 0x7ab,
         .data_len = 4,
@@ -43,20 +43,20 @@ static bool test_buffer_single_message(void)
         },
     };
 
-    if (!available_received_can_message_space()) {
+    if (rcvb_is_full()) {
         REPORT_FAIL("no space in newly initialized receive buffer");
         return false;
     }
-    buffer_received_can_message(&send);
-    if (!buffered_received_can_message_available()) {
+    rcvb_push_message(&send);
+    if (rcvb_is_empty()) {
         REPORT_FAIL("no available message after putting one in there");
         return false;
     }
-    if (!get_buffered_can_message(&rcv)) {
+    if (!rcvb_pop_message(&rcv)) {
         REPORT_FAIL("can't get the message we just buffered");
         return false;
     }
-    if (buffered_received_can_message_available()) {
+    if (!rcvb_is_empty()) {
         REPORT_FAIL("message still available after reading it");
         return false;
     }
@@ -73,7 +73,7 @@ static bool test_buffer_ten_messages(void)
     //a single element takes up 14 bytes on a 64 bit laptop, so to do 10 you
     //need 140 bytes. On an 8 bit micro, an element takes 12 bytes.
     uint8_t memory[14 * 10];
-    receive_buffer_init((void *) memory, sizeof(memory));
+    rcvb_init((void *) memory, sizeof(memory));
 
     uint8_t i;
     can_msg_t rcv, send = {
@@ -86,15 +86,15 @@ static bool test_buffer_ten_messages(void)
     };
     for (i = 0; i < 10; ++i) {
         send.sid = i;
-        buffer_received_can_message(&send);
+        rcvb_push_message(&send);
     }
     for (i = 0; i < 10; ++i) {
-        if (!buffered_received_can_message_available()) {
+        if (rcvb_is_empty()) {
             REPORT_FAIL("it says there are no messages left");
             return false;
         }
         send.sid = i;
-        if (!get_buffered_can_message(&rcv)) {
+        if (!rcvb_pop_message(&rcv)) {
             REPORT_FAIL("it says we couldn't get a message");
             return false;
         }
@@ -114,7 +114,7 @@ static bool test_buffer_doesnt_overrun()
     //byte is never changed
     uint8_t memory[29];
     memory[28] = 44;
-    receive_buffer_init((void *) memory, 28);
+    rcvb_init((void *) memory, 28);
     can_msg_t test = {
         .sid = 0x7FF,
         .data_len = 8,
@@ -131,7 +131,7 @@ static bool test_buffer_doesnt_overrun()
     };
     uint8_t i;
     for (i = 0; i < 3; ++i) {
-        buffer_received_can_message(&test);
+        rcvb_push_message(&test);
     }
     if (memory[28] != 44) {
         REPORT_FAIL("it overwrote the next byte of memory");

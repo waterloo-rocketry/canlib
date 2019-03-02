@@ -30,7 +30,7 @@
  * the caller. pool_size is the size of pool, in bytes (not in number of
  * can_t's)
  */
-void receive_buffer_init(void *pool, size_t pool_size);
+void rcvb_init(void *pool, size_t pool_size);
 
 /*
  * Copies msg into our internal buffering system.
@@ -39,33 +39,33 @@ void receive_buffer_init(void *pool, size_t pool_size);
  * message. This is so that you can use this buffering system as the CAN
  * callback, whose signature is void
  */
-void buffer_received_can_message(const can_msg_t *msg);
+void rcvb_push_message(const can_msg_t *msg);
 
 /*
- * Returns true if there's room available to buffer another CAN message
+ * Returns true if the receive buffer is full
  *
  * This function exists to make up for the signature of
- * buffer_received_can_message. If this function returns false, then you know
+ * rcvb_push_message. If this function returns true, then you know
  * that we're out of memory and we can't enqueue your new message
  */
-bool available_received_can_message_space(void);
+bool rcvb_is_full(void);
 
 /*
- * Returns true if there's a CAN message that has been buffered, but has not yet
- * been read. Returns false otherwise
+ * Returns false if there's a CAN message that has been buffered, but has not yet
+ * been read. Returns true otherwise
  */
-bool buffered_received_can_message_available(void);
+bool rcvb_is_empty(void);
 
 /*
  * Gets the oldest buffered CAN message and puts it into msg, then dequeues
  * that message. Returns true if we were successfully able to grab a CAN message.
  */
-bool get_buffered_can_message(can_msg_t *msg);
+bool rcvb_pop_message(can_msg_t *msg);
 
 /*
  * Gets the oldest buffered CAN message and puts it into msg, and does not
  * dequeue it. Returns true if we were successfully able to grab a CAN message.
  */
-bool peek_buffered_can_message(can_msg_t *msg);
+bool rcvb_peek_message(can_msg_t *msg);
 
 #endif

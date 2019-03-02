@@ -57,17 +57,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=pic18_main.c ../can_buffering_layer.c ../../../util/buffer_received_can_message.c ../build_can_message.c ../can_common_tests.c ../../../can_common.c
+SOURCEFILES_QUOTED_IF_SPACED=pic18_main.c ../can_buffering_layer.c ../build_can_message.c ../can_common_tests.c ../../../can_common.c ../../../util/can_rcv_buffer.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/pic18_main.p1 ${OBJECTDIR}/_ext/1472/can_buffering_layer.p1 ${OBJECTDIR}/_ext/32770385/buffer_received_can_message.p1 ${OBJECTDIR}/_ext/1472/build_can_message.p1 ${OBJECTDIR}/_ext/1472/can_common_tests.p1 ${OBJECTDIR}/_ext/2124829536/can_common.p1
-POSSIBLE_DEPFILES=${OBJECTDIR}/pic18_main.p1.d ${OBJECTDIR}/_ext/1472/can_buffering_layer.p1.d ${OBJECTDIR}/_ext/32770385/buffer_received_can_message.p1.d ${OBJECTDIR}/_ext/1472/build_can_message.p1.d ${OBJECTDIR}/_ext/1472/can_common_tests.p1.d ${OBJECTDIR}/_ext/2124829536/can_common.p1.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/pic18_main.p1 ${OBJECTDIR}/_ext/1472/can_buffering_layer.p1 ${OBJECTDIR}/_ext/1472/build_can_message.p1 ${OBJECTDIR}/_ext/1472/can_common_tests.p1 ${OBJECTDIR}/_ext/2124829536/can_common.p1 ${OBJECTDIR}/_ext/32770385/can_rcv_buffer.p1
+POSSIBLE_DEPFILES=${OBJECTDIR}/pic18_main.p1.d ${OBJECTDIR}/_ext/1472/can_buffering_layer.p1.d ${OBJECTDIR}/_ext/1472/build_can_message.p1.d ${OBJECTDIR}/_ext/1472/can_common_tests.p1.d ${OBJECTDIR}/_ext/2124829536/can_common.p1.d ${OBJECTDIR}/_ext/32770385/can_rcv_buffer.p1.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/pic18_main.p1 ${OBJECTDIR}/_ext/1472/can_buffering_layer.p1 ${OBJECTDIR}/_ext/32770385/buffer_received_can_message.p1 ${OBJECTDIR}/_ext/1472/build_can_message.p1 ${OBJECTDIR}/_ext/1472/can_common_tests.p1 ${OBJECTDIR}/_ext/2124829536/can_common.p1
+OBJECTFILES=${OBJECTDIR}/pic18_main.p1 ${OBJECTDIR}/_ext/1472/can_buffering_layer.p1 ${OBJECTDIR}/_ext/1472/build_can_message.p1 ${OBJECTDIR}/_ext/1472/can_common_tests.p1 ${OBJECTDIR}/_ext/2124829536/can_common.p1 ${OBJECTDIR}/_ext/32770385/can_rcv_buffer.p1
 
 # Source Files
-SOURCEFILES=pic18_main.c ../can_buffering_layer.c ../../../util/buffer_received_can_message.c ../build_can_message.c ../can_common_tests.c ../../../can_common.c
+SOURCEFILES=pic18_main.c ../can_buffering_layer.c ../build_can_message.c ../can_common_tests.c ../../../can_common.c ../../../util/can_rcv_buffer.c
 
 
 CFLAGS=
@@ -107,13 +107,6 @@ ${OBJECTDIR}/_ext/1472/can_buffering_layer.p1: ../can_buffering_layer.c  nbproje
 	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -D__DEBUG=1  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -DNO_PRINTF -DBOARD_UNIQUE_ID=0x03 -xassembler-with-cpp -I"../" -I"../../../util" -I"../../../" -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx032 -Wl,--data-init -mno-keep-startup -mno-download -mdefault-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/_ext/1472/can_buffering_layer.p1 ../can_buffering_layer.c 
 	@${FIXDEPS} ${OBJECTDIR}/_ext/1472/can_buffering_layer.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
-${OBJECTDIR}/_ext/32770385/buffer_received_can_message.p1: ../../../util/buffer_received_can_message.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}/_ext/32770385" 
-	@${RM} ${OBJECTDIR}/_ext/32770385/buffer_received_can_message.p1.d 
-	@${RM} ${OBJECTDIR}/_ext/32770385/buffer_received_can_message.p1 
-	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -D__DEBUG=1  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -DNO_PRINTF -DBOARD_UNIQUE_ID=0x03 -xassembler-with-cpp -I"../" -I"../../../util" -I"../../../" -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx032 -Wl,--data-init -mno-keep-startup -mno-download -mdefault-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/_ext/32770385/buffer_received_can_message.p1 ../../../util/buffer_received_can_message.c 
-	@${FIXDEPS} ${OBJECTDIR}/_ext/32770385/buffer_received_can_message.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
-	
 ${OBJECTDIR}/_ext/1472/build_can_message.p1: ../build_can_message.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/_ext/1472" 
 	@${RM} ${OBJECTDIR}/_ext/1472/build_can_message.p1.d 
@@ -135,6 +128,13 @@ ${OBJECTDIR}/_ext/2124829536/can_common.p1: ../../../can_common.c  nbproject/Mak
 	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -D__DEBUG=1  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -DNO_PRINTF -DBOARD_UNIQUE_ID=0x03 -xassembler-with-cpp -I"../" -I"../../../util" -I"../../../" -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx032 -Wl,--data-init -mno-keep-startup -mno-download -mdefault-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/_ext/2124829536/can_common.p1 ../../../can_common.c 
 	@${FIXDEPS} ${OBJECTDIR}/_ext/2124829536/can_common.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
+${OBJECTDIR}/_ext/32770385/can_rcv_buffer.p1: ../../../util/can_rcv_buffer.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/_ext/32770385" 
+	@${RM} ${OBJECTDIR}/_ext/32770385/can_rcv_buffer.p1.d 
+	@${RM} ${OBJECTDIR}/_ext/32770385/can_rcv_buffer.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -D__DEBUG=1  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -DNO_PRINTF -DBOARD_UNIQUE_ID=0x03 -xassembler-with-cpp -I"../" -I"../../../util" -I"../../../" -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx032 -Wl,--data-init -mno-keep-startup -mno-download -mdefault-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/_ext/32770385/can_rcv_buffer.p1 ../../../util/can_rcv_buffer.c 
+	@${FIXDEPS} ${OBJECTDIR}/_ext/32770385/can_rcv_buffer.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
 else
 ${OBJECTDIR}/pic18_main.p1: pic18_main.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
@@ -149,13 +149,6 @@ ${OBJECTDIR}/_ext/1472/can_buffering_layer.p1: ../can_buffering_layer.c  nbproje
 	@${RM} ${OBJECTDIR}/_ext/1472/can_buffering_layer.p1 
 	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -DNO_PRINTF -DBOARD_UNIQUE_ID=0x03 -xassembler-with-cpp -I"../" -I"../../../util" -I"../../../" -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx032 -Wl,--data-init -mno-keep-startup -mno-download -mdefault-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/_ext/1472/can_buffering_layer.p1 ../can_buffering_layer.c 
 	@${FIXDEPS} ${OBJECTDIR}/_ext/1472/can_buffering_layer.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
-	
-${OBJECTDIR}/_ext/32770385/buffer_received_can_message.p1: ../../../util/buffer_received_can_message.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}/_ext/32770385" 
-	@${RM} ${OBJECTDIR}/_ext/32770385/buffer_received_can_message.p1.d 
-	@${RM} ${OBJECTDIR}/_ext/32770385/buffer_received_can_message.p1 
-	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -DNO_PRINTF -DBOARD_UNIQUE_ID=0x03 -xassembler-with-cpp -I"../" -I"../../../util" -I"../../../" -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx032 -Wl,--data-init -mno-keep-startup -mno-download -mdefault-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/_ext/32770385/buffer_received_can_message.p1 ../../../util/buffer_received_can_message.c 
-	@${FIXDEPS} ${OBJECTDIR}/_ext/32770385/buffer_received_can_message.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
 ${OBJECTDIR}/_ext/1472/build_can_message.p1: ../build_can_message.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/_ext/1472" 
@@ -177,6 +170,13 @@ ${OBJECTDIR}/_ext/2124829536/can_common.p1: ../../../can_common.c  nbproject/Mak
 	@${RM} ${OBJECTDIR}/_ext/2124829536/can_common.p1 
 	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -DNO_PRINTF -DBOARD_UNIQUE_ID=0x03 -xassembler-with-cpp -I"../" -I"../../../util" -I"../../../" -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx032 -Wl,--data-init -mno-keep-startup -mno-download -mdefault-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/_ext/2124829536/can_common.p1 ../../../can_common.c 
 	@${FIXDEPS} ${OBJECTDIR}/_ext/2124829536/can_common.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/_ext/32770385/can_rcv_buffer.p1: ../../../util/can_rcv_buffer.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/_ext/32770385" 
+	@${RM} ${OBJECTDIR}/_ext/32770385/can_rcv_buffer.p1.d 
+	@${RM} ${OBJECTDIR}/_ext/32770385/can_rcv_buffer.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -DNO_PRINTF -DBOARD_UNIQUE_ID=0x03 -xassembler-with-cpp -I"../" -I"../../../util" -I"../../../" -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx032 -Wl,--data-init -mno-keep-startup -mno-download -mdefault-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/_ext/32770385/can_rcv_buffer.p1 ../../../util/can_rcv_buffer.c 
+	@${FIXDEPS} ${OBJECTDIR}/_ext/32770385/can_rcv_buffer.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
 endif
 
