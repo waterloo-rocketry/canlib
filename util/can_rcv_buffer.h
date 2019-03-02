@@ -42,6 +42,25 @@ void rcvb_init(void *pool, size_t pool_size);
 void rcvb_push_message(const can_msg_t *msg);
 
 /*
+ * Returns true if the CAN receive buffer has ever overflowed.
+ *
+ * Because the push function is meant to be called from an ISR, it won't be
+ * able to do anything if it runs out of memory, it will just drop the
+ * message. That drop shouldn't be silent, so this function will return
+ * true if a message has ever been dropped. You can clear this flag with
+ * rcvb_reset_overflow_flag.
+ */
+bool rcvb_has_overflowed(void);
+
+/*
+ * Clears the overflow flag, so that rcvb_has_overflowed will start
+ * returning false again. This function isn't perfectly concurrency safe:
+ * If you call this function and during the call the receive buffer
+ * overflows again, you'll miss that flag.
+ */
+void rcvb_clear_overflow_flag(void);
+
+/*
  * Returns true if the receive buffer is full
  *
  * This function exists to make up for the signature of

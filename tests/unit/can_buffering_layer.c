@@ -113,7 +113,7 @@ static bool test_buffer_doesnt_overrun()
     //each element is 14 bytes long. Allocate 29 bytes and make sure the last
     //byte is never changed
     uint8_t memory[29];
-    memory[28] = 44;
+    memory[28] = 44; //magic number
     rcvb_init((void *) memory, 28);
     can_msg_t test = {
         .sid = 0x7FF,
@@ -140,6 +140,34 @@ static bool test_buffer_doesnt_overrun()
     return true;
 }
 
+static bool test_buffer_overflow()
+{
+    uint8_t memory[100];
+    rcvb_init((void *) memory, sizeof(memory));
+    can_msg_t msg = {
+        .data_len = 0,
+        .sid = 0x7FF,
+    };
+    while (!rcvb_is_full()) {
+        rcvb_push_message(&msg);
+    }
+    if (rcvb_has_overflowed()) {
+        REPORT_FAIL("Reports overflow before overflowing");
+        return false;
+    }
+    rcvb_push_message(&msg);
+    if (!rcvb_has_overflowed()) {
+        REPORT_FAIL("Doesn't report overflow after overflowing");
+        return false;
+    }
+    rcvb_clear_overflow_flag();
+    if (rcvb_has_overflowed()) {
+        REPORT_FAIL("Reports overflow after clearing flag");
+        return false;
+    }
+    return true;
+}
+
 bool test_can_buffering_layer(void)
 {
     if (!test_buffer_single_message()) {
@@ -149,6 +177,9 @@ bool test_can_buffering_layer(void)
         return false;
     }
     if (!test_buffer_doesnt_overrun()) {
+        return false;
+    }
+    if (!test_buffer_overflow()) {
         return false;
     }
     return true;

@@ -12,6 +12,7 @@ static uint8_t read_index;
 static uint8_t write_index;
 static uint8_t number_of_elements;
 static uint8_t element_size;
+static bool overflow_flag;
 
 void rcvb_init(void *pool, size_t pool_size)
 {
@@ -19,6 +20,7 @@ void rcvb_init(void *pool, size_t pool_size)
     number_of_elements = pool_size / element_size;
     read_index = write_index = 0;
     memory_pool = (rb_element *) pool;
+    overflow_flag = false;
 
     //mark all elements as invalid
     rb_element *iter = memory_pool;
@@ -33,6 +35,7 @@ void rcvb_push_message(const can_msg_t *msg)
 {
     //check that write index points at empty element
     if (rcvb_is_full()) {
+        overflow_flag = true;
         return;
     }
 
@@ -43,6 +46,16 @@ void rcvb_push_message(const can_msg_t *msg)
     if (write_index >= number_of_elements) {
         write_index = 0;
     }
+}
+
+bool rcvb_has_overflowed(void)
+{
+    return overflow_flag;
+}
+
+void rcvb_clear_overflow_flag(void)
+{
+    overflow_flag = false;
 }
 
 bool rcvb_is_full(void)
