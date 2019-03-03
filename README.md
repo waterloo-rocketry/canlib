@@ -5,7 +5,7 @@ ability to communicate over CAN. This repository contains the library that all
 of them use in order to do so.
 
 At present, this library is primarily only useful for developing new subsystems
-for Waterloo Rocketry's CANbus system. However, all of the code is released
+for Waterloo Rocketry's CAN bus system. However, all of the code is released
 under GPL, so if you want to adapt any of it for your own project, go nuts.
 
 ## Busproj
@@ -22,9 +22,9 @@ all radio communications. All CAN networked systems can send and receive radio
 data through it.
 
 At present, there are 5 independent systems that can communicate over this
-CANbus. The PCB designs for each can be found at [this repository]
+CAN bus. The PCB designs for each can be found at [this repository]
 (https://github.com/waterloo-rocketry/canhw.git). The software, as well as
-readme descriptions for each subsystems are developed in the following
+readme descriptions for each subsystem are developed in the following
 independent repositories:
 
 * [Radio Subsystem] (https://github.com/waterloo-rocketry/cansw_radio)
