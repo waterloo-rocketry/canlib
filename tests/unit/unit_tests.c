@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include "build_can_message.h"
 #include "can_common_tests.h"
+#include "can_buffering_layer.h"
 
 /* Yes this macro is bad. Don't at me */
 #define RUN_UNIT_TEST(test_name)                        \
@@ -26,6 +27,7 @@ int main()
     RUN_UNIT_TEST(test_build_can_message);
     RUN_UNIT_TEST(test_can_common_functions);
     RUN_UNIT_TEST(test_debug_macro);
+    RUN_UNIT_TEST(test_can_buffering_layer);
 
     printf("%i Tests, %i passed, %i failed\n",
            number_of_tests,
