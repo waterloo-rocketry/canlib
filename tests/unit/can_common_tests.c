@@ -12,155 +12,37 @@
 #define REPORT_FAIL(x)
 #endif
 
-static bool test_get_message_type(void)
-{
-    can_msg_t output;
-    uint8_t input_data[8];
-    // for each type of message, generate a message of that type, then
-    // check that get_message_type returns that. I'm lazy, I don't
-    // want to type all that, so here comes a sketchy macro
-#define CHECK_GET_MESSAGE_TYPE(x)                                       \
-    do {                                                                \
-        if (!build_can_message((x), 0, input_data, &output)) {          \
-            REPORT_FAIL("fail on build_can_message"); \
-            return false;                                               \
-        }                                                               \
-        if ((x) != get_message_type(&output)) {                         \
-            REPORT_FAIL("fail on get_message_type"); \
-            return false;                                               \
-        }                                                               \
-    } while(0)
-
-    CHECK_GET_MESSAGE_TYPE(MSG_GENERAL_CMD);
-    CHECK_GET_MESSAGE_TYPE(MSG_VENT_VALVE_CMD);
-    CHECK_GET_MESSAGE_TYPE(MSG_INJ_VALVE_CMD);
-    CHECK_GET_MESSAGE_TYPE(MSG_DEBUG_MSG);
-    CHECK_GET_MESSAGE_TYPE(MSG_DEBUG_PRINTF);
-    CHECK_GET_MESSAGE_TYPE(MSG_VENT_VALVE_STATUS);
-    CHECK_GET_MESSAGE_TYPE(MSG_INJ_VALVE_STATUS);
-    CHECK_GET_MESSAGE_TYPE(MSG_GENERAL_BOARD_STATUS);
-    CHECK_GET_MESSAGE_TYPE(MSG_SENSOR_ACC);
-    CHECK_GET_MESSAGE_TYPE(MSG_SENSOR_GYRO);
-    CHECK_GET_MESSAGE_TYPE(MSG_SENSOR_MAG);
-    CHECK_GET_MESSAGE_TYPE(MSG_SENSOR_ANALOG);
-    CHECK_GET_MESSAGE_TYPE(MSG_LEDS_ON);
-    CHECK_GET_MESSAGE_TYPE(MSG_LEDS_OFF);
-
-    return true;
-}
-
-static bool test_is_sensor_data(void)
-{
-    can_msg_t output;
-    uint8_t input_data[8];
-#define CHECK_IS_NOT_SENSOR_DATA(x)                                     \
-    do {                                                                \
-        if (!build_can_message((x), 0, input_data, &output)) {          \
-            REPORT_FAIL("fail on build_can_message"); \
-            return false;                                               \
-        }                                                               \
-        if (is_sensor_data(&output)) {                                  \
-            REPORT_FAIL("fail on is_sensor_data"); \
-            return false;                                               \
-        }                                                               \
-    } while(0)
-#define CHECK_IS_SENSOR_DATA(x)                                         \
-    do {                                                                \
-        if (!build_can_message((x), 0, input_data, &output)) {          \
-            REPORT_FAIL("fail on build_can_message"); \
-            return false;                                               \
-        }                                                               \
-        if (!is_sensor_data(&output)) {                                 \
-            REPORT_FAIL("fail on is_sensor_data"); \
-            return false;                                               \
-        }                                                               \
-    } while(0)
-
-    CHECK_IS_NOT_SENSOR_DATA(MSG_GENERAL_CMD);
-    CHECK_IS_NOT_SENSOR_DATA(MSG_VENT_VALVE_CMD);
-    CHECK_IS_NOT_SENSOR_DATA(MSG_INJ_VALVE_CMD);
-    CHECK_IS_NOT_SENSOR_DATA(MSG_DEBUG_MSG);
-    CHECK_IS_NOT_SENSOR_DATA(MSG_DEBUG_PRINTF);
-    CHECK_IS_NOT_SENSOR_DATA(MSG_VENT_VALVE_STATUS);
-    CHECK_IS_NOT_SENSOR_DATA(MSG_INJ_VALVE_STATUS);
-    CHECK_IS_NOT_SENSOR_DATA(MSG_GENERAL_BOARD_STATUS);
-    CHECK_IS_NOT_SENSOR_DATA(MSG_LEDS_ON);
-    CHECK_IS_NOT_SENSOR_DATA(MSG_LEDS_OFF);
-
-    CHECK_IS_SENSOR_DATA(MSG_SENSOR_ACC);
-    CHECK_IS_SENSOR_DATA(MSG_SENSOR_GYRO);
-    CHECK_IS_SENSOR_DATA(MSG_SENSOR_MAG);
-    CHECK_IS_SENSOR_DATA(MSG_SENSOR_ANALOG);
-
-    return true;
-}
 
 static bool test_message_debug_level(void)
 {
     can_msg_t output;
     uint8_t input_data[8];
-#define CHECK_IS_NOT_DEBUG_MSG(x)                                       \
-    do {                                                                \
-        if (!build_can_message((x), 0, input_data, &output)) {          \
-            REPORT_FAIL("fail on build_can_message"); \
-            return false;                                               \
-        }                                                               \
-        if (NONE != message_debug_level(&output)) {                             \
-            REPORT_FAIL("fail on message_debug_level"); \
-            return false;                                               \
-        }                                                               \
-    } while(0)
-
-    CHECK_IS_NOT_DEBUG_MSG(MSG_GENERAL_CMD);
-    CHECK_IS_NOT_DEBUG_MSG(MSG_VENT_VALVE_CMD);
-    CHECK_IS_NOT_DEBUG_MSG(MSG_INJ_VALVE_CMD);
-    CHECK_IS_NOT_DEBUG_MSG(MSG_DEBUG_PRINTF);
-    CHECK_IS_NOT_DEBUG_MSG(MSG_VENT_VALVE_STATUS);
-    CHECK_IS_NOT_DEBUG_MSG(MSG_INJ_VALVE_STATUS);
-    CHECK_IS_NOT_DEBUG_MSG(MSG_GENERAL_BOARD_STATUS);
-    CHECK_IS_NOT_DEBUG_MSG(MSG_SENSOR_ACC);
-    CHECK_IS_NOT_DEBUG_MSG(MSG_SENSOR_GYRO);
-    CHECK_IS_NOT_DEBUG_MSG(MSG_SENSOR_MAG);
-    CHECK_IS_NOT_DEBUG_MSG(MSG_SENSOR_ANALOG);
-    CHECK_IS_NOT_DEBUG_MSG(MSG_LEDS_ON);
-    CHECK_IS_NOT_DEBUG_MSG(MSG_LEDS_OFF);
 
     // Check for ERROR
     input_data[0] = 0x10;
-    if (!build_can_message(MSG_DEBUG_MSG, 0, input_data, &output)) {
-        REPORT_FAIL("fail on build_can_message when level is ERROR");
-        return false;
-    }
+    build_debug_msg(0, input_data, &output);
     if (ERROR != message_debug_level(&output)) {
         REPORT_FAIL("fail on message_debug_level when level is ERROR");
         return false;
     }
+
     // Check for WARN
     input_data[0] = 0x20;
-    if (!build_can_message(MSG_DEBUG_MSG, 0, input_data, &output)) {
-        REPORT_FAIL("fail on build_can_message when level is WARN");
-        return false;
-    }
+    build_debug_msg(0, input_data, &output);
     if (WARN != message_debug_level(&output)) {
         REPORT_FAIL("fail on message_debug_level when level is WARN");
         return false;
     }
     // Check for INFO
     input_data[0] = 0x30;
-    if (!build_can_message(MSG_DEBUG_MSG, 0, input_data, &output)) {
-        REPORT_FAIL("fail on build_can_message when level is INFO");
-        return false;
-    }
+    build_debug_msg(0, input_data, &output);
     if (INFO != message_debug_level(&output)) {
         REPORT_FAIL("fail on message_debug_level when level is INFO");
         return false;
     }
     // Check for DEBUG
     input_data[0] = 0x40;
-    if (!build_can_message(MSG_DEBUG_MSG, 0, input_data, &output)) {
-        REPORT_FAIL("fail on build_can_message when level is DEBUG");
-        return false;
-    }
+    build_debug_msg(0, input_data, &output);
     if (DEBUG != message_debug_level(&output)) {
         REPORT_FAIL("fail on message_debug_level when level is DEBUG");
         return false;
@@ -257,17 +139,8 @@ static bool test_debug_printf(void)
 
 bool test_can_common_functions(void)
 {
-    if (!test_get_message_type()) {
-        REPORT_FAIL("Error, test_get_message_type returned false");
-        return false;
-    } else if (!test_is_sensor_data()) {
-        REPORT_FAIL("Error, test_is_sensor_data returned false");
-        return false;
-    } else if (!test_message_debug_level()) {
-        REPORT_FAIL("Error, test_message_debug_level returned false");
-        return false;
-    } else if (!test_debug_printf()) {
-        REPORT_FAIL("Error, test_debug_printf returned false");
+    if (!test_debug_printf()) {
+        printf("%s: Error, test_debug_printf returned false\n", __FUNCTION__);
         return false;
     }
 
