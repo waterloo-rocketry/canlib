@@ -30,25 +30,80 @@ typedef enum {
         uint8_t debug_macro_data[5] = {debug_macro_level << 4 | ((__LINE__ >> 8)) & 0xF, \
                                        __LINE__ & 0xFF,                 \
                                        0,0,0};                          \
-        build_can_message(MSG_DEBUG_MSG,                                \
-                          debug_macro_timestamp,                        \
-                          debug_macro_data,                             \
-                          &debug_macro_output);                         \
+        build_debug_msg( debug_macro_timestamp,                         \
+                         debug_macro_data,                              \
+                         &debug_macro_output);                          \
     } while(0)
 
-/*
- * Creates a new CAN message. It is the caller's responsibility to
- * ensure that input_data contains the correct amount and order of
- * data to be sent. Function returns true if CAN message was
- * successfully built, else returns false. The only way for this
- * function to return false is if message_type is not one of the
- * message types defined in message_types.h, or input_data or output
- * are NULL pointers.
- */
-bool build_can_message(uint16_t message_type,
-                       uint32_t timestamp,
-                       const uint8_t *input_data,
-                       can_msg_t *output);
+//***************************************************************************//
+//                         Message Type Functions                            //
+//***************************************************************************//
+// These functions are meant to format CAN messages of each message type
+// properly. They contain basic error checking to make sure that the message
+// type is valid and that all pointers passed in are valid.
+//
+// For the internal message format, refer to message_types.h. If you add a
+// new message type, please create a new function here. The internals of the
+// message should not be used by application code directly.
+
+// Used for general system-wide commands. Command types are defined in
+// message_types.h
+void build_general_cmd_msg(uint32_t timestamp,
+                           uint8_t cmd,
+                           can_msg_t *output);
+
+void build_debug_msg(uint32_t timestamp,
+                     uint8_t *debug_data,
+                     can_msg_t *output);
+
+void build_debug_printf(uint8_t *data,
+                        can_msg_t *output);
+
+// Used to send injector and vent commands
+void build_valve_cmd_msg(uint32_t timestamp,
+                         uint8_t valve_cmd,      // VALVE_STATE
+                         uint16_t message_type,  // vent or injector
+                         can_msg_t *output);
+
+// Used to send injector/vent status: current and desired
+void build_valve_stat_msg(uint32_t timestamp,
+                          uint8_t valve_state,      // VALVE_STATE
+                          uint8_t req_valve_state,  // VALVE_STATE
+                          uint16_t message_type,    // vent or injector
+                          can_msg_t *output);
+
+// Used by each board to send status messages. Error codes and their
+// corresponding supplemental data are defined in message_types.h.
+// This function may need to be modified to better hide the internals.
+void build_board_stat_msg(uint32_t timestamp,
+                          uint8_t error_code,
+                          uint8_t *error_data,
+                          uint8_t error_data_len,
+                          can_msg_t *output);
+
+// Used to send 16-bit IMU data values. It is assumed that an array
+// of 3 values is sent (X, Y, and Z axes).
+void build_imu_data_msg(uint16_t message_type,  // acc, gyro, mag
+                        uint16_t timestamp,
+                        uint16_t *imu_data,     // x, y, z
+                        can_msg_t *output);
+
+// Used to send analog sensor data. The units of the sensor data are
+// not nailed down at this point and will likely differ based on the
+// sensor id.
+void build_analog_data_msg(uint16_t timestamp,
+                           uint8_t sensor_id,
+                           uint16_t sensor_data,
+                           can_msg_t *output);
+
+// Returns the current valve state based on limit switch readings.
+// Returns -1 if the provided message is not a vent/injector status message.
+int get_curr_valve_state(can_msg_t *msg);
+
+// Returns the requested valve state from a valve command or
+// status message. Returns -1 if the provided message is not
+// a valve cmd/status.
+int get_req_valve_state(can_msg_t *msg);
 
 /*
  * Strips the board unique ID from msg, and returns the SID. Contains

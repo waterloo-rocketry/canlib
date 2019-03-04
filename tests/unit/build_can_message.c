@@ -10,43 +10,16 @@
 #define REPORT_FAIL(x)
 #endif
 
-static bool test_illegal_arguments(void)
-{
-    can_msg_t output;
-    uint8_t input_data[8];
-    // make sure illegal message type generates error
-    if (build_can_message(0, 0, input_data, &output)) {
-        REPORT_FAIL("No error when passing 0 as message type");
-        return false;
-    }
-    // make sure that passing null pointer as input data generates
-    // error
-    else if (build_can_message(MSG_GENERAL_CMD, 0, NULL, &output)) {
-        REPORT_FAIL("No error when passing NULL as input data pointer");
-        return false;
-    }
-    // make sure that passing null pointer as output data generates an
-    // error
-    else if (build_can_message(MSG_GENERAL_CMD, 0, input_data, NULL)) {
-        REPORT_FAIL("No error when passing NULL as output pointer");
-        return false;
-    }
-
-    // if those three cases all passed, we can safely return true
-    return true;
-}
-
 static bool test_general_command(void)
 {
     // make sure that a MSG_GENERAL_CMD message works properly
     uint32_t timestamp = 0xcafebabe;
-    uint8_t input_data[1] = { 0x74 };
+    uint8_t input_data = 0x74;
     can_msg_t output;
+
     // make sure we don't get an error creating the message
-    if (!build_can_message(MSG_GENERAL_CMD, timestamp, input_data, &output)) {
-        REPORT_FAIL("Error building message");
-        return false;
-    }
+    build_general_cmd_msg(timestamp, input_data, &output);
+
     // check that the data length is 4
     if (output.data_len != 4) {
         REPORT_FAIL("Wrong data_len generated");
@@ -76,10 +49,7 @@ static bool test_debug_printf(void)
         't', 'e', 's', 't'
     };
     can_msg_t output;
-    if (!build_can_message(MSG_DEBUG_PRINTF, 0, input_data, &output)) {
-        REPORT_FAIL("Error building message");
-        return false;
-    }
+    build_debug_printf(input_data, &output);
     // check the SID
     if (output.sid != 0x1E3) {
         REPORT_FAIL("SID compare failed");
@@ -102,17 +72,16 @@ static bool test_debug_printf(void)
 
 static bool test_sensor_acc(void)
 {
-    uint8_t input_data[6] = {
-        177, 107, 0, 189, 186, 190
+    uint16_t input_data[3] = {
+        0xa749, 0x6664, 0x1008
     };
     can_msg_t output;
     uint32_t timestamp = 0x12345678;
-    if (!build_can_message(MSG_SENSOR_ACC, timestamp, input_data, &output)) {
-        REPORT_FAIL("Error building message");
-        return false;
-    }
+    build_imu_data_msg(MSG_SENSOR_ACC, timestamp, input_data, &output);
+    
     if (output.sid != 0x583) {
         REPORT_FAIL("SID compare failed");
+        printf("sid: %x\n", output.sid);
         return false;
     }
     if (output.data[0] != 0x56 ||
@@ -120,12 +89,12 @@ static bool test_sensor_acc(void)
         REPORT_FAIL("Timestamp copied wrong");
         return false;
     }
-    if (output.data[2] != 177 ||
-        output.data[3] != 107 ||
-        output.data[4] != 0   ||
-        output.data[5] != 189 ||
-        output.data[6] != 186 ||
-        output.data[7] != 190) {
+    if (output.data[2] != 0xa7 ||
+        output.data[3] != 0x49 ||
+        output.data[4] != 0x66 ||
+        output.data[5] != 0x64 ||
+        output.data[6] != 0x10 ||
+        output.data[7] != 0x08) {
         REPORT_FAIL("Sensor Data copied wrong");
         return false;
     }
@@ -135,11 +104,8 @@ static bool test_sensor_acc(void)
 
 bool test_build_can_message(void)
 {
-    if (!test_illegal_arguments()) {
-        REPORT_FAIL("test_illegal_arguments returned false");
-        return false;
-    } else if (!test_general_command()) {
-        REPORT_FAIL("test_general_command returned false");
+    if (!test_general_command()) {
+        printf(__FILE__ ": Error, test_general_command returned false\n");
         return false;
     } else if (!test_debug_printf()) {
         REPORT_FAIL("test_debug_printf returned false");

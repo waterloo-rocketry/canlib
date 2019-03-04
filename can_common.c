@@ -1,6 +1,7 @@
 #include "can_common.h"
 #include "message_types.h"
 #include <stddef.h>
+#include <assert.h>
 
 // this symbol should be defined in the project's Makefile, but if it
 // isn't, issue a warning and set it to 0
@@ -9,124 +10,219 @@
 #define  BOARD_UNIQUE_ID 0
 #endif
 
-bool build_can_message(uint16_t message_type,
-                       uint32_t timestamp,
-                       const uint8_t *input_data,
-                       can_msg_t *output)
+// Helper function for populating CAN messages
+static void write_timestamp_uint16_t(uint16_t timestamp, can_msg_t *output)
 {
-    if (input_data == NULL || output == NULL) {
-        // illegal argument results in false return value
-        return false;
+    output->data[0] = (timestamp >> 8) & 0xff;
+    output->data[1] = (timestamp >> 0) & 0xff;
+}
+
+static void write_timestamp_uint24_t(uint32_t timestamp, can_msg_t *output)
+{
+    output->data[0] = (timestamp >> 16) & 0xff;
+    output->data[1] = (timestamp >> 8) & 0xff;
+    output->data[2] = (timestamp >> 0) & 0xff;
+}
+
+void build_general_cmd_msg(uint32_t timestamp,
+                           uint8_t cmd,
+                           can_msg_t *output)
+{
+    assert(output != NULL);
+
+    output->sid = MSG_GENERAL_CMD | BOARD_UNIQUE_ID;
+    write_timestamp_uint24_t(timestamp, output);
+    output->data[3] = cmd;
+    output->data_len = 4;   // 3 bytes timestamp, 1 byte data
+}
+
+void build_debug_msg(uint32_t timestamp,
+                     uint8_t *debug_data,
+                     can_msg_t *output)
+{
+    assert(output != NULL);
+    assert(debug_data != NULL);
+
+    output->sid = MSG_DEBUG_MSG | BOARD_UNIQUE_ID;
+    write_timestamp_uint24_t(timestamp, output);
+
+    output->data[3] = debug_data[0];
+    output->data[4] = debug_data[1];
+    output->data[5] = debug_data[2];
+    output->data[6] = debug_data[3];
+    output->data[7] = debug_data[4];
+
+    output->data_len = 8;
+}
+
+void build_debug_printf(uint8_t *input_data,
+                        can_msg_t *output)
+{
+    assert(input_data != NULL);
+    assert(output != NULL);
+
+    output->sid = MSG_DEBUG_PRINTF | BOARD_UNIQUE_ID;
+    for (int i = 0; i < 8; ++i) {
+        output->data[i] = input_data[i];
+    }
+    output->data_len = 8;
+}
+
+void build_valve_cmd_msg(uint32_t timestamp,
+                         uint8_t valve_cmd,
+                         uint16_t message_type,  // vent or injector
+                         can_msg_t *output)
+{
+    assert(message_type == MSG_VENT_VALVE_CMD
+           || message_type == MSG_INJ_VALVE_CMD);
+    assert(output != NULL);
+
+    output->sid = message_type | BOARD_UNIQUE_ID;
+    write_timestamp_uint24_t(timestamp, output);
+
+    output->data[3] = valve_cmd;
+    output->data_len = 4;   // 3 bytes timestamp, 1 byte data
+}
+
+void build_valve_stat_msg(uint32_t timestamp,
+                          uint8_t valve_state,
+                          uint8_t req_valve_state,
+                          uint16_t message_type,    // vent or injector
+                          can_msg_t *output)
+{
+    assert(message_type == MSG_VENT_VALVE_STATUS
+           || message_type == MSG_INJ_VALVE_STATUS);
+    assert(output != NULL);
+
+    output->sid = message_type | BOARD_UNIQUE_ID;
+    write_timestamp_uint24_t(timestamp, output);
+
+    output->data[3] = valve_state;
+    output->data[4] = req_valve_state;
+    output->data_len = 4;   // 3 bytes timestamp, 2 bytes data
+}
+
+// This might need to be made more granular - it doesn't quite hide
+// the data layout properly.
+void build_board_stat_msg(uint32_t timestamp,
+                          uint8_t error_code,
+                          uint8_t *error_data,
+                          uint8_t error_data_len,
+                          can_msg_t *output)
+{
+    assert(error_data != NULL);
+    assert(output != NULL);
+    assert(error_data_len <= 4);
+
+    output->sid = MSG_GENERAL_BOARD_STATUS | BOARD_UNIQUE_ID;
+    write_timestamp_uint24_t(timestamp, output);
+
+    output->data[3] = error_code;
+    for (int i = 0; i < error_data_len; ++i) {
+        // error data goes in message bytes 4-7
+        output->data[4 + i] = error_data[i];
     }
 
-    // consult spreadsheet linked in message_types.h to see where
-    // these values come from
-    switch (message_type) {
-        case MSG_LEDS_ON:
-        case MSG_LEDS_OFF:
-            // these two message types have no data in them, so can be
-            // handled the same
-            output->data_len = 0;
-            break;
+    // ugly but: 3 bytes timestamp, 1 byte error code, x bytes data
+    output->data_len = 4 + error_data_len;
+}
 
-        case MSG_GENERAL_CMD:
-        case MSG_VENT_VALVE_CMD:
-        case MSG_INJ_VALVE_CMD:
+void build_imu_data_msg(uint16_t message_type,
+                        uint16_t timestamp,   // acc, gyro, mag
+                        uint16_t *imu_data,   // x, y, z
+                        can_msg_t *output)
+{
+    assert(message_type == MSG_SENSOR_ACC
+           || message_type == MSG_SENSOR_GYRO
+           || message_type == MSG_SENSOR_MAG);
+    assert(imu_data != NULL);
+    assert(output != NULL);
+
+    output->sid = message_type | BOARD_UNIQUE_ID;
+    write_timestamp_uint16_t(timestamp, output);
+
+    // X value
+    output->data[2] = (imu_data[0] >> 8) & 0xff;
+    output->data[3] = (imu_data[0] >> 0) & 0xff;
+
+    // Y value
+    output->data[4] = (imu_data[1] >> 8) & 0xff;
+    output->data[5] = (imu_data[1] >> 0) & 0xff;
+
+    // Z value
+    output->data[6] = (imu_data[2] >> 8) & 0xff;
+    output->data[7] = (imu_data[2] >> 0) & 0xff;
+
+    // this message type uses the entire data field
+    output->data_len = 8;
+}
+
+void build_analog_data_msg(uint16_t timestamp,
+                           uint8_t sensor_id,
+                           uint16_t sensor_data,
+                           can_msg_t *output)
+{
+    assert(output != NULL);
+
+    output->sid = MSG_SENSOR_ANALOG | BOARD_UNIQUE_ID;
+    write_timestamp_uint16_t(timestamp, output);
+
+    output->data[2] = sensor_id;
+    output->data[3] = (sensor_data >> 8) & 0xff;
+    output->data[4] = (sensor_data >> 0) & 0xff;
+
+    output->data_len = 5;
+}
+
+int get_curr_valve_state(can_msg_t *msg)
+{
+    assert(msg != NULL);
+
+    uint16_t msg_type = get_message_type(msg);
+    if (msg_type == MSG_VENT_VALVE_STATUS || msg_type == MSG_INJ_VALVE_STATUS) {
+        return msg->data[3];
+    } else {
+        // not a valid field for this message type
+        return -1;
+    }
+}
+
+int get_req_valve_state(can_msg_t *msg)
+{
+    assert(msg != NULL);
+
+    uint16_t msg_type = get_message_type(msg);
+    switch (msg_type) {
         case MSG_VENT_VALVE_STATUS:
         case MSG_INJ_VALVE_STATUS:
-            // these five message types all have three bytes of timestamp,
-            // then a single byte of data, and thus can be handled the same
-            output->data_len = 4;
-            // first byte of data is highest nibble of timestamp
-            output->data[0] = ((timestamp >> 16) & 0xFF);
-            output->data[1] = ((timestamp >> 8)  & 0xFF);
-            output->data[2] = ((timestamp >> 0)  & 0xFF);
-            // copy over the one byte of data that this command takes
-            output->data[3] = input_data[0];
-            break;
+            return msg->data[4];
 
-        case MSG_SENSOR_ACC:
-        case MSG_SENSOR_GYRO:
-        case MSG_SENSOR_MAG:
-            // these three message types all have two bytes of timestamp,
-            // then six bytes of data
-            output->data_len = 8;
-            output->data[0] = ((timestamp >> 8) & 0xFF);
-            output->data[1] = ((timestamp >> 0) & 0xFF);
-            // copy six bytes of data from input_data
-            output->data[2] = input_data[0];
-            output->data[3] = input_data[1];
-            output->data[4] = input_data[2];
-            output->data[5] = input_data[3];
-            output->data[6] = input_data[4];
-            output->data[7] = input_data[5];
-            break;
-
-        case MSG_SENSOR_ANALOG:
-            // this message type has two bytes of timestamp, then two
-            // bytes of data
-            output->data_len = 4;
-            output->data[0] = ((timestamp >> 8) & 0xFF);
-            output->data[1] = ((timestamp >> 0) & 0xFF);
-            output->data[2] = input_data[0];
-            output->data[3] = input_data[1];
-            break;
-
-        case MSG_DEBUG_MSG:
-        case MSG_GENERAL_BOARD_STATUS:
-            // these two message types have three bytes of timestamp, then
-            // 5 bytes of data
-            output->data_len = 8;
-            output->data[0] = ((timestamp >> 16) & 0xFF);
-            output->data[1] = ((timestamp >> 8)  & 0xFF);
-            output->data[2] = ((timestamp >> 0)  & 0xFF);
-            output->data[3] = input_data[0];
-            output->data[4] = input_data[1];
-            output->data[5] = input_data[2];
-            output->data[6] = input_data[3];
-            output->data[7] = input_data[4];
-            break;
-
-        case MSG_DEBUG_PRINTF:
-            // this message type just has eight bytes of data
-            output->data_len = 8;
-            output->data[0] = input_data[0];
-            output->data[1] = input_data[1];
-            output->data[2] = input_data[2];
-            output->data[3] = input_data[3];
-            output->data[4] = input_data[4];
-            output->data[5] = input_data[5];
-            output->data[6] = input_data[6];
-            output->data[7] = input_data[7];
-            break;
+        case MSG_INJ_VALVE_CMD:
+        case MSG_VENT_VALVE_CMD:
+            return msg->data[3];
 
         default:
-            // message is not one of the types defined in message_types.h,
-            // so we should return false (illegal argument)
-            return false;
+            // not a valid field for this message type
+            return -1;
     }
-
-    // set output's SID. By our team's convention, a message's SID is
-    // the message type bitwise OR'd with the board's unique ID
-    output->sid = (message_type | BOARD_UNIQUE_ID);
-
-    // we've set the data_len, and we've set the SID, and we've set
-    // all the data we need to set. We're done
-    return true;
 }
 
 uint16_t get_message_type(const can_msg_t *msg)
 {
+    assert(msg != NULL);
     return (msg->sid & 0x7E0);
 }
 
 uint8_t get_board_unique_id(const can_msg_t *msg)
 {
+    assert(msg != NULL);
     return ((uint8_t) (msg->sid & 0x1F));
 }
 
 bool is_sensor_data(const can_msg_t *msg)
 {
+    assert(msg != NULL);
+
     uint16_t type = get_message_type(msg);
     if (type == MSG_SENSOR_ACC ||
         type == MSG_SENSOR_GYRO ||
@@ -140,6 +236,8 @@ bool is_sensor_data(const can_msg_t *msg)
 
 can_debug_level_t message_debug_level(const can_msg_t *msg)
 {
+    assert(msg != NULL);
+
     uint16_t type = get_message_type(msg);
     if (type != MSG_DEBUG_MSG) {
         return NONE;
@@ -173,6 +271,9 @@ can_debug_level_t message_debug_level(const can_msg_t *msg)
  */
 const char *build_printf_can_message(const char *string, can_msg_t *output)
 {
+    assert(string != NULL);
+    assert(output != NULL);
+
     // set the SID of ouput
     output->sid = (MSG_DEBUG_PRINTF | BOARD_UNIQUE_ID);
     uint8_t i;
