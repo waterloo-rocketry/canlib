@@ -28,7 +28,7 @@ typedef enum {
  */
 #define DEBUG(debug_macro_level, debug_macro_timestamp, debug_macro_output) \
     do {                                                                \
-        uint8_t debug_macro_data[5] = {debug_macro_level << 4 | ((__LINE__ >> 8)) & 0xF, \
+        uint8_t debug_macro_data[5] = {(debug_macro_level << 4) | ((__LINE__ >> 8) & 0xF), \
                                        __LINE__ & 0xFF,                 \
                                        0,0,0};                          \
         build_debug_msg( debug_macro_timestamp,                         \
