@@ -8,9 +8,9 @@ At present, this library is primarily only useful for developing new subsystems
 for Waterloo Rocketry's CAN bus system. However, all of the code is released
 under GPL, so if you want to adapt any of it for your own project, go nuts.
 
-## Busproj
+## RocketCAN
 
-Busproj is Waterloo Rocketry's project to network several independent electrical
+RocketCAN is Waterloo Rocketry's project to network several independent electrical
 systems onboard our rocket together over a CAN bus. The goal is to encourage
 separation of concerns of different subsystems, and to decrease the complexity
 of adding additional functionality to the rocket in the future.
