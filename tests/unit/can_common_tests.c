@@ -6,7 +6,7 @@
 #include <string.h>
 
 //if this test is running on hardware, don't actually print anything
-#ifndef NO_PRINTF
+#ifdef TARGET_LOCAL
 #define REPORT_FAIL(x) printf("%s: Fail: %s\n", __FUNCTION__, x)
 #else
 #define REPORT_FAIL(x)
@@ -140,7 +140,7 @@ static bool test_debug_printf(void)
 bool test_can_common_functions(void)
 {
     if (!test_debug_printf()) {
-        printf("%s: Error, test_debug_printf returned false\n", __FUNCTION__);
+        REPORT_FAIL("Error, test_debug_printf returned false\n");
         return false;
     }
 
