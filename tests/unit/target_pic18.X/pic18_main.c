@@ -60,18 +60,25 @@
 #include "can_common_tests.h"
 #include "can_buffering_layer.h"
 
-// These LEDs are the ones that exist on radio board. So run these tests
-// on radio borad
+// These LEDs are the ones that exist on picdev. So run these tests
+// on radio picdev
 static void leds_init()
 {
     // set all three leds as outputs
-    LATC1 = 1;
-    TRISC1 = 0;
-    LATA4 = 1;
-    TRISA4 = 0;
-    LATA5 = 1;
-    TRISA5 = 0;
+    LATB4 = 1;
+    TRISB4 = 0;
+    LATB3 = 1;
+    TRISB3 = 0;
+    LATB2 = 1;
+    TRISB2 = 0;
 }
+
+#define LED1_ON() (LATB4 = 0)
+#define LED1_OFF() (LATB4 = 1)
+#define LED2_ON() (LATB3 = 0)
+#define LED2_OFF() (LATB3 = 1)
+#define LED3_ON() (LATB2 = 0)
+#define LED3_OFF() (LATB2 = 1)
 
 int main()
 {
@@ -80,7 +87,7 @@ int main()
 
     bool all_tests_passed = true;
     // while we're running the tests, turn LED 2 on
-    LATA4 = 0;
+    LED2_ON();
 
     if (!test_build_can_message()) {
         all_tests_passed = false;
@@ -96,13 +103,13 @@ int main()
     }
 
     // end of the tests, turn LED 2 off
-    LATA4 = 1;
+    LED2_OFF();
     if (all_tests_passed) {
         // the success LED is LED 3
-        LATA5 = 0;
+        LED3_ON();
     } else {
         // the failure LED is LED 1
-        LATC1 = 0;
+        LED1_ON();
     }
 
     // loop forever

@@ -1,7 +1,6 @@
 #include "can_common.h"
 #include "message_types.h"
 #include <stddef.h>
-#include <assert.h>
 
 // this symbol should be defined in the project's Makefile, but if it
 // isn't, issue a warning and set it to 0
@@ -11,40 +10,42 @@
 #endif
 
 // Helper function for populating CAN messages
-static void write_timestamp_uint16_t(uint16_t timestamp, can_msg_t *output)
+static void write_timestamp_2bytes(uint16_t timestamp, can_msg_t *output)
 {
     output->data[0] = (timestamp >> 8) & 0xff;
     output->data[1] = (timestamp >> 0) & 0xff;
 }
 
-static void write_timestamp_uint24_t(uint32_t timestamp, can_msg_t *output)
+static void write_timestamp_3bytes(uint32_t timestamp, can_msg_t *output)
 {
     output->data[0] = (timestamp >> 16) & 0xff;
     output->data[1] = (timestamp >> 8) & 0xff;
     output->data[2] = (timestamp >> 0) & 0xff;
 }
 
-void build_general_cmd_msg(uint32_t timestamp,
+bool build_general_cmd_msg(uint32_t timestamp,
                            uint8_t cmd,
                            can_msg_t *output)
 {
-    assert(output != NULL);
+    if (!output) { return false; }
 
     output->sid = MSG_GENERAL_CMD | BOARD_UNIQUE_ID;
-    write_timestamp_uint24_t(timestamp, output);
+    write_timestamp_3bytes(timestamp, output);
     output->data[3] = cmd;
     output->data_len = 4;   // 3 bytes timestamp, 1 byte data
+
+    return true;
 }
 
-void build_debug_msg(uint32_t timestamp,
+bool build_debug_msg(uint32_t timestamp,
                      uint8_t *debug_data,
                      can_msg_t *output)
 {
-    assert(output != NULL);
-    assert(debug_data != NULL);
+    if (!output) { return false; }
+    if (!debug_data) { return false; }
 
     output->sid = MSG_DEBUG_MSG | BOARD_UNIQUE_ID;
-    write_timestamp_uint24_t(timestamp, output);
+    write_timestamp_3bytes(timestamp, output);
 
     output->data[3] = debug_data[0];
     output->data[4] = debug_data[1];
@@ -53,69 +54,79 @@ void build_debug_msg(uint32_t timestamp,
     output->data[7] = debug_data[4];
 
     output->data_len = 8;
+    return true;
 }
 
-void build_debug_printf(uint8_t *input_data,
+bool build_debug_printf(uint8_t *input_data,
                         can_msg_t *output)
 {
-    assert(input_data != NULL);
-    assert(output != NULL);
+    if (!output) { return false; }
+    if (!input_data) { return false; }
 
     output->sid = MSG_DEBUG_PRINTF | BOARD_UNIQUE_ID;
     for (int i = 0; i < 8; ++i) {
         output->data[i] = input_data[i];
     }
     output->data_len = 8;
+    return true;
 }
 
-void build_valve_cmd_msg(uint32_t timestamp,
+bool build_valve_cmd_msg(uint32_t timestamp,
                          uint8_t valve_cmd,
                          uint16_t message_type,  // vent or injector
                          can_msg_t *output)
 {
-    assert(message_type == MSG_VENT_VALVE_CMD
-           || message_type == MSG_INJ_VALVE_CMD);
-    assert(output != NULL);
+    if (!output) { return false; }
+    if (!(message_type == MSG_VENT_VALVE_CMD
+           || message_type == MSG_INJ_VALVE_CMD)) {
+        return false;
+    }
 
     output->sid = message_type | BOARD_UNIQUE_ID;
-    write_timestamp_uint24_t(timestamp, output);
+    write_timestamp_3bytes(timestamp, output);
 
     output->data[3] = valve_cmd;
     output->data_len = 4;   // 3 bytes timestamp, 1 byte data
+
+    return true;
 }
 
-void build_valve_stat_msg(uint32_t timestamp,
+bool build_valve_stat_msg(uint32_t timestamp,
                           uint8_t valve_state,
                           uint8_t req_valve_state,
                           uint16_t message_type,    // vent or injector
                           can_msg_t *output)
 {
-    assert(message_type == MSG_VENT_VALVE_STATUS
-           || message_type == MSG_INJ_VALVE_STATUS);
-    assert(output != NULL);
+    if (!output) { return false; }
+    if (!(message_type == MSG_VENT_VALVE_STATUS
+           || message_type == MSG_INJ_VALVE_STATUS)) {
+        return false;
+    }
 
     output->sid = message_type | BOARD_UNIQUE_ID;
-    write_timestamp_uint24_t(timestamp, output);
+    write_timestamp_3bytes(timestamp, output);
 
     output->data[3] = valve_state;
     output->data[4] = req_valve_state;
-    output->data_len = 4;   // 3 bytes timestamp, 2 bytes data
+    output->data_len = 5;   // 3 bytes timestamp, 2 bytes data
+
+    return true;
 }
 
 // This might need to be made more granular - it doesn't quite hide
 // the data layout properly.
-void build_board_stat_msg(uint32_t timestamp,
+bool build_board_stat_msg(uint32_t timestamp,
                           uint8_t error_code,
                           uint8_t *error_data,
                           uint8_t error_data_len,
                           can_msg_t *output)
 {
-    assert(error_data != NULL);
-    assert(output != NULL);
-    assert(error_data_len <= 4);
+    if (error_data_len > 0 && !error_data) { return false; }
+    if (!output) { return false; }
+    if (error_data_len > 4) { return false; }
 
     output->sid = MSG_GENERAL_BOARD_STATUS | BOARD_UNIQUE_ID;
-    write_timestamp_uint24_t(timestamp, output);
+    write_timestamp_3bytes(timestamp, output);
 
     output->data[3] = error_code;
     for (int i = 0; i < error_data_len; ++i) {
@@ -125,21 +136,25 @@ void build_board_stat_msg(uint32_t timestamp,
 
     // ugly but: 3 bytes timestamp, 1 byte error code, x bytes data
     output->data_len = 4 + error_data_len;
+
+    return true;
 }
 
-void build_imu_data_msg(uint16_t message_type,
+bool build_imu_data_msg(uint16_t message_type,
                         uint16_t timestamp,   // acc, gyro, mag
                         uint16_t *imu_data,   // x, y, z
                         can_msg_t *output)
 {
-    assert(message_type == MSG_SENSOR_ACC
+    if (!output) { return false; }
+    if (!imu_data) { return false; }
+    if (!(message_type == MSG_SENSOR_ACC
            || message_type == MSG_SENSOR_GYRO
-           || message_type == MSG_SENSOR_MAG);
-    assert(imu_data != NULL);
-    assert(output != NULL);
+           || message_type == MSG_SENSOR_MAG)) {
+        return false;
+    }
 
     output->sid = message_type | BOARD_UNIQUE_ID;
-    write_timestamp_uint16_t(timestamp, output);
+    write_timestamp_2bytes(timestamp, output);
 
     // X value
     output->data[2] = (imu_data[0] >> 8) & 0xff;
@@ -155,28 +170,32 @@ void build_imu_data_msg(uint16_t message_type,
 
     // this message type uses the entire data field
     output->data_len = 8;
+
+    return true;
 }
 
-void build_analog_data_msg(uint16_t timestamp,
+bool build_analog_data_msg(uint16_t timestamp,
                            uint8_t sensor_id,
                            uint16_t sensor_data,
                            can_msg_t *output)
 {
-    assert(output != NULL);
+    if (!output) { return false; }
 
     output->sid = MSG_SENSOR_ANALOG | BOARD_UNIQUE_ID;
-    write_timestamp_uint16_t(timestamp, output);
+    write_timestamp_2bytes(timestamp, output);
 
     output->data[2] = sensor_id;
     output->data[3] = (sensor_data >> 8) & 0xff;
     output->data[4] = (sensor_data >> 0) & 0xff;
 
     output->data_len = 5;
+
+    return true;
 }
 
-int get_curr_valve_state(can_msg_t *msg)
+int get_curr_valve_state(const can_msg_t *msg)
 {
-    assert(msg != NULL);
+    if (!msg) { return -1; }
 
     uint16_t msg_type = get_message_type(msg);
     if (msg_type == MSG_VENT_VALVE_STATUS || msg_type == MSG_INJ_VALVE_STATUS) {
@@ -187,9 +206,9 @@ int get_curr_valve_state(can_msg_t *msg)
     }
 }
 
-int get_req_valve_state(can_msg_t *msg)
+int get_req_valve_state(const can_msg_t *msg)
 {
-    assert(msg != NULL);
+    if (!msg) { return -1; }
 
     uint16_t msg_type = get_message_type(msg);
     switch (msg_type) {
@@ -209,19 +228,63 @@ int get_req_valve_state(can_msg_t *msg)
 
 uint16_t get_message_type(const can_msg_t *msg)
 {
-    assert(msg != NULL);
+    // invalid SID
+    if (!msg) { return 0; }
+
     return (msg->sid & 0x7E0);
 }
 
 uint8_t get_board_unique_id(const can_msg_t *msg)
 {
-    assert(msg != NULL);
+    // invalid SID
+    if (!msg) { return 0; }
+
     return ((uint8_t) (msg->sid & 0x1F));
+}
+
+uint32_t get_timestamp(const can_msg_t *msg)
+{
+    // the best we can do, really
+    if (!msg) { return 0; }
+
+    uint16_t msg_type = get_message_type(msg);
+    switch(msg_type) {
+        // 3 byte timestamp
+        case MSG_GENERAL_CMD:
+        case MSG_INJ_VALVE_CMD:
+        case MSG_VENT_VALVE_CMD:
+        case MSG_DEBUG_MSG:
+        case MSG_INJ_VALVE_STATUS:
+        case MSG_VENT_VALVE_STATUS:
+        case MSG_GENERAL_BOARD_STATUS:
+            return (uint32_t)msg->data[0] << 16
+                   | (uint32_t)msg->data[1] << 8
+                   | msg->data[2];
+
+        // 2 byte timestamp
+        case MSG_SENSOR_ACC:
+        case MSG_SENSOR_GYRO:
+        case MSG_SENSOR_MAG:
+        case MSG_SENSOR_ANALOG:
+            return (uint32_t)msg->data[0] << 8
+                   | msg->data[1];
+    
+        // no timestamp
+        case MSG_DEBUG_PRINTF:
+        case MSG_LEDS_ON:
+        case MSG_LEDS_OFF:
+            return 0;
+
+        // unknown message type
+        default:
+            // not much else we can do
+            return 0;
+    }
 }
 
 bool is_sensor_data(const can_msg_t *msg)
 {
-    assert(msg != NULL);
+    if (!msg) { return false; }
 
     uint16_t type = get_message_type(msg);
     if (type == MSG_SENSOR_ACC ||
@@ -234,10 +297,36 @@ bool is_sensor_data(const can_msg_t *msg)
     }
 }
 
+bool get_imu_data(const can_msg_t *msg, uint16_t *output_x, uint16_t *output_y, uint16_t *output_z)
+{
+    if (!msg) { return false; }
+    if (!output_x) { return false; }
+    if (!output_y) { return false; }
+    if (!output_z) { return false; }
+    if (!is_sensor_data(msg)) { return false; }
+    if (get_message_type(msg) == MSG_SENSOR_ANALOG) { return false; }
+
+    *output_x = (uint16_t)msg->data[2] << 8 | msg->data[3];    // x
+    *output_y = (uint16_t)msg->data[4] << 8 | msg->data[5];    // y
+    *output_z = (uint16_t)msg->data[6] << 8 | msg->data[7];    // z
+
+    return true;
+}
+
+bool get_analog_data(const can_msg_t *msg, uint8_t *sensor_id, uint16_t *output_data)
+{
+    if (!msg) { return false; }
+    if (!output_data) { return false; }
+    if (get_message_type(msg) != MSG_SENSOR_ANALOG) { return false; }
+
+    *sensor_id = msg->data[2];
+    *output_data = (uint16_t)msg->data[3] << 8 | msg->data[4];
+
+    return true;
+}
+
 can_debug_level_t message_debug_level(const can_msg_t *msg)
 {
-    assert(msg != NULL);
-
     uint16_t type = get_message_type(msg);
     if (type != MSG_DEBUG_MSG) {
         return NONE;
@@ -271,9 +360,6 @@ can_debug_level_t message_debug_level(const can_msg_t *msg)
  */
 const char *build_printf_can_message(const char *string, can_msg_t *output)
 {
-    assert(string != NULL);
-    assert(output != NULL);
-
     // set the SID of ouput
     output->sid = (MSG_DEBUG_PRINTF | BOARD_UNIQUE_ID);
     uint8_t i;
