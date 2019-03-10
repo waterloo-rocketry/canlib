@@ -11,6 +11,7 @@ VPATH +=../../
 VPATH +=../../util/
 
 DEFINES+=-DBOARD_UNIQUE_ID=3
+DEFINES+=-DTARGET_LOCAL
 
 program_name=unit_tests
 

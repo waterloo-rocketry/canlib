@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 //if this test is running on hardware, don't actually print anything
-#ifndef NO_PRINTF
+#ifdef TARGET_LOCAL
 #define REPORT_FAIL(x) printf("%s: Fail: %s\n", __FUNCTION__, x)
 #else
 #define REPORT_FAIL(x)
@@ -32,16 +32,16 @@ static bool test_buffer_single_message(void)
 {
     uint8_t memory[100];
     rcvb_init((void *) memory, sizeof(memory));
-    can_msg_t rcv, send = {
-        .sid = 0x7ab,
-        .data_len = 4,
-        .data = {
-            [0] = 0xab,
-            [1] = 0xcd,
-            [2] = 0xef,
-            [3] = 0xef,
-        },
-    };
+    can_msg_t rcv;
+
+    can_msg_t send;
+    send.sid = 0x7ab,
+    send.data_len = 4,
+
+    send.data[0] = 0xab;
+    send.data[1] = 0xcd;
+    send.data[2] = 0xef;
+    send.data[3] = 0xef;
 
     if (rcvb_is_full()) {
         REPORT_FAIL("no space in newly initialized receive buffer");
@@ -76,14 +76,15 @@ static bool test_buffer_ten_messages(void)
     rcvb_init((void *) memory, sizeof(memory));
 
     uint8_t i;
-    can_msg_t rcv, send = {
-        .sid = 0,
-        .data_len = 2,
-        .data = {
-            [0] = 72,
-            [1] = 49,
-        },
-    };
+
+    can_msg_t rcv;  // to be populated later
+    can_msg_t send;
+
+    send.sid = 0;
+    send.data_len = 2;
+    send.data[0] = 72;
+    send.data[1] = 49;
+
     for (i = 0; i < 10; ++i) {
         send.sid = i;
         rcvb_push_message(&send);
@@ -115,20 +116,13 @@ static bool test_buffer_doesnt_overrun()
     uint8_t memory[29];
     memory[28] = 44; //magic number
     rcvb_init((void *) memory, 28);
-    can_msg_t test = {
-        .sid = 0x7FF,
-        .data_len = 8,
-        .data = {
-            [0] = 0xff,
-            [1] = 0xff,
-            [2] = 0xff,
-            [3] = 0xff,
-            [4] = 0xff,
-            [5] = 0xff,
-            [6] = 0xff,
-            [7] = 0xff,
-        },
-    };
+    can_msg_t test;
+    test.sid = 0x7FF;
+    test.data_len = 8;
+    for (int i = 0; i < 8; ++i) {
+        test.data[i] = 0xff;
+    }
+
     uint8_t i;
     for (i = 0; i < 3; ++i) {
         rcvb_push_message(&test);
@@ -144,10 +138,10 @@ static bool test_buffer_overflow()
 {
     uint8_t memory[100];
     rcvb_init((void *) memory, sizeof(memory));
-    can_msg_t msg = {
-        .data_len = 0,
-        .sid = 0x7FF,
-    };
+    can_msg_t msg;
+    msg.data_len = 0;
+    msg.sid = 0x7FF;
+
     while (!rcvb_is_full()) {
         rcvb_push_message(&msg);
     }
