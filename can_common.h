@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "can.h"
+#include "message_types.h"
 
 /*
  * Debug levels for the debugging messages (MSG_DEBUG_MSG). Lower
@@ -51,7 +52,7 @@ typedef enum {
 * message_types.h
 */
 bool build_general_cmd_msg(uint32_t timestamp,
-                           uint8_t cmd,
+                           enum GEN_CMD cmd,
                            can_msg_t *output);
 
 bool build_debug_msg(uint32_t timestamp,
@@ -65,7 +66,7 @@ bool build_debug_printf(uint8_t *data,
  * Used to send injector and vent commands
  */
 bool build_valve_cmd_msg(uint32_t timestamp,
-                         uint8_t valve_cmd,      // VALVE_STATE
+                         enum VALVE_STATE valve_cmd,
                          uint16_t message_type,  // vent or injector
                          can_msg_t *output);
 
@@ -73,8 +74,8 @@ bool build_valve_cmd_msg(uint32_t timestamp,
 * Used to send injector/vent status: current and desired
 */
 bool build_valve_stat_msg(uint32_t timestamp,
-                          uint8_t valve_state,      // VALVE_STATE
-                          uint8_t req_valve_state,  // VALVE_STATE
+                          enum VALVE_STATE valve_state,
+                          enum VALVE_STATE req_valve_state,
                           uint16_t message_type,    // vent or injector
                           can_msg_t *output);
 
@@ -84,7 +85,7 @@ bool build_valve_stat_msg(uint32_t timestamp,
 * This function may need to be modified to better hide the internals.
 */
 bool build_board_stat_msg(uint32_t timestamp,
-                          uint8_t error_code,
+                          enum BOARD_STATUS error_code,
                           uint8_t *error_data,
                           uint8_t error_data_len,
                           can_msg_t *output);
@@ -94,7 +95,7 @@ bool build_board_stat_msg(uint32_t timestamp,
 * of 3 values is sent (X, Y, and Z axes).
 */
 bool build_imu_data_msg(uint16_t message_type,  // acc, gyro, mag
-                        uint16_t timestamp,
+                        uint32_t timestamp,
                         uint16_t *imu_data,     // x, y, z
                         can_msg_t *output);
 
@@ -103,8 +104,8 @@ bool build_imu_data_msg(uint16_t message_type,  // acc, gyro, mag
 * not nailed down at this point and will likely differ based on the
 * sensor id.
 */
-bool build_analog_data_msg(uint16_t timestamp,
-                           uint8_t sensor_id,
+bool build_analog_data_msg(uint32_t timestamp,
+                           enum SENSOR_ID sensor_id,
                            uint16_t sensor_data,
                            can_msg_t *output);
 
@@ -161,7 +162,7 @@ bool get_imu_data(const can_msg_t *msg,
  * the input is invalid.
  */
 bool get_analog_data(const can_msg_t *msg,
-                     uint8_t *sensor_id,
+                     enum SENSOR_ID *sensor_id,
                      uint16_t *output_data);
 
 /*

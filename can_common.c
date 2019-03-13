@@ -24,14 +24,14 @@ static void write_timestamp_3bytes(uint32_t timestamp, can_msg_t *output)
 }
 
 bool build_general_cmd_msg(uint32_t timestamp,
-                           uint8_t cmd,
+                           enum GEN_CMD cmd,
                            can_msg_t *output)
 {
     if (!output) { return false; }
 
     output->sid = MSG_GENERAL_CMD | BOARD_UNIQUE_ID;
     write_timestamp_3bytes(timestamp, output);
-    output->data[3] = cmd;
+    output->data[3] = (uint8_t) cmd;
     output->data_len = 4;   // 3 bytes timestamp, 1 byte data
 
     return true;
@@ -72,7 +72,7 @@ bool build_debug_printf(uint8_t *input_data,
 }
 
 bool build_valve_cmd_msg(uint32_t timestamp,
-                         uint8_t valve_cmd,
+                         enum VALVE_STATE valve_cmd,
                          uint16_t message_type,  // vent or injector
                          can_msg_t *output)
 {
@@ -85,15 +85,15 @@ bool build_valve_cmd_msg(uint32_t timestamp,
     output->sid = message_type | BOARD_UNIQUE_ID;
     write_timestamp_3bytes(timestamp, output);
 
-    output->data[3] = valve_cmd;
+    output->data[3] = (uint8_t) valve_cmd;
     output->data_len = 4;   // 3 bytes timestamp, 1 byte data
 
     return true;
 }
 
 bool build_valve_stat_msg(uint32_t timestamp,
-                          uint8_t valve_state,
-                          uint8_t req_valve_state,
+                          enum VALVE_STATE valve_state,
+                          enum VALVE_STATE req_valve_state,
                           uint16_t message_type,    // vent or injector
                           can_msg_t *output)
 {
@@ -106,8 +106,8 @@ bool build_valve_stat_msg(uint32_t timestamp,
     output->sid = message_type | BOARD_UNIQUE_ID;
     write_timestamp_3bytes(timestamp, output);
 
-    output->data[3] = valve_state;
-    output->data[4] = req_valve_state;
+    output->data[3] = (uint8_t) valve_state;
+    output->data[4] = (uint8_t) req_valve_state;
     output->data_len = 5;   // 3 bytes timestamp, 2 bytes data
 
     return true;
@@ -116,7 +116,7 @@ bool build_valve_stat_msg(uint32_t timestamp,
 // This might need to be made more granular - it doesn't quite hide
 // the data layout properly.
 bool build_board_stat_msg(uint32_t timestamp,
-                          uint8_t error_code,
+                          enum BOARD_STATUS error_code,
                           uint8_t *error_data,
                           uint8_t error_data_len,
                           can_msg_t *output)
@@ -128,7 +128,7 @@ bool build_board_stat_msg(uint32_t timestamp,
     output->sid = MSG_GENERAL_BOARD_STATUS | BOARD_UNIQUE_ID;
     write_timestamp_3bytes(timestamp, output);
 
-    output->data[3] = error_code;
+    output->data[3] = (uint8_t) error_code;
     for (int i = 0; i < error_data_len; ++i) {
         // error data goes in message bytes 4-7
         output->data[4 + i] = error_data[i];
@@ -141,7 +141,7 @@ bool build_board_stat_msg(uint32_t timestamp,
 }
 
 bool build_imu_data_msg(uint16_t message_type,
-                        uint16_t timestamp,   // acc, gyro, mag
+                        uint32_t timestamp,   // acc, gyro, mag
                         uint16_t *imu_data,   // x, y, z
                         can_msg_t *output)
 {
@@ -174,8 +174,8 @@ bool build_imu_data_msg(uint16_t message_type,
     return true;
 }
 
-bool build_analog_data_msg(uint16_t timestamp,
-                           uint8_t sensor_id,
+bool build_analog_data_msg(uint32_t timestamp,
+                           enum SENSOR_ID sensor_id,
                            uint16_t sensor_data,
                            can_msg_t *output)
 {
@@ -184,7 +184,7 @@ bool build_analog_data_msg(uint16_t timestamp,
     output->sid = MSG_SENSOR_ANALOG | BOARD_UNIQUE_ID;
     write_timestamp_2bytes(timestamp, output);
 
-    output->data[2] = sensor_id;
+    output->data[2] = (uint8_t) sensor_id;
     output->data[3] = (sensor_data >> 8) & 0xff;
     output->data[4] = (sensor_data >> 0) & 0xff;
 
@@ -313,7 +313,7 @@ bool get_imu_data(const can_msg_t *msg, uint16_t *output_x, uint16_t *output_y, 
     return true;
 }
 
-bool get_analog_data(const can_msg_t *msg, uint8_t *sensor_id, uint16_t *output_data)
+bool get_analog_data(const can_msg_t *msg, enum SENSOR_ID *sensor_id, uint16_t *output_data)
 {
     if (!msg) { return false; }
     if (!output_data) { return false; }
