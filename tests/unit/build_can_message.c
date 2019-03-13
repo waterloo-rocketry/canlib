@@ -314,7 +314,7 @@ static bool test_sensor_analog(void)
     }
 
     uint16_t output_data;
-    uint8_t output_sensor_id;
+    enum SENSOR_ID output_sensor_id;
     if (!get_analog_data(&output, &output_sensor_id, &output_data)) {
         REPORT_FAIL("Failed to retrieve sensor data");
         ret = false;
