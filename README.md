@@ -35,14 +35,14 @@ independent repositories:
 
 ## Supported Platforms
 
-Canlib is designed to run on all CAN subsystems. All of those systems run on
-one of three CAN modules, so those are the three that we support:
+The canlib library is designed to run on all CAN subsystems. All of those systems
+run on one of three CAN modules, so those are the three that we currently support:
 
-1. pic18f26k83: the cheap, low powered 8 bit microcontroller that the majority
+1. PIC18F26K83: the cheap, low powered 8 bit microcontroller that the majority
 of the subsystems run on. The platform specific code for this microcontroller is
 found in `pic18f26k83/`. It is meant to be compiled with Microchip's XC8
 compiler.
-2. dspic33ep512gp502: A higher powered 16 bit digital signal processing
+2. DSPIC33EP512GP502: A higher powered 16 bit digital signal processing
 microcontroller that the logging and sensor subsystems run on. The platform
 specific code for this microcontroller is found in `dspic33epxxxgp50x/`. It is
 meant to be compiled with Microchip's XC16 compiler.
@@ -56,7 +56,7 @@ compiler.
 To see a minimum viable program for each of these platforms, look in the
 `tests/` directory. There is a MPLAB project for each platform which contains
 the required initialization code that needs to be run by any project using
-Canlib on that platform. Each should also show how CAN messages can be sent on
+canlib on that platform. Each should also show how CAN messages can be sent on
 that platform.
 
 ## Utilties
@@ -67,7 +67,7 @@ helpful in some instances. Each utility module is described separately:
 ### timing\_util
 
 This module contains some preset `can_timing_params` for the bitrate that the
-library is currently running at. At present, all Canlib devices run a CAN bit
+library is currently running at. At present, all canlib devices run a CAN bit
 time of 24us (4.16 kHz). To initialize a `can_timings_t`, call
 `can_generate_timing_params` with the frequency that the CAN module is running
 at. In most instances, this will be the same frequency as the microcontroller
