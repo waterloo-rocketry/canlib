@@ -1,11 +1,15 @@
 CC=gcc
 
+CFLAGS+=-Wall
+CFLAGS+=-Werror
+
 objects  =unit_tests.o
 objects +=build_can_message.o
 objects +=can_common.o
 objects +=can_common_tests.o
 objects +=can_buffering_layer.o
 objects +=can_rcv_buffer.o
+objects +=safe_ring_buffer.o
 
 VPATH +=../../
 VPATH +=../../util/
@@ -20,7 +24,7 @@ INCLUDES+=-I../../util/
 INCLUDES+=-I.
 
 all: $(objects)
-	@$(CC) $(INCLUDES) $(DEFINES) $(objects) -o $(program_name)
+	@$(CC) $(CFLAGS) $(INCLUDES) $(DEFINES) $(objects) -o $(program_name)
 	@./$(program_name)
 
 .PHONY:clean
@@ -28,4 +32,4 @@ clean:
 	-rm $(objects)
 
 %.o: %.c
-	$(CC) $(INCLUDES) $(DEFINES) -c $< -o $@
+	$(CC) $(CFLAGS) $(INCLUDES) $(DEFINES) -c $< -o $@
