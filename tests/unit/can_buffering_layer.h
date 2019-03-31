@@ -3,6 +3,8 @@
 
 #include <stdbool.h>
 
-bool test_can_buffering_layer(void);
+bool test_can_buffering_layer_rx(void);
+
+bool test_can_buffering_layer_tx(void);
 
 #endif
