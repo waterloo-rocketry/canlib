@@ -110,7 +110,7 @@ enum BOARD_STATUS {
     E_CANNOT_INIT_DACS,         // x                x                   x                   x
     E_VENT_POT_RANGE,           // lim_upper (mV)   lim_lower (mV)      pot (mV)            x
 
-    E_LOGGING,                  // x                x                   x                   x
+    E_LOGGING,                  // error_type       x                   x                   x
     E_GPS,                      // x                x                   x                   x
     E_SENSOR,                   // sensor_id        x                   x                   x
 
