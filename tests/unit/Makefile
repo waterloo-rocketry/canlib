@@ -9,6 +9,7 @@ objects +=can_common.o
 objects +=can_common_tests.o
 objects +=can_buffering_layer.o
 objects +=can_rcv_buffer.o
+objects +=can_tx_buffer.o
 objects +=safe_ring_buffer.o
 
 VPATH +=../../
