@@ -374,3 +374,12 @@ const char *build_printf_can_message(const char *string, can_msg_t *output)
     output->data_len = i;
     return string;
 }
+
+const char *build_radio_cmd_can_message(const char *string, can_msg_t *output)
+{
+    // let build_printf_can_message do all the heavy lifting
+    string = build_printf_can_message(string, output);
+    // then just set SID, since that's the only difference in message type
+    output->sid = (MSG_DEBUG_RADIO_CMD | BOARD_UNIQUE_ID);
+    return string;
+}
