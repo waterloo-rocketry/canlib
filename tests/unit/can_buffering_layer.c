@@ -218,7 +218,7 @@ static bool test_send_single_message(void)
         return false;
     }
 
-    txb_send(&send);
+    txb_enqueue(&send);
 
     /*
      * For now, do not send a CAN message during a call to txb_send, even if
@@ -265,9 +265,10 @@ static bool test_send_ten_messages(void)
 
     for (i = 0; i < 10; ++i) {
         send.sid = i;
-        txb_send(&send);
+        txb_enqueue(&send);
     }
     for (i = 0; i < 10; ++i) {
+        tx_buffer_empty = true;
         txb_heartbeat();
         send.sid = i;
         if (!can_msg_compare(&last_can_message, &send)) {
@@ -297,7 +298,7 @@ static bool test_can_buffer_full(void)
         return false;
     }
 
-    txb_send(&send);
+    txb_enqueue(&send);
 
     if (can_msgs_sent != 0) {
         REPORT_FAIL("can_send called before heartbeat issued");
@@ -316,11 +317,7 @@ static bool test_can_buffer_full(void)
 
     if (can_msgs_sent != 1 ||
         last_can_message.sid != 0x7ab ||
-        last_can_message.data_len != 4 ||
-        last_can_message.data[0] != 0xab ||
-        last_can_message.data[1] != 0xcd ||
-        last_can_message.data[2] != 0xef ||
-        last_can_message.data[3] != 0xef) {
+        last_can_message.data_len != 0) {
         REPORT_FAIL("can_send wasn't called after heartbeat");
         return false;
     }

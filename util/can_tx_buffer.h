@@ -4,7 +4,7 @@
 
 /*
  * Initialization function. Sets up memory for the buffer, and caches the
- * funciton pointers
+ * function pointers
  *
  * can_tx_ready is a function that returns true if we can currently send a can
  * message, otherwise it returns false
