@@ -324,6 +324,36 @@ static bool test_can_buffer_full(void)
     return true;
 }
 
+/*
+ * If txb_heartbeat is called before any calls to txb_enqueue, can_send should
+ * not be called. txb_heartbeat should only call can_send if the buffer is
+ * empty and the message queue is not
+ */
+static bool test_can_heartbeat_without_enqueuing(void)
+{
+    tx_buffer_empty = true;
+    can_msgs_sent = 0;
+    uint8_t memory[100];
+    txb_init((void *) memory,
+             sizeof(memory),
+             &can_send,
+             &can_tx_buffer_available);
+
+    if (can_msgs_sent != 0) {
+        REPORT_FAIL("can_send called before any message queued");
+        return false;
+    }
+
+    txb_heartbeat();
+
+    if (can_msgs_sent != 0) {
+        REPORT_FAIL("can_send called after heartbeat without any CAN message queued");
+        return false;
+    }
+
+    return true;
+}
+
 bool test_can_buffering_layer_tx(void)
 {
     if (!test_send_single_message()) {
@@ -333,6 +363,9 @@ bool test_can_buffering_layer_tx(void)
         return false;
     }
     if (!test_can_buffer_full()) {
+        return false;
+    }
+    if (!test_can_heartbeat_without_enqueuing()) {
         return false;
     }
     return true;
