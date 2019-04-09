@@ -18,7 +18,7 @@ void txb_init(void *pool, size_t pool_size,
  * send the message. The only calls to can_send_fp will be made during
  * txb_heartbeat
  */
-void txb_enqueue(const can_msg_t *msg);
+bool txb_enqueue(const can_msg_t *msg);
 
 /*
  * This function is called every iteration through the main application loop.
