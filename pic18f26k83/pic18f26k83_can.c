@@ -80,21 +80,19 @@ void can_init(const can_timing_t *timing,
     while (CANSTATbits.OPMODE != 0x0);
 }
 
-// Priority must be a 2 bit number defining how high the priority of
-// this message is vs the other ones queued to be sent. 0 is lowest
-// priority, 3 is highest
-void can_send(const can_msg_t* message, uint8_t priority) {
+void can_send(const can_msg_t* message) {
     // at present, this fails if transmit buffer 0 isn't available
     if (TXB0CONbits.TXREQ != 0) {
         return;
     }
 
     // argument checking
-    if(message->data_len > 8 || message->sid > 0x7FF || priority > 3) {
+    if(message->data_len > 8 || message->sid > 0x7FF) {
         return;
     }
 
-    TXB0CONbits.TXPRI = priority;
+    // All messages are the highest priority
+    TXB0CONbits.TXPRI = 0;
     TXB0SIDH = ((message->sid) >> 3);
     TXB0SIDL = (((message->sid) & 0x7) << 5);
 
@@ -109,6 +107,10 @@ void can_send(const can_msg_t* message, uint8_t priority) {
 
     // Mark transmit buffer 0 ready to transmit
     TXB0CONbits.TXREQ = 1;
+}
+
+bool can_send_rdy(void) {
+    return TXB0CONbits.TXREQ == 0;
 }
 
 // if any bit is set in PIR5 during an interrupt service routine, call

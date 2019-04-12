@@ -2,6 +2,7 @@
 #define PIC18F26K83_CAN_H_
 
 #include "../can.h"
+#include <stdbool.h>
 
 /*
  * Initialize the CAN driver on a PI18fC26fk83. Note that this function
@@ -15,9 +16,11 @@
 void can_init(const can_timing_t *timing,
               void (*receive_callback)(const can_msg_t *message));
 
-// send a CAN message. Currently suboptimal, there are a lot of
-// improvements that I'd like to make here.
-void can_send(const can_msg_t* message, uint8_t priority);
+// send a CAN message
+void can_send(const can_msg_t* message);
+
+// returns true if the CAN module is ready to send a message
+bool can_send_rdy(void);
 
 // call this function in an interrupt context whenever PIR5 is nonzero
 void can_handle_interrupt(void);

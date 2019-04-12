@@ -112,7 +112,7 @@ int main() {
     message.data[2] = 0xAA;
     message.data[3] = 0xAA;
     while(1) {
-        can_send(&message, 0);
+        can_send(&message);
         __delay_ms(1000);
     }
 
