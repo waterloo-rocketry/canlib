@@ -2,16 +2,13 @@
 #include <string.h>
 #include <stdint.h>
 
-#define   VALID_FLAG 0xff
-#define INVALID_FLAG 0x00
-
 static size_t get_offset_bytes(const srb_ctx_t *ctx,
                                size_t index)
 {
     if (index >= ctx->max_elements) {
         return 0;
     }
-    return index * (ctx->element_size + 1);
+    return index * (ctx->element_size);
 }
 
 void srb_init(srb_ctx_t *ctx,
@@ -21,14 +18,9 @@ void srb_init(srb_ctx_t *ctx,
 {
     ctx->memory_pool = pool;
     ctx->element_size = element_size;
-    ctx->max_elements = (pool_size / (element_size + 1));
+    ctx->max_elements = (pool_size / (element_size));
     ctx->rd_idx = 0;
     ctx->wr_idx = 0;
-    size_t i;
-    for (i = 0; i < ctx->max_elements; ++i) {
-        size_t offset = get_offset_bytes(ctx, i);
-        *(((uint8_t *) ctx->memory_pool) + offset) = INVALID_FLAG;
-    }
 }
 
 bool srb_push(srb_ctx_t *ctx,
@@ -38,8 +30,7 @@ bool srb_push(srb_ctx_t *ctx,
         return false;
     }
     size_t offset = get_offset_bytes(ctx, ctx->wr_idx);
-    memcpy(((uint8_t *) ctx->memory_pool) + offset + 1, element, ctx->element_size);
-    *(((uint8_t *) ctx->memory_pool) + offset) = VALID_FLAG;
+    memcpy(((uint8_t *) ctx->memory_pool) + offset, element, ctx->element_size);
     if ( ++(ctx->wr_idx) >= ctx->max_elements) {
         ctx->wr_idx = 0;
     }
@@ -48,21 +39,21 @@ bool srb_push(srb_ctx_t *ctx,
 
 bool srb_is_full(const srb_ctx_t *ctx)
 {
-    size_t offset = get_offset_bytes(ctx, ctx->wr_idx);
-    if ( *(((uint8_t *) ctx->memory_pool) + offset) == VALID_FLAG) {
+    if ((ctx->wr_idx + 1 == ctx->rd_idx) || (ctx->wr_idx + 1 == ctx->max_elements && ctx->rd_idx == 0)) {
         return true;
-    } else {
+    }
+    else {
         return false;
     }
 }
 
 bool srb_is_empty(const srb_ctx_t *ctx)
 {
-    size_t offset = get_offset_bytes(ctx, ctx->rd_idx);
-    if ( *(((uint8_t *) ctx->memory_pool) + offset) == VALID_FLAG) {
-        return false;
-    } else {
+    if(ctx->wr_idx == ctx->rd_idx) {
         return true;
+    }
+    else {
+        return false;
     }
 }
 
@@ -73,8 +64,7 @@ bool srb_pop(srb_ctx_t *ctx,
         return false;
     }
     size_t offset = get_offset_bytes(ctx, ctx->rd_idx);
-    memcpy(element, ((uint8_t *)ctx->memory_pool) + offset + 1, ctx->element_size);
-    *(((uint8_t *) ctx->memory_pool) + offset) = INVALID_FLAG;
+    memcpy(element, ((uint8_t *)ctx->memory_pool) + offset, ctx->element_size);
     if ( ++(ctx->rd_idx) >= ctx->max_elements) {
         ctx->rd_idx = 0;
     }
@@ -88,6 +78,6 @@ bool srb_peek(const srb_ctx_t *ctx,
         return false;
     }
     size_t offset = get_offset_bytes(ctx, ctx->rd_idx);
-    memcpy(element, ctx->memory_pool + offset + 1, ctx->element_size);
+    memcpy(element, ctx->memory_pool + offset, ctx->element_size);
     return true;
 }
