@@ -41,18 +41,16 @@ bool srb_is_full(const srb_ctx_t *ctx)
 {
     if ((ctx->wr_idx + 1 == ctx->rd_idx) || (ctx->wr_idx + 1 == ctx->max_elements && ctx->rd_idx == 0)) {
         return true;
-    }
-    else {
+    } else {
         return false;
     }
 }
 
 bool srb_is_empty(const srb_ctx_t *ctx)
 {
-    if(ctx->wr_idx == ctx->rd_idx) {
+    if (ctx->wr_idx == ctx->rd_idx) {
         return true;
-    }
-    else {
+    } else {
         return false;
     }
 }
