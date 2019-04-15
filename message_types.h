@@ -21,6 +21,7 @@
 
 #define MSG_DEBUG_MSG             0x180
 #define MSG_DEBUG_PRINTF          0x1E0
+#define MSG_DEBUG_RADIO_CMD       0x200
 
 #define MSG_VENT_VALVE_STATUS     0x460
 #define MSG_INJ_VALVE_STATUS      0x4C0
@@ -56,6 +57,7 @@
  * INJ_VALVE_CMD:   TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    INJ_VALVE_STATE         None            None            None            None
  * DEBUG_MSG:       TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    DEBUG_LEVEL | LINUM_H   LINUM_L         MESSAGE_DEFINED MESSAGE_DEFINED MESSAGE_DEFINED
  * DEBUG_PRINTF:    ASCII       ASCII        ASCII          ASCII                   ASCII           ASCII           ASCII           ASCII
+ * DEBUG_RADIO_CMD: ASCII       ASCII        ASCII          ASCII                   ASCII           ASCII           ASCII           ASCII
  * VENT_VALVE_STAT: TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    VENT_VALVE_STATE        CMD_VALVE_STATE None            None            None
  * INJ_VALVE_STAT:  TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    INJ_VALVE_STATE         CMD_VALVE_STATE None            None            None
  * BOARD_STAT:      TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    ERROR_CODE              BOARD_DEFINED   BOARD_DEFINED   BOARD_DEFINED   BOARD_DEFINED

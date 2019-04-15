@@ -172,9 +172,23 @@ bool get_analog_data(const can_msg_t *msg,
 can_debug_level_t message_debug_level(const can_msg_t *msg);
 
 /*
- *  TODO, add comments. The code is written, comments are still needed
+ * These commands build CAN messages whose data bytes are the ASCII characters
+ * from string. The functions return a pointer to the first character in string
+ * which wasn't copied into output.
+ *
+ * So if you pass the function string="a long string", "a long s" will be put into
+ * output, and "tring" will be returned. You can tell if all of the string was
+ * copied into output if the return value points to a '\0'
+ *
+ * You can build and send an arbitrary length string with the following C code:
+ *   const char* string = "arbitrarily long string";
+ *   can_msg_t output;
+ *   while (*string) {
+ *       string = build_printf_can_message(string, &output);
+ *       can_send(&output);
+ *   }
  */
 const char *build_printf_can_message(const char *string, can_msg_t *output);
-
+const char *build_radio_cmd_can_message(const char *string, can_msg_t *output);
 
 #endif // compile guard
