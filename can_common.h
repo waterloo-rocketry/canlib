@@ -172,7 +172,7 @@ bool get_analog_data(const can_msg_t *msg,
 can_debug_level_t message_debug_level(const can_msg_t *msg);
 
 /*
- * These commands build CAN messages who's data bytes are the ASCII characters
+ * These commands build CAN messages whose data bytes are the ASCII characters
  * from string. The functions return a pointer to the first character in string
  * which wasn't copied into output.
  *
