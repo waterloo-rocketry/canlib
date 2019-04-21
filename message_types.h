@@ -120,6 +120,8 @@ enum BOARD_STATUS {
     E_SEGFAULT,                 // x                x                   x                   x
     E_UNHANDLED_INTERRUPT,      // x                x                   x                   x
     E_CODING_FUCKUP,            // x                x                   x                   x
+
+    E_BATT_OVER_CURRENT,        // mA_high          mA_low              x                   x
 };
 
 enum SENSOR_ID {
