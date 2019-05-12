@@ -21,4 +21,7 @@ void init_can(const can_timing_t *timing,
 // priority
 void can_send(const can_msg_t* message, uint8_t priority);
 
+// returns true if the CAN module is ready to send a message
+bool can_send_rdy(void);
+
 #endif // compile guard

@@ -110,6 +110,11 @@ void can_send(const can_msg_t* message, uint8_t priority) {
     C1TR01CONbits.TXREQ0 = 1;
 }
 
+// Returns true if a message is ready to be sent
+bool can_send_rdy(void) {
+    return C1TR01CONbits.TXREQ0 == 0;
+}
+
 // Interrupt that runs whenever IFS2::C1IF is set
 void __attribute__((__interrupt__, no_auto_psv)) _C1Interrupt(void) {
     // a transmit successfully finished, we abort the message so it
