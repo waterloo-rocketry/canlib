@@ -102,10 +102,8 @@ void can_send(const can_msg_t* message, uint8_t priority) {
     can_msg_buf[0][5] = ((message->data[5] << 8) | message->data[4]);
     can_msg_buf[0][6] = ((message->data[7] << 8) | message->data[6]);
 
-    // set priority. There's 0 point in doing this until we allow
-    // multiple transmit buffers, but hey, might as well make the API
-    // stable across different PICs.
-    C1TR01CONbits.TX0PRI = priority;
+    // the message priority is always 3 (the highest)
+    C1TR01CONbits.TX0PRI = 3;
 
     C1TR01CONbits.TXREQ0 = 1;
 }
