@@ -18,7 +18,7 @@ bool can_generate_timing_params(uint32_t can_frequency, can_timing_t *timing)
             timing->seg2ph   =  4;
             return true;
         case 1000000:
-            timing->brp      = 11;
+            timing->brp      =  0;
             timing->sjw      =  3;
             timing->btlmode  =  1;
             timing->sam      =  0;
