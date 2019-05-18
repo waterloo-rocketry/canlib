@@ -109,6 +109,12 @@ bool build_analog_data_msg(uint32_t timestamp,
                            uint16_t sensor_data,
                            can_msg_t *output);
 
+/*
+ * Gets the general command contained in a general command message.
+ * Returns -1 if the provided message is not a general cmd message.
+ */
+int get_general_cmd_type(const can_msg_t *msg);
+
  /*
  * Returns the current valve state based on limit switch readings.
  * Returns -1 if the provided message is not a vent/injector status message.

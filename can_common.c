@@ -193,6 +193,17 @@ bool build_analog_data_msg(uint32_t timestamp,
     return true;
 }
 
+int get_general_cmd_type(const can_msg_t *msg) {
+    if (!msg) { return -1; }
+
+    uint16_t msg_type = get_message_type(msg);
+    if (msg_type == MSG_GENERAL_CMD) {
+        return msg->data[3];
+    } else {
+        return -1;
+    }
+}
+
 int get_curr_valve_state(const can_msg_t *msg)
 {
     if (!msg) { return -1; }

@@ -42,6 +42,13 @@ static bool test_general_command(void)
         REPORT_FAIL("Timestamp copied wrong");
         ret = false;
     }
+
+    // check that the command itself was copied properly
+    if (get_general_cmd_type(&output) != input_data) {
+        REPORT_FAIL("Command type copied wrong");
+        ret = false;
+    }
+
     // check that the SID is proper. Note that the Makefile defines
     // the unique ID to be 0x3
     if (output.sid != 0x063) {
