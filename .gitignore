@@ -1,14 +1,17 @@
 **/nbproject/private/
 **/build/default/
 **/dist/default/
+/tests/pic18f26k83_picdev.X/nbproject/Makefile*
 /tests/pic18f26k83_picdev.X/nbproject/private/
 /tests/pic18f26k83_picdev.X/dist/default/
 /tests/mcp2515_picdev.X/nbproject/private/
 /tests/mcp2515_picdev.X/build/default/
 /tests/mcp2515_picdev.X/dist/default/
+/tests/dspic33ep256gp502.X/nbproject/Makefile*
 /tests/dspic33ep256gp502.X/nbproject/private/
 /tests/dspic33ep256gp502.X/build/default/
 /tests/dspic33ep256gp502.X/dist/default/
+/tests/unit/target_pic18.X/nbproject/Makefile*
 /tests/unit/target_pic18.X/nbproject/private/
 /tests/unit/target_pic18.X/build/default/
 /tests/unit/target_pic18.X/dist/default/
