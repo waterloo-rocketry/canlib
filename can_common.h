@@ -76,6 +76,8 @@ bool build_valve_cmd_msg(uint32_t timestamp,
 bool build_valve_stat_msg(uint32_t timestamp,
                           enum VALVE_STATE valve_state,
                           enum VALVE_STATE req_valve_state,
+                          uint16_t vent_batt_voltage_mv,
+                          uint16_t inj_batt_voltage_mv,
                           uint16_t message_type,    // vent or injector
                           can_msg_t *output);
 

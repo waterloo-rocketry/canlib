@@ -109,21 +109,21 @@ static bool test_valve_stat(void)
     bool ret = true;
 
     // test illegal args
-    if (build_valve_stat_msg(timestamp, VALVE_OPEN, VALVE_UNK, MSG_DEBUG_MSG, &output)) {
+    if (build_valve_stat_msg(timestamp, VALVE_OPEN, VALVE_UNK, 0x1234, 0x1234, MSG_DEBUG_MSG, &output)) {
         REPORT_FAIL("Valve cmd built with invalid message type");
         ret = false;
     }
-    if (build_valve_stat_msg(timestamp, VALVE_OPEN, VALVE_UNK, MSG_INJ_VALVE_STATUS, NULL)) {
+    if (build_valve_stat_msg(timestamp, VALVE_OPEN, VALVE_UNK, 0x1234, 0x1234, MSG_INJ_VALVE_STATUS, NULL)) {
         REPORT_FAIL("Message built with null output");
         ret = false;
     }
 
     // test nominal behaviour
-    if (!build_valve_stat_msg(timestamp, VALVE_OPEN, VALVE_CLOSED, MSG_INJ_VALVE_STATUS, &output)) {
+    if (!build_valve_stat_msg(timestamp, VALVE_OPEN, VALVE_CLOSED, 0x1234, 0x1234, MSG_INJ_VALVE_STATUS, &output)) {
         REPORT_FAIL("Error building message");
         ret = false;
     }
-    if (output.data_len != 5) {
+    if (output.data_len != 7) {
         REPORT_FAIL("Data length is wrong");
         ret = false;
     }

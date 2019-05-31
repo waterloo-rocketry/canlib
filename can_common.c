@@ -94,6 +94,8 @@ bool build_valve_cmd_msg(uint32_t timestamp,
 bool build_valve_stat_msg(uint32_t timestamp,
                           enum VALVE_STATE valve_state,
                           enum VALVE_STATE req_valve_state,
+                          uint16_t vent_batt_voltage_mv,
+                          uint16_t inj_batt_voltage_mv,
                           uint16_t message_type,    // vent or injector
                           can_msg_t *output)
 {
@@ -108,7 +110,13 @@ bool build_valve_stat_msg(uint32_t timestamp,
 
     output->data[3] = (uint8_t) valve_state;
     output->data[4] = (uint8_t) req_valve_state;
-    output->data_len = 5;   // 3 bytes timestamp, 2 bytes data
+    output->data[5] = vent_batt_voltage_mv;
+    // The vent battery voltage is the only voltage currently needed.
+    // In the future, the injector valve may run off of a separate
+    // battery so while the radio might ignore the injector voltage right
+    // now, it may be useful in the future.
+    output->data[6] = inj_batt_voltage_mv;
+    output->data_len = 7;   // 3 bytes timestamp, 4 bytes data
 
     return true;
 }
