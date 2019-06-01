@@ -121,7 +121,8 @@ void __attribute__((__interrupt__, no_auto_psv)) _C1Interrupt(void) {
         C1INTFbits.TBIF = 0;
         C1TR01CONbits.TXABT0 = 1;
         return;
-    } else if (C1INTFbits.RBIF) {
+    }
+    if (C1INTFbits.RBIF) {
         // check all receive buffers, trigger the callback with every
         // filled buffer
         can_msg_t cb_message;
@@ -147,14 +148,19 @@ void __attribute__((__interrupt__, no_auto_psv)) _C1Interrupt(void) {
         }
         C1INTFbits.RBIF = 0;
         return;
-    } else if (C1INTFbits.RBOVIF) {
+    }
+    if (C1INTFbits.RBOVIF) {
         // we weren't fast enough to catch all the messages
         // in the future, raise a warning now
         C1INTFbits.RBOVIF = 0;
         return;
     }
+    if (C1INTFbits.ERRIF) {
+        C1INTFbits.ERRIF = 0;
+    }
 
-    if(C1INTF == 0) {
+    // ignore IVRIF and TXBP
+    if((C1INTF & 0xef7f) == 0) {
         // there are no other CAN interrupts that we want to deal
         // with, so lower the main interrupt flag
         IFS2bits.C1IF = 0;
