@@ -159,12 +159,9 @@ void __attribute__((__interrupt__, no_auto_psv)) _C1Interrupt(void) {
         C1INTFbits.ERRIF = 0;
     }
 
-    // ignore IVRIF and TXBP
-    if((C1INTF & 0xef7f) == 0) {
-        // there are no other CAN interrupts that we want to deal
-        // with, so lower the main interrupt flag
-        IFS2bits.C1IF = 0;
-    }
+    // there are no other CAN interrupts that we want to deal
+    // with, so lower the main interrupt flag
+    IFS2bits.C1IF = 0;
     return;
 }
 
@@ -236,10 +233,10 @@ static void init_can_interrupts() {
     C1INTFbits.ERRIF = 0;
     C1INTFbits.TBIF = 0;
 
-    // enable interrupts on transmit, error, and receive
+    // enable interrupts on transmit and receive. Disable error interrupts
     C1INTEbits.TBIE = 1;
-    C1INTEbits.ERRIE = 1;
     C1INTEbits.RBIE = 1;
+    C1INTEbits.ERRIE = 0;
 
     // enable CAN1 interrupts
     IEC2bits.C1IE = 1;
