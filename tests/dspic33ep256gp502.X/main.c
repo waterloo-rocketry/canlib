@@ -94,10 +94,10 @@ int main() {
 
     // send 1 then the other forever
     while(1) {
-        can_send(&led1, 0);
+        can_send(&led1);
         // this delay feels like 200ms maybe?
         __delay32(1000000);
-        can_send(&led2, 0);
+        can_send(&led2);
         __delay32(1000000);
     }
 

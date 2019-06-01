@@ -102,6 +102,10 @@ void mcp_can_send(can_msg_t *msg) {
     mcp_write_reg(TXB0CTRL, 1 << 3);            // set txreq
 }
 
+bool mcp_can_send_rdy(void) {
+    return mcp_read_reg(TXB0CTRL) & 0b00001000 == 0;
+}
+
 bool mcp_can_receive(can_msg_t *msg) {
     uint8_t set = mcp_read_reg(CANINTF);
     if (set & 0b1) {

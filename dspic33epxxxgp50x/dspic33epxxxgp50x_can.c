@@ -83,7 +83,7 @@ void init_can(const can_timing_t *timing,
 // Priority must be a 2 bit number defining how high the priority of
 // this message is vs the other ones queued to be sent. 0 is lowest
 // priority, 3 is highest
-void can_send(const can_msg_t* message, uint8_t priority) {
+void can_send(const can_msg_t* message) {
     // put the SID in buffer 0 of the DMA buffers
     can_msg_buf[0][0] = (message->sid << 2);
 
@@ -102,12 +102,15 @@ void can_send(const can_msg_t* message, uint8_t priority) {
     can_msg_buf[0][5] = ((message->data[5] << 8) | message->data[4]);
     can_msg_buf[0][6] = ((message->data[7] << 8) | message->data[6]);
 
-    // set priority. There's 0 point in doing this until we allow
-    // multiple transmit buffers, but hey, might as well make the API
-    // stable across different PICs.
-    C1TR01CONbits.TX0PRI = priority;
+    // the message priority is always 3 (the highest)
+    C1TR01CONbits.TX0PRI = 3;
 
     C1TR01CONbits.TXREQ0 = 1;
+}
+
+// Returns true if a message is ready to be sent
+bool can_send_rdy(void) {
+    return C1TR01CONbits.TXREQ0 == 0;
 }
 
 // Interrupt that runs whenever IFS2::C1IF is set

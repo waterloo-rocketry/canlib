@@ -8,6 +8,7 @@ void mcp_can_init(can_timing_t *can_params,
                   void (*spi_write_fcn)(uint8_t data),
                   void (*cs_drive_fcn)(uint8_t state));
 void mcp_can_send(can_msg_t *msg);
+bool mcp_can_send_rdy(void);
 bool mcp_can_receive(can_msg_t *msg);
 
 // register addresses
