@@ -32,8 +32,15 @@
 #define MSG_SENSOR_MAG            0x640
 #define MSG_SENSOR_ANALOG         0x6A0
 
+#define MSG_GPS_TIMESTAMP         0x6B0
+#define MSG_GPS_LATITUDE          0x6C0
+#define MSG_GPS_LONGITUDE         0x6D0
+#define MSG_GPS_ALTITUDE          0x6E0
+#define MSG_GPS_INFO              0x6F0
+
 #define MSG_LEDS_ON               0x7E0
 #define MSG_LEDS_OFF              0x7C0
+
 
 #define BOARD_ID_INJECTOR         0x01
 #define BOARD_ID_INJECTOR_SPARE   0x02
@@ -47,6 +54,8 @@
 #define BOARD_ID_USB_SPARE        0x0A
 #define BOARD_ID_VENT             0x0B
 #define BOARD_ID_VENT_SPARE       0x0C
+#define BOARD_ID_GPS              0x0D
+#define BOARD_ID_GPS_SPARE        0x0E
 
 /*
  * General message type format (from spreadsheet):
@@ -55,16 +64,26 @@
  * GENERAL CMD:     TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    COMMAND_TYPE            None            None            None            None
  * VENT_VALVE_CMD:  TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    VENT_VALVE_STATE        None            None            None            None
  * INJ_VALVE_CMD:   TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    INJ_VALVE_STATE         None            None            None            None
+ *
  * DEBUG_MSG:       TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    DEBUG_LEVEL | LINUM_H   LINUM_L         MESSAGE_DEFINED MESSAGE_DEFINED MESSAGE_DEFINED
  * DEBUG_PRINTF:    ASCII       ASCII        ASCII          ASCII                   ASCII           ASCII           ASCII           ASCII
  * DEBUG_RADIO_CMD: ASCII       ASCII        ASCII          ASCII                   ASCII           ASCII           ASCII           ASCII
+ *
  * VENT_VALVE_STAT: TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    VENT_VALVE_STATE        CMD_VALVE_STATE None            None            None
  * INJ_VALVE_STAT:  TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    INJ_VALVE_STATE         CMD_VALVE_STATE None            None            None
  * BOARD_STAT:      TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    ERROR_CODE              BOARD_DEFINED   BOARD_DEFINED   BOARD_DEFINED   BOARD_DEFINED
+ *
  * SENSOR_ACC:      TSTAMP_MS_M TSTAMP_MS_L  VALUE_X_H      VALUE_X_L               VALUE_Y_H       VALUE_Y_L       VALUE_Z_H       VALUE_Z_L
  * SENSOR_GYRO:     TSTAMP_MS_M TSTAMP_MS_L  VALUE_X_H      VALUE_X_L               VALUE_Y_H       VALUE_Y_L       VALUE_Z_H       VALUE_Z_L
  * SENSOR_MAG:      TSTAMP_MS_M TSTAMP_MS_L  VALUE_X_H      VALUE_X_L               VALUE_Y_H       VALUE_Y_L       VALUE_Z_H       VALUE_Z_L
  * SENSOR_ANALOG:   TSTAMP_MS_M TSTAMP_MS_L  SENSOR_ID      VALUE_H                 VALUE_L         None            None            None
+ *
+ * GPS_TIMESTAMP:   TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    UTC_HOURS               UTC_MINUTES     UTC_SECONDS     UTC_DSECONDS    None
+ * GPS_LAT:         TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    DEGREES                 MINUTES_H       MINUTES_L       DMINUTES        N/S DIRECTION
+ * GPS_LON:         TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    DEGREES                 MINUTES_H       MINUTES_L       DMINUTES        E/W DIRECTION
+ * GPS_ALT:         TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    ALT_H                   ALT_L           ALT_DEC         UNITS           None
+ * GPS_INFO:        TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    NUM_SAT                 QUALITY         None            None            None
+ *
  * LEDS_ON:         None        None         None           None                    None            None            None            None
  * LEDS_OFF:        None        None         None           None                    None            None            None            None
  *
