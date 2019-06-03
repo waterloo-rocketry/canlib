@@ -193,6 +193,113 @@ bool build_analog_data_msg(uint32_t timestamp,
     return true;
 }
 
+bool build_gps_time_msg(uint32_t timestamp,
+                        uint8_t utc_hours,
+                        uint8_t utc_mins,
+                        uint8_t utc_secs,
+                        uint8_t utc_dsecs,
+                        can_msg_t *output)
+{
+    if (!output) { return false; }
+
+    output->sid = MSG_GPS_TIMESTAMP | BOARD_UNIQUE_ID;
+    write_timestamp_3bytes(timestamp, output);
+
+    output->data[3] = utc_hours;
+    output->data[4] = utc_mins;
+    output->data[5] = utc_secs;
+    output->data[6] = utc_dsecs;
+
+    output->data_len = 7;
+
+    return true;
+}
+
+bool build_gps_lat_msg(uint32_t timestamp,
+                       uint16_t degrees,
+                       uint8_t minutes,
+                       uint8_t dminutes,
+                       uint8_t direction,
+                       can_msg_t *output)
+{
+    if (!output) { return false; }
+
+    output->sid = MSG_GPS_LATITUDE | BOARD_UNIQUE_ID;
+    write_timestamp_3bytes(timestamp, output);
+
+    output->data[3] = (degrees >> 8) & 0xff;
+    output->data[4] = (degrees >> 0) & 0xff;
+    output->data[5] = minutes;
+    output->data[6] = dminutes;
+    output->data[7] = direction;
+
+    output->data_len = 8;
+
+    return true;
+}
+
+bool build_gps_lon_msg(uint32_t timestamp,
+                       uint16_t degrees,
+                       uint8_t minutes,
+                       uint8_t dminutes,
+                       uint8_t direction,
+                       can_msg_t *output)
+{
+    if (!output) { return false; }
+
+    output->sid = MSG_GPS_LONGITUDE | BOARD_UNIQUE_ID;
+    write_timestamp_3bytes(timestamp, output);
+
+    output->data[3] = (degrees >> 8) & 0xff;
+    output->data[4] = (degrees >> 0) & 0xff;
+    output->data[5] = minutes;
+    output->data[6] = dminutes;
+    output->data[7] = direction;
+
+    output->data_len = 8;
+
+    return true;
+}
+
+bool build_gps_alt_msg(uint32_t timestamp,
+                       uint16_t altitude,
+                       uint8_t daltitude,
+                       uint8_t units,
+                       can_msg_t *output)
+{
+    if (!output) { return false; }
+
+    output->sid = MSG_GPS_ALTITUDE | BOARD_UNIQUE_ID;
+    write_timestamp_3bytes(timestamp, output);
+
+    output->data[3] = (altitude >> 8) & 0xff;
+    output->data[4] = (altitude >> 0) & 0xff;
+    output->data[5] = daltitude;
+    output->data[6] = units;
+
+    output->data_len = 7;
+
+    return true;
+}
+
+bool build_gps_info_msg(uint32_t timestamp,
+                       uint8_t num_sat,
+                       uint8_t quality,
+                       can_msg_t *output)
+{
+    if (!output) { return false; }
+
+    output->sid = MSG_GPS_INFO | BOARD_UNIQUE_ID;
+    write_timestamp_3bytes(timestamp, output);
+
+    output->data[3] = num_sat;
+    output->data[4] = quality;
+
+    output->data_len = 5;
+
+    return true;
+}
+
 int get_general_cmd_type(const can_msg_t *msg) {
     if (!msg) { return -1; }
 
@@ -268,6 +375,11 @@ uint32_t get_timestamp(const can_msg_t *msg)
         case MSG_INJ_VALVE_STATUS:
         case MSG_VENT_VALVE_STATUS:
         case MSG_GENERAL_BOARD_STATUS:
+        case MSG_GPS_TIMESTAMP:
+        case MSG_GPS_LATITUDE:
+        case MSG_GPS_LONGITUDE:
+        case MSG_GPS_ALTITUDE:
+        case MSG_GPS_INFO:
             return (uint32_t)msg->data[0] << 16
                    | (uint32_t)msg->data[1] << 8
                    | msg->data[2];
@@ -332,6 +444,102 @@ bool get_analog_data(const can_msg_t *msg, enum SENSOR_ID *sensor_id, uint16_t *
 
     *sensor_id = msg->data[2];
     *output_data = (uint16_t)msg->data[3] << 8 | msg->data[4];
+
+    return true;
+}
+
+bool get_gps_time(const can_msg_t *msg,
+                  uint8_t *utc_hours,
+                  uint8_t *utc_mins,
+                  uint8_t *utc_secs,
+                  uint8_t *utc_dsecs)
+{
+    if (!msg) { return false; }
+    if (!utc_hours) { return false; }
+    if (!utc_mins) { return false; }
+    if (!utc_secs) { return false; }
+    if (!utc_dsecs) { return false; }
+    if (get_message_type(msg) != MSG_GPS_TIMESTAMP) { return false; }
+    
+    *utc_hours = msg->data[3];
+    *utc_mins  = msg->data[4];
+    *utc_secs  = msg->data[5];
+    *utc_dsecs = msg->data[6];
+
+    return true;
+}
+
+bool get_gps_lat(const can_msg_t *msg,
+                 uint16_t *degrees,
+                 uint8_t *minutes,
+                 uint8_t *dminutes,
+                 uint8_t *direction)
+{
+    if (!msg) { return false; }
+    if (!degrees) { return false; }
+    if (!minutes) { return false; }
+    if (!dminutes) { return false; }
+    if (!direction) { return false; }
+    if (get_message_type(msg) != MSG_GPS_LATITUDE) { return false; }
+
+    *degrees = (uint16_t)msg->data[3] << 8 | msg->data[4];
+    *minutes = msg->data[5];
+    *dminutes = msg->data[6];
+    *direction = msg->data[7];
+
+    return true;
+}
+
+bool get_gps_lon(const can_msg_t *msg,
+                 uint16_t *degrees,
+                 uint8_t *minutes,
+                 uint8_t *dminutes,
+                 uint8_t *direction)
+{
+    if (!msg) { return false; }
+    if (!degrees) { return false; }
+    if (!minutes) { return false; }
+    if (!dminutes) { return false; }
+    if (!direction) { return false; }
+    if (get_message_type(msg) != MSG_GPS_LONGITUDE) { return false; }
+
+    *degrees = (uint16_t)msg->data[3] << 8 | msg->data[4];
+    *minutes = msg->data[5];
+    *dminutes = msg->data[6];
+    *direction = msg->data[7];
+
+    return true;
+}
+
+bool get_gps_alt(const can_msg_t *msg,
+                 uint16_t *altitude,
+                 uint8_t *daltitude,
+                 uint8_t *units)
+{
+    if (!msg) { return false; }
+    if (!altitude) { return false; }
+    if (!daltitude) { return false; }
+    if (!units) { return false; }
+    if (get_message_type(msg) != MSG_GPS_ALTITUDE) { return false; }
+
+    *altitude = (uint16_t)msg->data[3] << 8 | msg->data[4];
+    *daltitude = msg->data[5];
+    *units = msg->data[6];
+
+    return true;
+}
+
+bool get_gps_info(const can_msg_t *msg,
+                 uint8_t *num_sat,
+                 uint8_t *quality)
+{
+    if (!msg) { return false; }
+    if (!num_sat) { return false; }
+    if (!quality) { return false; }
+    if (get_message_type(msg) != MSG_GPS_INFO) { return false; }
+
+    *num_sat = msg->data[4];
+    *quality = msg->data[5];
 
     return true;
 }

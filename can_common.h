@@ -110,6 +110,43 @@ bool build_analog_data_msg(uint32_t timestamp,
                            can_msg_t *output);
 
 /*
+ * Used to format GPS timestamp data. Data arguments: UTC time in hours,
+ * minutes, seconds, and deci-seconds. 
+ */
+bool build_gps_time_msg(uint32_t timestamp,
+                        uint8_t utc_hours,
+                        uint8_t utc_mins,
+                        uint8_t utc_secs,
+                        uint8_t utc_dsecs,
+                        can_msg_t *output);
+
+bool build_gps_lat_msg(uint32_t timestamp,
+                       uint16_t degrees,
+                       uint8_t minutes,
+                       uint8_t dminutes,
+                       uint8_t direction,
+                       can_msg_t *output);
+
+bool build_gps_lon_msg(uint32_t timestamp,
+                       uint16_t degrees,
+                       uint8_t minutes,
+                       uint8_t dminutes,
+                       uint8_t direction,
+                       can_msg_t *output);
+
+bool build_gps_alt_msg(uint32_t timestamp,
+                       uint16_t altitude,
+                       uint8_t daltitude,
+                       uint8_t units,
+                       can_msg_t *output);
+
+bool build_gps_info_msg(uint32_t timestamp,
+                       uint8_t num_sat,
+                       uint8_t quality,
+                       can_msg_t *output);
+
+
+/*
  * Gets the general command contained in a general command message.
  * Returns -1 if the provided message is not a general cmd message.
  */
@@ -170,6 +207,34 @@ bool get_imu_data(const can_msg_t *msg,
 bool get_analog_data(const can_msg_t *msg,
                      enum SENSOR_ID *sensor_id,
                      uint16_t *output_data);
+
+
+bool get_gps_time(const can_msg_t* msg,
+                  uint8_t *utc_hours,
+                  uint8_t *utc_mins,
+                  uint8_t *utc_secs,
+                  uint8_t *utc_dsecs);
+
+bool get_gps_lat(const can_msg_t* msg,
+                 uint16_t *degrees,
+                 uint8_t *minutes,
+                 uint8_t *dminutes,
+                 uint8_t *direction);
+
+bool get_gps_lon(const can_msg_t* msg,
+                 uint16_t *degrees,
+                 uint8_t *minutes,
+                 uint8_t *dminutes,
+                 uint8_t *direction);
+
+bool get_gps_alt(const can_msg_t* msg,
+                 uint16_t *altitude,
+                 uint8_t *daltitude,
+                 uint8_t *units);
+
+bool get_gps_info(const can_msg_t* msg,
+                  uint8_t *num_sat,
+                  uint8_t *quality);
 
 /*
  * If MSG is a DEBUG_MSG message, return its debug level, else return
