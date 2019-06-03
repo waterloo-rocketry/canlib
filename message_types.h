@@ -32,11 +32,11 @@
 #define MSG_SENSOR_MAG            0x640
 #define MSG_SENSOR_ANALOG         0x6A0
 
-#define MSG_GPS_TIMESTAMP         0x6B0
-#define MSG_GPS_LATITUDE          0x6C0
-#define MSG_GPS_LONGITUDE         0x6D0
-#define MSG_GPS_ALTITUDE          0x6E0
-#define MSG_GPS_INFO              0x6F0
+#define MSG_GPS_TIMESTAMP         0x6C0
+#define MSG_GPS_LATITUDE          0x6E0
+#define MSG_GPS_LONGITUDE         0x700
+#define MSG_GPS_ALTITUDE          0x720
+#define MSG_GPS_INFO              0x740
 
 #define MSG_LEDS_ON               0x7E0
 #define MSG_LEDS_OFF              0x7C0

@@ -460,7 +460,7 @@ bool get_gps_time(const can_msg_t *msg,
     if (!utc_secs) { return false; }
     if (!utc_dsecs) { return false; }
     if (get_message_type(msg) != MSG_GPS_TIMESTAMP) { return false; }
-    
+
     *utc_hours = msg->data[3];
     *utc_mins  = msg->data[4];
     *utc_secs  = msg->data[5];
@@ -538,8 +538,8 @@ bool get_gps_info(const can_msg_t *msg,
     if (!quality) { return false; }
     if (get_message_type(msg) != MSG_GPS_INFO) { return false; }
 
-    *num_sat = msg->data[4];
-    *quality = msg->data[5];
+    *num_sat = msg->data[3];
+    *quality = msg->data[4];
 
     return true;
 }

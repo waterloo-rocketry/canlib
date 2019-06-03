@@ -337,6 +337,149 @@ static bool test_sensor_analog(void)
     return ret;
 }
 
+bool test_gps(void)
+{
+    // global timestamp
+    uint32_t timestamp = 0x472032;
+
+    // test utc time
+    uint8_t utc_hours = 21;
+    uint8_t utc_mins = 56;
+    uint8_t utc_secs = 32;
+    uint8_t utc_dsecs = 9;
+
+    // test lat/lon
+    uint16_t degrees = 260;
+    uint8_t minutes = 45;
+    uint8_t dminutes = 23;
+    uint8_t direction_ns = 'S';
+    uint8_t direction_ew = 'E';
+
+    // test altitude
+    uint16_t altitude = 45000;
+    uint8_t daltitude = 9;
+    uint8_t units = 'F';
+
+    // test general info
+    uint8_t num_sat = 18;
+    uint8_t quality = 5;
+
+    can_msg_t output;
+    bool ret = true;
+
+    // illegal args
+    if (build_gps_time_msg(0, 0, 0, 0, 0, NULL)) {
+        REPORT_FAIL("Built message with null input");
+        ret = false;
+    }
+    if (build_gps_lat_msg(0, 0, 0, 0, 0, NULL)) {
+        REPORT_FAIL("Built message with null input");
+        ret = false;
+    }
+    if (build_gps_lon_msg(0, 0, 0, 0, 0, NULL)) {
+        REPORT_FAIL("Built message with null input");
+        ret = false;
+    }
+    if (build_gps_alt_msg(0, 0, 0, 0, NULL)) {
+        REPORT_FAIL("Built message with null input");
+        ret = false;
+    }
+    if (build_gps_info_msg(0, 0, 0, NULL)) {
+        REPORT_FAIL("Built message with null input");
+        ret = false;
+    }
+
+    // expected behaviour - time
+    if (!build_gps_time_msg(timestamp, utc_hours, utc_mins, utc_secs, utc_dsecs, &output)) {
+        REPORT_FAIL("Error building CAN message");
+        ret = false;
+    }
+
+    uint8_t utc_hours_, utc_mins_, utc_secs_, utc_dsecs_;
+    uint32_t timestamp_ = get_timestamp(&output);
+    if (!get_gps_time(&output, &utc_hours_, &utc_mins_, &utc_secs_, &utc_dsecs_)) {
+        REPORT_FAIL("Error getting GPS time fields");
+        ret = false;
+    }
+    if ((timestamp != timestamp_) || (utc_hours != utc_hours_) || (utc_mins != utc_mins_)
+        || (utc_secs != utc_secs_) || (utc_dsecs != utc_dsecs_)) {
+        REPORT_FAIL("GPS time fields do not match");
+        ret = false;
+    }
+
+    // expected behaviour - latitude
+    if (!build_gps_lat_msg(timestamp, degrees, minutes, dminutes, direction_ns, &output)) {
+        REPORT_FAIL("Error building CAN message");
+        ret = false;
+    }
+
+    uint16_t degrees_;
+    uint8_t minutes_, dminutes_, direction_;
+    timestamp_ = get_timestamp(&output);
+    if (!get_gps_lat(&output, &degrees_, &minutes_, &dminutes_, &direction_)) {
+        REPORT_FAIL("Error getting latitude data");
+        ret = false;
+    }
+    if ((timestamp != timestamp_) || (degrees != degrees_) || (minutes != minutes_)
+        || (dminutes != dminutes_) || (direction_ns != direction_)) {
+        REPORT_FAIL("GPS latitude fields do not match");
+        ret = false;
+    }
+
+    // expected behaviour - longitude
+    if (!build_gps_lon_msg(timestamp, degrees, minutes, dminutes, direction_ew, &output)) {
+        REPORT_FAIL("Error building CAN message");
+        ret = false;
+    }
+    timestamp_ = get_timestamp(&output);
+    if (!get_gps_lon(&output, &degrees_, &minutes_, &dminutes_, &direction_)) {
+        REPORT_FAIL("Error getting longitude data");
+        ret = false;
+    }
+    if ((timestamp != timestamp_) || (degrees != degrees_) || (minutes != minutes_)
+        || (dminutes != dminutes_) || (direction_ew != direction_)) {
+        REPORT_FAIL("GPS longitude fields do not match");
+        ret = false;
+    }
+
+    // expected behaviour - altitude
+    if (!build_gps_alt_msg(timestamp, altitude, daltitude, units, &output)) {
+        REPORT_FAIL("Error building CAN message");
+        ret = false;
+    }
+
+    uint16_t altitude_;
+    uint8_t daltitude_, units_;
+    timestamp_ = get_timestamp(&output);
+    if (!get_gps_alt(&output, &altitude_, &daltitude_, &units_)) {
+        REPORT_FAIL("Error getting latitude data");
+        ret = false;
+    }
+    if ((timestamp != timestamp_) || (altitude != altitude_) || (daltitude != daltitude_)
+        || (units != units_)) {
+        REPORT_FAIL("GPS latitude fields do not match");
+        ret = false;
+    }
+
+    // expected behaviour - info
+    if (!build_gps_info_msg(timestamp, num_sat, quality, &output)) {
+        REPORT_FAIL("Error building CAN message");
+        ret = false;
+    }
+    uint8_t num_sat_, quality_;
+    timestamp_ = get_timestamp(&output);
+    if (!get_gps_info(&output, &num_sat_, &quality_)) {
+        REPORT_FAIL("Error getting GPS info data");
+        ret = false;
+    }
+    if ((timestamp != timestamp_) || (num_sat != num_sat_) || (quality != quality_)) {
+        REPORT_FAIL("GPS info fields do not match");
+        ret = false;
+    }
+
+    return ret;
+}
+
 bool test_build_can_message(void)
 {
     bool ret = true;
@@ -368,6 +511,11 @@ bool test_build_can_message(void)
         REPORT_FAIL("test_sensor_analog returned false");
         ret = false;
     }
+    if (!test_gps()) {
+        REPORT_FAIL("test_gps returned false");
+        ret = false;
+    }
+
 
     return ret;
 }
