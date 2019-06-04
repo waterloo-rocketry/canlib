@@ -349,7 +349,7 @@ bool test_gps(void)
     uint8_t utc_dsecs = 9;
 
     // test lat/lon
-    uint16_t degrees = 260;
+    uint8_t degrees = 145;
     uint8_t minutes = 45;
     uint8_t dminutes = 23;
     uint8_t direction_ns = 'S';
@@ -413,8 +413,7 @@ bool test_gps(void)
         ret = false;
     }
 
-    uint16_t degrees_;
-    uint8_t minutes_, dminutes_, direction_;
+    uint8_t degrees_, minutes_, dminutes_, direction_;
     timestamp_ = get_timestamp(&output);
     if (!get_gps_lat(&output, &degrees_, &minutes_, &dminutes_, &direction_)) {
         REPORT_FAIL("Error getting latitude data");
