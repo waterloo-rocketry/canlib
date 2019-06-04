@@ -79,8 +79,8 @@
  * SENSOR_ANALOG:   TSTAMP_MS_M TSTAMP_MS_L  SENSOR_ID      VALUE_H                 VALUE_L         None            None            None
  *
  * GPS_TIMESTAMP:   TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    UTC_HOURS               UTC_MINUTES     UTC_SECONDS     UTC_DSECONDS    None
- * GPS_LAT:         TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    DEGREES_H               DEGREES_L       MINUTES         DMINUTES        N/S DIRECTION
- * GPS_LON:         TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    DEGREES_H               DEGREES_L       MINUTES         DMINUTES        E/W DIRECTION
+ * GPS_LAT:         TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    DEGREES                 MINUTES         DMINUTES        N/S DIRECTION   None
+ * GPS_LON:         TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    DEGREES                 MINUTES         DMINUTES        E/W DIRECTION   None
  * GPS_ALT:         TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    ALT_H                   ALT_L           ALT_DEC         UNITS           None
  * GPS_INFO:        TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    NUM_SAT                 QUALITY         None            None            None
  *

@@ -216,7 +216,7 @@ bool build_gps_time_msg(uint32_t timestamp,
 }
 
 bool build_gps_lat_msg(uint32_t timestamp,
-                       uint16_t degrees,
+                       uint8_t degrees,
                        uint8_t minutes,
                        uint8_t dminutes,
                        uint8_t direction,
@@ -227,19 +227,18 @@ bool build_gps_lat_msg(uint32_t timestamp,
     output->sid = MSG_GPS_LATITUDE | BOARD_UNIQUE_ID;
     write_timestamp_3bytes(timestamp, output);
 
-    output->data[3] = (degrees >> 8) & 0xff;
-    output->data[4] = (degrees >> 0) & 0xff;
-    output->data[5] = minutes;
-    output->data[6] = dminutes;
-    output->data[7] = direction;
+    output->data[3] = degrees;
+    output->data[4] = minutes;
+    output->data[5] = dminutes;
+    output->data[6] = direction;
 
-    output->data_len = 8;
+    output->data_len = 7;
 
     return true;
 }
 
 bool build_gps_lon_msg(uint32_t timestamp,
-                       uint16_t degrees,
+                       uint8_t degrees,
                        uint8_t minutes,
                        uint8_t dminutes,
                        uint8_t direction,
@@ -250,13 +249,12 @@ bool build_gps_lon_msg(uint32_t timestamp,
     output->sid = MSG_GPS_LONGITUDE | BOARD_UNIQUE_ID;
     write_timestamp_3bytes(timestamp, output);
 
-    output->data[3] = (degrees >> 8) & 0xff;
-    output->data[4] = (degrees >> 0) & 0xff;
-    output->data[5] = minutes;
-    output->data[6] = dminutes;
-    output->data[7] = direction;
+    output->data[3] = degrees;
+    output->data[4] = minutes;
+    output->data[5] = dminutes;
+    output->data[6] = direction;
 
-    output->data_len = 8;
+    output->data_len = 7;
 
     return true;
 }
@@ -470,7 +468,7 @@ bool get_gps_time(const can_msg_t *msg,
 }
 
 bool get_gps_lat(const can_msg_t *msg,
-                 uint16_t *degrees,
+                 uint8_t *degrees,
                  uint8_t *minutes,
                  uint8_t *dminutes,
                  uint8_t *direction)
@@ -482,16 +480,16 @@ bool get_gps_lat(const can_msg_t *msg,
     if (!direction) { return false; }
     if (get_message_type(msg) != MSG_GPS_LATITUDE) { return false; }
 
-    *degrees = (uint16_t)msg->data[3] << 8 | msg->data[4];
-    *minutes = msg->data[5];
-    *dminutes = msg->data[6];
-    *direction = msg->data[7];
+    *degrees = msg->data[3];
+    *minutes = msg->data[4];
+    *dminutes = msg->data[5];
+    *direction = msg->data[6];
 
     return true;
 }
 
 bool get_gps_lon(const can_msg_t *msg,
-                 uint16_t *degrees,
+                 uint8_t *degrees,
                  uint8_t *minutes,
                  uint8_t *dminutes,
                  uint8_t *direction)
@@ -503,10 +501,10 @@ bool get_gps_lon(const can_msg_t *msg,
     if (!direction) { return false; }
     if (get_message_type(msg) != MSG_GPS_LONGITUDE) { return false; }
 
-    *degrees = (uint16_t)msg->data[3] << 8 | msg->data[4];
-    *minutes = msg->data[5];
-    *dminutes = msg->data[6];
-    *direction = msg->data[7];
+    *degrees = msg->data[3];
+    *minutes = msg->data[4];
+    *dminutes = msg->data[5];
+    *direction = msg->data[6];
 
     return true;
 }
