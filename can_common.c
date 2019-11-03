@@ -23,7 +23,7 @@ static void write_timestamp_3bytes(uint32_t timestamp, can_msg_t *output)
     output->data[2] = (timestamp >> 0) & 0xff;
 }
 
-bool build_general_cmd_msg(uint32_t timestamp,
+static bool build_general_cmd_msg(uint32_t timestamp,
                            enum GEN_CMD cmd,
                            can_msg_t *output)
 {
