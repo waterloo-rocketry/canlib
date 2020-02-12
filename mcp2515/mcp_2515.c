@@ -14,50 +14,50 @@
 #define BIT_MOD     0b00000101
 
 // read a byte from the SPI module
-static uint8_t (*spi_read)(void);
+static uint8_t (*__spi_read)(void);
 
 // write a byte through the spi module
-static void (*spi_write)(uint8_t data);
+static void (*__spi_write)(uint8_t data);
 
 // drive the chip select pin for the MCP2562
 // 1: drive pin high, 0: drive pin low
-static void (*cs_drive)(uint8_t state);
+static void (*__cs_drive)(uint8_t state);
 
 static void mcp_write_reg(uint8_t addr, uint8_t data) {
-    cs_drive(0);
-    spi_write(WRITE);
-    spi_write(addr);
-    spi_write(data);
-    cs_drive(1);
+    __cs_drive(0);
+    __spi_write(WRITE);
+    __spi_write(addr);
+    __spi_write(data);
+    __cs_drive(1);
 }
 
 static uint8_t mcp_read_reg(uint8_t addr) {
-    cs_drive(0);
-    spi_write(READ);
-    spi_write(addr);
-    uint8_t ret =  spi_read();
-    cs_drive(1);
+    __cs_drive(0);
+    __spi_write(READ);
+    __spi_write(addr);
+    uint8_t ret =  __spi_read();
+    __cs_drive(1);
     return ret;
 }
 
 static void mcp_bit_modify(uint8_t addr, uint8_t mask, uint8_t data) {
-    cs_drive(0);
-    spi_write(BIT_MOD);
-    spi_write(addr);
-    spi_write(mask);
-    spi_write(data);
-    cs_drive(1);
+    __cs_drive(0);
+    __spi_write(BIT_MOD);
+    __spi_write(addr);
+    __spi_write(mask);
+    __spi_write(data);
+    __cs_drive(1);
 }
 
 void mcp_can_init(can_timing_t *can_params,
                   uint8_t (*spi_read_fcn)(void),
                   void (*spi_write_fcn)(uint8_t data),
                   void (*cs_drive_fcn)(uint8_t state)) {
-    spi_read = spi_read_fcn;
-    spi_write= spi_write_fcn;
-    cs_drive = cs_drive_fcn;
+    __spi_read = spi_read_fcn;
+    __spi_write= spi_write_fcn;
+    __cs_drive = cs_drive_fcn;
 
-    cs_drive(1);
+    __cs_drive(1);
 
     // set to config mode. top 3 bits are 0b100
     mcp_write_reg(CANCTRL, 0x4 << 5);
