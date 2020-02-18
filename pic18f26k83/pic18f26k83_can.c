@@ -140,9 +140,7 @@ void can_handle_interrupt() {
         RXB0CONbits.RXFUL = 0;
         return;
     } else if (PIR5bits.RXB1IF) {
-        
-        uint16_t sid = (((uint16_t)RXB0SIDH) << 3) | (RXB0SIDL >> 5);
-        
+                
         can_msg_t rcvd_msg;
         rcvd_msg.sid = (((uint16_t)RXB1SIDH) << 3) | (RXB1SIDL >> 5);
         rcvd_msg.data_len = RXB1DLCbits.DLC;
