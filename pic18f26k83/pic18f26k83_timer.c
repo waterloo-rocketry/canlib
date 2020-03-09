@@ -1,7 +1,9 @@
 #include <xc.h>
-#include <pic18f26k83.h>
-
 #include "pic18f26k83_timer.h"
+
+#ifndef _PIC18F26K83_H_
+#warning "compiling pic18f26k83 hardware specific file on a different microcontroller, WTF?"
+#endif
 
 /*
  * Magic numbers: timer is driven on a 500kHz clock and is 8 bits.
