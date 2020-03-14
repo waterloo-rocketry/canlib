@@ -83,7 +83,13 @@ pool. All functions in this module are described in `util/can_rcv_buffer.h`
 
 ### Timing Functions
 
-canlib supports a timer module for the pic18f26k83, which allows the use of a millis() function that returns the time in ms since the timer0_init() function is called. In order for this module to run, timer0_handle_interupt() must be called when the timer 0 interupt flag, PIR3bits.TMR0IF is set.
-IMPORTANT: The timer0_handle_interupt() function DOES NOT CLEAR the PIR3bits.TMR0IF interupt flag. This is the responsiblity of the top level ISR!
+Canlib supports a timer module for the pic18f26k83, which allows the use of a 
+`millis()` function that returns the time in ms since the `timer0_init()` 
+function is called. In order for this module to run, `timer0_handle_interupt()` 
+must be called when the timer 0 interupt flag, `PIR3bits.TMR0IF` is set.
+
+IMPORTANT: The `timer0_handle_interupt()` function DOES NOT CLEAR the 
+`PIR3bits.TMR0IF` interupt flag. This is the responsiblity of the top level ISR!
+
 REMINDER: This will take over timer0, Do not use timer0 if using this module.
- All functions in this module are described in 'pic18f26k83/pic18f26k83_timer.h'
+ All functions in this module are described in `pic18f26k83/pic18f26k83_timer.h`
