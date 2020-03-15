@@ -34,7 +34,7 @@ void timer0_init(void) {
     T0CON0bits.MD16 = 0;    // set up timer as 8 bits
 
     T0CON0bits.OUTPS = 0;   // set the output prescaler to 1:1
-    T0CON1bits.CKPS = 0;    // set the prescaller rate to 1:1
+    T0CON1bits.CKPS = 0;    // set the prescaler rate to 1:1
     
     T0CON1bits.CS = 0x5;    // drive timer from 500 kHz
     T0CON1bits.ASYNC = 0;   // timer zero is synchronized to the system clock
