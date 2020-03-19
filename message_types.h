@@ -62,8 +62,10 @@
 #define BOARD_ID_VENT_SPARE       0x0C
 #define BOARD_ID_GPS              0x0D
 #define BOARD_ID_GPS_SPARE        0x0E
-#define BOARD_ID_ARMING           0x0F
-#define BOARD_ID_ARMING_SPARE     0x10
+#define BOARD_ID_FILL             0x0F
+#define BOARD_ID_FILL_SPARE       0x10
+#define BOARD_ID_ARMING           0x11
+#define BOARD_ID_ARMING_SPARE     0x12
 
 /*
  * General message type format (from spreadsheet):
@@ -89,7 +91,7 @@
  * SENSOR_GYRO:     TSTAMP_MS_M TSTAMP_MS_L  VALUE_X_H      VALUE_X_L               VALUE_Y_H       VALUE_Y_L       VALUE_Z_H       VALUE_Z_L
  * SENSOR_MAG:      TSTAMP_MS_M TSTAMP_MS_L  VALUE_X_H      VALUE_X_L               VALUE_Y_H       VALUE_Y_L       VALUE_Z_H       VALUE_Z_L
  * SENSOR_ANALOG:   TSTAMP_MS_M TSTAMP_MS_L  SENSOR_ID      VALUE_H                 VALUE_L         None            None            None
- * 
+ *
  * GPS_TIMESTAMP:   TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    UTC_HOURS               UTC_MINUTES     UTC_SECONDS     UTC_DSECONDS    None
  * GPS_LAT:         TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    DEGREES                 MINUTES         DMINUTES_H      DIMNUTES_L      N/S DIRECTION
  * GPS_LON:         TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    DEGREES                 MINUTES         DMINUTES_H      DIMNUTES_L      E/W DIRECTION
@@ -173,6 +175,7 @@ enum SENSOR_ID {
     SENSOR_INJ_BATT,
     SENSOR_ARM_BATT_1,
     SENSOR_ARM_BATT_2,
+    SENSOR_ALTITUDE,
 };
 
 enum FILL_DIRECTION {
