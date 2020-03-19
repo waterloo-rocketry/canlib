@@ -18,12 +18,14 @@
 #define MSG_GENERAL_CMD           0x060
 #define MSG_VENT_VALVE_CMD        0x0C0
 #define MSG_INJ_VALVE_CMD         0x120
+#define MSG_ALT_ARM_CMD           0x140
 #define MSG_RESET_CMD             0x160
 
 #define MSG_DEBUG_MSG             0x180
 #define MSG_DEBUG_PRINTF          0x1E0
 #define MSG_DEBUG_RADIO_CMD       0x200
 
+#define MSG_ALT_ARM_STATUS        0x440
 #define MSG_VENT_VALVE_STATUS     0x460
 #define MSG_INJ_VALVE_STATUS      0x4C0
 #define MSG_GENERAL_BOARD_STATUS  0x520
@@ -59,16 +61,17 @@
 #define BOARD_ID_VENT_SPARE       0x0C
 #define BOARD_ID_GPS              0x0D
 #define BOARD_ID_GPS_SPARE        0x0E
-#define BOARD_ID_FILL             0x0F
-#define BOARD_ID_FILL_SPARE       0x10
+#define BOARD_ID_ARMING           0x0F
+#define BOARD_ID_ARMING_SPARE     0x10
 
 /*
  * General message type format (from spreadsheet):
- * (Version 0.2.2)
+ * (Version 0.0.4)
  *                  byte 0      byte 1       byte 2         byte 3                  byte 4          byte 5          byte 6          byte 7
  * GENERAL_CMD:     TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    COMMAND_TYPE            None            None            None            None
  * VENT_VALVE_CMD:  TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    VENT_VALVE_STATE        None            None            None            None
  * INJ_VALVE_CMD:   TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    INJ_VALVE_STATE         None            None            None            None
+ * ALT_ARM_CMD:     TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    ALT_ARM_STATE & #       None            None            None            None
  * RESET_CMD:       TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    BOARD_ID                None            None            None            None
  *
  * DEBUG_MSG:       TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    DEBUG_LEVEL | LINUM_H   LINUM_L         MESSAGE_DEFINED MESSAGE_DEFINED MESSAGE_DEFINED
@@ -77,6 +80,7 @@
  *
  * VENT_VALVE_STAT: TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    VENT_VALVE_STATE        CMD_VALVE_STATE None            None            None
  * INJ_VALVE_STAT:  TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    INJ_VALVE_STATE         CMD_VALVE_STATE None            None            None
+ * ALT_ARM_STAT:    TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    ALT_ARM_STATE & #       V_DROGUE_H      V_DROGUE_L      V_MAIN_H        V_MAIN_L
  * BOARD_STAT:      TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    ERROR_CODE              BOARD_DEFINED   BOARD_DEFINED   BOARD_DEFINED   BOARD_DEFINED
  *
  * SENSOR_ACC:      TSTAMP_MS_M TSTAMP_MS_L  VALUE_X_H      VALUE_X_L               VALUE_Y_H       VALUE_Y_L       VALUE_Z_H       VALUE_Z_L
@@ -116,6 +120,12 @@ enum VALVE_STATE {
     VALVE_CLOSED,
     VALVE_UNK,
     VALVE_ILLEGAL,
+};
+
+// ARM_CMD/STATUS STATES
+enum ARM_STATE {
+    DISARMED = 0,
+    ARMED,
 };
 
 // BOARD GENERAL STATUS ERROR CODES
@@ -159,6 +169,9 @@ enum SENSOR_ID {
     SENSOR_PRESSURE_CC,
     SENSOR_VENT_BATT,
     SENSOR_INJ_BATT,
+    SENSOR_ARM_BATT_1,
+    SENSOR_ARM_BATT_2,
+    SENSOR_ALTITUDE,
 };
 
 enum FILL_DIRECTION {
