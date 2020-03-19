@@ -139,6 +139,12 @@ enum ARM_STATE {
     ARMED,
 };
 
+// ARM_CMD/STATUS STATES
+enum ARM_STATE {
+    DISARMED = 0,
+    ARMED,
+};
+
 // BOARD GENERAL STATUS ERROR CODES
 //  ERROR CODE (byte 3)         (byte4)             (byte 5)            (byte 6)            (byte 7)
 enum BOARD_STATUS {
@@ -187,6 +193,7 @@ enum SENSOR_ID {
     SENSOR_VELOCITY,
     SENSOR_MAG_1,
     SENSOR_MAG_2,
+    SENSOR_ALTITUDE,
 };
 
 enum FILL_DIRECTION {
