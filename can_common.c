@@ -256,6 +256,7 @@ bool build_altitude_data_msg(uint32_t timestamp,
 {
     if(!output) { return false; }
 
+<<<<<<< HEAD
     output->sid =  MSG_SENSOR_ALTITUDE | BOARD_UNIQUE_ID;
     write_timestamp_3bytes(timestamp, output);
 
@@ -265,6 +266,8 @@ bool build_altitude_data_msg(uint32_t timestamp,
     output->data[6] = altitude & 0xFF;
     output->data_len = 7;
 
+=======
+>>>>>>> Add build and get functions for new message types.
     return true;
 }
 
@@ -465,16 +468,21 @@ int get_req_valve_state(const can_msg_t *msg)
     }
 }
 
+<<<<<<< HEAD
 bool get_curr_arm_state(const can_msg_t *msg, uint8_t *alt_num, enum ARM_STATE *arm_state)
 {
     if( !msg || !alt_num || !arm_state) { return false; }
     if(get_message_type(msg) != MSG_ALT_ARM_STATUS) { return false; }
     *alt_num = msg->data[3] & 0x0F;
     *arm_state = msg->data[3] >> 4;
+=======
+bool get_curr_arm_state(const can_msg_t *msg, uint8_t *alt_num, enum ARM_STATE *arm_state){
+>>>>>>> Add build and get functions for new message types.
 
     return true;
 }
 
+<<<<<<< HEAD
 bool get_req_arm_state(const can_msg_t *msg, uint8_t *alt_num, enum ARM_STATE *arm_state)
 {
     if( !msg || !alt_num || !arm_state) { return false; }
@@ -482,6 +490,10 @@ bool get_req_arm_state(const can_msg_t *msg, uint8_t *alt_num, enum ARM_STATE *a
     *alt_num = msg->data[3] & 0x0F;
     *arm_state = msg->data[3] >> 4;
 
+=======
+bool get_req_arm_state(const can_msg_t *msg, uint8_t *alt_num, enum ARM_STATE *arm_state){
+    
+>>>>>>> Add build and get functions for new message types.
     return true;
 }
 
@@ -593,6 +605,7 @@ bool get_analog_data(const can_msg_t *msg, enum SENSOR_ID *sensor_id, uint16_t *
 
 bool get_altitude_data(const can_msg_t *msg, int32_t *altitude)
 {
+<<<<<<< HEAD
     if (!msg || !altitude) { return false; }
     if (get_message_type(msg) != MSG_SENSOR_ALTITUDE) { return false; }
 
@@ -615,6 +628,12 @@ bool get_pyro_voltage_data(const can_msg_t *msg,
     *v_drogue += msg->data[5];
     *v_main = (msg->data[6] << 8);
     *v_main += msg->data[7];
+=======
+    if (!msg) { return false; }
+    if (!altitude) { return false; }
+    if (get_message_type(msg) != MSG_SENSOR_ALTITUDE) { return false; }
+
+>>>>>>> Add build and get functions for new message types.
 
     return true;
 }

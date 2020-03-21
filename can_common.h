@@ -277,14 +277,14 @@ bool get_analog_data(const can_msg_t *msg,
                      uint16_t *output_data);
 
 /*
-* Gets the altitude data, returns false if the message is not 
+* Gets the altitude data, returns false if the message is not
 * a SENSOR_ALTITUDE message.
 */
 bool get_altitude_data(const can_msg_t *msg,
                        int32_t *altitude);
 
 /*
-* Gets the voltage of the drogue and main pyro lines, returns false 
+* Gets the voltage of the drogue and main pyro lines, returns false
 * if the message is not an ALT_ARM_STATUS message
 */
 bool get_pyro_voltage_data(const can_msg_t *msg,

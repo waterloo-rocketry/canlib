@@ -35,6 +35,7 @@
 #define MSG_SENSOR_GYRO           0x5E0
 #define MSG_SENSOR_MAG            0x640
 #define MSG_SENSOR_ANALOG         0x6A0
+#define MSG_SENSOR_ALTITUDE       0x6C0
 
 #define MSG_GPS_TIMESTAMP         0x6C0
 #define MSG_GPS_LATITUDE          0x6E0
@@ -91,7 +92,8 @@
  * SENSOR_GYRO:     TSTAMP_MS_M TSTAMP_MS_L  VALUE_X_H      VALUE_X_L               VALUE_Y_H       VALUE_Y_L       VALUE_Z_H       VALUE_Z_L
  * SENSOR_MAG:      TSTAMP_MS_M TSTAMP_MS_L  VALUE_X_H      VALUE_X_L               VALUE_Y_H       VALUE_Y_L       VALUE_Z_H       VALUE_Z_L
  * SENSOR_ANALOG:   TSTAMP_MS_M TSTAMP_MS_L  SENSOR_ID      VALUE_H                 VALUE_L         None            None            None
- *
+ * SENSOR_ALTITUDE: TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    ALTITUDE_H              ALTITUDE_M      ALTITUDE_L      None            None
+ * 
  * GPS_TIMESTAMP:   TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    UTC_HOURS               UTC_MINUTES     UTC_SECONDS     UTC_DSECONDS    None
  * GPS_LAT:         TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    DEGREES                 MINUTES         DMINUTES_H      DIMNUTES_L      N/S DIRECTION
  * GPS_LON:         TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    DEGREES                 MINUTES         DMINUTES_H      DIMNUTES_L      E/W DIRECTION
@@ -175,7 +177,6 @@ enum SENSOR_ID {
     SENSOR_INJ_BATT,
     SENSOR_ARM_BATT_1,
     SENSOR_ARM_BATT_2,
-    SENSOR_ALTITUDE,
 };
 
 enum FILL_DIRECTION {
