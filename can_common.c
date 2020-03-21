@@ -207,6 +207,15 @@ bool build_analog_data_msg(uint32_t timestamp,
     return true;
 }
 
+bool build_altitude_data_msg(uint32_t timestamp,
+                             int32_t altitude,
+                             can_msg_t *output)
+{
+    if(!output) { return false; }
+
+    return true;
+}
+
 bool build_gps_time_msg(uint32_t timestamp,
                         uint8_t utc_hours,
                         uint8_t utc_mins,
@@ -404,6 +413,16 @@ int get_req_valve_state(const can_msg_t *msg)
     }
 }
 
+bool get_curr_arm_state(const can_msg_t *msg, uint8_t *alt_num, enum ARM_STATE *arm_state){
+
+    return true;
+}
+
+bool get_req_arm_state(const can_msg_t *msg, uint8_t *alt_num, enum ARM_STATE *arm_state){
+    
+    return true;
+}
+
 uint16_t get_message_type(const can_msg_t *msg)
 {
     // invalid SID
@@ -506,6 +525,16 @@ bool get_analog_data(const can_msg_t *msg, enum SENSOR_ID *sensor_id, uint16_t *
 
     *sensor_id = msg->data[2];
     *output_data = (uint16_t)msg->data[3] << 8 | msg->data[4];
+
+    return true;
+}
+
+bool get_altitude_data(const can_msg_t *msg, int32_t *altitude)
+{
+    if (!msg) { return false; }
+    if (!altitude) { return false; }
+    if (get_message_type(msg) != MSG_SENSOR_ALTITUDE) { return false; }
+
 
     return true;
 }
