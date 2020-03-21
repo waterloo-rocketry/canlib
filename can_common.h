@@ -248,6 +248,18 @@ bool get_req_arm_state(const can_msg_t *msg, uint8_t *alt_num, enum ARM_STATE *a
 
 
 /*
+* Gets the current arm state and which altimiter it is for.
+* Returns false if the provided message is not an arm status.
+*/
+bool get_curr_arm_state(const can_msg_t *msg, uint8_t *alt_num, enum ARM_STATE *arm_state);
+
+/*
+* Gets the requested arm state and altimeter number.
+* Returns false if the provided mesage is not an arm state request."
+*/
+bool get_req_arm_state(const can_msg_t *msg, uint8_t *alt_num, enum ARM_STATE *arm_state);
+
+/*
  * Strips the board unique ID from msg, and returns the SID. Contains
  * no error checking, so if you pass an illegal SID, you could get
  * back a nonsensical value.
