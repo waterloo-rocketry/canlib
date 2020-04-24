@@ -99,7 +99,9 @@ bool build_arm_cmd_msg(uint32_t timestamp,
 */
 bool build_arm_stat_msg(uint32_t timestamp,
                         uint8_t alt_num,
-                        enum ARM_STATE,
+                        enum ARM_STATE arm_state,
+                        uint16_t v_drogue,
+                        uint16_t v_main,
                         can_msg_t *output);
 
 
