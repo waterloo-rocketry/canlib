@@ -164,6 +164,49 @@ bool build_arm_stat_msg(uint32_t timestamp,
     return true;
 }
 
+bool build_arm_cmd_msg(uint32_t timestamp,
+                       uint8_t alt_num,
+                       enum ARM_STATE arm_cmd,
+                       can_msg_t *output)
+{
+    if (!output) { return false; }
+
+    output->sid = MSG_ALT_ARM_CMD | BOARD_UNIQUE_ID;
+    write_timestamp_3bytes(timestamp, output);
+
+    // 4 msb are used for arm state, 4 lsb used for altimeter number
+    output->data[3] = arm_cmd << 4 | alt_num & 0x0F; 
+    output->data_len = 4; // 3 bytes timestamp, 1 byte arm state + alt num
+    
+    return true;
+}
+
+bool build_arm_stat_msg(uint32_t timestamp,
+                        uint8_t alt_num,
+                        enum ARM_STATE arm_state,
+                        uint16_t v_drogue,
+                        uint16_t v_main,
+                        can_msg_t *output)
+{
+    if (!output) { return false; }
+
+    output->sid = MSG_ALT_ARM_CMD | BOARD_UNIQUE_ID;
+    write_timestamp_3bytes(timestamp, output);
+
+    // 4 msb are used for arm state, 4 lsb used for altimeter number
+    output->data[3] = arm_state << 4 | alt_num & 0x0F; 
+    // drogue voltage
+    output->data[4] = v_drogue >> 8;     // 8 msb
+    output->data[5] = v_drogue & 0x00FF; // 8 lsb
+    // main voltage
+    output->data[6] = v_main >> 8;     // 8 msb
+    output->data[7] = v_main & 0x00FF; // 8 lsb
+    // 3 bytes timestamp, 1 byte arm state + alt num, 4 bytes voltages
+    output->data_len = 8;
+
+    return true;
+}
+
 // This might need to be made more granular - it doesn't quite hide
 // the data layout properly.
 bool build_board_stat_msg(uint32_t timestamp,
