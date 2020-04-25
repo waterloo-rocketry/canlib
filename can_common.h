@@ -277,10 +277,19 @@ bool get_analog_data(const can_msg_t *msg,
                      uint16_t *output_data);
 
 /*
-* Gets the altitude data, returns false if the input is invalid.
+* Gets the altitude data, returns false if the message is not 
+* a SENSOR_ALTITUDE message.
 */
 bool get_altitude_data(const can_msg_t *msg,
                        int32_t *altitude);
+
+/*
+* Gets the voltage of the drogue and main pyro lines, returns false 
+* if the message is not an ALT_ARM_STATUS message
+*/
+bool get_pyro_voltage_data(const can_msg_t *msg,
+                           uint16_t *v_drogue,
+                           uint16_t *v_main);
 
 /*
  * Gets GPS UTC time information. Format is UTC hours, minutes,

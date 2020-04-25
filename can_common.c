@@ -256,6 +256,14 @@ bool build_altitude_data_msg(uint32_t timestamp,
 {
     if(!output) { return false; }
 
+    output->sid =  MSG_SENSOR_ALTITUDE | BOARD_UNIQUE_ID;
+    write_timestamp_3bytes(timestamp, output);
+
+    output->data[3] = (altitude >> 24) & 0x000F;
+    output->data[4] = (altitude >> 16) & 0x000F;
+    output->data[5] = (altitude >> 8) & 0x000F;
+    output->data[6] = altitude & 0x000F;
+
     return true;
 }
 
@@ -456,13 +464,23 @@ int get_req_valve_state(const can_msg_t *msg)
     }
 }
 
-bool get_curr_arm_state(const can_msg_t *msg, uint8_t *alt_num, enum ARM_STATE *arm_state){
+bool get_curr_arm_state(const can_msg_t *msg, uint8_t *alt_num, enum ARM_STATE *arm_state)
+{
+    if( !msg || !alt_num || !arm_state) { return false; }
+    if(get_message_type(msg) != MSG_ALT_ARM_STATUS) { return false; }
+    *alt_num = msg->data[3] & 0x0F;
+    *arm_state = msg->data[3] >> 4;
 
     return true;
 }
 
-bool get_req_arm_state(const can_msg_t *msg, uint8_t *alt_num, enum ARM_STATE *arm_state){
-    
+bool get_req_arm_state(const can_msg_t *msg, uint8_t *alt_num, enum ARM_STATE *arm_state)
+{
+    if( !msg || !alt_num || !arm_state) { return false; }
+    if(get_message_type(msg) != MSG_ALT_ARM_CMD) { return false; }
+    *alt_num = msg->data[3] & 0x0F;
+    *arm_state = msg->data[3] >> 4;
+
     return true;
 }
 
@@ -574,10 +592,28 @@ bool get_analog_data(const can_msg_t *msg, enum SENSOR_ID *sensor_id, uint16_t *
 
 bool get_altitude_data(const can_msg_t *msg, int32_t *altitude)
 {
-    if (!msg) { return false; }
-    if (!altitude) { return false; }
+    if (!msg || !altitude) { return false; }
     if (get_message_type(msg) != MSG_SENSOR_ALTITUDE) { return false; }
 
+    *altitude = (msg->data[3] << 24);
+    *altitude += (msg->data[4] << 16);
+    *altitude += (msg->data[5] << 8);
+    *altitude += msg->data[6];
+
+    return true;
+}
+
+bool get_pyro_voltage_data(const can_msg_t *msg,
+                           uint16_t *v_drogue,
+                           uint16_t *v_main)
+{
+    if (!msg || !v_drogue || !v_main) { return false; }
+    if (get_message_type(msg) != MSG_ALT_ARM_STATUS) { return false; }
+
+    *v_drogue = (msg->data[4] << 8);
+    *v_drogue += msg->data[5];
+    *v_main = (msg->data[6] << 8);
+    *v_main += msg->data[7];
 
     return true;
 }
