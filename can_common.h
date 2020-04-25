@@ -317,7 +317,6 @@ bool get_pyro_voltage_data(const can_msg_t *msg,
                            uint16_t *v_drogue,
                            uint16_t *v_main);
 
-
 /*
  * Gets GPS UTC time information. Format is UTC hours, minutes,
  * seconds, and deci-seconds.
