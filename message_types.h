@@ -34,7 +34,6 @@
 #define MSG_SENSOR_GYRO           0x5E0
 #define MSG_SENSOR_MAG            0x640
 #define MSG_SENSOR_ANALOG         0x6A0
-#define MSG_SENSOR_ALTITUDE       0x6C0
 
 #define MSG_GPS_TIMESTAMP         0x6C0
 #define MSG_GPS_LATITUDE          0x6E0
