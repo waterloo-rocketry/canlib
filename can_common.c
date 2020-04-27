@@ -259,10 +259,11 @@ bool build_altitude_data_msg(uint32_t timestamp,
     output->sid =  MSG_SENSOR_ALTITUDE | BOARD_UNIQUE_ID;
     write_timestamp_3bytes(timestamp, output);
 
-    output->data[3] = (altitude >> 24) & 0x000F;
-    output->data[4] = (altitude >> 16) & 0x000F;
-    output->data[5] = (altitude >> 8) & 0x000F;
-    output->data[6] = altitude & 0x000F;
+    output->data[3] = (altitude >> 24) & 0xFF;
+    output->data[4] = (altitude >> 16) & 0xFF;
+    output->data[5] = (altitude >> 8) & 0xFF;
+    output->data[6] = altitude & 0xFF;
+    output->data_len = 7;
 
     return true;
 }
