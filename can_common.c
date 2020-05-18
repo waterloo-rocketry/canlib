@@ -596,9 +596,9 @@ bool get_altitude_data(const can_msg_t *msg, int32_t *altitude)
     if (!msg || !altitude) { return false; }
     if (get_message_type(msg) != MSG_SENSOR_ALTITUDE) { return false; }
 
-    *altitude = (msg->data[3] << 24);
-    *altitude += (msg->data[4] << 16);
-    *altitude += (msg->data[5] << 8);
+    *altitude = ((uint32_t)msg->data[3] << 24);
+    *altitude += ((uint32_t)msg->data[4] << 16);
+    *altitude += ((uint32_t)msg->data[5] << 8);
     *altitude += msg->data[6];
 
     return true;
