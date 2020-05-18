@@ -175,7 +175,7 @@ bool build_arm_cmd_msg(uint32_t timestamp,
     write_timestamp_3bytes(timestamp, output);
 
     // 4 msb are used for arm state, 4 lsb used for altimeter number
-    output->data[3] = arm_cmd << 4 | alt_num & 0x0F;
+    output->data[3] = (arm_cmd << 4) | (alt_num & 0x0F);
     output->data_len = 4; // 3 bytes timestamp, 1 byte arm state + alt num
 
     return true;
@@ -194,7 +194,7 @@ bool build_arm_stat_msg(uint32_t timestamp,
     write_timestamp_3bytes(timestamp, output);
 
     // 4 msb are used for arm state, 4 lsb used for altimeter number
-    output->data[3] = arm_state << 4 | alt_num & 0x0F;
+    output->data[3] = (arm_state << 4) | (alt_num & 0x0F);
     // drogue voltage
     output->data[4] = v_drogue >> 8;     // 8 msb
     output->data[5] = v_drogue & 0x00FF; // 8 lsb
