@@ -21,7 +21,7 @@ subsystem with its own radio transceiver, we have a single board responsible for
 all radio communications. All CAN networked systems can send and receive radio
 data through it.
 
-At present, there are 5 independent systems that can communicate over this
+At present, there are 8 independent systems that can communicate over this
 CAN bus. The PCB designs for each can be found at [this repository](https://github.com/waterloo-rocketry/canhw.git). The software, as well as
 README descriptions for each subsystem are developed in the following
 independent repositories:
@@ -31,6 +31,10 @@ independent repositories:
 * [Nitrous Vent Valve Subsystem](https://github.com/waterloo-rocketry/cansw_vent)
 * [Injector Valve Subsystem](https://github.com/waterloo-rocketry/cansw_injector)
 * [Sensor Suite Subsystem](https://github.com/waterloo-rocketry/cansw_sensor)
+* [Arming Subsystem](https://github.com/waterloo-rocketry/cansw_arming)
+* [Oxidizer Fill Sensing Subsystem](https://github.com/waterloo-rocketry/cansw_fillsensing)
+* [Telemetry Subsystem](https://github.com/waterloo-rocketry/cansw_telemetry)
+
 
 ## Supported Platforms
 
