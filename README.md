@@ -21,17 +21,20 @@ subsystem with its own radio transceiver, we have a single board responsible for
 all radio communications. All CAN networked systems can send and receive radio
 data through it.
 
-At present, there are 5 independent systems that can communicate over this
-CAN bus. The PCB designs for each can be found at [this repository]
-(https://github.com/waterloo-rocketry/canhw.git). The software, as well as
-readme descriptions for each subsystem are developed in the following
+At present, there are 8 independent systems that can communicate over this
+CAN bus. The PCB designs for each can be found at [this repository](https://github.com/waterloo-rocketry/canhw.git). The software, as well as
+README descriptions for each subsystem are developed in the following
 independent repositories:
 
-* [Radio Subsystem] (https://github.com/waterloo-rocketry/cansw_radio)
-* [Logging Subsystem] (https://github.com/waterloo-rocketry/cansw_logger)
-* [Nitrous Vent Valve Subsystem] (https://github.com/waterloo-rocketry/cansw_vent)
-* [Injector Valve Subsystem] (https://github.com/waterloo-rocketry/cansw_injector)
-* [Sensor Suite Subsystem] (https://github.com/waterloo-rocketry/cansw_sensor)
+* [Radio Subsystem](https://github.com/waterloo-rocketry/cansw_radio)
+* [Logging Subsystem](https://github.com/waterloo-rocketry/cansw_logger)
+* [Nitrous Vent Valve Subsystem](https://github.com/waterloo-rocketry/cansw_vent)
+* [Injector Valve Subsystem](https://github.com/waterloo-rocketry/cansw_injector)
+* [Sensor Suite Subsystem](https://github.com/waterloo-rocketry/cansw_sensor)
+* [Arming Subsystem](https://github.com/waterloo-rocketry/cansw_arming)
+* [Oxidizer Fill Sensing Subsystem](https://github.com/waterloo-rocketry/cansw_fillsensing)
+* [Telemetry Subsystem](https://github.com/waterloo-rocketry/cansw_telemetry)
+
 
 ## Supported Platforms
 
@@ -59,7 +62,7 @@ the required initialization code that needs to be run by any project using
 canlib on that platform. Each should also show how CAN messages can be sent on
 that platform.
 
-## Utilties
+## Utilities
 
 The `util/` directory contains some platform independent utilities that may be
 helpful in some instances. Each utility module is described separately:
@@ -72,14 +75,14 @@ time of 24us (4.16 kHz). To initialize a `can_timings_t`, call
 `can_generate_timing_params` with the frequency that the CAN module is running
 at. In most instances, this will be the same frequency as the microcontroller
 core, but can vary depending on project setup. All functions are described in
-`util/timing_util.h`
+`util/timing_util.h`.
 
 ### can\_rcv\_buffer
 
 This module contains a thread safe ring buffer that can be populated with
 incoming CAN messages during the CAN ISR, which can later be read out by the
 application main thread. The module must be initialized with an external memory
-pool. All functions in this module are described in `util/can_rcv_buffer.h`
+pool. All functions in this module are described in `util/can_rcv_buffer.h`.
 
 ### Timing Functions
 
@@ -91,5 +94,5 @@ must be called when the timer 0 interupt flag, `PIR3bits.TMR0IF` is set.
 IMPORTANT: The `timer0_handle_interupt()` function DOES NOT CLEAR the 
 `PIR3bits.TMR0IF` interupt flag. This is the responsiblity of the top level ISR!
 
-REMINDER: This will take over timer0, Do not use timer0 if using this module.
- All functions in this module are described in `pic18f26k83/pic18f26k83_timer.h`
+REMINDER: This will take over timer0, do not use timer0 if using this module.
+ All functions in this module are described in `pic18f26k83/pic18f26k83_timer.h`.
