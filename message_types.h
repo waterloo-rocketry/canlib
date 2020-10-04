@@ -38,6 +38,8 @@
 #define MSG_GPS_ALTITUDE          0x720
 #define MSG_GPS_INFO              0x740
 
+#define MSG_FILL_LVL              0x8E0
+
 #define MSG_LEDS_ON               0x7E0
 #define MSG_LEDS_OFF              0x7C0
 
@@ -56,12 +58,14 @@
 #define BOARD_ID_VENT_SPARE       0x0C
 #define BOARD_ID_GPS              0x0D
 #define BOARD_ID_GPS_SPARE        0x0E
+#define BOARD_ID_FILL             0x0F
+#define BOARD_ID_FILL_SPARE       0x10
 
 /*
  * General message type format (from spreadsheet):
- * (Version 0.0.3)
+ * (Version 0.0.4)
  *                  byte 0      byte 1       byte 2         byte 3                  byte 4          byte 5          byte 6          byte 7
- * GENERAL CMD:     TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    COMMAND_TYPE            None            None            None            None
+ * GENERAL_CMD:     TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    COMMAND_TYPE            None            None            None            None
  * VENT_VALVE_CMD:  TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    VENT_VALVE_STATE        None            None            None            None
  * INJ_VALVE_CMD:   TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    INJ_VALVE_STATE         None            None            None            None
  *
@@ -84,6 +88,8 @@
  * GPS_ALT:         TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    ALT_H                   ALT_L           ALT_DEC         UNITS           None
  * GPS_INFO:        TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    NUM_SAT                 QUALITY         None            None            None
  *
+ * FILL_LVL:        TSTAMP_MS_M TSTAMP_MS_L  FILL_LEVEL     DIRECTION               None            None            None            None
+ * 
  * LEDS_ON:         None        None         None           None                    None            None            None            None
  * LEDS_OFF:        None        None         None           None                    None            None            None            None
  *
