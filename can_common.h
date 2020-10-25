@@ -277,14 +277,17 @@ bool get_gps_info(const can_msg_t* msg,
 
 /*
  * Used to send fill sensing data. Currently senses fill level
- * measured by senssor number, and direction of fill travel.
+ * measured by sensor number, and direction of fill travel.
  */
 bool build_fill_msg(uint32_t timestamp,
                            uint8_t lvl,
                            uint8_t direction,
                            can_msg_t *output);
 
-
+/*
+ * Populates provided lvl and direction arguments with data unpacked
+ * from fill sensing message.
+ */
 bool get_fill_info(const can_msg_t *msg,
                    uint8_t *lvl,
                    uint8_t *direction);
