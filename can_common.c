@@ -320,7 +320,7 @@ bool get_fill_lvl(const can_msg_t *msg,
                    uint8_t *lvl,
                    uint8_t *direction)
 {
-    if (!msg) { return false; }
+    if (!msg | !lvl | !direction) { return false; }
 
     uint16_t msg_type = get_message_type(msg);
     if (msg_type == MSG_FILL_LVL) {
