@@ -38,7 +38,7 @@
 #define MSG_GPS_ALTITUDE          0x720
 #define MSG_GPS_INFO              0x740
 
-#define MSG_FILL_LVL              0x8E0
+#define MSG_FILL_LVL              0x780
 
 #define MSG_LEDS_ON               0x7E0
 #define MSG_LEDS_OFF              0x7C0
@@ -63,7 +63,7 @@
 
 /*
  * General message type format (from spreadsheet):
- * (Version 0.0.4)
+ * (Version 0.1.0)
  *                  byte 0      byte 1       byte 2         byte 3                  byte 4          byte 5          byte 6          byte 7
  * GENERAL_CMD:     TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    COMMAND_TYPE            None            None            None            None
  * VENT_VALVE_CMD:  TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    VENT_VALVE_STATE        None            None            None            None
@@ -157,6 +157,11 @@ enum SENSOR_ID {
     SENSOR_PRESSURE_CC,
     SENSOR_VENT_BATT,
     SENSOR_INJ_BATT,
+};
+
+enum FILL_DIRECTION {
+    FILLING = 0,
+    EMPTYING,
 };
 
 
