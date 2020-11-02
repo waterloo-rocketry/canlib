@@ -58,6 +58,8 @@ void can_init(const can_timing_t *timing,
     RXB0CONbits.RXM0 = 1;
     RXB0CONbits.RXM1 = 1;
 
+    // Allow overflowing of messages into RXBUF1 if RXBUF0 is full
+    RXB0CONbits.RB0DBEN = 1;
 
     // enable interrupts for all useful CAN interrupts
     //  interrupt triggered on invalid message received
@@ -140,7 +142,16 @@ void can_handle_interrupt() {
         RXB0CONbits.RXFUL = 0;
         return;
     } else if (PIR5bits.RXB1IF) {
-        uint16_t sid = (((uint16_t)RXB0SIDH) << 3) | (RXB0SIDL >> 5);
+
+        can_msg_t rcvd_msg;
+        rcvd_msg.sid = (((uint16_t)RXB1SIDH) << 3) | (RXB1SIDL >> 5);
+        rcvd_msg.data_len = RXB1DLCbits.DLC;
+        memcpy(rcvd_msg.data, (const void *) &RXB1D0, rcvd_msg.data_len);
+
+        // call application code callback
+        if (NULL != can_rcv_cb) {
+            can_rcv_cb(&rcvd_msg);
+        }
 
         PIR5bits.RXB1IF = 0;
         RXB1CONbits.RXFUL = 0;
