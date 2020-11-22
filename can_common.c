@@ -230,7 +230,7 @@ bool build_gps_lat_msg(uint32_t timestamp,
     output->data[3] = degrees;
     output->data[4] = minutes;
     output->data[5] = dminutes >> 8;
-    output->data[6] = dminutes & 0xF;
+    output->data[6] = dminutes & 0xFF;
     output->data[7] = direction;
 
     output->data_len = 8;
@@ -253,7 +253,7 @@ bool build_gps_lon_msg(uint32_t timestamp,
     output->data[3] = degrees;
     output->data[4] = minutes;
     output->data[5] = dminutes >> 8;
-    output->data[6] = dminutes & 0xF;
+    output->data[6] = dminutes & 0xFF;
     output->data[7] = direction;
 
     output->data_len = 8;
