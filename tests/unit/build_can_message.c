@@ -479,6 +479,52 @@ bool test_gps(void)
     return ret;
 }
 
+bool test_build_fill_message(void)
+{
+    uint32_t timestamp = 0x12345678;
+    can_msg_t output;
+    uint8_t fill_lvl = 8;
+    uint8_t dir = FILLING;
+
+    bool ret = true;
+
+    // test illegal args
+    if(build_fill_msg(timestamp, fill_lvl, dir, NULL)){
+        REPORT_FAIL("Built with null output")
+        ret = false;
+    }
+
+    // test nominal behaviour
+    if(!build_fill_msg(timestamp, fill_lvl, dir, &output)){
+        REPORT_FAIL("Error building fill message");
+        ret = false;
+    }
+
+    if(output.data_len != 5){
+        REPORT_FAIL("Wrong data length generated");
+        ret = false;
+    }
+
+    uint8_t rx_lvl;
+    uint8_t rx_dir;
+    if(!get_fill_info(&output, &rx_lvl, &rx_dir)){
+        REPORT_FAIL("Error getting fill info");
+        ret = false;
+    }
+
+    if(rx_lvl != fill_lvl || rx_dir != dir){
+        REPORT_FAIL("Fill info fields don't match");
+        ret = false;
+    }
+
+    if (get_timestamp(&output) != (timestamp & 0xffffff)) {
+        REPORT_FAIL("Timestamp copied wrong");
+        ret = false;
+    }
+
+    return ret;
+}
+
 bool test_build_can_message(void)
 {
     bool ret = true;
@@ -513,6 +559,9 @@ bool test_build_can_message(void)
     if (!test_gps()) {
         REPORT_FAIL("test_gps returned false");
         ret = false;
+    }
+    if (!test_build_fill_message()) {
+        REPORT_FAIL("test_build_fill_msg returned false");
     }
 
 

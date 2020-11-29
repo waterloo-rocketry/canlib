@@ -288,7 +288,7 @@ bool build_fill_msg(uint32_t timestamp,
  * Populates provided lvl and direction arguments with data unpacked
  * from fill sensing message.
  */
-bool get_fill_lvl(const can_msg_t *msg,
+bool get_fill_info(const can_msg_t *msg,
                    uint8_t *lvl,
                    uint8_t *direction);
 
