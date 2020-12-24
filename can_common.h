@@ -11,11 +11,11 @@
  * numbers are more serious debug things
  */
 typedef enum {
-    NONE  = 0,
-    ERROR = 1,
-    WARN  = 2,
-    INFO  = 3,
-    DEBUG = 4
+    NONE      = 0,
+    ERROR     = 1,
+    WARN      = 2,
+    INFO      = 3,
+    DEBUGGING = 4
 } can_debug_level_t;
 
 /*
@@ -26,7 +26,7 @@ typedef enum {
  * the code later to see where the debug was issued from, and
  * hopefully find the cause of the problem
  */
-#define DEBUG(debug_macro_level, debug_macro_timestamp, debug_macro_output) \
+#define LOG_MSG(debug_macro_level, debug_macro_timestamp, debug_macro_output) \
     do {                                                                \
         uint8_t debug_macro_data[5] = {(debug_macro_level << 4) | ((__LINE__ >> 8) & 0xF), \
                                        __LINE__ & 0xFF,                 \
