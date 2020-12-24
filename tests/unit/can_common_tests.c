@@ -56,7 +56,7 @@ static bool test_message_debug_level(void)
         REPORT_FAIL("fail on build_can_message when level is DEBUG");
         ret = false;
     }
-    if (DEBUG != message_debug_level(&output)) {
+    if (DEBUGGING != message_debug_level(&output)) {
         REPORT_FAIL("fail on message_debug_level when level is DEBUG");
         ret = false;
     }
@@ -243,7 +243,7 @@ bool test_debug_macro(void)
     // right
     can_msg_t output;
     int linum = __LINE__ + 1;
-    DEBUG(ERROR, 0, output);
+    LOG_MSG(ERROR, 0, output);
 
     bool ret = true;
 
