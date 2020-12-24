@@ -298,6 +298,40 @@ bool build_gps_info_msg(uint32_t timestamp,
     return true;
 }
 
+bool build_fill_msg(uint32_t timestamp,
+                           uint8_t lvl,
+                           uint8_t direction,
+                           can_msg_t *output)
+{
+    if (!output) { return false; }
+
+    output->sid = MSG_FILL_LVL | BOARD_UNIQUE_ID;
+    write_timestamp_3bytes(timestamp, output);
+
+    output->data[3] = lvl;
+    output->data[4] = direction;
+
+    output->data_len = 5;
+
+    return true;
+}
+
+bool get_fill_info(const can_msg_t *msg,
+                   uint8_t *lvl,
+                   uint8_t *direction)
+{
+    if (!msg | !lvl | !direction) { return false; }
+
+    uint16_t msg_type = get_message_type(msg);
+    if (msg_type == MSG_FILL_LVL) {
+        *lvl = msg->data[3];
+        *direction = msg->data[4];
+        return true;
+    }
+
+    return false;
+}
+
 int get_general_cmd_type(const can_msg_t *msg) {
     if (!msg) { return -1; }
 

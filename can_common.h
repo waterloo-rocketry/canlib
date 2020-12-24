@@ -159,9 +159,9 @@ bool build_gps_alt_msg(uint32_t timestamp,
  * satellites used to obtain a reading and the quality indicator.
  */
 bool build_gps_info_msg(uint32_t timestamp,
-                       uint8_t num_sat,
-                       uint8_t quality,
-                       can_msg_t *output);
+                        uint8_t num_sat,
+                        uint8_t quality,
+                        can_msg_t *output);
 
 /*
  * Gets the general command contained in a general command message.
@@ -274,6 +274,23 @@ bool get_gps_alt(const can_msg_t* msg,
 bool get_gps_info(const can_msg_t* msg,
                   uint8_t *num_sat,
                   uint8_t *quality);
+
+/*
+ * Used to send fill sensing data. Currently senses fill level
+ * measured by sensor number, and direction of fill travel.
+ */
+bool build_fill_msg(uint32_t timestamp,
+                           uint8_t lvl,
+                           uint8_t direction,
+                           can_msg_t *output);
+
+/*
+ * Populates provided lvl and direction arguments with data unpacked
+ * from fill sensing message.
+ */
+bool get_fill_info(const can_msg_t *msg,
+                   uint8_t *lvl,
+                   uint8_t *direction);
 
 /*
  * If MSG is a DEBUG_MSG message, return its debug level, else return
