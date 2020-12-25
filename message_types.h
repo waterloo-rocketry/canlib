@@ -160,7 +160,7 @@ enum BOARD_STATUS {
     E_ILLEGAL_CAN_MSG,          // x                x                   x                   x
     E_SEGFAULT,                 // x                x                   x                   x
     E_UNHANDLED_INTERRUPT,      // x                x                   x                   x
-    E_CODING_SCREWUP,              // x                x                   x                   x
+    E_CODING_SCREWUP,           // x                x                   x                   x
 
     E_BATT_OVER_CURRENT,        // mA_high          mA_low              x                   x
 };
@@ -175,6 +175,7 @@ enum SENSOR_ID {
     SENSOR_INJ_BATT,
     SENSOR_ARM_BATT_1,
     SENSOR_ARM_BATT_2,
+    SENSOR_BATT_CURR,
 };
 
 enum FILL_DIRECTION {
