@@ -151,6 +151,9 @@ enum SENSOR_ID {
     SENSOR_PRESSURE_CC,
     SENSOR_VENT_BATT,
     SENSOR_INJ_BATT,
+
+	// for payload
+	SENSOR_PHOTODIODE
 };
 
 
