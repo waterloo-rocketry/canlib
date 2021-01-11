@@ -128,7 +128,7 @@ bool build_gps_time_msg(uint32_t timestamp,
 bool build_gps_lat_msg(uint32_t timestamp,
                        uint8_t degrees,
                        uint8_t minutes,
-                       uint8_t dminutes,
+                       uint16_t dminutes,
                        uint8_t direction,
                        can_msg_t *output);
 
@@ -140,7 +140,7 @@ bool build_gps_lat_msg(uint32_t timestamp,
 bool build_gps_lon_msg(uint32_t timestamp,
                        uint8_t degrees,
                        uint8_t minutes,
-                       uint8_t dminutes,
+                       uint16_t dminutes,
                        uint8_t direction,
                        can_msg_t *output);
 
@@ -243,7 +243,7 @@ bool get_gps_time(const can_msg_t* msg,
 bool get_gps_lat(const can_msg_t* msg,
                  uint8_t *degrees,
                  uint8_t *minutes,
-                 uint8_t *dminutes,
+                 uint16_t *dminutes,
                  uint8_t *direction);
 
 /*
@@ -254,7 +254,7 @@ bool get_gps_lat(const can_msg_t* msg,
 bool get_gps_lon(const can_msg_t* msg,
                  uint8_t *degrees,
                  uint8_t *minutes,
-                 uint8_t *dminutes,
+                 uint16_t *dminutes,
                  uint8_t *direction);
 
 /*
