@@ -222,16 +222,22 @@ int get_curr_valve_state(const can_msg_t *msg);
 int get_req_valve_state(const can_msg_t *msg);
 
 /*
-* Gets the current arm state and which altimiter it is for.
+* Gets the current arm state and which altimeter it is for.
 * Returns false if the provided message is not an arm status.
 */
 bool get_curr_arm_state(const can_msg_t *msg, uint8_t *alt_num, enum ARM_STATE *arm_state);
 
 /*
 * Gets the requested arm state and altimeter number.
-* Returns false if the provided mesage is not an arm state request."
+* Returns false if the provided message is not an arm state request."
 */
 bool get_req_arm_state(const can_msg_t *msg, uint8_t *alt_num, enum ARM_STATE *arm_state);
+
+/*
+ *Gets the remote arming recovery status
+ * Returns false if the provided message is not a recovery status message
+ */
+bool get_recovery_state(const can_msg_t *msg, enum RECOVERY_STATE *state);
 
 /*
  * Strips the board unique ID from msg, and returns the SID. Contains
@@ -277,27 +283,28 @@ bool get_analog_data(const can_msg_t *msg,
                      uint16_t *output_data);
 
 /*
-<<<<<<< HEAD
 * Gets the altitude data, returns false if the message is not
-=======
-* Gets the altitude data, returns false if the message is not 
->>>>>>> Implemet getter functions for remote arming functions.
 * a SENSOR_ALTITUDE message.
 */
 bool get_altitude_data(const can_msg_t *msg,
                        int32_t *altitude);
 
 /*
-<<<<<<< HEAD
 * Gets the voltage of the drogue and main pyro lines, returns false
-=======
-* Gets the voltage of the drogue and main pyro lines, returns false 
->>>>>>> Implemet getter functions for remote arming functions.
 * if the message is not an ALT_ARM_STATUS message
 */
 bool get_pyro_voltage_data(const can_msg_t *msg,
                            uint16_t *v_drogue,
                            uint16_t *v_main);
+
+/*
+ * Gets the voltages read from the outputs of the mag switches
+ * this indicates if the mag switches are on
+ * returns false if the message is not a RECOVERY_STATUS message
+ */
+bool get_mag_voltage_data(const can_msg_t *msg,
+                          uint16_t *v_mag1,
+                          uint16_t *vmag2);
 
 /*
  * Gets GPS UTC time information. Format is UTC hours, minutes,

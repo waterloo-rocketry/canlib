@@ -197,6 +197,30 @@ bool build_board_stat_msg(uint32_t timestamp,
     return true;
 }
 
+bool build_recovery_stat_msg(uint32_t timestamp,
+                             enum RECOVERY_STATE state,
+                             uint16_t v_mag1,
+                             uint16_t v_mag2,
+                             can_msg_t *output){
+    if (!output) { return false; }
+
+    output->sid = MSG_RECOVERY_STATUS | BOARD_UNIQUE_ID;
+    write_timestamp_3bytes(timestamp, output);
+
+    // recovery state
+    output->data[3] = state;
+    // drogue voltage
+    output->data[4] = v_mag1 >> 8;     // 8 msb
+    output->data[5] = v_mag1 & 0x00FF; // 8 lsb
+    // main voltage
+    output->data[6] = v_mag2 >> 8;     // 8 msb
+    output->data[7] = v_mag2 & 0x00FF; // 8 lsb
+    // 3 bytes timestamp, 1 byte state, 4 bytes voltages
+    output->data_len = 8;
+
+    return true;
+}
+
 bool build_imu_data_msg(uint16_t message_type,
                         uint32_t timestamp,   // acc, gyro, mag
                         uint16_t *imu_data,   // x, y, z
@@ -485,6 +509,14 @@ bool get_req_arm_state(const can_msg_t *msg, uint8_t *alt_num, enum ARM_STATE *a
     return true;
 }
 
+bool get_recovery_state(const can_msg_t *msg, enum RECOVERY_STATE *state){
+    if( !msg || !state) { return false; }
+    if(get_message_type(msg) != MSG_RECOVERY_STATUS) { return false; }
+    *state = msg->data[3];  
+
+    return true;
+}
+
 uint16_t get_message_type(const can_msg_t *msg)
 {
     // invalid SID
@@ -615,6 +647,20 @@ bool get_pyro_voltage_data(const can_msg_t *msg,
     *v_drogue += msg->data[5];
     *v_main = (msg->data[6] << 8);
     *v_main += msg->data[7];
+
+    return true;
+}
+
+bool get_mag_voltage_data(const can_msg_t *msg,
+                          uint16_t *v_mag1,
+                          uint16_t *v_mag2){
+    if (!msg || !v_mag1 || !v_mag2) { return false; }
+    if (get_message_type(msg) != MSG_RECOVERY_STATUS) { return false; }
+
+    *v_mag1 = (msg->data[4] << 8);
+    *v_mag1 += msg->data[5];
+    *v_mag2 = (msg->data[6] << 8);
+    *v_mag2 += msg->data[7];
 
     return true;
 }
