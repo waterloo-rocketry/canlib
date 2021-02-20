@@ -63,6 +63,13 @@ bool build_debug_printf(uint8_t *data,
                         can_msg_t *output);
 
 /*
+* Used to Reset a CAN board
+*/
+bool build_reset_msg(uint32_t timestamp,
+                     uint8_t board_id,
+                     can_msg_t *output);
+
+/*
  * Used to send injector and vent commands
  */
 bool build_valve_cmd_msg(uint32_t timestamp,
@@ -111,7 +118,7 @@ bool build_analog_data_msg(uint32_t timestamp,
 
 /*
  * Used to format GPS timestamp data. Data arguments: UTC time in hours,
- * minutes, seconds, and deci-seconds. 
+ * minutes, seconds, and deci-seconds.
  */
 bool build_gps_time_msg(uint32_t timestamp,
                         uint8_t utc_hours,
@@ -168,6 +175,12 @@ bool build_gps_info_msg(uint32_t timestamp,
  * Returns -1 if the provided message is not a general cmd message.
  */
 int get_general_cmd_type(const can_msg_t *msg);
+
+/*
+*
+*
+*/
+int get_reset_board_id(const can_msg_t *msg);
 
  /*
  * Returns the current valve state based on limit switch readings.

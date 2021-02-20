@@ -1,6 +1,7 @@
 #include "can_common.h"
 #include "message_types.h"
 #include <stddef.h>
+#include <stdio.h>
 
 // this symbol should be defined in the project's Makefile, but if it
 // isn't, issue a warning and set it to 0
@@ -68,6 +69,20 @@ bool build_debug_printf(uint8_t *input_data,
         output->data[i] = input_data[i];
     }
     output->data_len = 8;
+    return true;
+}
+
+bool build_reset_msg(uint32_t timestamp,
+                     uint8_t board_id,
+                     can_msg_t *output)
+{
+    if (!output) { return false; }
+
+    output->sid = MSG_RESET_CMD | BOARD_UNIQUE_ID;
+    write_timestamp_3bytes(timestamp, output);
+    output->data[3] = board_id;
+    output->data_len = 4; // 3 bytes timestamp, 1 byte data
+
     return true;
 }
 
@@ -345,6 +360,18 @@ int get_general_cmd_type(const can_msg_t *msg) {
     }
 }
 
+int get_reset_board_id(const can_msg_t *msg){
+    if (!msg) { return -1; }
+
+    uint16_t msg_type = get_message_type(msg);
+    if (msg_type == MSG_RESET_CMD) {
+        return msg->data[3];
+    } else {
+        // not a valid field for this message type
+        return -1;
+    }
+}
+
 int get_curr_valve_state(const can_msg_t *msg)
 {
     if (!msg) { return -1; }
@@ -414,6 +441,8 @@ uint32_t get_timestamp(const can_msg_t *msg)
         case MSG_GPS_LONGITUDE:
         case MSG_GPS_ALTITUDE:
         case MSG_GPS_INFO:
+        case MSG_RESET_CMD:
+        case MSG_FILL_LVL:
             return (uint32_t)msg->data[0] << 16
                    | (uint32_t)msg->data[1] << 8
                    | msg->data[2];
@@ -425,7 +454,7 @@ uint32_t get_timestamp(const can_msg_t *msg)
         case MSG_SENSOR_ANALOG:
             return (uint32_t)msg->data[0] << 8
                    | msg->data[1];
-    
+
         // no timestamp
         case MSG_DEBUG_PRINTF:
         case MSG_LEDS_ON:

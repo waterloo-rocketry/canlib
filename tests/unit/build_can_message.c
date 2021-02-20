@@ -59,6 +59,56 @@ static bool test_general_command(void)
     return ret;
 }
 
+static bool test_reset_command(void)
+{
+    // make sure that a MSG_RESET_CMD message works properly
+    uint32_t timestamp = 0xcafebabe;
+    uint8_t input_board_id = 0x1F;
+    can_msg_t output;
+
+    bool ret = true;
+
+    // Test illegal args
+    if (build_reset_msg(timestamp, input_board_id, NULL)) {
+        REPORT_FAIL("Message built with null output");
+        ret = false;
+    }
+
+    // make sure we don't get an error creating the message
+    if (!build_reset_msg(timestamp, input_board_id, &output)) {
+        REPORT_FAIL("Error building message");
+        ret = false;
+    }
+
+    // check that the data length is 4
+    if (output.data_len != 4) {
+        REPORT_FAIL("Wrong data_len generated");
+        ret = false;
+    }
+    // check that the timestamp was copied across properly
+    // only bottom 3 bytes of original should be copied
+    if (get_timestamp(&output) != (timestamp & 0xffffff)) {
+        REPORT_FAIL("Timestamp copied wrong");
+
+        ret = false;
+    }
+
+    // check that the command itself was copied properly
+    if (get_reset_board_id(&output) != input_board_id) {
+        REPORT_FAIL("Command type copied wrong");
+        ret = false;
+    }
+
+    // check that the SID is proper. Note that the Makefile defines
+    // the unique ID to be 0x3
+    if (output.sid != 0x163) {
+        REPORT_FAIL("SID compare failed");
+        ret = false;
+    }
+
+    return ret;
+}
+
 static bool test_valve_cmd(void)
 {
     uint32_t timestamp = 0x12345678;
@@ -491,7 +541,7 @@ bool test_build_fill_message(void)
 
     // test illegal args
     if(build_fill_msg(timestamp, fill_lvl, dir, NULL)){
-        REPORT_FAIL("Built with null output")
+        REPORT_FAIL("Built with null output");
         ret = false;
     }
 
@@ -531,6 +581,10 @@ bool test_build_can_message(void)
     bool ret = true;
     if (!test_general_command()) {
         REPORT_FAIL("test_general_command returned false");
+        ret = false;
+    }
+    if (!test_reset_command()) {
+        REPORT_FAIL("test_reset_command returned false");
         ret = false;
     }
     if (!test_valve_cmd()) {
