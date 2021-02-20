@@ -16,4 +16,5 @@
 /tests/unit/target_pic18.X/build/default/
 /tests/unit/target_pic18.X/dist/default/
 *.o
+*.exe
 unit_tests
