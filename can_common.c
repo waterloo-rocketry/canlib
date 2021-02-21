@@ -153,7 +153,7 @@ bool build_arm_stat_msg(uint32_t timestamp,
 {
     if (!output) { return false; }
 
-    output->sid = MSG_ALT_ARM_CMD | BOARD_UNIQUE_ID;
+    output->sid = MSG_ALT_ARM_STATUS | BOARD_UNIQUE_ID;
     write_timestamp_3bytes(timestamp, output);
 
     // 4 msb are used for arm state, 4 lsb used for altimeter number
