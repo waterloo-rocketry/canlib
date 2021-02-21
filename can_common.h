@@ -63,6 +63,13 @@ bool build_debug_printf(uint8_t *data,
                         can_msg_t *output);
 
 /*
+ * Used to Reset a CAN board
+ */
+bool build_reset_msg(uint32_t timestamp,
+                     uint8_t board_id,
+                     can_msg_t *output);
+
+/*
  * Used to send injector and vent commands
  */
 bool build_valve_cmd_msg(uint32_t timestamp,
@@ -71,8 +78,8 @@ bool build_valve_cmd_msg(uint32_t timestamp,
                          can_msg_t *output);
 
 /*
-* Used to send injector/vent status: current and desired
-*/
+ * Used to send injector/vent status: current and desired
+ */
 bool build_valve_stat_msg(uint32_t timestamp,
                           enum VALVE_STATE valve_state,
                           enum VALVE_STATE req_valve_state,
@@ -80,10 +87,10 @@ bool build_valve_stat_msg(uint32_t timestamp,
                           can_msg_t *output);
 
 /*
-* Used by each board to send status messages. Error codes and their
-* corresponding supplemental data are defined in message_types.h.
-* This function may need to be modified to better hide the internals.
-*/
+ * Used by each board to send status messages. Error codes and their
+ * corresponding supplemental data are defined in message_types.h.
+ * This function may need to be modified to better hide the internals.
+ */
 bool build_board_stat_msg(uint32_t timestamp,
                           enum BOARD_STATUS error_code,
                           uint8_t *error_data,
@@ -91,28 +98,28 @@ bool build_board_stat_msg(uint32_t timestamp,
                           can_msg_t *output);
 
 /*
-* Used to send 16-bit IMU data values. It is assumed that an array
-* of 3 values is sent (X, Y, and Z axes).
-*/
+ * Used to send 16-bit IMU data values. It is assumed that an array
+ * of 3 values is sent (X, Y, and Z axes).
+ */
 bool build_imu_data_msg(uint16_t message_type,  // acc, gyro, mag
                         uint32_t timestamp,
                         uint16_t *imu_data,     // x, y, z
                         can_msg_t *output);
 
 /*
-* Used to send analog sensor data. The units of the sensor data are
-* not nailed down at this point and will likely differ based on the
-* sensor id.
-*/
+ * Used to send analog sensor data. The units of the sensor data are
+ * not nailed down at this point and will likely differ based on the
+ * sensor id.
+ */
 bool build_analog_data_msg(uint32_t timestamp,
                            enum SENSOR_ID sensor_id,
                            uint16_t sensor_data,
                            can_msg_t *output);
 
 /*
- * Used to format GPS timestamp data. Data arguments: UTC time in hours,
- * minutes, seconds, and deci-seconds. 
- */
+  * Used to format GPS timestamp data. Data arguments: UTC time in hours,
+  * minutes, seconds, and deci-seconds.
+  */
 bool build_gps_time_msg(uint32_t timestamp,
                         uint8_t utc_hours,
                         uint8_t utc_mins,
@@ -169,17 +176,23 @@ bool build_gps_info_msg(uint32_t timestamp,
  */
 int get_general_cmd_type(const can_msg_t *msg);
 
- /*
- * Returns the current valve state based on limit switch readings.
- * Returns -1 if the provided message is not a vent/injector status message.
+/*
+ * Gets the board ID of the board to be reset
+ * Returns -1 if the provided message is not a reset command message.
  */
+int get_reset_board_id(const can_msg_t *msg);
+
+ /*
+  * Returns the current valve state based on limit switch readings.
+  * Returns -1 if the provided message is not a vent/injector status message.
+  */
 int get_curr_valve_state(const can_msg_t *msg);
 
  /*
-* Returns the requested valve state from a valve command or
-* status message. Returns -1 if the provided message is not
-* a valve cmd/status.
-*/
+ * Returns the requested valve state from a valve command or
+ * status message. Returns -1 if the provided message is not
+ * a valve cmd/status.
+ */
 int get_req_valve_state(const can_msg_t *msg);
 
 /*
