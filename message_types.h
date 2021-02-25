@@ -28,7 +28,6 @@
 #define MSG_ALT_ARM_STATUS        0x440
 #define MSG_ACTUATOR_STATUS       0x460
 #define MSG_GENERAL_BOARD_STATUS  0x520
-#define MSG_RECOVERY_STATUS       0x540
 
 #define MSG_SENSOR_ALTITUDE       0x560
 #define MSG_SENSOR_ACC            0x580
