@@ -61,6 +61,8 @@
 #define BOARD_ID_GPS_SPARE        0x0E
 #define BOARD_ID_FILL             0x0F
 #define BOARD_ID_FILL_SPARE       0x10
+#define BOARD_ID_PAPA             0x13  
+#define BOARD_ID_PAPA_SPARE       0x14
 
 /*
  * General message type format (from spreadsheet):
@@ -159,6 +161,7 @@ enum SENSOR_ID {
     SENSOR_PRESSURE_CC,
     SENSOR_VENT_BATT,
     SENSOR_INJ_BATT,
+    SENSOR_RADIATION,
 };
 
 enum FILL_DIRECTION {
