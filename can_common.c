@@ -338,8 +338,18 @@ bool build_radi_info_msg(uint32_t timestamp,
                          uint8_t deci_value,
                          can_msg_t *output)
  {
-    if (!output) { return false; }
+    if (!output) { return false;}
 
+    output -> sid = MSG_RADI_VALUE | BOARD_UNIQUE_ID;
+    write_timestamp_3bytes(timestamp, output);
+
+    output -> data[3] = board_num;
+    output -> data[4] = int_value;
+    output -> data[5] = deci_value;
+
+    output -> data_len = 6;
+
+    return true;
  }
 
 bool get_fill_info(const can_msg_t *msg,

@@ -41,6 +41,8 @@
 
 #define MSG_FILL_LVL              0x780
 
+#define MSG_RADI_VALUE            0x820
+
 #define MSG_LEDS_ON               0x7E0
 #define MSG_LEDS_OFF              0x7C0
 
@@ -93,11 +95,13 @@
  * GPS_INFO:        TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    NUM_SAT                 QUALITY         None            None            None
  *
  * FILL_LVL:        TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    FILL_LEVEL              DIRECTION       None            None            None
- *
+ * 
+ * RADI_VALUE:      TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    RADI_BOARD              RADI_INT        RADI_DECI
+ * 
  * LEDS_ON:         None        None         None           None                    None            None            None            None
  * LEDS_OFF:        None        None         None           None                    None            None            None            None
  * 
- * RADI_VALUE:      TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    RADI_BOARD              RADI_INT        RADI_DECI
+ * 
  *
  * This file defines the format of the various CAN message types (defined in
  * message_types.h). There is no unified message format; the format of each message
