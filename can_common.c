@@ -335,10 +335,10 @@ bool build_fill_msg(uint32_t timestamp,
 bool build_radi_info_msg(uint32_t timestamp,
                          uint8_t board_num,
                          uint8_t int_value,
-                         uint8_t deci_value,
+                         uint16_t deci_value,
                          can_msg_t *output)
  {
-    if (!output) { return false;}
+    if (!output) { return false; }
 
     output -> sid = MSG_RADI_VALUE | BOARD_UNIQUE_ID;
     write_timestamp_3bytes(timestamp, output);
@@ -622,6 +622,24 @@ bool get_gps_info(const can_msg_t *msg,
 
     *num_sat = msg->data[3];
     *quality = msg->data[4];
+
+    return true;
+}
+
+bool get_radi_info(const can_msg_t* msg,
+                   uint8_t *board_num,
+                   uint8_t *int_value,
+                   uint16_t *deci_value)
+{
+    if (!msg) { return false; }
+    if (!board_num) { return false; }
+    if (!int_value) { return false; }
+    if (!deci_value) { return false; }
+    if (get_message_type(msg) != MSG_RADI_VALUE) { return false;}
+
+    *board_num = msg -> data[3];
+    *int_value = msg -> data[4];
+    *deci_value = msg -> data[5];
 
     return true;
 }
