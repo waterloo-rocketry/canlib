@@ -96,6 +96,8 @@
  *
  * LEDS_ON:         None        None         None           None                    None            None            None            None
  * LEDS_OFF:        None        None         None           None                    None            None            None            None
+ * 
+ * RADI_VALUE:      TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    RADI_BOARD              RADI_INT        RADI_DECI
  *
  * This file defines the format of the various CAN message types (defined in
  * message_types.h). There is no unified message format; the format of each message
