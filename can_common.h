@@ -171,6 +171,15 @@ bool build_gps_info_msg(uint32_t timestamp,
                         can_msg_t *output);
 
 /*
+ * Used to send radiation board info. The format is board number, radiation
+ * voltage integer value, and radiation voltgage decimal value.
+ * 
+ */
+bool build_radi_info_msg(uint32_t timestamp,
+                         uint8_t board_num,
+                         uint8_t int_value,
+                         uint8_t deci_value)
+/*
  * Gets the general command contained in a general command message.
  * Returns -1 if the provided message is not a general cmd message.
  */

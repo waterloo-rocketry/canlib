@@ -332,6 +332,16 @@ bool build_fill_msg(uint32_t timestamp,
     return true;
 }
 
+bool build_radi_info_msg(uint32_t timestamp,
+                         uint8_t board_num,
+                         uint8_t int_value,
+                         uint8_t deci_value,
+                         can_msg_t *output)
+ {
+    if (!output) { return false; }
+
+ }
+
 bool get_fill_info(const can_msg_t *msg,
                    uint8_t *lvl,
                    uint8_t *direction)
