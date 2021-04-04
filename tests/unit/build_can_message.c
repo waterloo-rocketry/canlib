@@ -576,6 +576,60 @@ bool test_build_fill_message(void)
     return ret;
 }
 
+bool test_build_radi_info_msg (void)
+{
+    uint32_t timestamp = 0x12345678;
+    can_msg_t output;
+    uint8_t board_num = 1;
+    uint8_t int_value = 1;
+    uint16_t deci_value = 321;
+
+    bool ret = true;
+
+    //test illegal args
+    if (build_radi_info_msg(timestamp, board_num, int_value, deci_value, NULL))
+    {
+        REPORT_FAIL("Built with null output");
+        ret = false;
+    }
+
+    //test nominal behaviour
+    if (build_radi_info_msg(timestamp, board_num, int_value, deci_value, &output))
+    {
+        REPORT_FAIL("Error building radiation board message");
+        ret = false;
+    }
+
+    if (output.data_len != 6)
+    {
+        REPORT_FAIL ("Wrong data length generated");
+        ret = false;
+    }
+
+    uint8_t test_board_num;
+    uint8_t test_int_value;
+    uint16_t test_deci_value;
+
+    if (!get_radi_info(&output, &test_board_num, &test_int_value, &test_deci_value))
+    {
+        REPORT_FAIL("Error building radiation board message")
+        ret = false;
+    }
+
+    if (test_board_num != board_num || test_int_value != int_value || test_deci_value != deci_value)
+    {
+        REPORT_FAIL ("Radiation board fields dont match");
+        ret = false; 
+    }
+
+    if (get_timestamp(&output) != (timestamp & 0xffffff)) {
+        REPORT_FAIL("Timestamp copied wrong");
+        ret = false;
+    }
+
+    return ret;
+}
+
 bool test_build_can_message(void)
 {
     bool ret = true;
@@ -617,6 +671,10 @@ bool test_build_can_message(void)
     }
     if (!test_build_fill_message()) {
         REPORT_FAIL("test_build_fill_msg returned false");
+    }
+    if (!test_build_radi_info_msg()){
+        REPORT_FAIL("test_build_radi_info_msg returned false");
+        ret = false;
     }
 
 
