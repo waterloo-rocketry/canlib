@@ -1,7 +1,7 @@
 #ifndef TIMING_UTIL_H_
 #define TIMING_UTIL_H_
 
-#include "can.h"
+#include "../can.h"
 #include <stdint.h>
 #include <stdbool.h>
 

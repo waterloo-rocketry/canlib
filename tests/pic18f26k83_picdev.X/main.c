@@ -64,6 +64,7 @@
 #include <stdlib.h>
 
 #include "../../pic18f26k83/pic18f26k83_can.h"
+#include "../../util/timing_util.h"
 
 void can_receive_callback(const can_msg_t *msg) {
     //put breakpoint here, examine the contents of these variables yourself
@@ -91,14 +92,8 @@ int main() {
     ANSELC1 = 0;
 
     can_timing_t timing;
-    timing.brp = 0;
-    timing.btlmode = 0;
-    timing.sjw = 0b11;
-    timing.sam = 0;
-    timing.seg1ph = 0b100;
-    timing.seg2ph = 0b100;
-    timing.prseg = 0;
-
+    can_generate_timing_params(_XTAL_FREQ, &timing);
+    
     can_init(&timing, can_receive_callback);
 
     INTCON0 = 0b10000000;
