@@ -23,7 +23,10 @@
 
 #include "mcc_generated_files/mcc.h"
 #include "../../mcp2515/mcp_2515.h"
+#include "../../util/timing_util.h"
 #include "spi.h"
+
+#define _XTAL_FREQ 48000000
 
 #define LED_1_OFF do{LATC4 = 1;}while(0)
 #define LED_2_OFF do{LATC5 = 1;}while(0)
@@ -45,16 +48,10 @@ void main(void)
     spi_init();
 
     //initialize the CAN module
-    can_timing_t can_setup;
-    can_setup.brp = 11;
-    can_setup.sjw = 3;
-    can_setup.btlmode = 0x01;
-    can_setup.sam = 0;
-    can_setup.seg1ph = 0x04;
-    can_setup.prseg = 0;
-    can_setup.seg2ph = 0x04;
+    can_timing_t timing;
+    can_generate_timing_params(_XTAL_FREQ, &timing);
 
-    mcp_can_init(&can_setup, spi_read, spi_write, cs_drive);
+    mcp_can_init(&timing, spi_read, spi_write, cs_drive);
 
     // When using interrupts, you need to set the Global and Peripheral Interrupt Enable bits
     // Use the following macros to:
