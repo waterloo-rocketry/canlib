@@ -4,7 +4,7 @@
 
 // CONFIG1L
 #pragma config FEXTOSC = OFF    // External Oscillator Selection (Oscillator not enabled)
-#pragma config RSTOSC = HFINTOSC_1MHZ// Reset Oscillator Selection (HFINTOSC with HFFRQ = 4 MHz and CDIV = 4:1)
+#pragma config RSTOSC = HFINTOSC_64MHZ// Reset Oscillator Selection (HFINTOSC with HFFRQ = 64 MHz and CDIV = 1:1)
 
 // CONFIG1H
 #pragma config CLKOUTEN = OFF   // Clock out Enable bit (CLKOUT function is disabled)
@@ -69,8 +69,8 @@ static void leds_init()
     TRISB4 = 0;
     LATB3 = 1;
     TRISB3 = 0;
-    LATB2 = 1;
-    TRISB2 = 0;
+    LATB1 = 1;
+    TRISB1 = 0;
 }
 
 #define LED1_ON() (LATB4 = 0)
@@ -98,7 +98,10 @@ int main()
     if (!test_debug_macro()) {
         all_tests_passed = false;
     }
-    if (!test_can_buffering_layer()) {
+    if (!test_can_buffering_layer_rx()) {
+        all_tests_passed = false;
+    }
+    if (!test_can_buffering_layer_tx()) {
         all_tests_passed = false;
     }
 
