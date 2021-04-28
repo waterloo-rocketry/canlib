@@ -4,7 +4,7 @@
 
 // CONFIG1L
 #pragma config FEXTOSC = OFF    // External Oscillator Selection (Oscillator not enabled)
-#pragma config RSTOSC = HFINTOSC_1MHZ// Reset Oscillator Selection (HFINTOSC with HFFRQ = 4 MHz and CDIV = 4:1)
+#pragma config RSTOSC = HFINTOSC_64MHZ// Reset Oscillator Selection (HFINTOSC with HFFRQ = 64 MHz and CDIV = 1:1)
 
 // CONFIG1H
 #pragma config CLKOUTEN = OFF   // Clock out Enable bit (CLKOUT function is disabled)
@@ -57,7 +57,7 @@
 // #pragma config statements should precede project file includes.
 // Use project enums instead of #define for ON and OFF.
 
-#define _XTAL_FREQ 1000000
+#define _XTAL_FREQ 64000000
 #include <xc.h>
 
 #include <stdio.h>
