@@ -626,6 +626,8 @@ bool get_gps_info(const can_msg_t *msg,
     return true;
 }
 
+#include <stdio.h> //REMOVE LATER
+
 bool get_radi_info(const can_msg_t* msg,
                    uint8_t *board_num,
                    uint8_t *int_value,
@@ -635,7 +637,7 @@ bool get_radi_info(const can_msg_t* msg,
     if (!board_num) { return false; }
     if (!int_value) { return false; }
     if (!deci_value) { return false; }
-    if (get_message_type(msg) != MSG_RADI_VALUE) { return false;}
+    if (get_message_type(msg) != MSG_RADI_VALUE) {printf("FAILLLLLLLL"); return false;}
 
     *board_num = msg -> data[3];
     *int_value = msg -> data[4];

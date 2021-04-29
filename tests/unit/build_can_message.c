@@ -580,9 +580,9 @@ bool test_build_radi_info_msg (void)
 {
     uint32_t timestamp = 0x12345678;
     can_msg_t output;
-    uint8_t board_num = 1;
-    uint8_t int_value = 1;
-    uint16_t deci_value = 321;
+    uint8_t board_num = 3;
+    uint8_t int_value = 3;
+    uint16_t deci_value = 1;
 
     bool ret = true;
 
@@ -594,7 +594,7 @@ bool test_build_radi_info_msg (void)
     }
 
     //test nominal behaviour
-    if (build_radi_info_msg(timestamp, board_num, int_value, deci_value, &output))
+    if (!build_radi_info_msg(timestamp, board_num, int_value, deci_value, &output))
     {
         REPORT_FAIL("Error building radiation board message");
         ret = false;
@@ -612,7 +612,7 @@ bool test_build_radi_info_msg (void)
 
     if (!get_radi_info(&output, &test_board_num, &test_int_value, &test_deci_value))
     {
-        REPORT_FAIL("Error building radiation board message")
+        REPORT_FAIL("Error getting radiation board message");
         ret = false;
     }
 
