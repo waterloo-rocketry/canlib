@@ -1,7 +1,6 @@
 #include "can_common.h"
 #include "message_types.h"
 #include <stddef.h>
-#include <stdio.h> //REMOVE LATER
 
 // this symbol should be defined in the project's Makefile, but if it
 // isn't, issue a warning and set it to 0
@@ -350,12 +349,6 @@ bool build_radi_info_msg(uint32_t timestamp,
 
     output -> data_len = 6;
 
-    printf ("BOARD NUMBER: %d", output -> data[3]);
-    printf ("INT VALUE: %d", output -> data[4]);
-    printf ("DECIMAL VALUE: %d", output -> data[5]);
-    printf ("MESSAGE TYPE: %d", output -> sid);
-    printf ("TIMESTAMP: %d", timestamp);
-
     return true;
  }
 
@@ -469,6 +462,7 @@ uint32_t get_timestamp(const can_msg_t *msg)
         case MSG_GPS_INFO:
         case MSG_RESET_CMD:
         case MSG_FILL_LVL:
+        case MSG_RADI_VALUE:
             return (uint32_t)msg->data[0] << 16
                    | (uint32_t)msg->data[1] << 8
                    | msg->data[2];
@@ -647,12 +641,6 @@ bool get_radi_info(const can_msg_t* msg,
     *board_num = msg -> data[3];
     *int_value = msg -> data[4];
     *deci_value = msg -> data[5];
-
-    printf ("BOARD NUMBER: %hhn", board_num);
-    printf ("INT VALUE: %hhn", int_value);
-    printf ("DECIMAL VALUE: %hn", deci_value);
-    printf ("MESSAGE TYPE: %d", get_message_type(msg));
-    printf ("TIMESTAMP: %d", get_timestamp(msg));
 
     return true;
 }
