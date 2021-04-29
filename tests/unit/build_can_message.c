@@ -578,7 +578,7 @@ bool test_build_fill_message(void)
 
 bool test_build_radi_info_msg (void)
 {
-    uint32_t timestamp = 0x12345678;
+    uint32_t timestamp = 0x123456;
     can_msg_t output;
     uint8_t board_num = 3;
     uint8_t int_value = 3;

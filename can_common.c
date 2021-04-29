@@ -1,6 +1,7 @@
 #include "can_common.h"
 #include "message_types.h"
 #include <stddef.h>
+#include <stdio.h> //REMOVE LATER
 
 // this symbol should be defined in the project's Makefile, but if it
 // isn't, issue a warning and set it to 0
@@ -349,6 +350,12 @@ bool build_radi_info_msg(uint32_t timestamp,
 
     output -> data_len = 6;
 
+    printf ("BOARD NUMBER: %d", output -> data[3]);
+    printf ("INT VALUE: %d", output -> data[4]);
+    printf ("DECIMAL VALUE: %d", output -> data[5]);
+    printf ("MESSAGE TYPE: %d", output -> sid);
+    printf ("TIMESTAMP: %d", timestamp);
+
     return true;
  }
 
@@ -626,8 +633,6 @@ bool get_gps_info(const can_msg_t *msg,
     return true;
 }
 
-#include <stdio.h> //REMOVE LATER
-
 bool get_radi_info(const can_msg_t* msg,
                    uint8_t *board_num,
                    uint8_t *int_value,
@@ -637,11 +642,17 @@ bool get_radi_info(const can_msg_t* msg,
     if (!board_num) { return false; }
     if (!int_value) { return false; }
     if (!deci_value) { return false; }
-    if (get_message_type(msg) != MSG_RADI_VALUE) {printf("FAILLLLLLLL"); return false;}
+    if (get_message_type(msg) != MSG_RADI_VALUE) {return false;}
 
     *board_num = msg -> data[3];
     *int_value = msg -> data[4];
     *deci_value = msg -> data[5];
+
+    printf ("BOARD NUMBER: %hhn", board_num);
+    printf ("INT VALUE: %hhn", int_value);
+    printf ("DECIMAL VALUE: %hn", deci_value);
+    printf ("MESSAGE TYPE: %d", get_message_type(msg));
+    printf ("TIMESTAMP: %d", get_timestamp(msg));
 
     return true;
 }

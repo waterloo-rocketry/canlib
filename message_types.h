@@ -41,7 +41,7 @@
 
 #define MSG_FILL_LVL              0x780
 
-#define MSG_RADI_VALUE            0x820
+#define MSG_RADI_VALUE            0x7A0
 
 #define MSG_LEDS_ON               0x7E0
 #define MSG_LEDS_OFF              0x7C0
