@@ -101,8 +101,6 @@
  * LEDS_ON:         None        None         None           None                    None            None            None            None
  * LEDS_OFF:        None        None         None           None                    None            None            None            None
  * 
- * 
- *
  * This file defines the format of the various CAN message types (defined in
  * message_types.h). There is no unified message format; the format of each message
  * depends on the message type. In the case of board status messages, the format
