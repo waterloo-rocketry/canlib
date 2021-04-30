@@ -96,11 +96,11 @@
  *
  * FILL_LVL:        TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    FILL_LEVEL              DIRECTION       None            None            None
  * 
- * RADI_VALUE:      TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    RADI_BOARD              RADI_INT        RADI_DECI
+ * RADI_VALUE:      TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    RADI_BOARD              RADI_INT        RADI_DECI       None            None
  * 
  * LEDS_ON:         None        None         None           None                    None            None            None            None
  * LEDS_OFF:        None        None         None           None                    None            None            None            None
- * 
+ *
  * This file defines the format of the various CAN message types (defined in
  * message_types.h). There is no unified message format; the format of each message
  * depends on the message type. In the case of board status messages, the format
@@ -165,7 +165,6 @@ enum SENSOR_ID {
     SENSOR_PRESSURE_CC,
     SENSOR_VENT_BATT,
     SENSOR_INJ_BATT,
-    SENSOR_RADIATION,
 };
 
 enum FILL_DIRECTION {

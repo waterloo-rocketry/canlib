@@ -340,14 +340,14 @@ bool build_radi_info_msg(uint32_t timestamp,
  {
     if (!output) { return false; }
 
-    output -> sid = MSG_RADI_VALUE | BOARD_UNIQUE_ID;
+    output->sid = MSG_RADI_VALUE | BOARD_UNIQUE_ID;
     write_timestamp_3bytes(timestamp, output);
 
-    output -> data[3] = sensor_identifier;
-    output -> data[4] = int_value;
-    output -> data[5] = deci_value;
+    output->data[3] = sensor_identifier;
+    output->data[4] = int_value;
+    output->data[5] = deci_value;
 
-    output -> data_len = 6;
+    output->data_len = 6;
 
     return true;
  }
