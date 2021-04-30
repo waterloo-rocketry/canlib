@@ -335,7 +335,7 @@ bool build_fill_msg(uint32_t timestamp,
 bool build_radi_info_msg(uint32_t timestamp,
                          uint8_t sensor_identifier,
                          uint8_t int_value,
-                         uint16_t deci_value,
+                         uint8_t deci_value,
                          can_msg_t *output)
  {
     if (!output) { return false; }
@@ -630,7 +630,7 @@ bool get_gps_info(const can_msg_t *msg,
 bool get_radi_info(const can_msg_t* msg,
                    uint8_t *sensor_identifier,
                    uint8_t *int_value,
-                   uint16_t *deci_value)
+                   uint8_t *deci_value)
 {
     if (!msg) { return false; }
     if (!sensor_identifier) { return false; }

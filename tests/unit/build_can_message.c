@@ -582,7 +582,7 @@ bool test_build_radi_info_msg (void)
     can_msg_t output;
     uint8_t sensor_identifier = 3;
     uint8_t int_value = 3;
-    uint16_t deci_value = 254;
+    uint8_t deci_value = 254;
 
     bool ret = true;
 
@@ -608,7 +608,7 @@ bool test_build_radi_info_msg (void)
 
     uint8_t test_sensor_identifier;
     uint8_t test_int_value;
-    uint16_t test_deci_value;
+    uint8_t test_deci_value;
 
     if (!get_radi_info(&output, &test_sensor_identifier, &test_int_value, &test_deci_value))
     {
