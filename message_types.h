@@ -41,6 +41,8 @@
 
 #define MSG_FILL_LVL              0x780
 
+#define MSG_RADI_VALUE            0x7A0
+
 #define MSG_LEDS_ON               0x7E0
 #define MSG_LEDS_OFF              0x7C0
 
@@ -61,10 +63,12 @@
 #define BOARD_ID_GPS_SPARE        0x0E
 #define BOARD_ID_FILL             0x0F
 #define BOARD_ID_FILL_SPARE       0x10
+#define BOARD_ID_PAPA             0x13  
+#define BOARD_ID_PAPA_SPARE       0x14
 
 /*
  * General message type format (from spreadsheet):
- * (Version 0.2.2)
+ * (Version 0.5.0)
  *                  byte 0      byte 1       byte 2         byte 3                  byte 4          byte 5          byte 6          byte 7
  * GENERAL_CMD:     TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    COMMAND_TYPE            None            None            None            None
  * VENT_VALVE_CMD:  TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    VENT_VALVE_STATE        None            None            None            None
@@ -91,7 +95,9 @@
  * GPS_INFO:        TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    NUM_SAT                 QUALITY         None            None            None
  *
  * FILL_LVL:        TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    FILL_LEVEL              DIRECTION       None            None            None
- *
+ * 
+ * RADI_VALUE:      TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    RADI_BOARD              RADI_INT        RADI_DECI       None            None
+ * 
  * LEDS_ON:         None        None         None           None                    None            None            None            None
  * LEDS_OFF:        None        None         None           None                    None            None            None            None
  *
