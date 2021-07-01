@@ -121,8 +121,9 @@ void can_handle_interrupt() {
     // if there was already a message in the receive buffer and we
     // received another message, just drop that message. Apparently
     // your code isn't fast enough.
-    if (COMSTATbits.RXB0OVFL) {
+    if (COMSTATbits.RXB0OVFL || COMSTATbits.RXB1OVFL) {
         COMSTATbits.RXB0OVFL = 0;
+        COMSTATbits.RXB1OVFL = 0;
     }
 
     // handle a received message by stuffing it into a can_message_t
