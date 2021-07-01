@@ -9,7 +9,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define CANLIB_VERSION            "v0.4.0"
+#define CANLIB_VERSION            "v0.6.0"
 #define CANLIB_BIT_TIME_US        24
 
 // Timing parameters
