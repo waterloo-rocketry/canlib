@@ -44,6 +44,8 @@
 
 #define MSG_FILL_LVL              0x780
 
+#define MSG_RADI_VALUE            0x7A0
+
 #define MSG_LEDS_ON               0x7E0
 #define MSG_LEDS_OFF              0x7C0
 
@@ -66,6 +68,8 @@
 #define BOARD_ID_FILL_SPARE       0x10
 #define BOARD_ID_ARMING           0x11
 #define BOARD_ID_ARMING_SPARE     0x12
+#define BOARD_ID_PAPA             0x13  
+#define BOARD_ID_PAPA_SPARE       0x14
 
 /*
  * General message type format (from spreadsheet):
@@ -99,7 +103,9 @@
  * GPS_INFO:        TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    NUM_SAT                 QUALITY         None            None            None
  *
  * FILL_LVL:        TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    FILL_LEVEL              DIRECTION       None            None            None
- *
+ * 
+ * RADI_VALUE:      TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    RADI_BOARD              RADI_INT        RADI_DECI       None            None
+ * 
  * LEDS_ON:         None        None         None           None                    None            None            None            None
  * LEDS_OFF:        None        None         None           None                    None            None            None            None
  *

@@ -393,6 +393,26 @@ bool build_fill_msg(uint32_t timestamp,
     return true;
 }
 
+bool build_radi_info_msg(uint32_t timestamp,
+                         uint8_t sensor_identifier,
+                         uint8_t int_value,
+                         uint8_t deci_value,
+                         can_msg_t *output)
+ {
+    if (!output) { return false; }
+
+    output->sid = MSG_RADI_VALUE | BOARD_UNIQUE_ID;
+    write_timestamp_3bytes(timestamp, output);
+
+    output->data[3] = sensor_identifier;
+    output->data[4] = int_value;
+    output->data[5] = deci_value;
+
+    output->data_len = 6;
+
+    return true;
+ }
+
 bool get_fill_info(const can_msg_t *msg,
                    uint8_t *lvl,
                    uint8_t *direction)
@@ -523,6 +543,7 @@ uint32_t get_timestamp(const can_msg_t *msg)
         case MSG_GPS_INFO:
         case MSG_RESET_CMD:
         case MSG_FILL_LVL:
+        case MSG_RADI_VALUE:
             return (uint32_t)msg->data[0] << 16
                    | (uint32_t)msg->data[1] << 8
                    | msg->data[2];
@@ -711,6 +732,24 @@ bool get_gps_info(const can_msg_t *msg,
 
     *num_sat = msg->data[3];
     *quality = msg->data[4];
+
+    return true;
+}
+
+bool get_radi_info(const can_msg_t* msg,
+                   uint8_t *sensor_identifier,
+                   uint8_t *int_value,
+                   uint8_t *deci_value)
+{
+    if (!msg) { return false; }
+    if (!sensor_identifier) { return false; }
+    if (!int_value) { return false; }
+    if (!deci_value) { return false; }
+    if (get_message_type(msg) != MSG_RADI_VALUE) {return false;}
+
+    *sensor_identifier = msg -> data[3];
+    *int_value = msg -> data[4];
+    *deci_value = msg -> data[5];
 
     return true;
 }
