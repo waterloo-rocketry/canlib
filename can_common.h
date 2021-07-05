@@ -72,19 +72,19 @@ bool build_reset_msg(uint32_t timestamp,
 /*
  * Used to send injector and vent commands
  */
-bool build_valve_cmd_msg(uint32_t timestamp,
-                         enum VALVE_STATE valve_cmd,
-                         uint16_t message_type,  // vent or injector
-                         can_msg_t *output);
+bool build_actuator_cmd_msg(uint32_t timestamp,
+                            enum ACTUATOR_ID actuator_id,
+                            enum VALVE_STATE valve_cmd,                  
+                            can_msg_t *output);
 
 /*
  * Used to send injector/vent status: current and desired
  */
-bool build_valve_stat_msg(uint32_t timestamp,
-                          enum VALVE_STATE valve_state,
-                          enum VALVE_STATE req_valve_state,
-                          uint16_t message_type,    // vent or injector
-                          can_msg_t *output);
+bool build_actuator_stat_msg(uint32_t timestamp,
+                             enum ACTUATOR_ID actuator_id,
+                             enum VALVE_STATE valve_state,
+                             enum VALVE_STATE req_valve_state,
+                             can_msg_t *output);
 
 /*
 * Used to send altimeter arm commands
@@ -120,8 +120,8 @@ bool build_board_stat_msg(uint32_t timestamp,
  * Used to send 16-bit IMU data values. It is assumed that an array
  * of 3 values is sent (X, Y, and Z axes).
  */
-bool build_imu_data_msg(uint16_t message_type,  // acc, gyro, mag
-                        uint32_t timestamp,
+bool build_imu_data_msg(uint32_t timestamp,
+                        uint16_t message_type,  // acc, gyro, mag
                         uint16_t *imu_data,     // x, y, z
                         can_msg_t *output);
 

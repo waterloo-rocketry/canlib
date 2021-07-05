@@ -16,8 +16,7 @@
  */
 
 #define MSG_GENERAL_CMD           0x060
-#define MSG_VENT_VALVE_CMD        0x0C0
-#define MSG_INJ_VALVE_CMD         0x120
+#define MSG_ACTUATOR_CMD          0x0C0
 #define MSG_ALT_ARM_CMD           0x140
 #define MSG_RESET_CMD             0x160
 
@@ -26,8 +25,7 @@
 #define MSG_DEBUG_RADIO_CMD       0x200
 
 #define MSG_ALT_ARM_STATUS        0x440
-#define MSG_VENT_VALVE_STATUS     0x460
-#define MSG_INJ_VALVE_STATUS      0x4C0
+#define MSG_ACTUATOR_STATUS       0x460
 #define MSG_GENERAL_BOARD_STATUS  0x520
 
 #define MSG_SENSOR_ALTITUDE       0x560
@@ -73,41 +71,39 @@
 
 /*
  * General message type format (from spreadsheet):
- * (Version 0.6.0)
- *                  byte 0      byte 1       byte 2         byte 3                  byte 4          byte 5          byte 6          byte 7
- * GENERAL_CMD:     TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    COMMAND_TYPE            None            None            None            None
- * VENT_VALVE_CMD:  TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    VENT_VALVE_STATE        None            None            None            None
- * INJ_VALVE_CMD:   TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    INJ_VALVE_STATE         None            None            None            None
- * ALT_ARM_CMD:     TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    ALT_ARM_STATE & #       None            None            None            None
- * RESET_CMD:       TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    BOARD_ID                None            None            None            None
+ * (Version 0.7.0)
+ *                  byte 0      byte 1       byte 2         byte 3                  byte 4              byte 5          byte 6          byte 7
+ * GENERAL_CMD:     TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    COMMAND_TYPE            None                None            None            None
+ * ACTUATOR_CMD:    TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    ACTUATOR_ID             ACTUATOR_STATE      None            None            None
+ * ALT_ARM_CMD:     TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    ALT_ARM_STATE & #       None                None            None            None
+ * RESET_CMD:       TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    BOARD_ID                None                None            None            None
  *
- * DEBUG_MSG:       TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    DEBUG_LEVEL | LINUM_H   LINUM_L         MESSAGE_DEFINED MESSAGE_DEFINED MESSAGE_DEFINED
- * DEBUG_PRINTF:    ASCII       ASCII        ASCII          ASCII                   ASCII           ASCII           ASCII           ASCII
- * DEBUG_RADIO_CMD: ASCII       ASCII        ASCII          ASCII                   ASCII           ASCII           ASCII           ASCII
+ * DEBUG_MSG:       TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    DEBUG_LEVEL | LINUM_H   LINUM_L             MESSAGE_DEFINED MESSAGE_DEFINED MESSAGE_DEFINED
+ * DEBUG_PRINTF:    ASCII       ASCII        ASCII          ASCII                   ASCII               ASCII           ASCII           ASCII
+ * DEBUG_RADIO_CMD: ASCII       ASCII        ASCII          ASCII                   ASCII               ASCII           ASCII           ASCII
  *
- * VENT_VALVE_STAT: TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    VENT_VALVE_STATE        CMD_VALVE_STATE None            None            None
- * INJ_VALVE_STAT:  TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    INJ_VALVE_STATE         CMD_VALVE_STATE None            None            None
- * ALT_ARM_STAT:    TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    ALT_ARM_STATE & #       V_DROGUE_H      V_DROGUE_L      V_MAIN_H        V_MAIN_L
- * BOARD_STAT:      TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    ERROR_CODE              BOARD_DEFINED   BOARD_DEFINED   BOARD_DEFINED   BOARD_DEFINED
+ * ACTUATOR_STAT:   TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    ACTUATOR_STATE          CMD_VALVE_STATE     None            None            None
+ * ALT_ARM_STAT:    TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    ALT_ARM_STATE & #       V_DROGUE_H          V_DROGUE_L      V_MAIN_H        V_MAIN_L
+ * BOARD_STAT:      TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    ERROR_CODE              BOARD_DEFINED       BOARD_DEFINED   BOARD_DEFINED   BOARD_DEFINED
  *
- * SENSOR_ALTITUDE: TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    ALTITUDE_H              ALTITUDE_MH     ALTITUDE_ML     ALTITUDE_L      None
- * SENSOR_ACC:      TSTAMP_MS_M TSTAMP_MS_L  VALUE_X_H      VALUE_X_L               VALUE_Y_H       VALUE_Y_L       VALUE_Z_H       VALUE_Z_L
- * SENSOR_GYRO:     TSTAMP_MS_M TSTAMP_MS_L  VALUE_X_H      VALUE_X_L               VALUE_Y_H       VALUE_Y_L       VALUE_Z_H       VALUE_Z_L
- * SENSOR_MAG:      TSTAMP_MS_M TSTAMP_MS_L  VALUE_X_H      VALUE_X_L               VALUE_Y_H       VALUE_Y_L       VALUE_Z_H       VALUE_Z_L
- * SENSOR_ANALOG:   TSTAMP_MS_M TSTAMP_MS_L  SENSOR_ID      VALUE_H                 VALUE_L         None            None            None
+ * SENSOR_ALTITUDE: TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    ALTITUDE_H              ALTITUDE_MH         ALTITUDE_ML     ALTITUDE_L      None
+ * SENSOR_ACC:      TSTAMP_MS_M TSTAMP_MS_L  VALUE_X_H      VALUE_X_L               VALUE_Y_H           VALUE_Y_L       VALUE_Z_H       VALUE_Z_L
+ * SENSOR_GYRO:     TSTAMP_MS_M TSTAMP_MS_L  VALUE_X_H      VALUE_X_L               VALUE_Y_H           VALUE_Y_L       VALUE_Z_H       VALUE_Z_L
+ * SENSOR_MAG:      TSTAMP_MS_M TSTAMP_MS_L  VALUE_X_H      VALUE_X_L               VALUE_Y_H           VALUE_Y_L       VALUE_Z_H       VALUE_Z_L
+ * SENSOR_ANALOG:   TSTAMP_MS_M TSTAMP_MS_L  SENSOR_ID      VALUE_H                 VALUE_L             None            None            None
  *
- * GPS_TIMESTAMP:   TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    UTC_HOURS               UTC_MINUTES     UTC_SECONDS     UTC_DSECONDS    None
- * GPS_LAT:         TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    DEGREES                 MINUTES         DMINUTES_H      DIMNUTES_L      N/S DIRECTION
- * GPS_LON:         TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    DEGREES                 MINUTES         DMINUTES_H      DIMNUTES_L      E/W DIRECTION
- * GPS_ALT:         TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    ALT_H                   ALT_L           ALT_DEC         UNITS           None
- * GPS_INFO:        TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    NUM_SAT                 QUALITY         None            None            None
+ * GPS_TIMESTAMP:   TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    UTC_HOURS               UTC_MINUTES         UTC_SECONDS     UTC_DSECONDS    None
+ * GPS_LAT:         TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    DEGREES                 MINUTES             DMINUTES_H      DIMNUTES_L      N/S DIRECTION
+ * GPS_LON:         TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    DEGREES                 MINUTES             DMINUTES_H      DIMNUTES_L      E/W DIRECTION
+ * GPS_ALT:         TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    ALT_H                   ALT_L               ALT_DEC         UNITS           None
+ * GPS_INFO:        TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    NUM_SAT                 QUALITY             None            None            None
  *
- * FILL_LVL:        TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    FILL_LEVEL              DIRECTION       None            None            None
- * 
- * RADI_VALUE:      TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    RADI_BOARD              RADI_HIGH       RADI_LOW        None            None
- * 
- * LEDS_ON:         None        None         None           None                    None            None            None            None
- * LEDS_OFF:        None        None         None           None                    None            None            None            None
+ * FILL_LVL:        TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    FILL_LEVEL              DIRECTION           None            None            None
+ *
+ * RADI_VALUE:      TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    RADI_BOARD              RADI_HIGH           RADI_LOW        None            None
+ *
+ * LEDS_ON:         None        None         None           None                    None                None            None            None
+ * LEDS_OFF:        None        None         None           None                    None                None            None            None
  *
  * This file defines the format of the various CAN message types (defined in
  * message_types.h). There is no unified message format; the format of each message
@@ -193,5 +189,8 @@ enum FILL_DIRECTION {
     EMPTYING,
 };
 
+enum ACTUATOR_ID {
+    VENT_VALVE = 0,
+};
 
 #endif // compile guard
