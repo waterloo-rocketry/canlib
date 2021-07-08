@@ -581,7 +581,7 @@ bool test_build_radi_info_msg (void)
     uint32_t timestamp = 0x123456;
     can_msg_t output;
     uint8_t sensor_identifier = 3;
-    uint16_t adc_value = 2021 << 4;
+    uint16_t adc_value = 2021;
 
     bool ret = true;
 
@@ -606,16 +606,15 @@ bool test_build_radi_info_msg (void)
     }
 
     uint8_t test_sensor_identifier;
-    uint8_t test_adc_high_value;
-    uint8_t test_adc_low_value;
+    uint16_t test_adc_value;
 
-    if (!get_radi_info(&output, &test_sensor_identifier, &test_adc_high_value, &test_adc_low_value))
+    if (!get_radi_info(&output, &test_sensor_identifier, &test_adc_value))
     {
         REPORT_FAIL("Error getting radiation board message");
         ret = false;
     }
 
-    if (test_sensor_identifier != sensor_identifier || test_adc_high_value != (uint8_t) (adc_value >> 8) || test_adc_low_value != (uint8_t) (adc_value))
+    if (test_sensor_identifier != sensor_identifier || test_adc_value != adc_value)
     {
         REPORT_FAIL ("Radiation board fields dont match");
         ret = false; 
