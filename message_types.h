@@ -68,11 +68,12 @@
 #define BOARD_ID_FILL_SPARE       0x10
 #define BOARD_ID_ARMING           0x11
 #define BOARD_ID_ARMING_SPARE     0x12
-#define BOARD_ID_PAPA             0x13  
+#define BOARD_ID_PAPA             0x13
 #define BOARD_ID_PAPA_SPARE       0x14
 
 /*
- * General message type format (from spreadsheet):
+ * General message type format (from spread
+ sheet):
  * (Version 0.6.0)
  *                  byte 0      byte 1       byte 2         byte 3                  byte 4          byte 5          byte 6          byte 7
  * GENERAL_CMD:     TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    COMMAND_TYPE            None            None            None            None
@@ -103,9 +104,9 @@
  * GPS_INFO:        TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    NUM_SAT                 QUALITY         None            None            None
  *
  * FILL_LVL:        TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    FILL_LEVEL              DIRECTION       None            None            None
- * 
+ *
  * RADI_VALUE:      TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    RADI_BOARD              RADI_INT        RADI_DECI       None            None
- * 
+ *
  * LEDS_ON:         None        None         None           None                    None            None            None            None
  * LEDS_OFF:        None        None         None           None                    None            None            None            None
  *

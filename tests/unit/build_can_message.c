@@ -193,6 +193,116 @@ static bool test_valve_stat(void)
     return ret;
 }
 
+static bool test_arm_cmd(void){
+    uint32_t timestamp = 0x12345678;
+    can_msg_t output;
+
+    bool ret = true;
+
+    uint8_t alt_number = 1;
+
+    // test illegal args
+    if (build_arm_cmd_msg(timestamp, alt_number, ARMED, NULL)) {
+        REPORT_FAIL("Message built with null output");
+        ret = false;
+    }
+
+    // test nominal behaviour
+    if (!build_arm_cmd_msg(timestamp, alt_number, ARMED, &output)) {
+        REPORT_FAIL("Error building message");
+        ret = false;
+    }
+    if (output.data_len != 4) {
+        REPORT_FAIL("Data length is wrong");
+        ret = false;
+    }
+    if (get_timestamp(&output) != (timestamp & 0xffffff)) {
+        REPORT_FAIL("Timestamp copied wrong");
+        ret = false;
+    }
+
+    uint8_t copied_alt_num;
+    enum ARM_STATE copied_arming_state;
+    if (get_curr_arm_state(&output, &copied_alt_num, &copied_arming_state)) {
+        REPORT_FAIL("Got current arming state from a command message");
+        ret = false;
+    }
+
+    get_req_arm_state(&output, &copied_alt_num, &copied_arming_state);
+    if (alt_number != copied_alt_num) {
+        REPORT_FAIL("Altimeter number copied incorrectly");
+        ret = false;
+    }
+    if (copied_arming_state != ARMED){
+        REPORT_FAIL("Altimeter requested state copied incorrectly");
+        ret = false;
+    }
+
+    return ret;
+}
+
+static bool test_arm_status(void){
+    uint32_t timestamp = 0x12345678;
+    can_msg_t output;
+
+    bool ret = true;
+
+    uint8_t alt_number = 1;
+    uint16_t v_drogue = 0xcafe, v_main = 0xdada;
+
+    // test illegal args
+    if (build_arm_stat_msg(timestamp, alt_number, ARMED,
+                           v_drogue, v_main, NULL)) {
+        REPORT_FAIL("Message built with null output");
+        ret = false;
+    }
+
+    // test nominal behaviour
+    if (!build_arm_stat_msg(timestamp, alt_number, ARMED,
+                            v_drogue, v_main, &output)) {
+        REPORT_FAIL("Error building message");
+        ret = false;
+    }
+    if (output.data_len != 8) {
+        REPORT_FAIL("Data length is wrong");
+        ret = false;
+    }
+    if (get_timestamp(&output) != (timestamp & 0xffffff)) {
+        REPORT_FAIL("Timestamp copied wrong");
+        ret = false;
+    }
+
+    uint8_t copied_alt_num;
+    enum ARM_STATE copied_arming_state;
+    if (get_req_arm_state(&output, &copied_alt_num, &copied_arming_state)) {
+        REPORT_FAIL("Got requested arming state from a status message");
+        ret = false;
+    }
+
+    get_curr_arm_state(&output, &copied_alt_num, &copied_arming_state);
+    if (alt_number != copied_alt_num) {
+        REPORT_FAIL("Altimeter number copied incorrectly");
+        ret = false;
+    }
+    if (copied_arming_state != ARMED){
+        REPORT_FAIL("Altimeter requested state copied incorrectly");
+        ret = false;
+    }
+
+    uint16_t copied_v_drogue, copied_v_main;
+    get_pyro_voltage_data(&output, &copied_v_drogue, &copied_v_main);
+    if (copied_v_drogue != v_drogue){
+        REPORT_FAIL("Drogue voltage copied incorrectly");
+        ret = false;
+    }
+    if (copied_v_main != v_main){
+        REPORT_FAIL("Main voltage copied incorrectly");
+        ret = false;
+    }
+
+    return ret;
+}
+
 static bool test_board_stat(void)
 {
     uint32_t timestamp = 0x12345678;
@@ -619,7 +729,7 @@ bool test_build_radi_info_msg (void)
     if (test_sensor_identifier != sensor_identifier || test_int_value != int_value || test_deci_value != deci_value)
     {
         REPORT_FAIL ("Radiation board fields dont match");
-        ret = false; 
+        ret = false;
     }
 
     if (get_timestamp(&output) != (timestamp & 0xffffff)) {
@@ -647,6 +757,14 @@ bool test_build_can_message(void)
     }
     if (!test_valve_stat()) {
         REPORT_FAIL("test_valve_stat returned false");
+        ret = false;
+    }
+    if (!test_arm_cmd()){
+        REPORT_FAIL("test_arm_cmd returned false");
+        ret = false;
+    }
+    if (!test_arm_status()){
+        REPORT_FAIL("test_arm_status returned false");
         ret = false;
     }
     if (!test_board_stat()) {

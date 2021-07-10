@@ -134,7 +134,7 @@ bool build_arm_cmd_msg(uint32_t timestamp,
 {
     if (!output) { return false; }
 
-    output->sid = MSG_ALT_ARM_STATUS | BOARD_UNIQUE_ID;
+    output->sid = MSG_ALT_ARM_CMD | BOARD_UNIQUE_ID;
     write_timestamp_3bytes(timestamp, output);
 
     // 4 msb are used for arm state, 4 lsb used for altimeter number
@@ -532,9 +532,11 @@ uint32_t get_timestamp(const can_msg_t *msg)
         case MSG_GENERAL_CMD:
         case MSG_INJ_VALVE_CMD:
         case MSG_VENT_VALVE_CMD:
+        case MSG_ALT_ARM_CMD:
         case MSG_DEBUG_MSG:
         case MSG_INJ_VALVE_STATUS:
         case MSG_VENT_VALVE_STATUS:
+        case MSG_ALT_ARM_STATUS:
         case MSG_GENERAL_BOARD_STATUS:
         case MSG_GPS_TIMESTAMP:
         case MSG_GPS_LATITUDE:
