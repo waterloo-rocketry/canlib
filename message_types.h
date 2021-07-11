@@ -72,8 +72,7 @@
 #define BOARD_ID_PAPA_SPARE       0x14
 
 /*
- * General message type format (from spread
- sheet):
+ * General message type format (from spreadsheet):
  * (Version 0.6.0)
  *                  byte 0      byte 1       byte 2         byte 3                  byte 4          byte 5          byte 6          byte 7
  * GENERAL_CMD:     TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    COMMAND_TYPE            None            None            None            None

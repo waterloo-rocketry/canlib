@@ -545,6 +545,7 @@ uint32_t get_timestamp(const can_msg_t *msg)
         case MSG_GPS_INFO:
         case MSG_RESET_CMD:
         case MSG_FILL_LVL:
+        case MSG_SENSOR_ALTITUDE:
         case MSG_RADI_VALUE:
             return (uint32_t)msg->data[0] << 16
                    | (uint32_t)msg->data[1] << 8
@@ -620,9 +621,9 @@ bool get_altitude_data(const can_msg_t *msg, int32_t *altitude)
     if (get_message_type(msg) != MSG_SENSOR_ALTITUDE) { return false; }
 
     *altitude = ((uint32_t)msg->data[3] << 24);
-    *altitude += ((uint32_t)msg->data[4] << 16);
-    *altitude += ((uint32_t)msg->data[5] << 8);
-    *altitude += msg->data[6];
+    *altitude |= ((uint32_t)msg->data[4] << 16);
+    *altitude |= ((uint32_t)msg->data[5] << 8);
+    *altitude |= msg->data[6];
 
     return true;
 }
