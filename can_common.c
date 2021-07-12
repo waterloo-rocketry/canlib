@@ -127,6 +127,49 @@ bool build_valve_stat_msg(uint32_t timestamp,
     return true;
 }
 
+bool build_arm_cmd_msg(uint32_t timestamp,
+                       uint8_t alt_num,
+                       enum ARM_STATE arm_cmd,
+                       can_msg_t *output)
+{
+    if (!output) { return false; }
+
+    output->sid = MSG_ALT_ARM_CMD | BOARD_UNIQUE_ID;
+    write_timestamp_3bytes(timestamp, output);
+
+    // 4 msb are used for arm state, 4 lsb used for altimeter number
+    output->data[3] = (arm_cmd << 4) | (alt_num & 0x0F);
+    output->data_len = 4; // 3 bytes timestamp, 1 byte arm state + alt num
+
+    return true;
+}
+
+bool build_arm_stat_msg(uint32_t timestamp,
+                        uint8_t alt_num,
+                        enum ARM_STATE arm_state,
+                        uint16_t v_drogue,
+                        uint16_t v_main,
+                        can_msg_t *output)
+{
+    if (!output) { return false; }
+
+    output->sid = MSG_ALT_ARM_STATUS | BOARD_UNIQUE_ID;
+    write_timestamp_3bytes(timestamp, output);
+
+    // 4 msb are used for arm state, 4 lsb used for altimeter number
+    output->data[3] = (arm_state << 4) | (alt_num & 0x0F);
+    // drogue voltage
+    output->data[4] = v_drogue >> 8;     // 8 msb
+    output->data[5] = v_drogue & 0x00FF; // 8 lsb
+    // main voltage
+    output->data[6] = v_main >> 8;     // 8 msb
+    output->data[7] = v_main & 0x00FF; // 8 lsb
+    // 3 bytes timestamp, 1 byte arm state + alt num, 4 bytes voltages
+    output->data_len = 8;
+
+    return true;
+}
+
 // This might need to be made more granular - it doesn't quite hide
 // the data layout properly.
 bool build_board_stat_msg(uint32_t timestamp,
@@ -203,6 +246,24 @@ bool build_analog_data_msg(uint32_t timestamp,
     output->data[4] = (sensor_data >> 0) & 0xff;
 
     output->data_len = 5;
+
+    return true;
+}
+
+bool build_altitude_data_msg(uint32_t timestamp,
+                             int32_t altitude,
+                             can_msg_t *output)
+{
+    if(!output) { return false; }
+
+    output->sid =  MSG_SENSOR_ALTITUDE | BOARD_UNIQUE_ID;
+    write_timestamp_3bytes(timestamp, output);
+
+    output->data[3] = (altitude >> 24) & 0xFF;
+    output->data[4] = (altitude >> 16) & 0xFF;
+    output->data[5] = (altitude >> 8) & 0xFF;
+    output->data[6] = altitude & 0xFF;
+    output->data_len = 7;
 
     return true;
 }
@@ -424,6 +485,26 @@ int get_req_valve_state(const can_msg_t *msg)
     }
 }
 
+bool get_curr_arm_state(const can_msg_t *msg, uint8_t *alt_num, enum ARM_STATE *arm_state)
+{
+    if( !msg || !alt_num || !arm_state) { return false; }
+    if(get_message_type(msg) != MSG_ALT_ARM_STATUS) { return false; }
+    *alt_num = msg->data[3] & 0x0F;
+    *arm_state = msg->data[3] >> 4;
+
+    return true;
+}
+
+bool get_req_arm_state(const can_msg_t *msg, uint8_t *alt_num, enum ARM_STATE *arm_state)
+{
+    if( !msg || !alt_num || !arm_state) { return false; }
+    if(get_message_type(msg) != MSG_ALT_ARM_CMD) { return false; }
+    *alt_num = msg->data[3] & 0x0F;
+    *arm_state = msg->data[3] >> 4;
+
+    return true;
+}
+
 uint16_t get_message_type(const can_msg_t *msg)
 {
     // invalid SID
@@ -451,9 +532,11 @@ uint32_t get_timestamp(const can_msg_t *msg)
         case MSG_GENERAL_CMD:
         case MSG_INJ_VALVE_CMD:
         case MSG_VENT_VALVE_CMD:
+        case MSG_ALT_ARM_CMD:
         case MSG_DEBUG_MSG:
         case MSG_INJ_VALVE_STATUS:
         case MSG_VENT_VALVE_STATUS:
+        case MSG_ALT_ARM_STATUS:
         case MSG_GENERAL_BOARD_STATUS:
         case MSG_GPS_TIMESTAMP:
         case MSG_GPS_LATITUDE:
@@ -462,6 +545,7 @@ uint32_t get_timestamp(const can_msg_t *msg)
         case MSG_GPS_INFO:
         case MSG_RESET_CMD:
         case MSG_FILL_LVL:
+        case MSG_SENSOR_ALTITUDE:
         case MSG_RADI_VALUE:
             return (uint32_t)msg->data[0] << 16
                    | (uint32_t)msg->data[1] << 8
@@ -527,6 +611,34 @@ bool get_analog_data(const can_msg_t *msg, enum SENSOR_ID *sensor_id, uint16_t *
 
     *sensor_id = msg->data[2];
     *output_data = (uint16_t)msg->data[3] << 8 | msg->data[4];
+
+    return true;
+}
+
+bool get_altitude_data(const can_msg_t *msg, int32_t *altitude)
+{
+    if (!msg || !altitude) { return false; }
+    if (get_message_type(msg) != MSG_SENSOR_ALTITUDE) { return false; }
+
+    *altitude = ((uint32_t)msg->data[3] << 24);
+    *altitude |= ((uint32_t)msg->data[4] << 16);
+    *altitude |= ((uint32_t)msg->data[5] << 8);
+    *altitude |= msg->data[6];
+
+    return true;
+}
+
+bool get_pyro_voltage_data(const can_msg_t *msg,
+                           uint16_t *v_drogue,
+                           uint16_t *v_main)
+{
+    if (!msg || !v_drogue || !v_main) { return false; }
+    if (get_message_type(msg) != MSG_ALT_ARM_STATUS) { return false; }
+
+    *v_drogue = (msg->data[4] << 8);
+    *v_drogue += msg->data[5];
+    *v_main = (msg->data[6] << 8);
+    *v_main += msg->data[7];
 
     return true;
 }

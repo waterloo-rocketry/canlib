@@ -87,10 +87,29 @@ bool build_valve_stat_msg(uint32_t timestamp,
                           can_msg_t *output);
 
 /*
- * Used by each board to send status messages. Error codes and their
- * corresponding supplemental data are defined in message_types.h.
- * This function may need to be modified to better hide the internals.
- */
+* Used to send altimeter arm commands
+*/
+bool build_arm_cmd_msg(uint32_t timestamp,
+                       uint8_t alt_num,
+                       enum ARM_STATE arm_cmd,
+                       can_msg_t *output);
+
+/*
+* Used to send the current altimeter arming status
+*/
+bool build_arm_stat_msg(uint32_t timestamp,
+                        uint8_t alt_num,
+                        enum ARM_STATE arm_state,
+                        uint16_t v_drogue,
+                        uint16_t v_main,
+                        can_msg_t *output);
+
+
+/*
+* Used by each board to send status messages. Error codes and their
+* corresponding supplemental data are defined in message_types.h.
+* This function may need to be modified to better hide the internals.
+*/
 bool build_board_stat_msg(uint32_t timestamp,
                           enum BOARD_STATUS error_code,
                           uint8_t *error_data,
@@ -117,9 +136,16 @@ bool build_analog_data_msg(uint32_t timestamp,
                            can_msg_t *output);
 
 /*
-  * Used to format GPS timestamp data. Data arguments: UTC time in hours,
-  * minutes, seconds, and deci-seconds.
-  */
+* Used to send altitude recived from altimiters
+*/
+bool build_altitude_data_msg(uint32_t timestamp,
+                             int32_t altitude,
+                             can_msg_t *output);
+
+/*
+ * Used to format GPS timestamp data. Data arguments: UTC time in hours,
+ * minutes, seconds, and deci-seconds.
+ */
 bool build_gps_time_msg(uint32_t timestamp,
                         uint8_t utc_hours,
                         uint8_t utc_mins,
@@ -205,6 +231,19 @@ int get_curr_valve_state(const can_msg_t *msg);
 int get_req_valve_state(const can_msg_t *msg);
 
 /*
+* Gets the current arm state and which altimeter it is for.
+* Returns false if the provided message is not an arm status.
+*/
+bool get_curr_arm_state(const can_msg_t *msg, uint8_t *alt_num, enum ARM_STATE *arm_state);
+
+/*
+* Gets the requested arm state and altimeter number.
+* Returns false if the provided message is not an arm state request."
+*/
+bool get_req_arm_state(const can_msg_t *msg, uint8_t *alt_num, enum ARM_STATE *arm_state);
+
+
+/*
  * Strips the board unique ID from msg, and returns the SID. Contains
  * no error checking, so if you pass an illegal SID, you could get
  * back a nonsensical value.
@@ -246,6 +285,22 @@ bool get_imu_data(const can_msg_t *msg,
 bool get_analog_data(const can_msg_t *msg,
                      enum SENSOR_ID *sensor_id,
                      uint16_t *output_data);
+
+/*
+* Gets the altitude data, returns false if the message is not
+* a SENSOR_ALTITUDE message.
+*/
+bool get_altitude_data(const can_msg_t *msg,
+                       int32_t *altitude);
+
+/*
+* Gets the voltage of the drogue and main pyro lines, returns false
+* if the message is not an ALT_ARM_STATUS message
+*/
+bool get_pyro_voltage_data(const can_msg_t *msg,
+                           uint16_t *v_drogue,
+                           uint16_t *v_main);
+
 
 /*
  * Gets GPS UTC time information. Format is UTC hours, minutes,
