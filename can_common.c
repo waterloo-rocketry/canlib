@@ -260,11 +260,10 @@ bool build_temp_data_msg(uint32_t timestamp,
     write_timestamp_3bytes(timestamp, output);
 
     output->data[3] = sensor_num;
-    output->data[4] = (temp >> 24) & 0xFF;
-    output->data[5] = (temp >> 16) & 0xFF;
-    output->data[6] = (temp >> 8) & 0xFF;
-    output->data[7] = temp & 0xFF;
-    output->data_len = 8;
+    output->data[4] = (temp >> 16) & 0xFF;
+    output->data[5] = (temp >> 8) & 0xFF;
+    output->data[6] = temp & 0xFF;
+    output->data_len = 7;
 
     return true;
 }
@@ -643,10 +642,11 @@ bool get_temp_data(const can_msg_t *msg,
     if (get_message_type(msg) != MSG_SENSOR_TEMP) { return false; }
 
     *sensor_num = msg->data[3];
-    *temp = ((uint32_t)msg->data[4] << 24);
-    *temp |= ((uint32_t)msg->data[5] << 16);
-    *temp |= ((uint32_t)msg->data[6] << 8);
-    *temp |= msg->data[7];
+    //handle 24 bit to 32 bit sign conversion
+    *temp = (msg->data[4] & 0x80)? 0xFF << 24 : 0;
+    *temp |= ((uint32_t)msg->data[4] << 16);
+    *temp |= ((uint32_t)msg->data[5] << 8);
+    *temp |= msg->data[6];
 
     return true;
 }

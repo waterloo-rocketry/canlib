@@ -442,7 +442,7 @@ static bool test_sensor_altitude(void)
 static bool test_sensor_temp(void)
 {
     uint8_t sensor_num = 27;
-    int32_t temp = 3000*1024;
+    int32_t temp = -3000*1024;
     uint32_t timestamp = 0x12345678;
     can_msg_t output;
     bool ret = true;
@@ -462,7 +462,7 @@ static bool test_sensor_temp(void)
         REPORT_FAIL("SID compare failed");
         ret = false;
     }
-    if (output.data_len != 8) {
+    if (output.data_len != 7) {
         REPORT_FAIL("Data length copied wrong");
         ret = false;
     }
