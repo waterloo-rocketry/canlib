@@ -30,6 +30,7 @@
 #define MSG_INJ_VALVE_STATUS      0x4C0
 #define MSG_GENERAL_BOARD_STATUS  0x520
 
+#define MSG_SENSOR_TEMP           0x540
 #define MSG_SENSOR_ALTITUDE       0x560
 #define MSG_SENSOR_ACC            0x580
 #define MSG_SENSOR_GYRO           0x5E0
@@ -70,10 +71,13 @@
 #define BOARD_ID_ARMING_SPARE     0x12
 #define BOARD_ID_PAPA             0x13
 #define BOARD_ID_PAPA_SPARE       0x14
+#define BOARD_ID_TEMP_SENSE       0x15
+#define BOARD_ID_TEMP_SENSE_SPARE 0x16
+
 
 /*
  * General message type format (from spreadsheet):
- * (Version 0.6.0)
+ * (Version 0.7.0)
  *                  byte 0      byte 1       byte 2         byte 3                  byte 4          byte 5          byte 6          byte 7
  * GENERAL_CMD:     TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    COMMAND_TYPE            None            None            None            None
  * VENT_VALVE_CMD:  TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    VENT_VALVE_STATE        None            None            None            None
@@ -90,6 +94,7 @@
  * ALT_ARM_STAT:    TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    ALT_ARM_STATE & #       V_DROGUE_H      V_DROGUE_L      V_MAIN_H        V_MAIN_L
  * BOARD_STAT:      TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    ERROR_CODE              BOARD_DEFINED   BOARD_DEFINED   BOARD_DEFINED   BOARD_DEFINED
  *
+ * SENSOR_TEMP:     TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    SENSOR_NUM              TEMP_H          TEMP_MH         TEMP_ML         TEMP_L
  * SENSOR_ALTITUDE: TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    ALTITUDE_H              ALTITUDE_MH     ALTITUDE_ML     ALTITUDE_L      None
  * SENSOR_ACC:      TSTAMP_MS_M TSTAMP_MS_L  VALUE_X_H      VALUE_X_L               VALUE_Y_H       VALUE_Y_L       VALUE_Z_H       VALUE_Z_L
  * SENSOR_GYRO:     TSTAMP_MS_M TSTAMP_MS_L  VALUE_X_H      VALUE_X_L               VALUE_Y_H       VALUE_Y_L       VALUE_Z_H       VALUE_Z_L
