@@ -439,6 +439,55 @@ static bool test_sensor_altitude(void)
     return ret;
 }
 
+static bool test_sensor_temp(void)
+{
+    uint8_t sensor_num = 27;
+    int32_t temp = 3000*1024;
+    uint32_t timestamp = 0x12345678;
+    can_msg_t output;
+    bool ret = true;
+
+    // test illegal args
+    if (build_temp_data_msg(timestamp, sensor_num, temp, NULL)) {
+        REPORT_FAIL("Message built with null output");
+        ret = false;
+    }
+
+    // test nominal behaviour
+    if (!build_temp_data_msg(timestamp, sensor_num, temp, &output)) {
+        REPORT_FAIL("Error building message");
+        ret = false;
+    }
+    if (output.sid != 0x543) {
+        REPORT_FAIL("SID compare failed");
+        ret = false;
+    }
+    if (output.data_len != 8) {
+        REPORT_FAIL("Data length copied wrong");
+        ret = false;
+    }
+    if (get_timestamp(&output) != (timestamp & 0xffffff)) {
+        REPORT_FAIL("Timestamp copied wrong");
+        ret = false;
+    }
+
+    uint8_t output_sensor_num;
+    int32_t output_temp;
+    if (!get_temp_data(&output, &output_sensor_num, &output_temp)) {
+        REPORT_FAIL("Failed to retrieve sensor data");
+        ret = false;
+    }
+    if (output_sensor_num != sensor_num) {
+        REPORT_FAIL("temp sensor number is incorrect");
+        ret = false;
+    }
+    if (output_temp != temp) {
+        REPORT_FAIL("temperature data is incorrect");
+        ret = false;
+    }
+    return ret;
+}
+
 static bool test_sensor_imu(void)
 {
     uint16_t input_data[3] = {
@@ -824,6 +873,10 @@ bool test_build_can_message(void)
     }
     if (!test_debug_printf()) {
         REPORT_FAIL("test_debug_printf returned false");
+        ret = false;
+    }
+    if(!test_sensor_temp()) {
+        REPORT_FAIL("test_sensor_temp returned false");
         ret = false;
     }
     if(!test_sensor_altitude()) {
