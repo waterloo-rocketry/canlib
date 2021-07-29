@@ -103,9 +103,9 @@
  * GPS_INFO:        TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    NUM_SAT                 QUALITY         None            None            None
  *
  * FILL_LVL:        TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    FILL_LEVEL              DIRECTION       None            None            None
- *
- * RADI_VALUE:      TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    RADI_BOARD              RADI_INT        RADI_DECI       None            None
- *
+ * 
+ * RADI_VALUE:      TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    RADI_BOARD              RADI_HIGH       RADI_LOW        None            None
+ * 
  * LEDS_ON:         None        None         None           None                    None            None            None            None
  * LEDS_OFF:        None        None         None           None                    None            None            None            None
  *

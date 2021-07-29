@@ -395,8 +395,7 @@ bool build_fill_msg(uint32_t timestamp,
 
 bool build_radi_info_msg(uint32_t timestamp,
                          uint8_t sensor_identifier,
-                         uint8_t int_value,
-                         uint8_t deci_value,
+                         uint16_t adc_value,
                          can_msg_t *output)
  {
     if (!output) { return false; }
@@ -405,8 +404,8 @@ bool build_radi_info_msg(uint32_t timestamp,
     write_timestamp_3bytes(timestamp, output);
 
     output->data[3] = sensor_identifier;
-    output->data[4] = int_value;
-    output->data[5] = deci_value;
+    output->data[4] = (uint8_t) ((adc_value >> 8) & 0x0F); // Upper byte
+    output->data[5] = (uint8_t) (adc_value & 0xFF); // Lower byte
 
     output->data_len = 6;
 
@@ -741,19 +740,15 @@ bool get_gps_info(const can_msg_t *msg,
 
 bool get_radi_info(const can_msg_t* msg,
                    uint8_t *sensor_identifier,
-                   uint8_t *int_value,
-                   uint8_t *deci_value)
+                   uint16_t *adc_value)
 {
     if (!msg) { return false; }
     if (!sensor_identifier) { return false; }
-    if (!int_value) { return false; }
-    if (!deci_value) { return false; }
+    if (!adc_value) { return false; }
     if (get_message_type(msg) != MSG_RADI_VALUE) {return false;}
 
     *sensor_identifier = msg -> data[3];
-    *int_value = msg -> data[4];
-    *deci_value = msg -> data[5];
-
+    *adc_value = msg -> data[4] << 8 | msg -> data[5];
     return true;
 }
 

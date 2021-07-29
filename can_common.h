@@ -202,8 +202,7 @@ bool build_gps_info_msg(uint32_t timestamp,
  */
 bool build_radi_info_msg(uint32_t timestamp,
                          uint8_t board_num,
-                         uint8_t int_value,
-                         uint8_t deci_value,
+                         uint16_t adc_value,
                          can_msg_t *output);
 /*
  * Gets the general command contained in a general command message.
@@ -374,8 +373,7 @@ bool get_fill_info(const can_msg_t *msg,
  */
 bool get_radi_info(const can_msg_t* msg,
                    uint8_t *board_num,
-                   uint8_t *int_value,
-                   uint8_t *deci_value);
+                   uint16_t *adc_value);
 
 /*
  * If MSG is a DEBUG_MSG message, return its debug level, else return
