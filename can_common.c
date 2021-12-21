@@ -86,9 +86,9 @@ bool build_reset_msg(uint32_t timestamp,
 }
 
 bool build_actuator_cmd_msg(uint32_t timestamp,
-                         enum ACTUATOR_ID actuator_id,
-                         enum VALVE_STATE valve_cmd,
-                         can_msg_t *output)
+                            enum ACTUATOR_ID actuator_id,
+                            enum ACTUATOR_STATE actuator_cmd,
+                            can_msg_t *output)
 {
     if (!output) { return false; }
 
@@ -96,17 +96,17 @@ bool build_actuator_cmd_msg(uint32_t timestamp,
     write_timestamp_3bytes(timestamp, output);
 
     output->data[3] = (uint8_t) actuator_id;
-    output->data[4] = (uint8_t) valve_cmd;
+    output->data[4] = (uint8_t) actuator_cmd;
     output->data_len = 5;   // 3 bytes timestamp, 2 byte data
 
     return true;
 }
 
 bool build_actuator_stat_msg(uint32_t timestamp,
-                          enum ACTUATOR_ID actuator_id,
-                          enum VALVE_STATE valve_state,
-                          enum VALVE_STATE req_valve_state,
-                          can_msg_t *output)
+                             enum ACTUATOR_ID actuator_id,
+                             enum ACTUATOR_STATE actuator_state,
+                             enum ACTUATOR_STATE req_actuator_state,
+                             can_msg_t *output)
 {
     if (!output) { return false; }
 
@@ -114,8 +114,8 @@ bool build_actuator_stat_msg(uint32_t timestamp,
     write_timestamp_3bytes(timestamp, output);
 
     output->data[3] = (uint8_t) actuator_id;
-    output->data[4] = (uint8_t) valve_state;
-    output->data[5] = (uint8_t) req_valve_state;
+    output->data[4] = (uint8_t) actuator_state;
+    output->data[5] = (uint8_t) req_actuator_state;
     output->data_len = 6;   // 3 bytes timestamp, 3 bytes data
 
     return true;
@@ -191,8 +191,8 @@ bool build_board_stat_msg(uint32_t timestamp,
     return true;
 }
 
-bool build_imu_data_msg(uint32_t timestamp,   // acc, gyro, mag
-                        uint16_t message_type,
+bool build_imu_data_msg(uint16_t message_type,
+                        uint32_t timestamp,   // acc, gyro, mag
                         uint16_t *imu_data,   // x, y, z
                         can_msg_t *output)
 {
@@ -445,30 +445,45 @@ int get_reset_board_id(const can_msg_t *msg){
     }
 }
 
-int get_curr_valve_state(const can_msg_t *msg)
+int get_actuator_id(const can_msg_t *msg) {
+    if (!msg) { return -1; }
+
+    uint16_t msg_type = get_message_type(msg);
+    switch (msg_type) {
+        case MSG_ACTUATOR_CMD:
+        case MSG_ACTUATOR_STATUS:
+            return msg->data[3];
+
+        default:
+            // not a valid field for this message type
+            return -1;
+    }
+}
+
+int get_curr_actuator_state(const can_msg_t *msg)
 {
     if (!msg) { return -1; }
 
     uint16_t msg_type = get_message_type(msg);
     if (msg_type == MSG_ACTUATOR_STATUS) {
-        return msg->data[3];
+        return msg->data[4];
     } else {
         // not a valid field for this message type
         return -1;
     }
 }
 
-int get_req_valve_state(const can_msg_t *msg)
+int get_req_actuator_state(const can_msg_t *msg)
 {
     if (!msg) { return -1; }
 
     uint16_t msg_type = get_message_type(msg);
     switch (msg_type) {
         case MSG_ACTUATOR_STATUS:
-            return msg->data[4];
+            return msg->data[5];
 
         case MSG_ACTUATOR_CMD:
-            return msg->data[3];
+            return msg->data[4];
 
         default:
             // not a valid field for this message type
