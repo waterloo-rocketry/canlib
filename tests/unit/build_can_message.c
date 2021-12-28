@@ -442,7 +442,7 @@ static bool test_sensor_altitude(void)
 static bool test_sensor_temp(void)
 {
     uint8_t sensor_num = 27;
-    int32_t temp = -3000*1024;
+    int32_t temp = 3000*1024;
     uint32_t timestamp = 0x12345678;
     can_msg_t output;
     bool ret = true;
@@ -485,6 +485,22 @@ static bool test_sensor_temp(void)
         REPORT_FAIL("temperature data is incorrect");
         ret = false;
     }
+
+    //test with a negitive tempurature
+    int32_t neg_temp = -2999*1024;
+    if (!build_temp_data_msg(timestamp, sensor_num, neg_temp, &output)) {
+        REPORT_FAIL("Error building negative temp message");
+        ret = false;
+    }
+    if (!get_temp_data(&output, &output_sensor_num, &output_temp)) {
+        REPORT_FAIL("Failed to retrieve negitive temp sensor data");
+        ret = false;
+    }
+    if (output_temp != neg_temp) {
+        REPORT_FAIL("negitive temperature data is incorrect");
+        ret = false;
+    }
+
     return ret;
 }
 

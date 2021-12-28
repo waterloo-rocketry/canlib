@@ -251,12 +251,12 @@ bool build_analog_data_msg(uint32_t timestamp,
 }
 
 bool build_temp_data_msg(uint32_t timestamp,
-                             uint8_t sensor_num,
-                             int32_t temp,
-                             can_msg_t *output){
+                         uint8_t sensor_num,
+                         int32_t temp,
+                         can_msg_t *output){
     if(!output) { return false; }
 
-    output->sid =  MSG_SENSOR_TEMP | BOARD_UNIQUE_ID;
+    output->sid = MSG_SENSOR_TEMP | BOARD_UNIQUE_ID;
     write_timestamp_3bytes(timestamp, output);
 
     output->data[3] = sensor_num;
@@ -274,7 +274,7 @@ bool build_altitude_data_msg(uint32_t timestamp,
 {
     if(!output) { return false; }
 
-    output->sid =  MSG_SENSOR_ALTITUDE | BOARD_UNIQUE_ID;
+    output->sid = MSG_SENSOR_ALTITUDE | BOARD_UNIQUE_ID;
     write_timestamp_3bytes(timestamp, output);
 
     output->data[3] = (altitude >> 24) & 0xFF;
@@ -635,8 +635,8 @@ bool get_analog_data(const can_msg_t *msg, enum SENSOR_ID *sensor_id, uint16_t *
 }
 
 bool get_temp_data(const can_msg_t *msg,
-                       uint8_t *sensor_num,
-                       int32_t *temp)
+                   uint8_t *sensor_num,
+                   int32_t *temp)
 {
     if (!msg || !sensor_num || !temp) { return false; }
     if (get_message_type(msg) != MSG_SENSOR_TEMP) { return false; }
