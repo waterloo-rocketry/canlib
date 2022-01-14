@@ -192,6 +192,7 @@ enum FILL_DIRECTION {
 enum ACTUATOR_ID {
     ACTUATOR_VENT_VALVE = 0,
     ACTUATOR_INJECTOR_VALVE,
+    MAMA_BOARD_ACTIVATE,
 };
 
 #endif // compile guard
