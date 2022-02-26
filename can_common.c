@@ -127,6 +127,23 @@ bool build_valve_stat_msg(uint32_t timestamp,
     return true;
 }
 
+bool build_cam_stat_msg(uint32_t timestamp,
+                          enum CAM_STATE cam_state,
+                          enum CAM_STATE req_cam_state,
+                          can_msg_t *output)
+{
+    if (!output) { return false; }
+
+    output->sid = MSG_CAM_STATUS | BOARD_UNIQUE_ID;
+    write_timestamp_3bytes(timestamp, output);
+
+    output->data[3] = (uint8_t) cam_state;
+    output->data[4] = (uint8_t) req_cam_state;
+    output->data_len = 5;   // 3 bytes timestamp, 2 bytes data
+
+    return true;
+}
+
 bool build_arm_cmd_msg(uint32_t timestamp,
                        uint8_t alt_num,
                        enum ARM_STATE arm_cmd,

@@ -15,6 +15,7 @@
  *
  */
 
+// Message Types
 #define MSG_GENERAL_CMD           0x060
 #define MSG_VENT_VALVE_CMD        0x0C0
 #define MSG_INJ_VALVE_CMD         0x120
@@ -49,7 +50,11 @@
 #define MSG_LEDS_ON               0x7E0
 #define MSG_LEDS_OFF              0x7C0
 
+#define MSG_PICAM_ON              0x020
+#define MSG_PICAM_OFF             0x040
+#define MSG_CAM_STATUS            0x080
 
+// Board IDs
 #define BOARD_ID_INJECTOR         0x01
 #define BOARD_ID_INJECTOR_SPARE   0x02
 #define BOARD_ID_LOGGER           0x03
@@ -70,6 +75,7 @@
 #define BOARD_ID_ARMING_SPARE     0x12
 #define BOARD_ID_PAPA             0x13
 #define BOARD_ID_PAPA_SPARE       0x14
+#define BOARD_ID_ROCKET_PI        0X15
 
 /*
  * General message type format (from spreadsheet):
@@ -109,6 +115,9 @@
  * LEDS_ON:         None        None         None           None                    None            None            None            None
  * LEDS_OFF:        None        None         None           None                    None            None            None            None
  *
+ * PICAM_ON:        None        None         None           None                    None            None            None            None
+ * PICAM_OFF:       None        None         None           None                    None            None            None            None
+ * CAM_STAT:        TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    CAM_STATE               CMD_CAM_STATE   None            None            None
  * This file defines the format of the various CAN message types (defined in
  * message_types.h). There is no unified message format; the format of each message
  * depends on the message type. In the case of board status messages, the format
@@ -191,6 +200,13 @@ enum SENSOR_ID {
 enum FILL_DIRECTION {
     FILLING = 0,
     EMPTYING,
+};
+
+enum CAM_STATE {
+    CAM_OFF = 0,
+    CAM_ON,
+    CAM_UNK,
+    CAM_ILLEGAL,
 };
 
 
