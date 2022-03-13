@@ -109,7 +109,7 @@ static bool test_reset_command(void)
     return ret;
 }
 
-static bool test_valve_cmd(void)
+static bool test_actuator_cmd(void)
 {
     uint32_t timestamp = 0x12345678;
     can_msg_t output;
@@ -117,59 +117,13 @@ static bool test_valve_cmd(void)
     bool ret = true;
 
     // test illegal args
-    if (build_valve_cmd_msg(timestamp, VALVE_OPEN, MSG_DEBUG_MSG, &output)) {
-        REPORT_FAIL("Valve cmd built with invalid message type");
-        ret = false;
-    }
-    if (build_valve_cmd_msg(timestamp, VALVE_OPEN, MSG_INJ_VALVE_CMD, NULL)) {
+    if (build_actuator_cmd_msg(timestamp, ACTUATOR_VENT_VALVE, ACTUATOR_OPEN, NULL)) {
         REPORT_FAIL("Message built with null output");
         ret = false;
     }
 
     // test nominal behaviour
-    if (!build_valve_cmd_msg(timestamp, VALVE_OPEN, MSG_INJ_VALVE_CMD, &output)) {
-        REPORT_FAIL("Error building message");
-        ret = false;
-    }
-    if (output.data_len != 4) {
-        REPORT_FAIL("Data length is wrong");
-        ret = false;
-    }
-    if (get_timestamp(&output) != (timestamp & 0xffffff)) {
-        REPORT_FAIL("Timestamp copied wrong");
-        ret = false;
-    }
-    if (get_curr_valve_state(&output) != -1) {
-        REPORT_FAIL("Got current valve state from a command message");
-        ret = false;
-    }
-    if (get_req_valve_state(&output) != VALVE_OPEN) {
-        REPORT_FAIL("Valve data copied incorrectly");
-        ret = false;
-    }
-
-    return ret;
-}
-
-static bool test_valve_stat(void)
-{
-    uint32_t timestamp = 0x12345678;
-    can_msg_t output;
-
-    bool ret = true;
-
-    // test illegal args
-    if (build_valve_stat_msg(timestamp, VALVE_OPEN, VALVE_UNK, MSG_DEBUG_MSG, &output)) {
-        REPORT_FAIL("Valve cmd built with invalid message type");
-        ret = false;
-    }
-    if (build_valve_stat_msg(timestamp, VALVE_OPEN, VALVE_UNK, MSG_INJ_VALVE_STATUS, NULL)) {
-        REPORT_FAIL("Message built with null output");
-        ret = false;
-    }
-
-    // test nominal behaviour
-    if (!build_valve_stat_msg(timestamp, VALVE_OPEN, VALVE_CLOSED, MSG_INJ_VALVE_STATUS, &output)) {
+    if (!build_actuator_cmd_msg(timestamp, ACTUATOR_INJECTOR_VALVE, ACTUATOR_OPEN, &output)) {
         REPORT_FAIL("Error building message");
         ret = false;
     }
@@ -181,12 +135,58 @@ static bool test_valve_stat(void)
         REPORT_FAIL("Timestamp copied wrong");
         ret = false;
     }
-    if (get_curr_valve_state(&output) != VALVE_OPEN) {
-        REPORT_FAIL("Current valve state copied wrong");
+    if (get_actuator_id(&output) != ACTUATOR_INJECTOR_VALVE) {
+        REPORT_FAIL("Actuator id copied incorrectly");
         ret = false;
     }
-    if (get_req_valve_state(&output) != VALVE_CLOSED) {
-        REPORT_FAIL("Requested valve state copied wrong");
+    if (get_curr_actuator_state(&output) != -1) {
+        REPORT_FAIL("Got current actuator state from a command message");
+        ret = false;
+    }
+    if (get_req_actuator_state(&output) != ACTUATOR_OPEN) {
+        REPORT_FAIL("Actuator data copied incorrectly");
+        ret = false;
+    }
+
+    return ret;
+}
+
+static bool test_actuator_stat(void)
+{
+    uint32_t timestamp = 0x12345678;
+    can_msg_t output;
+
+    bool ret = true;
+
+    // test illegal args
+    if (build_actuator_stat_msg(timestamp, ACTUATOR_INJECTOR_VALVE, ACTUATOR_OPEN, ACTUATOR_UNK, NULL)) {
+        REPORT_FAIL("Message built with null output");
+        ret = false;
+    }
+
+    // test nominal behaviour
+    if (!build_actuator_stat_msg(timestamp, ACTUATOR_VENT_VALVE, ACTUATOR_OPEN, ACTUATOR_CLOSED, &output)) {
+        REPORT_FAIL("Error building message");
+        ret = false;
+    }
+    if (output.data_len != 6) {
+        REPORT_FAIL("Data length is wrong");
+        ret = false;
+    }
+    if (get_timestamp(&output) != (timestamp & 0xffffff)) {
+        REPORT_FAIL("Timestamp copied wrong");
+        ret = false;
+    }
+    if (get_actuator_id(&output) != ACTUATOR_VENT_VALVE) {
+        REPORT_FAIL("Current actuator state copied wrong");
+        ret = false;
+    }
+    if (get_curr_actuator_state(&output) != ACTUATOR_OPEN) {
+        REPORT_FAIL("Current actuator state copied wrong");
+        ret = false;
+    }
+    if (get_req_actuator_state(&output) != ACTUATOR_CLOSED) {
+        REPORT_FAIL("Requested actuator state copied wrong");
         ret = false;
     }
 
@@ -800,12 +800,12 @@ bool test_build_can_message(void)
         REPORT_FAIL("test_reset_command returned false");
         ret = false;
     }
-    if (!test_valve_cmd()) {
-        REPORT_FAIL("test_valve_cmd returned false");
+    if (!test_actuator_cmd()) {
+        REPORT_FAIL("test_actuator_cmd returned false");
         ret = false;
     }
-    if (!test_valve_stat()) {
-        REPORT_FAIL("test_valve_stat returned false");
+    if (!test_actuator_stat()) {
+        REPORT_FAIL("test_actuator_stat returned false");
         ret = false;
     }
     if (!test_arm_cmd()){
