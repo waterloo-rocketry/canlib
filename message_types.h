@@ -202,8 +202,6 @@ enum ACTUATOR_ID {
     ACTUATOR_INJECTOR_VALVE,
     MAMA_BOARD_ACTIVATE,
     PICAM,
-=======
->>>>>>> 5321659 (Rename valve to actuator everywhere (#37))
 };
 
 #endif // compile guard
