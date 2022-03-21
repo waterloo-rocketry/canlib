@@ -87,14 +87,6 @@ bool build_valve_stat_msg(uint32_t timestamp,
                           can_msg_t *output);
 
 /*
- * Used to send picam status: current and desired
- */
-bool build_cam_stat_msg(uint32_t timestamp,
-                          enum CAM_STATE cam_state,
-                          enum CAM_STATE req_cam_state,
-                          can_msg_t *output);
-
-/*
 * Used to send altimeter arm commands
 */
 bool build_arm_cmd_msg(uint32_t timestamp,
