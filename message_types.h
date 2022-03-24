@@ -72,7 +72,7 @@
 #define BOARD_ID_ROCKET_PI         0X15
 #define BOARD_ID_ROCKET_PI_2       0X16
 #define BOARD_ID_ROCKET_PI_SPARE   0X17
-#define BOARD_ID_ROCKET_PI_SPARE_2 0X18
+#define BOARD_ID_ROCKET_PI_2_SPARE 0X18
 
 /*
  * General message type format (from spreadsheet):
@@ -110,9 +110,6 @@
  * LEDS_ON:         None        None        None        None                  None           None               None            None
  * LEDS_OFF:        None        None        None        None                  None           None               None            None
  *
- * PICAM_ON:        None        None         None           None                    None            None            None            None
- * PICAM_OFF:       None        None         None           None                    None            None            None            None
- * CAM_STAT:        TSTAMP_MS_H TSTAMP_MS_M  TSTAMP_MS_L    CAM_STATE               CMD_CAM_STATE   None            None            None
  * This file defines the format of the various CAN message types (defined in
  * message_types.h). There is no unified message format; the format of each message
  * depends on the message type. In the case of board status messages, the format
