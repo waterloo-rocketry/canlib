@@ -6,19 +6,10 @@
 
 bool can_generate_timing_params(uint32_t can_frequency, can_timing_t *timing)
 {
-    // this function is designed to create a bit time of 24 microseconds
+    // this function is designed to create a bit time of 2 microseconds
     switch (can_frequency) {
         case 48000000:
-            timing->brp      = 47;
-            timing->sjw      =  3;
-            timing->btlmode  =  1;
-            timing->sam      =  0;
-            timing->seg1ph   =  4;
-            timing->prseg    =  0;
-            timing->seg2ph   =  4;
-            return true;
-        case 32000000:
-            timing->brp      = 31;
+            timing->brp      =  3;
             timing->sjw      =  3;
             timing->btlmode  =  1;
             timing->sam      =  0;
@@ -27,15 +18,6 @@ bool can_generate_timing_params(uint32_t can_frequency, can_timing_t *timing)
             timing->seg2ph   =  4;
             return true;
         case 12000000:
-            timing->brp      = 11;
-            timing->sjw      =  3;
-            timing->btlmode  =  1;
-            timing->sam      =  0;
-            timing->seg1ph   =  4;
-            timing->prseg    =  0;
-            timing->seg2ph   =  4;
-            return true;
-        case 1000000:
             timing->brp      =  0;
             timing->sjw      =  3;
             timing->btlmode  =  1;
