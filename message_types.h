@@ -69,10 +69,32 @@
 #define BOARD_ID_ARMING_SPARE      0x12
 #define BOARD_ID_PAPA              0x13
 #define BOARD_ID_PAPA_SPARE        0x14
-#define BOARD_ID_ROCKET_PI         0X15
-#define BOARD_ID_ROCKET_PI_2       0X16
-#define BOARD_ID_ROCKET_PI_SPARE   0X17
-#define BOARD_ID_ROCKET_PI_2_SPARE 0X18
+#define BOARD_ID_ROCKET_PI         0x15
+#define BOARD_ID_ROCKET_PI_2       0x16
+#define BOARD_ID_ROCKET_PI_SPARE   0x17
+#define BOARD_ID_ROCKET_PI_2_SPARE 0x18
+
+// #define BOARD_ID_SENSOR_2          0x
+// #define BOARD_ID_SENSOR_2_SPARE    0x
+// #define BOARD_ID_SENSOR_3          0x
+// #define BOARD_ID_SENSOR_4          0x
+
+// #define BOARD_ID_LOGGER_2          0x
+
+/* based off of https://docs.google.com/spreadsheets/d/1E7AoJcPQ-G4WlnR_5O33RbVlu6RWfZS963JJ1bgnQbE
+ *
+ * actuator (FAST, vent)
+ * minisensor (FAST, CC, Ox, payload)
+ * picam x2
+ * mama x2
+ * papa
+ * telementry (payload, recovery)
+ * CAN battery
+ * gps
+ * logger
+ * remote arming x2
+ * alimeter x2
+ */
 
 /*
  * General message type format (from spreadsheet):
