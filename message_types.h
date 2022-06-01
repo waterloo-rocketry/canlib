@@ -73,13 +73,11 @@
 #define BOARD_ID_ROCKET_PI_2       0x16
 #define BOARD_ID_ROCKET_PI_SPARE   0x17
 #define BOARD_ID_ROCKET_PI_2_SPARE 0x18
-
-// #define BOARD_ID_SENSOR_2          0x
-// #define BOARD_ID_SENSOR_2_SPARE    0x
-// #define BOARD_ID_SENSOR_3          0x
-// #define BOARD_ID_SENSOR_4          0x
-
-// #define BOARD_ID_LOGGER_2          0x
+#define BOARD_ID_SENSOR_2          0x19
+#define BOARD_ID_SENSOR_2_SPARE    0x1A
+#define BOARD_ID_SENSOR_3          0x1B
+#define BOARD_ID_SENSOR_4          0x1C
+#define BOARD_ID_LOGGER_2          0x1D
 
 /* based off of https://docs.google.com/spreadsheets/d/1E7AoJcPQ-G4WlnR_5O33RbVlu6RWfZS963JJ1bgnQbE
  *
