@@ -31,6 +31,7 @@
 
 #define MSG_SENSOR_ALTITUDE       0x560
 #define MSG_SENSOR_ACC            0x580
+#define MSG_SENSOR_ACC2           0x5A0
 #define MSG_SENSOR_GYRO           0x5E0
 #define MSG_SENSOR_MAG            0x640
 #define MSG_SENSOR_ANALOG         0x6A0
