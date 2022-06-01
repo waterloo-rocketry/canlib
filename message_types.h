@@ -79,21 +79,6 @@
 #define BOARD_ID_SENSOR_4          0x1C
 #define BOARD_ID_LOGGER_2          0x1D
 
-/* based off of https://docs.google.com/spreadsheets/d/1E7AoJcPQ-G4WlnR_5O33RbVlu6RWfZS963JJ1bgnQbE
- *
- * actuator (FAST, vent)
- * minisensor (FAST, CC, Ox, payload)
- * picam x2
- * mama x2
- * papa
- * telementry (payload, recovery)
- * CAN battery
- * gps
- * logger
- * remote arming x2
- * alimeter x2
- */
-
 /*
  * General message type format (from spreadsheet):
  * (Version 0.7.0)
