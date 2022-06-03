@@ -200,7 +200,8 @@ bool build_imu_data_msg(uint16_t message_type,
     if (!imu_data) { return false; }
     if (!(message_type == MSG_SENSOR_ACC
            || message_type == MSG_SENSOR_GYRO
-           || message_type == MSG_SENSOR_MAG)) {
+           || message_type == MSG_SENSOR_MAG
+           || message_type == MSG_SENSOR_ACC2)) {
         return false;
     }
 
@@ -557,6 +558,7 @@ uint32_t get_timestamp(const can_msg_t *msg)
 
         // 2 byte timestamp
         case MSG_SENSOR_ACC:
+        case MSG_SENSOR_ACC2:
         case MSG_SENSOR_GYRO:
         case MSG_SENSOR_MAG:
         case MSG_SENSOR_ANALOG:
@@ -582,6 +584,7 @@ bool is_sensor_data(const can_msg_t *msg)
 
     uint16_t type = get_message_type(msg);
     if (type == MSG_SENSOR_ACC ||
+        type == MSG_SENSOR_ACC2 ||
         type == MSG_SENSOR_GYRO ||
         type == MSG_SENSOR_MAG ||
         type == MSG_SENSOR_ANALOG) {
