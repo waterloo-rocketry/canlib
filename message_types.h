@@ -193,6 +193,7 @@ enum SENSOR_ID {
     SENSOR_VELOCITY,
     SENSOR_MAG_1,
     SENSOR_MAG_2,
+    SENSOR_ROCKET_BATT,
 };
 
 enum FILL_DIRECTION {
@@ -205,6 +206,7 @@ enum ACTUATOR_ID {
     ACTUATOR_INJECTOR_VALVE,
     MAMA_BOARD_ACTIVATE,
     PICAM,
+    CANBUS,
 };
 
 #endif // compile guard
