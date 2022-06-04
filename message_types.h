@@ -79,6 +79,7 @@
 #define BOARD_ID_SENSOR_3          0x1B
 #define BOARD_ID_SENSOR_4          0x1C
 #define BOARD_ID_LOGGER_2          0x1D
+#define BOARD_ID_RLCS              0x1E
 
 /*
  * General message type format (from spreadsheet):
@@ -194,6 +195,8 @@ enum SENSOR_ID {
     SENSOR_MAG_1,
     SENSOR_MAG_2,
     SENSOR_ROCKET_BATT,
+    SENSOR_PRESSURE_PNEUMATICS,
+    SENSOR_VENT_TEMP,
 };
 
 enum FILL_DIRECTION {
