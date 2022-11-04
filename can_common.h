@@ -72,19 +72,19 @@ bool build_reset_msg(uint32_t timestamp,
 /*
  * Used to send injector and vent commands
  */
-bool build_valve_cmd_msg(uint32_t timestamp,
-                         enum VALVE_STATE valve_cmd,
-                         uint16_t message_type,  // vent or injector
-                         can_msg_t *output);
+bool build_actuator_cmd_msg(uint32_t timestamp,
+                            enum ACTUATOR_ID actuator_id,
+                            enum ACTUATOR_STATE actuator_cmd,
+                            can_msg_t *output);
 
 /*
  * Used to send injector/vent status: current and desired
  */
-bool build_valve_stat_msg(uint32_t timestamp,
-                          enum VALVE_STATE valve_state,
-                          enum VALVE_STATE req_valve_state,
-                          uint16_t message_type,    // vent or injector
-                          can_msg_t *output);
+bool build_actuator_stat_msg(uint32_t timestamp,
+                             enum ACTUATOR_ID actuator_id,
+                             enum ACTUATOR_STATE actuator_state,
+                             enum ACTUATOR_STATE req_actuator_state,
+                             can_msg_t *output);
 
 /*
 * Used to send altimeter arm commands
@@ -214,8 +214,7 @@ bool build_gps_info_msg(uint32_t timestamp,
  */
 bool build_radi_info_msg(uint32_t timestamp,
                          uint8_t board_num,
-                         uint8_t int_value,
-                         uint8_t deci_value,
+                         uint16_t adc_value,
                          can_msg_t *output);
 /*
  * Gets the general command contained in a general command message.
@@ -228,19 +227,24 @@ int get_general_cmd_type(const can_msg_t *msg);
  * Returns -1 if the provided message is not a reset command message.
  */
 int get_reset_board_id(const can_msg_t *msg);
-
  /*
-  * Returns the current valve state based on limit switch readings.
-  * Returns -1 if the provided message is not a vent/injector status message.
+  * Returns the actuator id from an actuator command or status message.
+  * Returns -1 if the provided message is not an actuator cmd/status.
   */
-int get_curr_valve_state(const can_msg_t *msg);
+int get_actuator_id(const can_msg_t *msg);
 
  /*
- * Returns the requested valve state from a valve command or
+  * Returns the current actuator state based on limit switch readings.
+  * Returns -1 if the provided message is not a actuator status message.
+  */
+int get_curr_actuator_state(const can_msg_t *msg);
+
+ /*
+ * Returns the requested actuator state from an actuator command or
  * status message. Returns -1 if the provided message is not
- * a valve cmd/status.
+ * an actuator cmd/status.
  */
-int get_req_valve_state(const can_msg_t *msg);
+int get_req_actuator_state(const can_msg_t *msg);
 
 /*
 * Gets the current arm state and which altimeter it is for.
@@ -395,8 +399,7 @@ bool get_fill_info(const can_msg_t *msg,
  */
 bool get_radi_info(const can_msg_t* msg,
                    uint8_t *board_num,
-                   uint8_t *int_value,
-                   uint8_t *deci_value);
+                   uint16_t *adc_value);
 
 /*
  * If MSG is a DEBUG_MSG message, return its debug level, else return

@@ -125,6 +125,12 @@ void can_handle_interrupt() {
         COMSTATbits.RXB0OVFL = 0;
         COMSTATbits.RXB1OVFL = 0;
     }
+    
+    if (TXB0CONbits.TXREQ && TXB0CONbits.TXERR && PIR5bits.IRXIF) {
+        // This condition is true if we tried to send and ran into an error (eg if there is no CAN bus connected)
+        TXB0CONbits.TXREQ = 0; // Cancel the attempted tx
+        return;
+    }
 
     // handle a received message by stuffing it into a can_message_t
     // and calling the application code provided callback
