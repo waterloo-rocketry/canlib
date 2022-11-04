@@ -245,13 +245,31 @@ bool build_analog_data_msg(uint32_t timestamp,
     return true;
 }
 
+bool build_temp_data_msg(uint32_t timestamp,
+                         uint8_t sensor_num,
+                         int32_t temp,
+                         can_msg_t *output){
+    if(!output) { return false; }
+
+    output->sid = MSG_SENSOR_TEMP | BOARD_UNIQUE_ID;
+    write_timestamp_3bytes(timestamp, output);
+
+    output->data[3] = sensor_num;
+    output->data[4] = (temp >> 16) & 0xFF;
+    output->data[5] = (temp >> 8) & 0xFF;
+    output->data[6] = temp & 0xFF;
+    output->data_len = 7;
+
+    return true;
+}
+
 bool build_altitude_data_msg(uint32_t timestamp,
                              int32_t altitude,
                              can_msg_t *output)
 {
     if(!output) { return false; }
 
-    output->sid =  MSG_SENSOR_ALTITUDE | BOARD_UNIQUE_ID;
+    output->sid = MSG_SENSOR_ALTITUDE | BOARD_UNIQUE_ID;
     write_timestamp_3bytes(timestamp, output);
 
     output->data[3] = (altitude >> 24) & 0xFF;
@@ -546,6 +564,7 @@ uint32_t get_timestamp(const can_msg_t *msg)
         case MSG_GPS_TIMESTAMP:
         case MSG_GPS_LATITUDE:
         case MSG_GPS_LONGITUDE:
+        case MSG_SENSOR_TEMP:
         case MSG_GPS_ALTITUDE:
         case MSG_GPS_INFO:
         case MSG_RESET_CMD:
@@ -618,6 +637,23 @@ bool get_analog_data(const can_msg_t *msg, enum SENSOR_ID *sensor_id, uint16_t *
 
     *sensor_id = msg->data[2];
     *output_data = (uint16_t)msg->data[3] << 8 | msg->data[4];
+
+    return true;
+}
+
+bool get_temp_data(const can_msg_t *msg,
+                   uint8_t *sensor_num,
+                   int32_t *temp)
+{
+    if (!msg || !sensor_num || !temp) { return false; }
+    if (get_message_type(msg) != MSG_SENSOR_TEMP) { return false; }
+
+    *sensor_num = msg->data[3];
+    //handle 24 bit to 32 bit sign conversion
+    *temp = (msg->data[4] & 0x80)? 0xFF << 24 : 0;
+    *temp |= ((uint32_t)msg->data[4] << 16);
+    *temp |= ((uint32_t)msg->data[5] << 8);
+    *temp |= msg->data[6];
 
     return true;
 }

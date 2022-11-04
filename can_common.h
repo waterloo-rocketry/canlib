@@ -135,6 +135,18 @@ bool build_analog_data_msg(uint32_t timestamp,
                            uint16_t sensor_data,
                            can_msg_t *output);
 
+
+/*
+* Used to send tempurature measurement data
+* Units are 1/1024th of a degree C
+* Temp is 24 bit signed, not 32 bit. Values less than -8388608 or greater than
+* 8388607 will overflow.
+*/
+bool build_temp_data_msg(uint32_t timestamp,
+                         uint8_t sensor_num,
+                         int32_t temp,
+                         can_msg_t *output);
+
 /*
 * Used to send altitude recived from altimiters
 */
@@ -289,6 +301,15 @@ bool get_imu_data(const can_msg_t *msg,
 bool get_analog_data(const can_msg_t *msg,
                      enum SENSOR_ID *sensor_id,
                      uint16_t *output_data);
+
+
+/*
+* Gets the temp data and sensor num, returns false if the message is not
+* a SENSOR_TEMP message.
+*/
+bool get_temp_data(const can_msg_t *msg,
+                   uint8_t *sensor_num,
+                   int32_t *temp);
 
 /*
 * Gets the altitude data, returns false if the message is not
