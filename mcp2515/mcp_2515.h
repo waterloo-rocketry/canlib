@@ -130,7 +130,7 @@ bool mcp_can_receive(can_msg_t *msg);
 #define RXB1D6    0x7C
 
 #define TXRTSCTRL 0x0D
-#define REC       0x1D
+#define REC       0x1D //conflicting declaration with MPLAB???
 #define EFLG      0x2D
 #define TXB0D7    0x3D
 #define TXB1D7    0x4D
