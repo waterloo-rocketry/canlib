@@ -44,6 +44,15 @@ bool can_generate_timing_params(uint32_t can_frequency, can_timing_t *timing)
             timing->prseg    =  0;
             timing->seg2ph   =  4;
             return true;
+        case 6000000:
+            timing->brp      =  5;
+            timing->sjw      =  3;
+            timing->btlmode  =  1;
+            timing->sam      =  0;
+            timing->seg1ph   =  4;
+            timing->prseg    =  0;
+            timing->seg2ph   =  4;
+            return true;
         default:
             // unhandled can frequency, just abort
             return false;
