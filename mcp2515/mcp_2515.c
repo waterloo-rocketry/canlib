@@ -103,7 +103,7 @@ void mcp_can_send(can_msg_t *msg) {
 }
 
 bool mcp_can_send_rdy(void) {
-    return mcp_read_reg(TXB0CTRL) & 0b00001000 == 0;
+    return (mcp_read_reg(TXB0CTRL) & 0b00001000) == 0;
 }
 
 bool mcp_can_receive(can_msg_t *msg) {
