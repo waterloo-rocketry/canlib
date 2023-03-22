@@ -121,7 +121,7 @@ bool mcp_can_receive(can_msg_t *msg);
 #define RXB1D5    0x7B
 
 #define BFPCTRL   0x0C
-#define TEC       0x1C
+//#define TEC       0x1C
 #define CANINTF   0x2C
 #define TXB0D6    0x3C
 #define TXB1D6    0x4C
@@ -130,7 +130,7 @@ bool mcp_can_receive(can_msg_t *msg);
 #define RXB1D6    0x7C
 
 #define TXRTSCTRL 0x0D
-#define REC       0x1D
+//#define REC       0x1D
 #define EFLG      0x2D
 #define TXB0D7    0x3D
 #define TXB1D7    0x4D
