@@ -64,14 +64,16 @@
 #define BOARD_ID_LOGGER            0x0C
 #define BOARD_ID_LOGGER_PAYLOAD    0x0D
 #define BOARD_ID_LOGGER_SPARE      0x0E
-#define BOARD_ID_CHARGING          0x0F
-#define BOARD_ID_ARMING            0x10
-#define BOARD_ID_GRANDPAPA         0x11
-#define BOARD_ID_KALMAN            0x12
-#define BOARD_ID_GPS               0x13
-#define BOARD_ID_TELEMETRY         0x14
-#define BOARD_ID_USB               0x15
-#define BOARD_ID_RLCS              0x16
+#define BOARD_ID_GPS               0x0F
+#define BOARD_ID_GPS_PAYLOAD       0x10
+#define BOARD_ID_GPS_SPARE         0x11
+#define BOARD_ID_CHARGING          0x12
+#define BOARD_ID_ARMING            0x13
+#define BOARD_ID_GRANDPAPA         0x14
+#define BOARD_ID_KALMAN            0x15
+#define BOARD_ID_TELEMETRY         0x16
+#define BOARD_ID_USB               0x17
+#define BOARD_ID_RLCS              0x18
 
 /*
  * General message type format (from spreadsheet):
