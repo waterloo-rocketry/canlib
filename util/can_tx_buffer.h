@@ -1,6 +1,6 @@
 #include <stdbool.h>
 #include <stddef.h>
-#include "can.h"
+#include "../can.h"
 
 /*
  * Initialization function. Sets up memory for the buffer, and caches the

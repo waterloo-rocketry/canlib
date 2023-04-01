@@ -21,7 +21,7 @@
  * problems.
  */
 
-#include "can.h"
+#include "../can.h"
 #include <stdbool.h>
 #include <stddef.h>
 
