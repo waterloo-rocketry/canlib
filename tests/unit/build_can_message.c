@@ -117,13 +117,13 @@ static bool test_actuator_cmd(void)
     bool ret = true;
 
     // test illegal args
-    if (build_actuator_cmd_msg(timestamp, ACTUATOR_VENT_VALVE, ACTUATOR_OPEN, NULL)) {
+    if (build_actuator_cmd_msg(timestamp, ACTUATOR_VENT_VALVE, ACTUATOR_ON, NULL)) {
         REPORT_FAIL("Message built with null output");
         ret = false;
     }
 
     // test nominal behaviour
-    if (!build_actuator_cmd_msg(timestamp, ACTUATOR_INJECTOR_VALVE, ACTUATOR_OPEN, &output)) {
+    if (!build_actuator_cmd_msg(timestamp, ACTUATOR_INJECTOR_VALVE, ACTUATOR_ON, &output)) {
         REPORT_FAIL("Error building message");
         ret = false;
     }
@@ -143,7 +143,7 @@ static bool test_actuator_cmd(void)
         REPORT_FAIL("Got current actuator state from a command message");
         ret = false;
     }
-    if (get_req_actuator_state(&output) != ACTUATOR_OPEN) {
+    if (get_req_actuator_state(&output) != ACTUATOR_ON) {
         REPORT_FAIL("Actuator data copied incorrectly");
         ret = false;
     }
@@ -159,13 +159,13 @@ static bool test_actuator_stat(void)
     bool ret = true;
 
     // test illegal args
-    if (build_actuator_stat_msg(timestamp, ACTUATOR_INJECTOR_VALVE, ACTUATOR_OPEN, ACTUATOR_UNK, NULL)) {
+    if (build_actuator_stat_msg(timestamp, ACTUATOR_INJECTOR_VALVE, ACTUATOR_ON, ACTUATOR_UNK, NULL)) {
         REPORT_FAIL("Message built with null output");
         ret = false;
     }
 
     // test nominal behaviour
-    if (!build_actuator_stat_msg(timestamp, ACTUATOR_VENT_VALVE, ACTUATOR_OPEN, ACTUATOR_CLOSED, &output)) {
+    if (!build_actuator_stat_msg(timestamp, ACTUATOR_VENT_VALVE, ACTUATOR_ON, ACTUATOR_OFF, &output)) {
         REPORT_FAIL("Error building message");
         ret = false;
     }
@@ -181,11 +181,11 @@ static bool test_actuator_stat(void)
         REPORT_FAIL("Current actuator state copied wrong");
         ret = false;
     }
-    if (get_curr_actuator_state(&output) != ACTUATOR_OPEN) {
+    if (get_curr_actuator_state(&output) != ACTUATOR_ON) {
         REPORT_FAIL("Current actuator state copied wrong");
         ret = false;
     }
-    if (get_req_actuator_state(&output) != ACTUATOR_CLOSED) {
+    if (get_req_actuator_state(&output) != ACTUATOR_OFF) {
         REPORT_FAIL("Requested actuator state copied wrong");
         ret = false;
     }

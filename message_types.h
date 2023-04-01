@@ -44,43 +44,34 @@
 #define MSG_GPS_INFO              0x740
 
 #define MSG_FILL_LVL              0x780
-
 #define MSG_RADI_VALUE            0x7A0
 
 #define MSG_LEDS_ON               0x7E0
 #define MSG_LEDS_OFF              0x7C0
 
 // Board IDs
-#define BOARD_ID_INJECTOR          0x01
-#define BOARD_ID_INJECTOR_SPARE    0x02
-#define BOARD_ID_LOGGER            0x03
-#define BOARD_ID_LOGGER_SPARE      0x04
-#define BOARD_ID_RADIO             0x05
-#define BOARD_ID_RADIO_SPARE       0x06
-#define BOARD_ID_SENSOR            0x07
-#define BOARD_ID_SENSOR_SPARE      0x08
-#define BOARD_ID_USB               0x09
-#define BOARD_ID_USB_SPARE         0x0A
-#define BOARD_ID_VENT              0x0B
-#define BOARD_ID_VENT_SPARE        0x0C
-#define BOARD_ID_GPS               0x0D
-#define BOARD_ID_GPS_SPARE         0x0E
-#define BOARD_ID_FILL              0x0F
-#define BOARD_ID_FILL_SPARE        0x10
-#define BOARD_ID_ARMING            0x11
-#define BOARD_ID_ARMING_SPARE      0x12
-#define BOARD_ID_PAPA              0x13
-#define BOARD_ID_PAPA_SPARE        0x14
-#define BOARD_ID_ROCKET_PI         0x15
-#define BOARD_ID_ROCKET_PI_2       0x16
-#define BOARD_ID_ROCKET_PI_SPARE   0x17
-#define BOARD_ID_ROCKET_PI_2_SPARE 0x18
-#define BOARD_ID_SENSOR_2          0x19
-#define BOARD_ID_SENSOR_2_SPARE    0x1A
-#define BOARD_ID_SENSOR_3          0x1B
-#define BOARD_ID_SENSOR_4          0x1C
-#define BOARD_ID_LOGGER_2          0x1D
-#define BOARD_ID_RLCS              0x1E
+#define BOARD_ID_ACTUATOR_INJ      0x01
+#define BOARD_ID_ACTUATOR_VENT     0x02
+#define BOARD_ID_ACTUATOR_CAM1     0x03
+#define BOARD_ID_ACTUATOR_CAM2     0x04
+#define BOARD_ID_ACTUATOR_SPARE1   0x05
+#define BOARD_ID_ACTUATOR_SPARE2   0x06
+#define BOARD_ID_SENSOR_INJ        0x07
+#define BOARD_ID_SENSOR_VENT       0x08
+#define BOARD_ID_SENSOR_PAYLOAD    0x09
+#define BOARD_ID_SENSOR_SPARE1     0x0A
+#define BOARD_ID_SENSOR_SPARE2     0x0B
+#define BOARD_ID_LOGGER            0x0C
+#define BOARD_ID_LOGGER_PAYLOAD    0x0D
+#define BOARD_ID_LOGGER_SPARE      0x0E
+#define BOARD_ID_CHARGING          0x0F
+#define BOARD_ID_ARMING            0x10
+#define BOARD_ID_GRANDPAPA         0x11
+#define BOARD_ID_KALMAN            0x12
+#define BOARD_ID_GPS               0x13
+#define BOARD_ID_TELEMETRY         0x14
+#define BOARD_ID_USB               0x15
+#define BOARD_ID_RLCS              0x16
 
 /*
  * General message type format (from spreadsheet):
@@ -136,8 +127,8 @@ enum GEN_CMD {
 
 // ACTUATOR_CMD/STATUS STATES
 enum ACTUATOR_STATE {
-    ACTUATOR_OPEN = 0,
-    ACTUATOR_CLOSED,
+    ACTUATOR_ON = 0,
+    ACTUATOR_OFF,
     ACTUATOR_UNK,
     ACTUATOR_ILLEGAL,
 };
@@ -157,6 +148,7 @@ enum BOARD_STATUS {
     E_BUS_UNDER_VOLTAGE,        // mV_high          mV_low              x                   x
     E_BUS_OVER_VOLTAGE,         // mV_high          mV_low              x                   x
 
+    E_BATT_OVER_CURRENT,        // mA_high          mA_low              x                   x
     E_BATT_UNDER_VOLTAGE,       // mV_high          mV_low              x                   x
     E_BATT_OVER_VOLTAGE,        // mV_high          mV_low              x                   x
 
@@ -177,29 +169,24 @@ enum BOARD_STATUS {
     E_SEGFAULT,                 // x                x                   x                   x
     E_UNHANDLED_INTERRUPT,      // x                x                   x                   x
     E_CODING_SCREWUP,           // x                x                   x                   x
-
-    E_BATT_OVER_CURRENT,        // mA_high          mA_low              x                   x
 };
 
 enum SENSOR_ID {
-    SENSOR_IMU1 = 0,
-    SENSOR_IMU2,
-    SENSOR_BARO,
+    SENSOR_BUS_CURR = 0,
+    SENSOR_BATT_CURR,
+    SENSOR_BATT_VOLT,
+    SENSOR_CHARGE_CURR,
+    SENSOR_CHARGE_VOLT,
     SENSOR_PRESSURE_OX,
     SENSOR_PRESSURE_CC,
-    SENSOR_VENT_BATT,
-    SENSOR_INJ_BATT,
+    SENSOR_PRESSURE_PNEUMATICS,
+    SENSOR_BARO,
     SENSOR_ARM_BATT_1,
     SENSOR_ARM_BATT_2,
-    SENSOR_BATT_CURR,
-    SENSOR_BUS_CURR,
-    SENSOR_VELOCITY,
     SENSOR_MAG_1,
     SENSOR_MAG_2,
-    SENSOR_ROCKET_BATT,
-    SENSOR_PRESSURE_PNEUMATICS,
+    SENSOR_VELOCITY,
     SENSOR_VENT_TEMP,
-    SENSOR_PICAM_CURRENT,
 };
 
 enum FILL_DIRECTION {
@@ -210,9 +197,9 @@ enum FILL_DIRECTION {
 enum ACTUATOR_ID {
     ACTUATOR_VENT_VALVE = 0,
     ACTUATOR_INJECTOR_VALVE,
-    MAMA_BOARD_ACTIVATE,
-    PICAM,
-    CANBUS,
+    ACTUATOR_PAYLOAD,
+    ACTUATOR_CAMERAS,
+    ACTUATOR_CANBUS,
 };
 
 #endif // compile guard
