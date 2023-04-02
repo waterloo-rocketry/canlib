@@ -54,26 +54,22 @@
 #define BOARD_ID_ACTUATOR_VENT     0x02
 #define BOARD_ID_ACTUATOR_CAM1     0x03
 #define BOARD_ID_ACTUATOR_CAM2     0x04
-#define BOARD_ID_ACTUATOR_SPARE1   0x05
-#define BOARD_ID_ACTUATOR_SPARE2   0x06
-#define BOARD_ID_SENSOR_INJ        0x07
-#define BOARD_ID_SENSOR_VENT       0x08
-#define BOARD_ID_SENSOR_PAYLOAD    0x09
-#define BOARD_ID_SENSOR_SPARE1     0x0A
-#define BOARD_ID_SENSOR_SPARE2     0x0B
-#define BOARD_ID_LOGGER            0x0C
-#define BOARD_ID_LOGGER_PAYLOAD    0x0D
-#define BOARD_ID_LOGGER_SPARE      0x0E
-#define BOARD_ID_GPS               0x0F
-#define BOARD_ID_GPS_PAYLOAD       0x10
-#define BOARD_ID_GPS_SPARE         0x11
-#define BOARD_ID_CHARGING          0x12
-#define BOARD_ID_ARMING            0x13
-#define BOARD_ID_GRANDPAPA         0x14
-#define BOARD_ID_KALMAN            0x15
-#define BOARD_ID_TELEMETRY         0x16
-#define BOARD_ID_USB               0x17
-#define BOARD_ID_RLCS              0x18
+#define BOARD_ID_SENSOR_INJ        0x05
+#define BOARD_ID_SENSOR_VENT       0x06
+#define BOARD_ID_SENSOR_PAYLOAD    0x07
+#define BOARD_ID_LOGGER            0x08
+#define BOARD_ID_LOGGER_PAYLOAD    0x09
+#define BOARD_ID_LOGGER_SPARE      0x0A
+#define BOARD_ID_GPS               0x0B
+#define BOARD_ID_GPS_PAYLOAD       0x0C
+#define BOARD_ID_GPS_SPARE         0x0D
+#define BOARD_ID_CHARGING          0x0E
+#define BOARD_ID_ARMING            0x0F
+#define BOARD_ID_GRANDPAPA         0x10
+#define BOARD_ID_KALMAN            0x11
+#define BOARD_ID_TELEMETRY         0x12
+#define BOARD_ID_USB               0x13
+#define BOARD_ID_RLCS              0x14
 
 /*
  * General message type format (from spreadsheet):
