@@ -1,10 +1,9 @@
 #ifndef MESSAGE_TYPES_H_
 #define MESSAGE_TYPES_H_
 
-/* The defines in this file track the information in this spreadsheet:
- * https://docs.google.com/spreadsheets/d/1sXmhBklBM_79vqq_NNaoq-xuxz7BbkHtFnsmBFPSksc/
+/* REMINDER: Any changes to this file should be reflected in parsley.
  *
- * If the spreadsheet and file differ, this file is the source of truth.
+ * If parsley and this file differ, this file is the source of truth.
  *
  * Message SIDs are 11 bit unique identifiers.
  * Bottom 5 bits: IDs that are unique to the board sending the message
