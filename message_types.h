@@ -184,6 +184,10 @@ enum SENSOR_ID {
     SENSOR_MAG_2,
     SENSOR_VELOCITY,
     SENSOR_VENT_TEMP,
+<<<<<<< HEAD
+=======
+    SENSOR_PICAM_CURRENT,
+>>>>>>> 3e4452b08dad6aecf56cc9dfa40cfea0c0b14a90
     SENSOR_RADIO_CURR,
 };
 
