@@ -42,6 +42,8 @@
 #define MSG_GPS_ALTITUDE          0x720
 #define MSG_GPS_INFO              0x740
 
+#define MSG_STATE_EST             0x760
+
 #define MSG_FILL_LVL              0x780
 #define MSG_RADI_VALUE            0x7A0
 
