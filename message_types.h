@@ -42,6 +42,8 @@
 #define MSG_GPS_ALTITUDE          0x720
 #define MSG_GPS_INFO              0x740
 
+#define MSG_STATE_EST             0x760
+
 #define MSG_FILL_LVL              0x780
 #define MSG_RADI_VALUE            0x7A0
 
@@ -99,6 +101,8 @@
  * GPS_LON:         TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L DEGREES               MINUTES        DMINUTES_H         DIMNUTES_L      E/W DIRECTION
  * GPS_ALT:         TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L ALT_H                 ALT_L          ALT_DEC            UNITS           None
  * GPS_INFO:        TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L NUM_SAT               QUALITY        None               None            None
+ * 
+ * STATE_EST:       TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L NUMBERS               NUMBERS        DECIMALS           DECIMALS        None
  *
  * FILL_LVL:        TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L FILL_LEVEL            DIRECTION      None               None            None
  *
