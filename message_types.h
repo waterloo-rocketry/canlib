@@ -24,15 +24,7 @@
 #define MSG_DEBUG_PRINTF          0x1E0
 #define MSG_DEBUG_RADIO_CMD       0x200
 
-#define MSG_STATE_EST_X           0x300
-#define MSG_STATE_EST_Y           0x320
-#define MSG_STATE_EST_Z           0x340
-#define MSG_STATE_EST_XV          0x360
-#define MSG_STATE_EST_YV          0x380
-#define MSG_STATE_EST_ZV          0x3A0
-#define MSG_STATE_EST_XA          0x3C0
-#define MSG_STATE_EST_YA          0x3E0
-#define MSG_STATE_EST_ZA          0x400
+#define MSG_STATE_EST           0x300
 
 #define MSG_ALT_ARM_STATUS        0x440
 #define MSG_ACTUATOR_STATUS       0x460
