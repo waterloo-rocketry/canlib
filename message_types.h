@@ -24,7 +24,6 @@
 #define MSG_DEBUG_PRINTF          0x1E0
 #define MSG_DEBUG_RADIO_CMD       0x200
 
-#define MSG_STATE_EST           0x300
 
 #define MSG_ALT_ARM_STATUS        0x440
 #define MSG_ACTUATOR_STATUS       0x460
@@ -46,7 +45,7 @@
 
 
 #define MSG_FILL_LVL              0x780
-#define MSG_RADI_VALUE            0x7A0
+#define MSG_STATE_EST             0x7A0
 
 #define MSG_LEDS_ON               0x7E0
 #define MSG_LEDS_OFF              0x7C0
@@ -87,15 +86,6 @@
  * DEBUG_PRINTF:    ASCII       ASCII       ASCII       ASCII                 ASCII            ASCII              ASCII            ASCII
  * DEBUG_RADIO_CMD: ASCII       ASCII       ASCII       ASCII                 ASCII            ASCII              ASCII            ASCII
  *
- * STATE_EST_X:     TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L KALMAN_X_DISP_H       KALMAN_X_DISP_M  KALMAN_X_DISP_M    KALMAN_X_DISP_L  None
- * STATE_EST_Y:     TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L KALMAN_Y_DISP_H       KALMAN_Y_DISP_M  KALMAN_Y_DISP_M    KALMAN_Y_DISP_L  None
- * STATE_EST_Z:     TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L KALMAN_Z_DISP_H       KALMAN_Z_DISP_M  KALMAN_Z_DISP_M    KALMAN_Z_DISP_L  None
- * STATE_EST_XV:    TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L KALMAN_XV_DISP_H      KALMAN_XV_DISP_M KALMAN_XV_DISP_M   KALMAN_XV_DISP_L None
- * STATE_EST_YV:    TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L KALMAN_YV_DISP_H      KALMAN_YV_DISP_M KALMAN_YV_DISP_M   KALMAN_YV_DISP_L None
- * STATE_EST_ZV:    TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L KALMAN_ZV_DISP_H      KALMAN_ZV_DISP_M KALMAN_ZV_DISP_M   KALMAN_ZV_DISP_L None
- * STATE_EST_XA:    TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L KALMAN_XA_DISP_H      KALMAN_XA_DISP_M KALMAN_XA_DISP_M   KALMAN_XA_DISP_L None
- * STATE_EST_YA:    TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L KALMAN_YA_DISP_H      KALMAN_YA_DISP_M KALMAN_YA_DISP_M   KALMAN_YA_DISP_L None
- * STATE_EST_ZA:    TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L KALMAN_ZA_DISP_H      KALMAN_ZA_DISP_M KALMAN_ZA_DISP_M   KALMAN_ZA_DISP_L None
  *
  * ACTUATOR_STAT:   TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L ACTUATOR_ID           ACTUATOR_STATE   REQ_ACTUATOR_STATE None             None
  * ALT_ARM_STAT:    TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L ALT_ARM_STATE & #     V_DROGUE_H       V_DROGUE_L         V_MAIN_H         V_MAIN_L
@@ -117,7 +107,7 @@
  *
  * FILL_LVL:        TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L FILL_LEVEL            DIRECTION        None               None             None
  *
- * RADI_VALUE:      TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L RADI_BOARD            RADI_HIGH        RADI_LOW           None             None
+ * STATE_EST:     TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L KALMAN_H       KALMAN_MH  KALMAN_ML    KALMAN_L  KALMAN_ID
  *
  * LEDS_ON:         None        None        None        None                  None             None               None             None
  * LEDS_OFF:        None        None        None        None                  None             None               None             None
