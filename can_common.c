@@ -406,24 +406,6 @@ bool build_fill_msg(uint32_t timestamp,
     return true;
 }
 
-bool build_radi_info_msg(uint32_t timestamp,
-                         uint8_t sensor_identifier,
-                         uint16_t adc_value,
-                         can_msg_t *output)
- {
-    if (!output) { return false; }
-
-    output->sid = MSG_STATE_EST | BOARD_UNIQUE_ID;
-    write_timestamp_3bytes(timestamp, output);
-
-    output->data[3] = sensor_identifier;
-    output->data[4] = (uint8_t) ((adc_value >> 8) & 0x0F); // Upper byte
-    output->data[5] = (uint8_t) (adc_value & 0xFF); // Lower byte
-
-    output->data_len = 6;
-
-    return true;
- }
 
 bool get_fill_info(const can_msg_t *msg,
                    uint8_t *lvl,
@@ -571,11 +553,6 @@ uint32_t get_timestamp(const can_msg_t *msg)
         case MSG_FILL_LVL:
         case MSG_SENSOR_ALTITUDE:
         case MSG_STATE_EST:
-            return (uint32_t)msg->data[0] << 16
-                   | (uint32_t)msg->data[1] << 8
-                   | msg->data[2];
-
-        // 2 byte timestamp
         case MSG_SENSOR_ACC:
         case MSG_SENSOR_ACC2:
         case MSG_SENSOR_GYRO:
@@ -779,20 +756,6 @@ bool get_gps_info(const can_msg_t *msg,
     *num_sat = msg->data[3];
     *quality = msg->data[4];
 
-    return true;
-}
-
-bool get_radi_info(const can_msg_t* msg,
-                   uint8_t *sensor_identifier,
-                   uint16_t *adc_value)
-{
-    if (!msg) { return false; }
-    if (!sensor_identifier) { return false; }
-    if (!adc_value) { return false; }
-    if (get_message_type(msg) != MSG_STATE_EST) {return false;}
-
-    *sensor_identifier = msg -> data[3];
-    *adc_value = msg -> data[4] << 8 | msg -> data[5];
     return true;
 }
 
