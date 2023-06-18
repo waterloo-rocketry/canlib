@@ -413,7 +413,7 @@ bool build_radi_info_msg(uint32_t timestamp,
  {
     if (!output) { return false; }
 
-    output->sid = MSG_RADI_VALUE | BOARD_UNIQUE_ID;
+    output->sid = MSG_STATE_EST | BOARD_UNIQUE_ID;
     write_timestamp_3bytes(timestamp, output);
 
     output->data[3] = sensor_identifier;
@@ -570,7 +570,7 @@ uint32_t get_timestamp(const can_msg_t *msg)
         case MSG_RESET_CMD:
         case MSG_FILL_LVL:
         case MSG_SENSOR_ALTITUDE:
-        case MSG_RADI_VALUE:
+        case MSG_STATE_EST:
             return (uint32_t)msg->data[0] << 16
                    | (uint32_t)msg->data[1] << 8
                    | msg->data[2];
@@ -789,7 +789,7 @@ bool get_radi_info(const can_msg_t* msg,
     if (!msg) { return false; }
     if (!sensor_identifier) { return false; }
     if (!adc_value) { return false; }
-    if (get_message_type(msg) != MSG_RADI_VALUE) {return false;}
+    if (get_message_type(msg) != MSG_STATE_EST) {return false;}
 
     *sensor_identifier = msg -> data[3];
     *adc_value = msg -> data[4] << 8 | msg -> data[5];
