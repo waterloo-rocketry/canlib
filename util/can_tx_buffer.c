@@ -29,7 +29,7 @@ bool txb_enqueue(const can_msg_t *msg) {
 }
 
 void txb_heartbeat(void) {
-    if (!srb_is_empty(&buf)) {
+    while (!srb_is_empty(&buf)) {
         if ((*(ctx.can_tx_ready))()) {
             can_msg_t msg_sent;
             srb_pop(&buf, &msg_sent);
