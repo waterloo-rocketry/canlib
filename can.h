@@ -10,7 +10,7 @@
 #include <stdbool.h>
 
 #define CANLIB_VERSION            "v0.7.0"
-#define CANLIB_BIT_TIME_US        24
+#define CANLIB_BIT_TIME_US        4
 
 // Timing parameters
 typedef struct {
