@@ -132,7 +132,7 @@ bool build_imu_data_msg(uint16_t message_type,  // acc, gyro, mag
  */
 bool build_analog_data_msg(uint32_t timestamp,
                            enum SENSOR_ID sensor_id,
-                           uint16_t sensor_data,
+                           uint8_t *sensor_data,
                            can_msg_t *output);
 
 

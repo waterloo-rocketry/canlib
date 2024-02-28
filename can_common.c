@@ -228,7 +228,7 @@ bool build_imu_data_msg(uint16_t message_type,
 
 bool build_analog_data_msg(uint32_t timestamp,
                            enum SENSOR_ID sensor_id,
-                           uint16_t sensor_data,
+                           uint8_t *sensor_data,
                            can_msg_t *output)
 {
     if (!output) { return false; }
@@ -237,8 +237,8 @@ bool build_analog_data_msg(uint32_t timestamp,
     write_timestamp_2bytes(timestamp, output);
 
     output->data[2] = (uint8_t) sensor_id;
-    output->data[3] = (sensor_data >> 8) & 0xff;
-    output->data[4] = (sensor_data >> 0) & 0xff;
+    output->data[3] =  *sensor_data++; // (sensor_data >> 8) & 0xff;
+    output->data[4] = *sensor_data; //(sensor_data >> 0) & 0xff;
 
     output->data_len = 5;
 
