@@ -23,6 +23,7 @@
 #define MSG_DEBUG_MSG             0x180
 #define MSG_DEBUG_PRINTF          0x1E0
 #define MSG_DEBUG_RADIO_CMD       0x200
+#define MSG_MTR_CTL               0x220
 
 
 #define MSG_ALT_ARM_STATUS        0x440
@@ -51,23 +52,20 @@
 #define MSG_LEDS_OFF              0x7C0
 
 // Board IDs
-#define BOARD_ID_ACTUATOR_INJ      0x01
-#define BOARD_ID_ACTUATOR_VENT     0x02
-#define BOARD_ID_ACTUATOR_CAM1     0x03
-#define BOARD_ID_ACTUATOR_CAM2     0x04
-#define BOARD_ID_SENSOR_INJ        0x05
-#define BOARD_ID_SENSOR_VENT       0x06
-#define BOARD_ID_SENSOR_PAYLOAD    0x07
-#define BOARD_ID_LOGGER            0x08
-#define BOARD_ID_LOGGER_PAYLOAD    0x09
+#define BOARD_ID_PROPULSION_INJ    0x01
+#define BOARD_ID_PROPULSION_VENT   0x02
+#define BOARD_ID_CAM1              0x03
+#define BOARD_ID_CAM2              0x04
+#define BOARD_ID_CHARGING          0x05
+#define BOARD_ID_MTRCTL_AIRBRAKES  0x06
+#define BOARD_ID_MTRCTL_PAYLOAD    0x07
+#define BOARD_ID_PROCESSOR		   0x08
+#define BOARD_ID_LOGGER            0x09
 #define BOARD_ID_LOGGER_SPARE      0x0A
 #define BOARD_ID_GPS               0x0B
-#define BOARD_ID_GPS_PAYLOAD       0x0C
 #define BOARD_ID_GPS_SPARE         0x0D
-#define BOARD_ID_CHARGING          0x0E
+#define BOARD_ID_VIB_PAYLOAD       0x0E
 #define BOARD_ID_ARMING            0x0F
-#define BOARD_ID_GRANDPAPA         0x10
-#define BOARD_ID_KALMAN            0x11
 #define BOARD_ID_TELEMETRY         0x12
 #define BOARD_ID_USB               0x13
 #define BOARD_ID_RLCS              0x14
@@ -85,7 +83,7 @@
  * DEBUG_MSG:       TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L DEBUG_LEVEL | LINUM_H LINUM_L          MESSAGE_DEFINED    MESSAGE_DEFINED  MESSAGE_DEFINED
  * DEBUG_PRINTF:    ASCII       ASCII       ASCII       ASCII                 ASCII            ASCII              ASCII            ASCII
  * DEBUG_RADIO_CMD: ASCII       ASCII       ASCII       ASCII                 ASCII            ASCII              ASCII            ASCII
- *
+ * MSG_MTR_CTL:     TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L DATA_H                DATA_MH          DATA_ML            DATA_L		   None
  *
  * ACTUATOR_STAT:   TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L ACTUATOR_ID           ACTUATOR_STATE   REQ_ACTUATOR_STATE None             None
  * ALT_ARM_STAT:    TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L ALT_ARM_STATE & #     V_DROGUE_H       V_DROGUE_L         V_MAIN_H         V_MAIN_L
@@ -107,7 +105,7 @@
  *
  * FILL_LVL:        TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L FILL_LEVEL            DIRECTION        None               None             None
  *
- * STATE_EST:     TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L KALMAN_H       KALMAN_MH  KALMAN_ML    KALMAN_L  KALMAN_ID
+ * STATE_EST:       TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L DATA_H                DATA_MH          DATA_ML            DATA_L           STATE_ID
  *
  * LEDS_ON:         None        None        None        None                  None             None               None             None
  * LEDS_OFF:        None        None        None        None                  None             None               None             None

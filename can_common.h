@@ -11,11 +11,11 @@
  * numbers are more serious debug things
  */
 typedef enum {
-    NONE      = 0,
-    ERROR     = 1,
-    WARN      = 2,
-    INFO      = 3,
-    DEBUGGING = 4
+    LVL_NONE  = 0,
+    LVL_ERROR = 1,
+    LVL_WARN  = 2,
+    LVL_INFO  = 3,
+    LVL_DEBUG = 4
 } can_debug_level_t;
 
 /*

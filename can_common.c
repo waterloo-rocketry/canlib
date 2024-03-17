@@ -763,7 +763,7 @@ can_debug_level_t message_debug_level(const can_msg_t *msg)
 {
     uint16_t type = get_message_type(msg);
     if (type != MSG_DEBUG_MSG) {
-        return NONE;
+        return LVL_NONE;
     } else {
         // As per the spreadsheet, the debug level of a DEBUG_MSG is
         // stored in the top nibble of the 4th data byte (yeah, I
