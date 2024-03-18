@@ -121,6 +121,7 @@ bool build_board_stat_msg(uint32_t timestamp,
  * of 3 values is sent (X, Y, and Z axes).
  */
 bool build_imu_data_msg(uint16_t message_type,  // acc, gyro, mag
+                        enum SENSOR_ID sensor_id,
                         uint32_t timestamp,
                         uint16_t *imu_data,     // x, y, z
                         can_msg_t *output);
@@ -139,16 +140,31 @@ bool build_analog_data_msg(uint32_t timestamp,
 /*
 * Used to send tempurature measurement data
 * Units are 1/1024th of a degree C
-* Temp is 24 bit signed, not 32 bit. Values less than -8388608 or greater than
-* 8388607 will overflow.
+* Temp is 12 bit signed, not 16 ubit. (i think - Lana)
+ * this is fydp2024 change from 32bit signed
 */
 bool build_temp_data_msg(uint32_t timestamp,
-                         uint8_t sensor_num,
-                         int32_t temp,
+                         enum SENSOR_ID sensor_id,
+                         uint16_t temp,
+                         can_msg_t *output);
+/*FYDP2024 
+ *Used to send message that level sensor has been triggered*/
+
+bool build_level_data_msg(uint32_t timestamp,
+                         enum SENSOR_ID sensor_id,
+                         can_msg_t *output);
+
+/*FYDP2024 
+ *Used to send RPM count value, returns counts at specific frequency
+ determined by spreadsheets, will be calculated by omnibus
+ supports both high frequency and low frequency rpm counts*/
+bool build_rpm_data_msg(uint32_t timestamp,
+                         enum SENSOR_ID sensor_id,
+                         uint32_t rpm_count,
                          can_msg_t *output);
 
 /*
-* Used to send altitude recived from altimiters
+* Used to send altitude received from altimiters
 */
 bool build_altitude_data_msg(uint32_t timestamp,
                              int32_t altitude,

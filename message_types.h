@@ -36,6 +36,8 @@
 #define MSG_SENSOR_GYRO           0x5E0
 #define MSG_SENSOR_MAG            0x640
 #define MSG_SENSOR_ANALOG         0x6A0
+#define MSG_SENSOR_RPM            0x680
+#define MSG_SENSOR_LEVEL          0x620
 
 #define MSG_GPS_TIMESTAMP         0x6C0
 #define MSG_GPS_LATITUDE          0x6E0
@@ -71,6 +73,7 @@
 #define BOARD_ID_TELEMETRY         0x12
 #define BOARD_ID_USB               0x13
 #define BOARD_ID_RLCS              0x14
+#define BOARD_ID_FYDPSEQUENCER     0x15
 
 /*
  * General message type format (from spreadsheet):
@@ -196,7 +199,7 @@ enum SENSOR_ID {
     SENSOR_ACCEL_FYDP,
     SENSOR_LEVEL_FYDP,
     SENSOR_HALL_FYDP,
-    SENSOR_TC_FYDP
+    SENSOR_TC_FYDP,
 };
 
 enum FILL_DIRECTION {
@@ -205,14 +208,6 @@ enum FILL_DIRECTION {
 };
 
 enum ACTUATOR_ID {
-    ACTUATOR_VENT_VALVE = 0,
-    ACTUATOR_INJECTOR_VALVE,
-    ACTUATOR_PAYLOAD,
-    ACTUATOR_CAMERAS,
-    ACTUATOR_CANBUS,
-    ACTUATOR_CHARGE,
-    ACTUATOR_RADIO,
-    ACTUATOR_PAYLOAD_5V,
     VA101,
     VA201,
     VA102,
