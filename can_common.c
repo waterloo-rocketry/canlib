@@ -192,25 +192,23 @@ bool build_board_stat_msg(uint32_t timestamp,
 }
 
 bool build_imu_data_msg(uint16_t message_type,
-                        enum SENSOR_ID sensor_id,
                         uint32_t timestamp,   // acc, gyro, mag
                         uint16_t *imu_data,   // x, y, z
                         can_msg_t *output)
 {
     if (!output) { return false; }
     if (!imu_data) { return false; }
-    if (!(message_type == MSG_SENSOR_ACC
-           || message_type == MSG_SENSOR_GYRO
-           || message_type == MSG_SENSOR_MAG
-           || message_type == MSG_SENSOR_ACC2)) {
+    if (!(message_type == MSG_SENSOR_A501
+           || message_type == MSG_SENSOR_A502
+           || message_type == MSG_SENSOR_A503
+           || message_type == MSG_SENSOR_A504
+           || message_type == MSG_SENSOR_A505
+           || message_type == MSG_SENSOR_A506)) {
         return false;
     }
 
     output->sid = message_type | BOARD_UNIQUE_ID;
-    //timestamp
-    output->data[0] = (timestamp >> 0) & 0xff;
-    //sensor id
-    output->data[1] = (uint8_t) sensor_id;
+    write_timestamp_2bytes(timestamp, output);
     
     // X value
     output->data[2] = (imu_data[0] >> 8) & 0xff;
@@ -238,13 +236,13 @@ bool build_analog_data_msg(uint32_t timestamp,
     if (!output) { return false; }
 
     output->sid = MSG_SENSOR_ANALOG | BOARD_UNIQUE_ID;
-    write_timestamp_2bytes(timestamp, output);
+    write_timestamp_3bytes(timestamp, output);
 
-    output->data[2] = (uint8_t) sensor_id;
-    output->data[3] =  *sensor_data++; // (sensor_data >> 8) & 0xff;
-    output->data[4] = *sensor_data; //(sensor_data >> 0) & 0xff;
+    output->data[3] = (uint8_t) sensor_id;
+    output->data[4] =  *sensor_data++; // (sensor_data >> 8) & 0xff;
+    output->data[5] = *sensor_data; //(sensor_data >> 0) & 0xff;
 
-    output->data_len = 5;
+    output->data_len = 6;
 
     return true;
 }
@@ -259,8 +257,8 @@ bool build_temp_data_msg(uint32_t timestamp,
     write_timestamp_3bytes(timestamp, output);
 
     output->data[3] = (uint8_t) sensor_id;
-    output->data[5] = (temp >> 8) & 0xFF;
-    output->data[6] = temp & 0xFF;
+    output->data[4] = (temp >> 8) & 0xFF;
+    output->data[5] = temp & 0xFF;
     output->data_len = 6;
 
     return true;
@@ -294,7 +292,7 @@ bool build_level_data_msg(uint32_t timestamp,
     write_timestamp_3bytes(timestamp, output);
 
     output->data[3] = (uint8_t) sensor_id;
-    output->data_len = 3;
+    output->data_len = 4;
 
     return true;
 }

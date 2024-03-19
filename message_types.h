@@ -52,6 +52,14 @@
 #define MSG_LEDS_ON               0x7E0
 #define MSG_LEDS_OFF              0x7C0
 
+
+#define MSG_SENSOR_A501           0x220
+#define MSG_SENSOR_A502           0x240
+#define MSG_SENSOR_A503           0x260
+#define MSG_SENSOR_A504           0x280
+#define MSG_SENSOR_A505           0x2A0
+#define MSG_SENSOR_A506           0x2E0
+
 // Board IDs
 #define BOARD_ID_ACTUATOR_INJ      0x01
 #define BOARD_ID_ACTUATOR_VENT     0x02

@@ -121,7 +121,6 @@ bool build_board_stat_msg(uint32_t timestamp,
  * of 3 values is sent (X, Y, and Z axes).
  */
 bool build_imu_data_msg(uint16_t message_type,  // acc, gyro, mag
-                        enum SENSOR_ID sensor_id,
                         uint32_t timestamp,
                         uint16_t *imu_data,     // x, y, z
                         can_msg_t *output);
