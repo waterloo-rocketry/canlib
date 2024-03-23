@@ -23,6 +23,7 @@
 #define MSG_DEBUG_MSG             0x180
 #define MSG_DEBUG_PRINTF          0x1E0
 #define MSG_DEBUG_RADIO_CMD       0x200
+#define MSG_ACT_ANALOG_CMD        0x220
 
 
 #define MSG_ALT_ARM_STATUS        0x440
@@ -34,9 +35,10 @@
 #define MSG_SENSOR_ACC            0x580
 #define MSG_SENSOR_ACC2           0x5A0
 #define MSG_SENSOR_GYRO           0x5E0
+
+#define MSG_STATE_EST_CALIB       0x620
 #define MSG_SENSOR_MAG            0x640
 #define MSG_SENSOR_ANALOG         0x6A0
-
 #define MSG_GPS_TIMESTAMP         0x6C0
 #define MSG_GPS_LATITUDE          0x6E0
 #define MSG_GPS_LONGITUDE         0x700
@@ -45,29 +47,27 @@
 
 
 #define MSG_FILL_LVL              0x780
-#define MSG_STATE_EST             0x7A0
+#define MSG_STATE_EST_DATA        0x7A0
+
 
 #define MSG_LEDS_ON               0x7E0
 #define MSG_LEDS_OFF              0x7C0
 
 // Board IDs
-#define BOARD_ID_ACTUATOR_INJ      0x01
-#define BOARD_ID_ACTUATOR_VENT     0x02
-#define BOARD_ID_ACTUATOR_CAM1     0x03
-#define BOARD_ID_ACTUATOR_CAM2     0x04
-#define BOARD_ID_SENSOR_INJ        0x05
-#define BOARD_ID_SENSOR_VENT       0x06
-#define BOARD_ID_SENSOR_PAYLOAD    0x07
-#define BOARD_ID_LOGGER            0x08
-#define BOARD_ID_LOGGER_PAYLOAD    0x09
+#define BOARD_ID_PROPULSION_INJ    0x01
+#define BOARD_ID_PROPULSION_VENT   0x02
+#define BOARD_ID_CAM1              0x03
+#define BOARD_ID_CAM2              0x04
+#define BOARD_ID_CHARGING          0x05
+#define BOARD_ID_MTRCTL_AIRBRAKES  0x06
+#define BOARD_ID_MTRCTL_PAYLOAD    0x07
+#define BOARD_ID_PROCESSOR		   0x08
+#define BOARD_ID_LOGGER            0x09
 #define BOARD_ID_LOGGER_SPARE      0x0A
 #define BOARD_ID_GPS               0x0B
-#define BOARD_ID_GPS_PAYLOAD       0x0C
 #define BOARD_ID_GPS_SPARE         0x0D
-#define BOARD_ID_CHARGING          0x0E
+#define BOARD_ID_VIB_PAYLOAD       0x0E
 #define BOARD_ID_ARMING            0x0F
-#define BOARD_ID_GRANDPAPA         0x10
-#define BOARD_ID_KALMAN            0x11
 #define BOARD_ID_TELEMETRY         0x12
 #define BOARD_ID_USB               0x13
 #define BOARD_ID_RLCS              0x14
@@ -80,12 +80,11 @@
  * ACTUATOR_CMD:    TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L ACTUATOR_ID           ACTUATOR_STATE   None               None             None
  * ALT_ARM_CMD:     TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L ALT_ARM_STATE & #     None             None               None             None
  * RESET_CMD:       TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L BOARD_ID              None             None               None             None
- *
+ * ACT_ANALOG_CMD:  TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L ACTUATOR_ID           ACTUATOR_STATE_H ACTUATOR_STATE_MH  ACTUATOR_STATE_ML ACTUATOR_STATE_L
  *
  * DEBUG_MSG:       TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L DEBUG_LEVEL | LINUM_H LINUM_L          MESSAGE_DEFINED    MESSAGE_DEFINED  MESSAGE_DEFINED
  * DEBUG_PRINTF:    ASCII       ASCII       ASCII       ASCII                 ASCII            ASCII              ASCII            ASCII
  * DEBUG_RADIO_CMD: ASCII       ASCII       ASCII       ASCII                 ASCII            ASCII              ASCII            ASCII
- *
  *
  * ACTUATOR_STAT:   TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L ACTUATOR_ID           ACTUATOR_STATE   REQ_ACTUATOR_STATE None             None
  * ALT_ARM_STAT:    TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L ALT_ARM_STATE & #     V_DROGUE_H       V_DROGUE_L         V_MAIN_H         V_MAIN_L
@@ -107,7 +106,8 @@
  *
  * FILL_LVL:        TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L FILL_LEVEL            DIRECTION        None               None             None
  *
- * STATE_EST:     TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L KALMAN_H       KALMAN_MH  KALMAN_ML    KALMAN_L  KALMAN_ID
+ * STATE_EST_DATA:  TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L DATA_H                DATA_MH          DATA_ML            DATA_L           STATE_ID
+ * STATE_EST_CALIB: TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L ACK_FLAG			  APOGEE_H		   APOGEE_L			  None 			   None
  *
  * LEDS_ON:         None        None        None        None                  None             None               None             None
  * LEDS_OFF:        None        None        None        None                  None             None               None             None
@@ -202,12 +202,13 @@ enum FILL_DIRECTION {
 enum ACTUATOR_ID {
     ACTUATOR_VENT_VALVE = 0,
     ACTUATOR_INJECTOR_VALVE,
-    ACTUATOR_PAYLOAD,
     ACTUATOR_CAMERAS,
     ACTUATOR_CANBUS,
     ACTUATOR_CHARGE,
     ACTUATOR_RADIO,
-    ACTUATOR_PAYLOAD_5V,
+    ACTUATOR_PAYLOAD_SERVO,
+	ACTUATOR_AIRBRAKES_SERVO,
+	ACTUATOR_AIRBRAKES_ENABLE,
 };
 
 #endif // compile guard
