@@ -23,7 +23,7 @@
 #define MSG_DEBUG_MSG             0x180
 #define MSG_DEBUG_PRINTF          0x1E0
 #define MSG_DEBUG_RADIO_CMD       0x200
-#define ACT_ANALOG_CMD            0x220
+#define MSG_ACT_ANALOG_CMD        0x220
 
 
 #define MSG_ALT_ARM_STATUS        0x440
@@ -106,7 +106,7 @@
  *
  * FILL_LVL:        TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L FILL_LEVEL            DIRECTION        None               None             None
  *
- * STATE_EST_DATA:       TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L DATA_H                DATA_MH          DATA_ML            DATA_L           STATE_ID
+ * STATE_EST_DATA:  TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L DATA_H                DATA_MH          DATA_ML            DATA_L           STATE_ID
  * STATE_EST_CALIB: TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L ACK_FLAG			  APOGEE_H		   APOGEE_L			  None 			   None
  *
  * LEDS_ON:         None        None        None        None                  None             None               None             None
