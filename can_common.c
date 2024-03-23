@@ -552,7 +552,7 @@ uint32_t get_timestamp(const can_msg_t *msg)
         case MSG_RESET_CMD:
         case MSG_FILL_LVL:
         case MSG_SENSOR_ALTITUDE:
-        case MSG_STATE_EST:
+        case MSG_STATE_EST_DATA:
         case MSG_SENSOR_ACC:
         case MSG_SENSOR_ACC2:
         case MSG_SENSOR_GYRO:
