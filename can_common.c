@@ -1,6 +1,7 @@
 #include "can_common.h"
 #include "message_types.h"
 #include <stddef.h>
+#include <string.h>
 
 // this symbol should be defined in the project's Makefile, but if it
 // isn't, issue a warning and set it to 0
@@ -501,7 +502,7 @@ float get_req_actuator_state_analog(const can_msg_t *msg)
     switch (msg_type) {
         case MSG_ACT_ANALOG_CMD:
         	float value;
-        	memcpy(&value, data+4, sizeof(value));
+        	memcpy(&value, msg->data+4, sizeof(value));
             return msg->data[5];
 
         default:
@@ -577,7 +578,7 @@ uint32_t get_timestamp(const can_msg_t *msg)
         case MSG_SENSOR_MAG:
         case MSG_SENSOR_ANALOG:
         case MSG_ACT_ANALOG_CMD:
-        case STATE_EST_CALIB:
+        case MSG_STATE_EST_CALIB:
             return (uint32_t)msg->data[0] << 8
                    | msg->data[1];
 
