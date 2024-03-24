@@ -51,26 +51,35 @@
 #define MSG_LEDS_OFF              0x7C0
 
 // Board IDs
-#define BOARD_ID_ACTUATOR_INJ      0x01
-#define BOARD_ID_ACTUATOR_VENT     0x02
-#define BOARD_ID_ACTUATOR_CAM1     0x03
-#define BOARD_ID_ACTUATOR_CAM2     0x04
-#define BOARD_ID_SENSOR_INJ        0x05
-#define BOARD_ID_SENSOR_VENT       0x06
-#define BOARD_ID_SENSOR_PAYLOAD    0x07
-#define BOARD_ID_LOGGER            0x08
-#define BOARD_ID_LOGGER_PAYLOAD    0x09
-#define BOARD_ID_LOGGER_SPARE      0x0A
-#define BOARD_ID_GPS               0x0B
-#define BOARD_ID_GPS_PAYLOAD       0x0C
-#define BOARD_ID_GPS_SPARE         0x0D
-#define BOARD_ID_CHARGING          0x0E
-#define BOARD_ID_ARMING            0x0F
-#define BOARD_ID_GRANDPAPA         0x10
-#define BOARD_ID_KALMAN            0x11
+// Any
+#define BOARD_ID_ANY               0x00
+// Ground Side
+#define BOARD_ID_DAQ               0x01
+#define BOARD_ID_THERMOCOUPLE_1    0x02
+#define BOARD_ID_THERMOCOUPLE_2    0x03
+#define BOARD_ID_THERMOCOUPLE_3    0x04
+#define BOARD_ID_THERMOCOUPLE_4    0x05
+// Injector/Fill Section
+#define BOARD_ID_PROPULSION_INJ    0x06
+// Vent Section
+#define BOARD_ID_PROPULSION_VENT   0x07
+#define BOARD_ID_CAMERA_1          0x08
+#define BOARD_ID_CAMERA_2          0x09
+// Airbrake Section
+#define BOARD_ID_CHARGING_AIRBRAKE 0x0A
+// Payload Section
+#define BOARD_ID_CHARGING_PAYLOAD  0x0B
+#define BOARD_ID_VIBRATION         0x0C
+// Recovery Electronics(RecElec) Sled
+#define BOARD_ID_CHARGING_CAN      0x0D
+#define BOARD_ID_LOGGER            0x0E
+#define BOARD_ID_PROCESSOR         0x0F
+#define BOARD_ID_GPS               0x10
+#define BOARD_ID_ARMING            0x11
 #define BOARD_ID_TELEMETRY         0x12
-#define BOARD_ID_USB               0x13
-#define BOARD_ID_RLCS              0x14
+#define BOARD_ID_CAMERA_3          0x13
+// Debug
+#define BOARD_ID_USB               0x14
 
 /*
  * General message type format (from spreadsheet):
