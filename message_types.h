@@ -59,6 +59,7 @@
 #define MSG_SENSOR_A504           0x280
 #define MSG_SENSOR_A505           0x2A0
 #define MSG_SENSOR_A506           0x2E0
+#define MSG_FAKE_ACCEL            0x2C0
 
 // Board IDs
 #define BOARD_ID_ACTUATOR_INJ      0x01
