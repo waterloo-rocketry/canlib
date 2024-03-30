@@ -60,6 +60,9 @@
 #define MSG_SENSOR_A505           0x2A0
 #define MSG_SENSOR_A506           0x2E0
 #define MSG_FAKE_RPM              0x2C0
+#define FAKE_TC                   0x0A0,
+#define FAKE_ANALOG               0x0E0,
+#define FAKE_LEVEL                0x030,
 
 // Board IDs
 #define BOARD_ID_ACTUATOR_INJ      0x01
@@ -182,9 +185,21 @@ enum BOARD_STATUS {
     E_ILLEGAL_CAN_MSG,          // x                x                   x                   x
     E_SEGFAULT,                 // x                x                   x                   x
     E_UNHANDLED_INTERRUPT,      // x                x                   x                   x
-    E_CODING_SCREWUP,           // x                x                   x                   x
+    E_CODING_FUCKUP,            // x                x                   x                   x
+    E_COMM_FUCKUP,              //COMM_ERROR_TYPE
 };
 
+enum COMM_ERROR_TYPE{
+    E_I2C_TIMEOUT = 0,
+    E_CAN_RX,
+    E_CAN_TX,
+    E_UART1,
+    E_UART2,
+    E_UART3,
+    E_UART4,
+    E_SPI,
+    
+};
 enum SENSOR_ID {
     SENSOR_BUS_CURR = 0,
     SENSOR_BATT_CURR,

@@ -9,6 +9,7 @@
 #define  BOARD_UNIQUE_ID 0
 #endif
 
+
 // Helper function for populating CAN messages
 static void write_timestamp_2bytes(uint16_t timestamp, can_msg_t *output)
 {
