@@ -60,9 +60,7 @@
 #define MSG_SENSOR_A505           0x2A0
 #define MSG_SENSOR_A506           0x2E0
 #define MSG_FAKE_RPM              0x2C0
-#define FAKE_TC                   0x0A0,
-#define FAKE_ANALOG               0x0E0,
-#define FAKE_LEVEL                0x030,
+#define SENSOR_SPOOF              0x0A0,
 
 // Board IDs
 #define BOARD_ID_ACTUATOR_INJ      0x01
@@ -223,8 +221,9 @@ enum SENSOR_ID {
     SENSOR_ADC_FYDP,
     SENSOR_ACCEL_FYDP,
     SENSOR_LEVEL_FYDP,
-    SENSOR_HALL_FYDP,
+    SENSOR_RPM_FYDP,
     SENSOR_TC_FYDP,
+    SENSOR_GEN_FYDP,
 };
 
 enum FILL_DIRECTION {
