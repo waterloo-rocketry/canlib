@@ -140,6 +140,7 @@
 // GENERAL_CMD: COMMAND_TYPE
 enum GEN_CMD {
     BUS_DOWN_WARNING = 0,
+    STATE_TRANSITION,
 };
 
 // ACTUATOR_CMD/STATUS STATES
@@ -234,19 +235,13 @@ enum FILL_DIRECTION {
 enum ACTUATOR_ID {
     VA101,
     VA201,
-    VA102,
     VA202,
     VA301,
     VA302,
     VA303,
     VA304,
     VA401,
-    VA_SPARE1,
-    VA_SPARE2,
-    VA_SPARE3,
     I501,
-    I_SPARE1,
-    I_SPARE2,
 };
 
 #endif // compile guard
