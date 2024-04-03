@@ -229,7 +229,7 @@ bool build_imu_data_msg(uint16_t message_type,
 
 bool build_state_est_data_msg(uint16_t message_type,
                         uint32_t timestamp,
-                        uint16_t *data,   // floating point
+                        float *data,   // floating point
 						enum STATE_ID data_id,
                         can_msg_t *output)
 {
