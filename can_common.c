@@ -227,6 +227,23 @@ bool build_imu_data_msg(uint16_t message_type,
     return true;
 }
 
+bool build_state_est_data_msg(uint16_t message_type,
+                        uint32_t timestamp,
+                        uint16_t *data,   // floating point
+						enum STATE_ID data_id,
+                        can_msg_t *output)
+{
+	output->sid = MSG_STATE_EST_DATA | BOARD_UNIQUE_ID;
+	write_timestamp_3bytes(timestamp, output);
+	unsigned char *bytes = (unsigned char *)data;
+	output->data[3] = bytes[3];
+	output->data[4] = bytes[2];
+	output->data[5] = bytes[1];
+	output->data[6] = bytes[0];
+	output-data[7] = data_id;
+
+}
+
 bool build_analog_data_msg(uint32_t timestamp,
                            enum SENSOR_ID sensor_id,
                            uint16_t sensor_data,
