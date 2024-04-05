@@ -235,7 +235,7 @@ bool build_state_est_data_msg(uint16_t message_type,
 {
 	output->sid = MSG_STATE_EST_DATA | BOARD_UNIQUE_ID;
 	write_timestamp_3bytes(timestamp, output);
-	unsigned char *bytes = (unsigned char *)data;
+	uint8_t *bytes = (uint8_t *)data;
 	output->data[3] = bytes[3];
 	output->data[4] = bytes[2];
 	output->data[5] = bytes[1];
@@ -643,6 +643,22 @@ bool get_imu_data(const can_msg_t *msg, uint16_t *output_x, uint16_t *output_y, 
     *output_z = (uint16_t)msg->data[6] << 8 | msg->data[7];    // z
 
     return true;
+}
+
+bool get_state_est_data(const can_msg_t *msg, float *data, enum STATE_ID *data_id){
+	if(!msg) { return false; }
+	if(!data) { return false; }
+	if(!data_id) { return false; }
+	if(get_message_type(msg) != MSG_STATE_EST_DATA) { return false; }
+
+	uint8_t *bytes = (uint8_t*)data;
+	bytes[3] = msg->data[3];
+	bytes[2] = msg->data[4];
+	bytes[1] = msg->data[5];
+	bytes[0] = msg->data[6];
+	*data_id = msg->data[7];
+
+	return true;
 }
 
 bool get_analog_data(const can_msg_t *msg, enum SENSOR_ID *sensor_id, uint16_t *output_data)
