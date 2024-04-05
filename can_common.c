@@ -240,8 +240,9 @@ bool build_state_est_data_msg(uint16_t message_type,
 	output->data[4] = bytes[2];
 	output->data[5] = bytes[1];
 	output->data[6] = bytes[0];
-	output-data[7] = data_id;
+	output->data[7] = data_id;
 
+	return true;
 }
 
 bool build_analog_data_msg(uint32_t timestamp,
