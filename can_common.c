@@ -122,6 +122,24 @@ bool build_actuator_stat_msg(uint32_t timestamp,
     return true;
 }
 
+
+bool build_actuator_cmd_analog(uint32_t timestamp,
+								 enum ACTUATOR_ID actuator_id,
+								 float actuator_cmd,
+								 can_msg_t *output)
+{
+	if(!output) { return false; }
+
+	output->sid = MSG_ACT_ANALOG_CMD | BOARD_UNIQUE_ID;
+	write_timestamp_3bytes(timestamp, output);
+
+	memcpy(output->data+4, &actuator_cmd, sizeof(actuator_cmd));
+
+	output->data_len = 7;
+	
+	return true;
+}
+
 bool build_arm_cmd_msg(uint32_t timestamp,
                        uint8_t alt_num,
                        enum ARM_STATE arm_cmd,
@@ -405,6 +423,25 @@ bool build_gps_info_msg(uint32_t timestamp,
     output->data_len = 5;
 
     return true;
+}
+
+bool build_calibration_msg(uint32_t timestamp,
+						   uint8_t ack_flag,
+						   uint16_t apogee,
+						   can_msg_t *output)
+{
+	if(!output) { return false; }
+
+	output->sid = MSG_STATE_EST_CALIB | BOARD_UNIQUE_ID;
+	write_timestamp_3bytes(timestamp, output);
+
+	output->data[3] = ack_flag;
+	output->data[4] = apogee & 0xff;
+	output->data[5] = (apogee >> 8) & 0xff;
+
+	output->data_len = 6;
+
+	return true;
 }
 
 bool build_fill_msg(uint32_t timestamp,
@@ -814,9 +851,9 @@ bool get_gps_info(const can_msg_t *msg,
     return true;
 }
 
-bool get_calibration_apogee(const can_msg_t *msg,
-							uint8_t *ack_flag,
-							uint16_t *apogee)
+bool get_calibration_msg(const can_msg_t *msg,
+						 uint8_t *ack_flag,
+						 uint16_t *apogee)
 {
 	if (!msg) { return false; }
 	if (!ack_flag) { return false; }
@@ -824,7 +861,9 @@ bool get_calibration_apogee(const can_msg_t *msg,
 	if (get_message_type(msg) != MSG_STATE_EST_CALIB) { return false; }
 
 	*ack_flag = msg->data[3];
-	*apogee = msg->data[3] << 8 | msg->data[4];
+	*apogee = msg->data[5] << 8 | msg->data[4];
+
+	return true;
 }
 
 can_debug_level_t message_debug_level(const can_msg_t *msg)
