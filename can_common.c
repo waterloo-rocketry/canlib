@@ -133,6 +133,7 @@ bool build_actuator_cmd_analog(uint32_t timestamp,
 	output->sid = MSG_ACT_ANALOG_CMD | BOARD_UNIQUE_ID;
 	write_timestamp_3bytes(timestamp, output);
 
+	output->data[3] = actuator_id;
 	memcpy(output->data+4, &actuator_cmd, sizeof(actuator_cmd));
 
 	output->data_len = 7;
@@ -253,11 +254,7 @@ bool build_state_est_data_msg(uint16_t message_type,
 {
 	output->sid = MSG_STATE_EST_DATA | BOARD_UNIQUE_ID;
 	write_timestamp_3bytes(timestamp, output);
-	uint8_t *bytes = (uint8_t *)data;
-	output->data[3] = bytes[3];
-	output->data[4] = bytes[2];
-	output->data[5] = bytes[1];
-	output->data[6] = bytes[0];
+	memcpy(output->data + 3, data, 4);
 	output->data[7] = data_id;
 
 	return true;
@@ -436,8 +433,8 @@ bool build_calibration_msg(uint32_t timestamp,
 	write_timestamp_3bytes(timestamp, output);
 
 	output->data[3] = ack_flag;
-	output->data[4] = apogee & 0xff;
-	output->data[5] = (apogee >> 8) & 0xff;
+	output->data[4] = (apogee >> 8) & 0xff;
+	output->data[5] = apogee & 0xff;
 
 	output->data_len = 6;
 
@@ -558,7 +555,7 @@ float get_req_actuator_state_analog(const can_msg_t *msg)
         case MSG_ACT_ANALOG_CMD:
         	float value;
         	memcpy(&value, msg->data+4, sizeof(value));
-            return msg->data[5];
+            return value;
 
         default:
             // not a valid field for this message type
@@ -688,11 +685,7 @@ bool get_state_est_data(const can_msg_t *msg, float *data, enum STATE_ID *data_i
 	if(!data_id) { return false; }
 	if(get_message_type(msg) != MSG_STATE_EST_DATA) { return false; }
 
-	uint8_t *bytes = (uint8_t*)data;
-	bytes[3] = msg->data[3];
-	bytes[2] = msg->data[4];
-	bytes[1] = msg->data[5];
-	bytes[0] = msg->data[6];
+	memcpy(data, msg->data + 3, 4);
 	*data_id = msg->data[7];
 
 	return true;
