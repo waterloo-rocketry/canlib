@@ -87,6 +87,14 @@ bool build_actuator_stat_msg(uint32_t timestamp,
                              can_msg_t *output);
 
 /*
+ * Used to send motor control commands
+ */
+bool build_actuator_cmd_analog(uint32_t timestamp,
+							   enum ACTUATOR_ID actuator_id,
+							   float actuator_cmd,
+							   can_msg_t *output);
+
+/*
 * Used to send altimeter arm commands
 */
 bool build_arm_cmd_msg(uint32_t timestamp,
@@ -124,6 +132,14 @@ bool build_imu_data_msg(uint16_t message_type,  // acc, gyro, mag
                         uint32_t timestamp,
                         uint16_t *imu_data,     // x, y, z
                         can_msg_t *output);
+
+/*
+ * Used to build state estimation data
+ */
+bool build_state_est_data_msg(uint32_t timestamp,
+							  float *data,
+							  enum STATE_ID data_id,
+							  can_msg_t *output);
 
 /*
  * Used to send analog sensor data. The units of the sensor data are
@@ -209,6 +225,14 @@ bool build_gps_info_msg(uint32_t timestamp,
                         can_msg_t *output);
 
 /*
+ * Used to build state estimation calibration message
+ */
+bool build_state_est_calibration_msg(uint32_t timestamp,
+									 uint8_t ack_flag,
+									 uint16_t apogee,
+									 can_msg_t *output);
+
+/*
  * Gets the general command contained in a general command message.
  * Returns -1 if the provided message is not a general cmd message.
  */
@@ -238,6 +262,13 @@ int get_curr_actuator_state(const can_msg_t *msg);
  */
 int get_req_actuator_state(const can_msg_t *msg);
 
+ /*
+ * Returns the requested actuator state from an analog actuator 
+ * command or status message. Returns -1.0 if the provided message is not
+ * an actuator cmd/status.
+ */
+float get_req_actuator_state_analog(const can_msg_t *msg);
+
 /*
 * Gets the current arm state and which altimeter it is for.
 * Returns false if the provided message is not an arm status.
@@ -249,7 +280,6 @@ bool get_curr_arm_state(const can_msg_t *msg, uint8_t *alt_num, enum ARM_STATE *
 * Returns false if the provided message is not an arm state request."
 */
 bool get_req_arm_state(const can_msg_t *msg, uint8_t *alt_num, enum ARM_STATE *arm_state);
-
 
 /*
  * Strips the board unique ID from msg, and returns the SID. Contains
@@ -284,6 +314,14 @@ bool get_imu_data(const can_msg_t *msg,
                   uint16_t *output_x,
                   uint16_t *output_y,
                   uint16_t *output_z);
+
+/*
+ * Gets state estimation data. Returns true if
+ * successful, false if the input is invalid.
+ */
+bool get_state_est_data(const can_msg_t *msg,
+						float *data,
+						enum STATE_ID *data_id);
 
 /*
  * Gets analog data (the sensor ID and data itself) from an
@@ -368,6 +406,13 @@ bool get_gps_alt(const can_msg_t* msg,
 bool get_gps_info(const can_msg_t* msg,
                   uint8_t *num_sat,
                   uint8_t *quality);
+
+/*
+ * Get state estimation calibration message
+ */
+bool get_state_est_calibration_msg(const can_msg_t *msg,
+								   uint8_t *ack_flag,
+								   uint16_t *apogee);
 
 /*
  * Used to send fill sensing data. Currently senses fill level

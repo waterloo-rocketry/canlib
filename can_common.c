@@ -134,9 +134,9 @@ bool build_actuator_cmd_analog(uint32_t timestamp,
 	write_timestamp_3bytes(timestamp, output);
 
 	output->data[3] = actuator_id;
-	memcpy(output->data+4, &actuator_cmd, sizeof(actuator_cmd));
+	memcpy(output->data + 4, &actuator_cmd, sizeof(actuator_cmd));
 
-	output->data_len = 7;
+	output->data_len = 8;
 	
 	return true;
 }
@@ -246,15 +246,14 @@ bool build_imu_data_msg(uint16_t message_type,
     return true;
 }
 
-bool build_state_est_data_msg(uint16_t message_type,
-                        uint32_t timestamp,
-                        float *data,   // floating point
-						enum STATE_ID data_id,
-                        can_msg_t *output)
+bool build_state_est_data_msg(uint32_t timestamp,
+							  float *data,
+							  enum STATE_ID data_id,
+							  can_msg_t *output)
 {
 	output->sid = MSG_STATE_EST_DATA | BOARD_UNIQUE_ID;
 	write_timestamp_3bytes(timestamp, output);
-	memcpy(output->data + 3, data, 4);
+	memcpy(output->data + 3, data, sizeof(*data));
 	output->data[7] = data_id;
 
 	return true;
@@ -422,10 +421,10 @@ bool build_gps_info_msg(uint32_t timestamp,
     return true;
 }
 
-bool build_calibration_msg(uint32_t timestamp,
-						   uint8_t ack_flag,
-						   uint16_t apogee,
-						   can_msg_t *output)
+bool build_state_est_calibration_msg(uint32_t timestamp,
+									 uint8_t ack_flag,
+									 uint16_t apogee,
+									 can_msg_t *output)
 {
 	if(!output) { return false; }
 
@@ -559,7 +558,7 @@ float get_req_actuator_state_analog(const can_msg_t *msg)
 
         default:
             // not a valid field for this message type
-            return -1;
+            return -1.0;
     }
 }
 
@@ -685,7 +684,7 @@ bool get_state_est_data(const can_msg_t *msg, float *data, enum STATE_ID *data_i
 	if(!data_id) { return false; }
 	if(get_message_type(msg) != MSG_STATE_EST_DATA) { return false; }
 
-	memcpy(data, msg->data + 3, 4);
+	memcpy(data, msg->data + 3, sizeof(*data));
 	*data_id = msg->data[7];
 
 	return true;
@@ -844,9 +843,9 @@ bool get_gps_info(const can_msg_t *msg,
     return true;
 }
 
-bool get_calibration_msg(const can_msg_t *msg,
-						 uint8_t *ack_flag,
-						 uint16_t *apogee)
+bool get_state_est_calibration_msg(const can_msg_t *msg,
+								   uint8_t *ack_flag,
+								   uint16_t *apogee)
 {
 	if (!msg) { return false; }
 	if (!ack_flag) { return false; }
