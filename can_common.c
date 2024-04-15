@@ -39,7 +39,7 @@ bool build_general_cmd_msg(uint32_t timestamp,
 }
 
 bool build_debug_msg(uint32_t timestamp,
-                     uint8_t *debug_data,
+                     const uint8_t *debug_data,
                      can_msg_t *output)
 {
     if (!output) { return false; }
@@ -58,7 +58,7 @@ bool build_debug_msg(uint32_t timestamp,
     return true;
 }
 
-bool build_debug_printf(uint8_t *input_data,
+bool build_debug_printf(const uint8_t *input_data,
                         can_msg_t *output)
 {
     if (!output) { return false; }
@@ -188,7 +188,7 @@ bool build_arm_stat_msg(uint32_t timestamp,
 // the data layout properly.
 bool build_board_stat_msg(uint32_t timestamp,
                           enum BOARD_STATUS error_code,
-                          uint8_t *error_data,
+                          const uint8_t *error_data,
                           uint8_t error_data_len,
                           can_msg_t *output)
 {
@@ -212,8 +212,8 @@ bool build_board_stat_msg(uint32_t timestamp,
 }
 
 bool build_imu_data_msg(uint16_t message_type,
-                        uint32_t timestamp,   // acc, gyro, mag
-                        uint16_t *imu_data,   // x, y, z
+                        uint32_t timestamp, // acc, gyro, mag
+                        const uint16_t *imu_data, // x, y, z
                         can_msg_t *output)
 {
     if (!output) { return false; }
@@ -247,7 +247,7 @@ bool build_imu_data_msg(uint16_t message_type,
 }
 
 bool build_state_est_data_msg(uint32_t timestamp,
-							  float *data,
+							  const float *data,
 							  enum STATE_ID data_id,
 							  can_msg_t *output)
 {
@@ -463,7 +463,7 @@ bool get_fill_info(const can_msg_t *msg,
                    uint8_t *lvl,
                    uint8_t *direction)
 {
-    if (!msg | !lvl | !direction) { return false; }
+    if ((!msg) | (!lvl) | (!direction)) { return false; }
 
     uint16_t msg_type = get_message_type(msg);
     if (msg_type == MSG_FILL_LVL) {
@@ -550,9 +550,10 @@ float get_req_actuator_state_analog(const can_msg_t *msg)
     if (!msg) { return -1; }
 
     uint16_t msg_type = get_message_type(msg);
-    switch (msg_type) {
+	float value;
+
+	switch (msg_type) {
         case MSG_ACT_ANALOG_CMD:
-        	float value;
         	memcpy(&value, msg->data+4, sizeof(value));
             return value;
 

@@ -56,10 +56,10 @@ bool build_general_cmd_msg(uint32_t timestamp,
                            can_msg_t *output);
 
 bool build_debug_msg(uint32_t timestamp,
-                     uint8_t *debug_data,
+                     const uint8_t *debug_data,
                      can_msg_t *output);
 
-bool build_debug_printf(uint8_t *data,
+bool build_debug_printf(const uint8_t *data,
                         can_msg_t *output);
 
 /*
@@ -120,7 +120,7 @@ bool build_arm_stat_msg(uint32_t timestamp,
 */
 bool build_board_stat_msg(uint32_t timestamp,
                           enum BOARD_STATUS error_code,
-                          uint8_t *error_data,
+                          const uint8_t *error_data,
                           uint8_t error_data_len,
                           can_msg_t *output);
 
@@ -130,14 +130,14 @@ bool build_board_stat_msg(uint32_t timestamp,
  */
 bool build_imu_data_msg(uint16_t message_type,  // acc, gyro, mag
                         uint32_t timestamp,
-                        uint16_t *imu_data,     // x, y, z
+                        const uint16_t *imu_data,     // x, y, z
                         can_msg_t *output);
 
 /*
  * Used to build state estimation data
  */
 bool build_state_est_data_msg(uint32_t timestamp,
-							  float *data,
+							  const float *data,
 							  enum STATE_ID data_id,
 							  can_msg_t *output);
 
@@ -331,7 +331,6 @@ bool get_state_est_data(const can_msg_t *msg,
 bool get_analog_data(const can_msg_t *msg,
                      enum SENSOR_ID *sensor_id,
                      uint16_t *output_data);
-
 
 /*
 * Gets the temp data and sensor num, returns false if the message is not
