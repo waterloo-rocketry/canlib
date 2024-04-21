@@ -22,7 +22,7 @@
 
 #include "dspic33epxxxgp50x/dspic33epxxxgp50x_can.h"
 
-#elif defined(STM32H733XX)
+#elif ConfName == STM32H733XX
 
 #include "stm32h733/stm32h733.h"
 

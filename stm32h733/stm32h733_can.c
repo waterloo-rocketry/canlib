@@ -23,7 +23,7 @@ bool can_init_stm(FDCAN_HandleTypeDef *handle,  can_receive_callback receive_cal
 		Error_Handler();
 	}
 
-	return HAL_FDCAN_Start(handle)!= HAL_OK;
+	return HAL_FDCAN_Start(handle)== HAL_OK;
 }
 
 void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs) {
@@ -70,7 +70,7 @@ void can_send(const can_msg_t* message) {
 
 	if (HAL_FDCAN_AddMessageToTxFifoQ(fdcan_handle, &TxHeader, TxData)!= HAL_OK)
 	{
-		Error_Handler();
+		//Error_Handler();
 	}
 }
 
