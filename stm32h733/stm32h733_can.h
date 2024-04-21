@@ -22,9 +22,8 @@ typedef void (*can_receive_callback)(const can_msg_t *message, uint32_t timestam
 
 bool can_init_stm(FDCAN_HandleTypeDef *handle,  can_receive_callback receive_callback);
 
-//Register an Rx buffer for a specific canlib board and/or message type
-
-bool can_buffer_init_stm(FDCAN_HandleTypeDef *handle, uint16_t board_id, uint16_t msg_id, can_receive_callback receive_callback);
+//TODO: Register an Rx buffer for a specific canlib board and/or message type
+//bool can_buffer_init_stm(FDCAN_HandleTypeDef *handle, uint16_t board_id, uint16_t msg_id, can_receive_callback receive_callback);
 
 // send a CAN message
 void can_send(const can_msg_t* message);

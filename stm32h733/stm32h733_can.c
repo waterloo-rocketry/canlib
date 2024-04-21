@@ -5,7 +5,7 @@
  *      Author: joedo
  */
 #include "stm32h733/stm32h733_can.h"
-#include "main.h"
+#include "stm32h7xx_hal.h"
 #include <string.h>
 
 static can_receive_callback can_rcv_cb;
@@ -20,7 +20,8 @@ bool can_init_stm(FDCAN_HandleTypeDef *handle,  can_receive_callback receive_cal
 	//Enable new message interrupts on Rx FIFO0
 	if(HAL_FDCAN_ActivateNotification(handle, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0) != HAL_OK)
 	{
-		Error_Handler();
+		//Error_Handler();
+		//TODO: report error to log
 	}
 
 	return HAL_FDCAN_Start(handle)== HAL_OK;
@@ -37,7 +38,8 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 		if (HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO0, &RxHeader, RxData) != HAL_OK)
 		{
 			/* Reception Error */
-			Error_Handler();
+			//Error_Handler();
+			//TODO: handle reception error
 		}
 
 		/*if (HAL_FDCAN_ActivateNotification(hfdcan, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0) != HAL_OK) {
