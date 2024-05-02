@@ -1,6 +1,7 @@
 #include "can_common.h"
 #include "message_types.h"
 #include <stddef.h>
+#include <string.h>
 
 // this symbol should be defined in the project's Makefile, but if it
 // isn't, issue a warning and set it to 0
@@ -38,7 +39,7 @@ bool build_general_cmd_msg(uint32_t timestamp,
 }
 
 bool build_debug_msg(uint32_t timestamp,
-                     uint8_t *debug_data,
+                     const uint8_t *debug_data,
                      can_msg_t *output)
 {
     if (!output) { return false; }
@@ -57,7 +58,7 @@ bool build_debug_msg(uint32_t timestamp,
     return true;
 }
 
-bool build_debug_printf(uint8_t *input_data,
+bool build_debug_printf(const uint8_t *input_data,
                         can_msg_t *output)
 {
     if (!output) { return false; }
@@ -121,6 +122,25 @@ bool build_actuator_stat_msg(uint32_t timestamp,
     return true;
 }
 
+
+bool build_actuator_cmd_analog(uint32_t timestamp,
+								 enum ACTUATOR_ID actuator_id,
+								 float actuator_cmd,
+								 can_msg_t *output)
+{
+	if(!output) { return false; }
+
+	output->sid = MSG_ACT_ANALOG_CMD | BOARD_UNIQUE_ID;
+	write_timestamp_3bytes(timestamp, output);
+
+	output->data[3] = actuator_id;
+	memcpy(output->data + 4, &actuator_cmd, sizeof(actuator_cmd));
+
+	output->data_len = 8;
+	
+	return true;
+}
+
 bool build_arm_cmd_msg(uint32_t timestamp,
                        uint8_t alt_num,
                        enum ARM_STATE arm_cmd,
@@ -168,7 +188,7 @@ bool build_arm_stat_msg(uint32_t timestamp,
 // the data layout properly.
 bool build_board_stat_msg(uint32_t timestamp,
                           enum BOARD_STATUS error_code,
-                          uint8_t *error_data,
+                          const uint8_t *error_data,
                           uint8_t error_data_len,
                           can_msg_t *output)
 {
@@ -192,8 +212,8 @@ bool build_board_stat_msg(uint32_t timestamp,
 }
 
 bool build_imu_data_msg(uint16_t message_type,
-                        uint32_t timestamp,   // acc, gyro, mag
-                        uint16_t *imu_data,   // x, y, z
+                        uint32_t timestamp, // acc, gyro, mag
+                        const uint16_t *imu_data, // x, y, z
                         can_msg_t *output)
 {
     if (!output) { return false; }
@@ -224,6 +244,19 @@ bool build_imu_data_msg(uint16_t message_type,
     output->data_len = 8;
 
     return true;
+}
+
+bool build_state_est_data_msg(uint32_t timestamp,
+							  const float *data,
+							  enum STATE_ID data_id,
+							  can_msg_t *output)
+{
+	output->sid = MSG_STATE_EST_DATA | BOARD_UNIQUE_ID;
+	write_timestamp_3bytes(timestamp, output);
+	memcpy(output->data + 3, data, sizeof(*data));
+	output->data[7] = data_id;
+
+	return true;
 }
 
 bool build_analog_data_msg(uint32_t timestamp,
@@ -388,6 +421,25 @@ bool build_gps_info_msg(uint32_t timestamp,
     return true;
 }
 
+bool build_state_est_calibration_msg(uint32_t timestamp,
+									 uint8_t ack_flag,
+									 uint16_t apogee,
+									 can_msg_t *output)
+{
+	if(!output) { return false; }
+
+	output->sid = MSG_STATE_EST_CALIB | BOARD_UNIQUE_ID;
+	write_timestamp_3bytes(timestamp, output);
+
+	output->data[3] = ack_flag;
+	output->data[4] = (apogee >> 8) & 0xff;
+	output->data[5] = apogee & 0xff;
+
+	output->data_len = 6;
+
+	return true;
+}
+
 bool build_fill_msg(uint32_t timestamp,
                     uint8_t lvl,
                     uint8_t direction,
@@ -411,7 +463,7 @@ bool get_fill_info(const can_msg_t *msg,
                    uint8_t *lvl,
                    uint8_t *direction)
 {
-    if (!msg | !lvl | !direction) { return false; }
+    if ((!msg) | (!lvl) | (!direction)) { return false; }
 
     uint16_t msg_type = get_message_type(msg);
     if (msg_type == MSG_FILL_LVL) {
@@ -453,6 +505,7 @@ int get_actuator_id(const can_msg_t *msg) {
     switch (msg_type) {
         case MSG_ACTUATOR_CMD:
         case MSG_ACTUATOR_STATUS:
+        case MSG_ACT_ANALOG_CMD:
             return msg->data[3];
 
         default:
@@ -489,6 +542,24 @@ int get_req_actuator_state(const can_msg_t *msg)
         default:
             // not a valid field for this message type
             return -1;
+    }
+}
+
+float get_req_actuator_state_analog(const can_msg_t *msg)
+{
+    if (!msg) { return -1; }
+
+    uint16_t msg_type = get_message_type(msg);
+	float value;
+
+	switch (msg_type) {
+        case MSG_ACT_ANALOG_CMD:
+        	memcpy(&value, msg->data+4, sizeof(value));
+            return value;
+
+        default:
+            // not a valid field for this message type
+            return -1.0;
     }
 }
 
@@ -552,12 +623,14 @@ uint32_t get_timestamp(const can_msg_t *msg)
         case MSG_RESET_CMD:
         case MSG_FILL_LVL:
         case MSG_SENSOR_ALTITUDE:
-        case MSG_STATE_EST:
+        case MSG_STATE_EST_DATA:
         case MSG_SENSOR_ACC:
         case MSG_SENSOR_ACC2:
         case MSG_SENSOR_GYRO:
         case MSG_SENSOR_MAG:
         case MSG_SENSOR_ANALOG:
+        case MSG_ACT_ANALOG_CMD:
+        case MSG_STATE_EST_CALIB:
             return (uint32_t)msg->data[0] << 8
                    | msg->data[1];
 
@@ -604,6 +677,18 @@ bool get_imu_data(const can_msg_t *msg, uint16_t *output_x, uint16_t *output_y, 
     *output_z = (uint16_t)msg->data[6] << 8 | msg->data[7];    // z
 
     return true;
+}
+
+bool get_state_est_data(const can_msg_t *msg, float *data, enum STATE_ID *data_id){
+	if(!msg) { return false; }
+	if(!data) { return false; }
+	if(!data_id) { return false; }
+	if(get_message_type(msg) != MSG_STATE_EST_DATA) { return false; }
+
+	memcpy(data, msg->data + 3, sizeof(*data));
+	*data_id = msg->data[7];
+
+	return true;
 }
 
 bool get_analog_data(const can_msg_t *msg, enum SENSOR_ID *sensor_id, uint16_t *output_data)
@@ -759,11 +844,26 @@ bool get_gps_info(const can_msg_t *msg,
     return true;
 }
 
+bool get_state_est_calibration_msg(const can_msg_t *msg,
+								   uint8_t *ack_flag,
+								   uint16_t *apogee)
+{
+	if (!msg) { return false; }
+	if (!ack_flag) { return false; }
+	if (!apogee) { return false; }
+	if (get_message_type(msg) != MSG_STATE_EST_CALIB) { return false; }
+
+	*ack_flag = msg->data[3];
+	*apogee = msg->data[5] << 8 | msg->data[4];
+
+	return true;
+}
+
 can_debug_level_t message_debug_level(const can_msg_t *msg)
 {
     uint16_t type = get_message_type(msg);
     if (type != MSG_DEBUG_MSG) {
-        return NONE;
+        return LVL_NONE;
     } else {
         // As per the spreadsheet, the debug level of a DEBUG_MSG is
         // stored in the top nibble of the 4th data byte (yeah, I
