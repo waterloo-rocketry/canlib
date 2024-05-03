@@ -158,13 +158,16 @@ enum ARM_STATE {
 enum BOARD_STATUS {
     E_NOMINAL = 0,              // x                x                   x                   x
 
-    E_BUS_OVER_CURRENT,         // mA_high          mA_low              x                   x
-    E_BUS_UNDER_VOLTAGE,        // mV_high          mV_low              x                   x
-    E_BUS_OVER_VOLTAGE,         // mV_high          mV_low              x                   x
+    E_5V_OVER_CURRENT,         // mA_high          mA_low              x                   x
+    E_5V_UNDER_VOLTAGE,        // mV_high          mV_low              x                   x
+    E_5V_OVER_VOLTAGE,         // mV_high          mV_low              x                   x
 
-    E_BATT_OVER_CURRENT,        // mA_high          mA_low              x                   x
-    E_BATT_UNDER_VOLTAGE,       // mV_high          mV_low              x                   x
-    E_BATT_OVER_VOLTAGE,        // mV_high          mV_low              x                   x
+    E_BATT_OVER_CURRENT,       // mA_high          mA_low              x                   x
+    E_BATT_UNDER_VOLTAGE,      // mV_high          mV_low              x                   x
+    E_BATT_OVER_VOLTAGE,       // mV_high          mV_low              x                   x
+
+    E_13V_OVER_CURRENT,        // mA_high          mA_low              x                   x
+    E_MOTOR_OVER_CURRENT,      // mA_high          mA_low              x                   x
 
     E_BOARD_FEARED_DEAD,        // board_id         x                   x                   x
     E_NO_CAN_TRAFFIC,           // time_s_high      time_s_low          x                   x
@@ -186,10 +189,12 @@ enum BOARD_STATUS {
 };
 
 enum SENSOR_ID {
-    SENSOR_BUS_CURR = 0,
+    SENSOR_5V_CURR = 0,
     SENSOR_BATT_CURR,
     SENSOR_BATT_VOLT,
     SENSOR_CHARGE_CURR,
+    SENSOR_13V_CURR,
+    SENSOR_MOTOR_CURR,
     SENSOR_GROUND_VOLT,
     SENSOR_PRESSURE_OX,
     SENSOR_PRESSURE_CC,
