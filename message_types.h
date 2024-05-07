@@ -61,7 +61,6 @@
 #define MSG_SENSOR_A506           0x2E0
 #define MSG_FAKE_RPM              0x2C0
 #define SENSOR_SPOOF              0x0A0
-#define CLEAR_SENSOR_SPOOF        0x0E0
 
 // Board IDs
 #define BOARD_ID_ACTUATOR_INJ      0x01
@@ -85,7 +84,6 @@
 #define BOARD_ID_USB               0x13
 #define BOARD_ID_RLCS              0x14
 #define BOARD_ID_FYDPSEQUENCER     0x15
-
 /*
  * General message type format (from spreadsheet):
  * (Version 0.7.0)
@@ -235,7 +233,6 @@ enum FILL_DIRECTION {
 enum ACTUATOR_ID {
     VA101,
     VA201,
-    VA202,
     VA301,
     VA302,
     VA303,
