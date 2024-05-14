@@ -25,7 +25,7 @@ static bool test_message_debug_level(void)
         REPORT_FAIL("fail on build_can_message when level is ERROR");
         ret = false;
     }
-    if (ERROR != message_debug_level(&output)) {
+    if (LVL_ERROR != message_debug_level(&output)) {
         REPORT_FAIL("fail on message_debug_level when level is ERROR");
         ret = false;
     }
@@ -36,7 +36,7 @@ static bool test_message_debug_level(void)
         REPORT_FAIL("fail on build_can_message when level is WARN");
         ret = false;
     }
-    if (WARN != message_debug_level(&output)) {
+    if (LVL_WARN != message_debug_level(&output)) {
         REPORT_FAIL("fail on message_debug_level when level is WARN");
         ret = false;
     }
@@ -46,7 +46,7 @@ static bool test_message_debug_level(void)
         REPORT_FAIL("fail on build_can_message when level is INFO");
         ret = false;
     }
-    if (INFO != message_debug_level(&output)) {
+    if (LVL_INFO != message_debug_level(&output)) {
         REPORT_FAIL("fail on message_debug_level when level is INFO");
         ret = false;
     }
@@ -56,7 +56,7 @@ static bool test_message_debug_level(void)
         REPORT_FAIL("fail on build_can_message when level is DEBUG");
         ret = false;
     }
-    if (DEBUGGING != message_debug_level(&output)) {
+    if (LVL_DEBUG != message_debug_level(&output)) {
         REPORT_FAIL("fail on message_debug_level when level is DEBUG");
         ret = false;
     }
@@ -243,7 +243,7 @@ bool test_debug_macro(void)
     // right
     can_msg_t output;
     int linum = __LINE__ + 1;
-    LOG_MSG(ERROR, 0, output);
+    LOG_MSG(LVL_ERROR, 0, output);
 
     bool ret = true;
 
@@ -263,7 +263,7 @@ bool test_debug_macro(void)
         // check that the bottom byte of linum was put in this byte of
         // the data
         ret = false;
-    } else if (message_debug_level(&output) != ERROR) {
+    } else if (message_debug_level(&output) != LVL_ERROR) {
         // Check the debug level. This is more of a test that the
         // message_debug_level function works, since we already
         // checked that the top nibble of data[3] was 0x01
