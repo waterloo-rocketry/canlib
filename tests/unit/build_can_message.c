@@ -246,7 +246,7 @@ static bool test_arm_cmd(void){
 }
 
 static bool test_arm_status(void){
-    uint32_t timestamp = 0x12345678;
+    uint32_t timestamp = 0x00123456;
     can_msg_t output;
 
     bool ret = true;
