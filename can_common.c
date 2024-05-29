@@ -630,7 +630,7 @@ uint32_t get_timestamp(const can_msg_t *msg)
 
         // 2 byte timestamp
         case MSG_SENSOR_ACC:
-        // case MSG_SENSOR_ACC2:
+        case MSG_SENSOR_ACC2:
         case MSG_SENSOR_GYRO:
         case MSG_SENSOR_MAG:
         case MSG_SENSOR_ANALOG:
