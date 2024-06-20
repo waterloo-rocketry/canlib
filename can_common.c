@@ -624,15 +624,17 @@ uint32_t get_timestamp(const can_msg_t *msg)
         case MSG_FILL_LVL:
         case MSG_SENSOR_ALTITUDE:
         case MSG_STATE_EST_DATA:
+        case MSG_ACT_ANALOG_CMD:
+        case MSG_STATE_EST_CALIB:
+            return (uint32_t)msg->data[0] << 16 | msg->data[1] << 8 | msg->data[2];
+
+        // 2 byte timestamp
         case MSG_SENSOR_ACC:
         case MSG_SENSOR_ACC2:
         case MSG_SENSOR_GYRO:
         case MSG_SENSOR_MAG:
         case MSG_SENSOR_ANALOG:
-        case MSG_ACT_ANALOG_CMD:
-        case MSG_STATE_EST_CALIB:
-            return (uint32_t)msg->data[0] << 8
-                   | msg->data[1];
+            return (uint32_t)msg->data[0] << 8 | msg->data[1];
 
         // no timestamp
         case MSG_DEBUG_PRINTF:

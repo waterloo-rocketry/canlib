@@ -1,6 +1,7 @@
 CC=gcc
 
 CFLAGS+=-Wall
+CFLAGS+=-Wextra
 CFLAGS+=-Werror
 
 objects  =unit_tests.o
