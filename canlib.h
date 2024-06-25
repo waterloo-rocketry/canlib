@@ -9,7 +9,11 @@
 #include "util/can_tx_buffer.h"
 #include "util/timing_util.h"
 
-#if ConfName == PIC18F26K83
+#if (defined(STM32H733xx) || defined(STM32H750xx))
+
+#include "stm32h7/stm32h7_can.h"
+
+#elif ConfName == PIC18F26K83
 
 #include "pic18f26k83/pic18f26k83_can.h"
 #include "pic18f26k83/pic18f26k83_timer.h"
@@ -21,10 +25,6 @@
 #elif ConfName == DSPIC33EPXXXGP50X
 
 #include "dspic33epxxxgp50x/dspic33epxxxgp50x_can.h"
-
-#elif ConfName == STM32H733XX
-
-#include "stm32h733/stm32h733.h"
 
 #else
 

@@ -1,12 +1,7 @@
-/*
- * stm32h733_can.c
- *
- *  Created on: Mar 16, 2024
- *      Author: joedo
- */
-#include "stm32h733/stm32h733_can.h"
-#include "stm32h7xx_hal.h"
 #include <string.h>
+
+#include "stm32h7/stm32h7_can.h"
+#include "stm32h7xx_hal.h"
 
 static can_receive_callback can_rcv_cb;
 //static uint16_t RxBufferIdx = 0;
