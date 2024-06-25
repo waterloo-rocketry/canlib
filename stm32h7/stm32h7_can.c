@@ -49,7 +49,7 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 	can_rcv_cb(&rcvd_msg, RxHeader.RxTimestamp);
 }
 
-void can_send(const can_msg_t* message) {
+bool can_send(const can_msg_t* message) {
 	FDCAN_TxHeaderTypeDef TxHeader;
 	uint8_t TxData[8] = {0};
 
@@ -67,8 +67,9 @@ void can_send(const can_msg_t* message) {
 
 	if (HAL_FDCAN_AddMessageToTxFifoQ(fdcan_handle, &TxHeader, TxData)!= HAL_OK)
 	{
-		//Error_Handler();
+		return false;
 	}
+	return true;
 }
 
 bool can_send_rdy(void) {
