@@ -1,15 +1,10 @@
-/*
- * stm32h733_can.h
- *
- *  Created on: Mar 16, 2024
- *      Author: joedo
- */
-#include "stm32h7xx_hal.h"
-#include "canlib.h"
 #include <stdbool.h>
 
-#ifndef STM32H733_STM32H733_CAN_H_
-#define STM32H733_STM32H733_CAN_H_
+#include "stm32h7xx_hal.h"
+#include "canlib.h"
+
+#ifndef _STM32H7_CAN_H
+#define _STM32H7_CAN_H
 
 /* CAN module should be automatically initialized by static void MX_FDCANx_Init
  * This library is deseigned to use CANRxFIFO0 by default, which is not filtered
@@ -25,11 +20,10 @@ bool can_init_stm(FDCAN_HandleTypeDef *handle,  can_receive_callback receive_cal
 //TODO: Register an Rx buffer for a specific canlib board and/or message type
 //bool can_buffer_init_stm(FDCAN_HandleTypeDef *handle, uint16_t board_id, uint16_t msg_id, can_receive_callback receive_callback);
 
-// send a CAN message
-void can_send(const can_msg_t* message);
+// send a CAN message, return true if succeeed
+bool can_send(const can_msg_t* message);
 
 // returns true if the CAN module is ready to send a message
 bool can_send_rdy(void);
 
-
-#endif /* STM32H733_STM32H733_CAN_H_ */
+#endif
