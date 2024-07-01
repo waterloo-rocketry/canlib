@@ -43,7 +43,7 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 		}*/
 	}
 	can_msg_t rcvd_msg;
-	rcvd_msg.data_len = 0x8; //HAL uses defines for data length. Better off using constant length than doing bit shifts
+	rcvd_msg.data_len = RxHeader.DataLength;
 	rcvd_msg.sid = RxHeader.Identifier;
 	memcpy(rcvd_msg.data, RxData, rcvd_msg.data_len);
 	can_rcv_cb(&rcvd_msg, RxHeader.RxTimestamp);
