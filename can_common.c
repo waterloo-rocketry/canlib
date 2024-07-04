@@ -255,6 +255,7 @@ bool build_state_est_data_msg(uint32_t timestamp,
 	write_timestamp_3bytes(timestamp, output);
 	memcpy(output->data + 3, data, sizeof(*data));
 	output->data[7] = data_id;
+	output->data_len = 8;
 
 	return true;
 }
