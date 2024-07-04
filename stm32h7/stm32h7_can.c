@@ -43,7 +43,7 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 		}*/
 	}
 	can_msg_t rcvd_msg;
-	rcvd_msg.data_len = RxHeader.DataLength;
+	rcvd_msg.data_len = RxHeader.DataLength; // For CAN 2.0 message FDCAN_DLC equals to actual length
 	rcvd_msg.sid = RxHeader.Identifier;
 	memcpy(rcvd_msg.data, RxData, rcvd_msg.data_len);
 	can_rcv_cb(&rcvd_msg, RxHeader.RxTimestamp);
@@ -59,7 +59,7 @@ bool can_send(const can_msg_t* message) {
 	TxHeader.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
 	TxHeader.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
 	TxHeader.BitRateSwitch = FDCAN_BRS_OFF;
-	TxHeader.DataLength = FDCAN_DLC_BYTES_8;
+	TxHeader.DataLength = message->data_len; // For CAN 2.0 message FDCAN_DLC equals to actual length
 	TxHeader.MessageMarker = 0;
 	TxHeader.Identifier = message->sid;
 
