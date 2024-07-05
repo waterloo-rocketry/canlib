@@ -136,7 +136,7 @@ bool build_actuator_cmd_analog(uint32_t timestamp,
 	output->data[3] = actuator_id;
 	output->data[4] = actuator_cmd;
 
-	output->data_len = 8;
+	output->data_len = 5;
 	
 	return true;
 }
@@ -546,9 +546,9 @@ int get_req_actuator_state(const can_msg_t *msg)
     }
 }
 
-int get_req_actuator_state_analog(const can_msg_t *msg)
+uint8_t get_req_actuator_state_analog(const can_msg_t *msg)
 {
-    if (!msg) { return -1; }
+    if (!msg) { return 0; }
 
     uint16_t msg_type = get_message_type(msg);
 	switch (msg_type) {
@@ -557,7 +557,7 @@ int get_req_actuator_state_analog(const can_msg_t *msg)
 
         default:
             // not a valid field for this message type
-            return -1;
+            return 0;
     }
 }
 

@@ -267,7 +267,7 @@ int get_req_actuator_state(const can_msg_t *msg);
  * command or status message. Returns -1.0 if the provided message is not
  * an actuator cmd/status.
  */
-float get_req_actuator_state_analog(const can_msg_t *msg);
+uint8_t get_req_actuator_state_analog(const can_msg_t *msg);
 
 /*
 * Gets the current arm state and which altimeter it is for.
