@@ -125,7 +125,7 @@ bool build_actuator_stat_msg(uint32_t timestamp,
 
 bool build_actuator_cmd_analog(uint32_t timestamp,
 								 enum ACTUATOR_ID actuator_id,
-								 float actuator_cmd,
+								 uint8_t actuator_cmd,
 								 can_msg_t *output)
 {
 	if(!output) { return false; }
@@ -134,7 +134,7 @@ bool build_actuator_cmd_analog(uint32_t timestamp,
 	write_timestamp_3bytes(timestamp, output);
 
 	output->data[3] = actuator_id;
-	memcpy(output->data + 4, &actuator_cmd, sizeof(actuator_cmd));
+	output->data[4] = actuator_cmd;
 
 	output->data_len = 8;
 	

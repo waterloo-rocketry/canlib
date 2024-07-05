@@ -91,7 +91,7 @@ bool build_actuator_stat_msg(uint32_t timestamp,
  */
 bool build_actuator_cmd_analog(uint32_t timestamp,
 							   enum ACTUATOR_ID actuator_id,
-							   float actuator_cmd,
+							   uint8_t actuator_cmd,
 							   can_msg_t *output);
 
 /*
