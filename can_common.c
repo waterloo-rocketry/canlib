@@ -125,7 +125,7 @@ bool build_actuator_stat_msg(uint32_t timestamp,
 
 bool build_actuator_cmd_analog(uint32_t timestamp,
 								 enum ACTUATOR_ID actuator_id,
-								 float actuator_cmd,
+								 uint8_t actuator_cmd,
 								 can_msg_t *output)
 {
 	if(!output) { return false; }
@@ -134,9 +134,9 @@ bool build_actuator_cmd_analog(uint32_t timestamp,
 	write_timestamp_3bytes(timestamp, output);
 
 	output->data[3] = actuator_id;
-	memcpy(output->data + 4, &actuator_cmd, sizeof(actuator_cmd));
+	output->data[4] = actuator_cmd;
 
-	output->data_len = 8;
+	output->data_len = 5;
 	
 	return true;
 }
@@ -546,21 +546,18 @@ int get_req_actuator_state(const can_msg_t *msg)
     }
 }
 
-float get_req_actuator_state_analog(const can_msg_t *msg)
+uint8_t get_req_actuator_state_analog(const can_msg_t *msg)
 {
-    if (!msg) { return -1; }
+    if (!msg) { return 0; }
 
     uint16_t msg_type = get_message_type(msg);
-	float value;
-
 	switch (msg_type) {
         case MSG_ACT_ANALOG_CMD:
-        	memcpy(&value, msg->data+4, sizeof(value));
-            return value;
+            return msg->data[4];
 
         default:
             // not a valid field for this message type
-            return -1.0;
+            return 0;
     }
 }
 
