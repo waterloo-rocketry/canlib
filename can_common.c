@@ -546,21 +546,18 @@ int get_req_actuator_state(const can_msg_t *msg)
     }
 }
 
-float get_req_actuator_state_analog(const can_msg_t *msg)
+int get_req_actuator_state_analog(const can_msg_t *msg)
 {
     if (!msg) { return -1; }
 
     uint16_t msg_type = get_message_type(msg);
-	float value;
-
 	switch (msg_type) {
         case MSG_ACT_ANALOG_CMD:
-        	memcpy(&value, msg->data+4, sizeof(value));
-            return value;
+            return msg->data[4];
 
         default:
             // not a valid field for this message type
-            return -1.0;
+            return -1;
     }
 }
 
