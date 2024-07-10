@@ -854,7 +854,7 @@ bool get_state_est_calibration_msg(const can_msg_t *msg,
 	if (get_message_type(msg) != MSG_STATE_EST_CALIB) { return false; }
 
 	*ack_flag = msg->data[3];
-	*apogee = msg->data[5] << 8 | msg->data[4];
+	*apogee = msg->data[4] << 8 | msg->data[5];
 
 	return true;
 }
