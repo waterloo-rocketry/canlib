@@ -50,6 +50,13 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 }
 
 bool can_send(const can_msg_t* message) {
+	// Reinit the CAN module if a bus off state was detected
+	FDCAN_ProtocolStatusTypeDef protocolStatus = {};
+	HAL_FDCAN_GetProtocolStatus(fdcan_handle, &protocolStatus);
+	if (protocolStatus.BusOff) {
+		CLEAR_BIT(fdcan_handle->Instance->CCCR, FDCAN_CCCR_INIT);
+	}
+
 	FDCAN_TxHeaderTypeDef TxHeader;
 	uint8_t TxData[8] = {0};
 
