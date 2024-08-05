@@ -181,6 +181,7 @@ enum BOARD_STATUS {
     E_LOGGING,                  // error_type       x                   x                   x
     E_GPS,                      // x                x                   x                   x
     E_SENSOR,                   // sensor_id        x                   x                   x
+    E_VIDEO,                    // state            x                   x                   x
 
     E_ILLEGAL_CAN_MSG,          // x                x                   x                   x
     E_SEGFAULT,                 // x                x                   x                   x
@@ -214,7 +215,8 @@ enum SENSOR_ID {
     SENSOR_PAYLOAD_TEMP,
     SENSOR_PAYLOAD_FLOW_RATE,
     SENSOR_9V_BATT_CURR_1,
-    SENSOR_9V_BATT_CURR_2
+    SENSOR_9V_BATT_CURR_2,
+    SENSOR_FPS
 };
 
 enum FILL_DIRECTION {
