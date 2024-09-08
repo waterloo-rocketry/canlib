@@ -89,14 +89,16 @@ void can_send(const can_msg_t* message) {
     }
 
     // argument checking
-    if(message->data_len > 8 || message->sid > 0x7FF) {
+    if(message->data_len > 8 || message->sid > 0x1FFFFFFF) {
         return;
     }
 
     // All messages are the highest priority
     TXB0CONbits.TXPRI = 0;
-    TXB0SIDH = ((message->sid) >> 3);
-    TXB0SIDL = (((message->sid) & 0x7) << 5);
+    TXB0SIDH = (message->sid >> 21);
+    TXB0SIDL = (((message->sid >> 18) & 0x7) << 5) | (1 << 3) | ((message->sid >> 16) & 0x3);
+    TXB0EIDH = message->sid >> 8;
+    TXB0EIDL = message->sid;
 
     // not an RTR message, we don't support those
     TXB0DLCbits.TXRTR = 0;
@@ -136,7 +138,12 @@ void can_handle_interrupt() {
     // and calling the application code provided callback
     if (PIR5bits.RXB0IF) {
         can_msg_t rcvd_msg;
-        rcvd_msg.sid = (((uint16_t)RXB0SIDH) << 3) | (RXB0SIDL >> 5);
+        rcvd_msg.sid = (uint32_t)RXB0SIDH << 21;
+        rcvd_msg.sid |= (((uint32_t)RXB0SIDL >> 5) & 0x7) << 18;
+        rcvd_msg.sid |= ((uint32_t)RXB0SIDL & 0x3) << 16;
+        rcvd_msg.sid |= (uint32_t)RXB0EIDH << 8;
+        rcvd_msg.sid |= RXB0EIDL;
+
         rcvd_msg.data_len = RXB0DLCbits.DLC;
         memcpy(rcvd_msg.data, (const void *) &RXB0D0, rcvd_msg.data_len);
 
@@ -151,7 +158,12 @@ void can_handle_interrupt() {
     } else if (PIR5bits.RXB1IF) {
 
         can_msg_t rcvd_msg;
-        rcvd_msg.sid = (((uint16_t)RXB1SIDH) << 3) | (RXB1SIDL >> 5);
+        rcvd_msg.sid = (uint32_t)RXB1SIDH << 21;
+        rcvd_msg.sid |= (((uint32_t)RXB1SIDL >> 5) & 0x7) << 18;
+        rcvd_msg.sid |= ((uint32_t)RXB1SIDL & 0x3) << 16;
+        rcvd_msg.sid |= (uint32_t)RXB1EIDH << 8;
+        rcvd_msg.sid |= RXB1EIDL;
+
         rcvd_msg.data_len = RXB1DLCbits.DLC;
         memcpy(rcvd_msg.data, (const void *) &RXB1D0, rcvd_msg.data_len);
 

@@ -89,8 +89,10 @@ void mcp_can_send(can_msg_t *msg) {
     mcp_write_reg(CANINTF, 0);     // clear interrupt flag register
     mcp_write_reg(EFLG, 0);
 
-    mcp_write_reg(TXB0SIDH, (uint8_t) (msg->sid >> 3));          // set sid
-    mcp_write_reg(TXB0SIDL, (msg->sid & 0x7) << 5);              // set sid
+    mcp_write_reg(TXB0SIDH, msg->sid >> 21);
+    mcp_write_reg(TXB0SIDL, (((msg->sid >> 18) & 0x7) << 5) | (1 << 3) | ((msg->sid >> 16) & 0x3));
+    mcp_write_reg(TXB0EID8, msg->sid >> 8);
+    mcp_write_reg(TXB0EID0, msg->sid);
 
     // data registers are consecutive
     for (int i = 0; i < msg->data_len; ++i) {
@@ -112,7 +114,13 @@ bool mcp_can_receive(can_msg_t *msg) {
         // rxb0 is full
         uint8_t sid_h = mcp_read_reg(RXB0SIDH);
         uint8_t sid_l = mcp_read_reg(RXB0SIDL);
-        msg->sid = ((uint16_t)sid_h << 3) | sid_l >> 5;
+        uint8_t eid_h = mcp_read_reg(RXB0EID8);
+        uint8_t eid_l = mcp_read_reg(RXB0EID0);
+        msg->sid = (uint32_t)sid_h << 21;
+        msg->sid |= (((uint32_t)sid_l >> 5) & 0x7) << 18;
+        msg->sid |= ((uint32_t)eid_l & 0x3) << 16;
+        msg->sid |= (uint32_t)eid_h << 8;
+        msg->sid |= eid_l;
 
         msg->data_len = mcp_read_reg(RXB0DLC) & 0xf;
         for (int i = 0; i < msg->data_len; ++i) {
@@ -124,7 +132,13 @@ bool mcp_can_receive(can_msg_t *msg) {
         // rxb1 is full - lower priority
         uint8_t sid_h = mcp_read_reg(RXB1SIDH);
         uint8_t sid_l = mcp_read_reg(RXB1SIDL);
-        msg->sid = ((uint16_t)sid_h << 3) | sid_l >> 5;
+        uint8_t eid_h = mcp_read_reg(RXB1EID8);
+        uint8_t eid_l = mcp_read_reg(RXB1EID0);
+        msg->sid = (uint32_t)sid_h << 21;
+        msg->sid |= (((uint32_t)sid_l >> 5) & 0x7) << 18;
+        msg->sid |= ((uint32_t)eid_l & 0x3) << 16;
+        msg->sid |= (uint32_t)eid_h << 8;
+        msg->sid |= eid_l;
 
         msg->data_len = mcp_read_reg(RXB1DLC) & 0xf;
         for (int i = 0; i < msg->data_len; ++i) {
