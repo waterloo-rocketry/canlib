@@ -118,7 +118,7 @@ bool mcp_can_receive(can_msg_t *msg) {
         uint8_t eid_l = mcp_read_reg(RXB0EID0);
         msg->sid = (uint32_t)sid_h << 21;
         msg->sid |= (((uint32_t)sid_l >> 5) & 0x7) << 18;
-        msg->sid |= ((uint32_t)eid_l & 0x3) << 16;
+        msg->sid |= ((uint32_t)sid_l & 0x3) << 16;
         msg->sid |= (uint32_t)eid_h << 8;
         msg->sid |= eid_l;
 
@@ -136,7 +136,7 @@ bool mcp_can_receive(can_msg_t *msg) {
         uint8_t eid_l = mcp_read_reg(RXB1EID0);
         msg->sid = (uint32_t)sid_h << 21;
         msg->sid |= (((uint32_t)sid_l >> 5) & 0x7) << 18;
-        msg->sid |= ((uint32_t)eid_l & 0x3) << 16;
+        msg->sid |= ((uint32_t)sid_l & 0x3) << 16;
         msg->sid |= (uint32_t)eid_h << 8;
         msg->sid |= eid_l;
 
