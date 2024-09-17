@@ -85,13 +85,10 @@ void init_can(const can_timing_t *timing,
 // priority, 3 is highest
 void can_send(const can_msg_t* message) {
     // put the SID in buffer 0 of the DMA buffers
-    can_msg_buf[0][0] = (message->sid << 2);
-
-    // no extended identifier
-    can_msg_buf[0][1] = 0;
-
-    // set the length, other bits are zero because no EID
-    can_msg_buf[0][2] = message->data_len;
+    can_msg_buf[0][0] = ((message->sid >> 18) << 2) | 0x3;
+    can_msg_buf[0][1] = (message->sid >> 6) & 0xfff;
+    // set the length and rest of EID
+    can_msg_buf[0][2] = ((message->sid & 0x3f) << 10) | message->data_len;
 
     // copy data over. Note that this is a 16 bit part, so we
     // interlace the bytes of data. To see the structure that the CAN
@@ -168,7 +165,9 @@ void __attribute__((__interrupt__, no_auto_psv)) _C1Interrupt(void) {
 // Converts the DsPIC's internal CAN message buffer format into our
 // message struct format
 static void buffer_to_msg(const unsigned int *buffer, can_msg_t *received) {
-    received->sid = ((buffer[0] >> 2) & 0x7ff);
+    received->sid = ((buffer[0] >> 2) & 0x7ff) << 18;
+    received->sid |= (buffer[1] & 0xfff) << 6;
+    received->sid |= (buffer[2] >> 10) & 0x3f;
     received->data_len = (buffer[2] & 0x0f);
     // fallthroughs are intentional
     switch(received->data_len) {
