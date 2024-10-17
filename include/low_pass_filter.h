@@ -16,4 +16,7 @@ w_status_t low_pass_filter_init(double *alpha, double response_time);
 // Updates the low-pass filter with a new value and returns the updated filter value
 uint16_t update_low_pass(double *alpha, uint16_t new_value, double *low_pass_value);
 
+// Updates the low-pass filter with a new value and returns the updated filter value
+uint16_t update_low_pass(double *alpha, uint16_t new_value, double *low_pass_value);
+
 #endif /* ROCKETLIB_LOW_PASS_FILTER_H */
