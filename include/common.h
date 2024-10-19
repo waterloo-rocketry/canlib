@@ -4,6 +4,6 @@
 typedef enum {
     W_SUCCESS = 0,
     W_FAILURE
-} status_t;
+} w_status_t;
 
 #endif
