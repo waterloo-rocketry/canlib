@@ -2,7 +2,6 @@
 #define ROCKETLIB_LOW_PASS_FILTER_H
 
 #include "common.h"
-#include <xc.h>
 
 // Macro to calculate the sample frequency based on the time difference in milliseconds
 #define SAMPLE_FREQ(time_diff_ms) (1000.0 / (time_diff_ms))
