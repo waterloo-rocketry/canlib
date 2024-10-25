@@ -3,6 +3,6 @@
 
 #include "common.h"
 
-status_t low_pass_filter_init(void);
+w_status_t low_pass_filter_init(void);
 
 #endif
