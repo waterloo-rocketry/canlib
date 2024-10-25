@@ -3,7 +3,12 @@
 
 typedef enum {
     W_SUCCESS = 0,
-    W_FAILURE
+    W_FAILURE,
+    W_INVALID_PARAM,
+    W_IO_ERROR,
+    W_IO_TIMEOUT,
+    W_MATH_ERROR,
+    W_OVERFLOW
 } w_status_t;
 
 void w_assert_fail(const char *file, int line, const char *statement);
