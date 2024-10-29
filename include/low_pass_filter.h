@@ -2,6 +2,7 @@
 #define ROCKETLIB_LOW_PASS_FILTER_H
 
 #include "common.h"
+#include "stdint.h"
 
 // Macro to calculate the sample frequency based on the time difference in milliseconds
 #define SAMPLE_FREQ(time_diff_ms) (1000.0 / (time_diff_ms))
@@ -11,9 +12,6 @@
 
 // Initializes the low-pass filter by calculating the alpha value based on the response time
 w_status_t low_pass_filter_init(double *alpha, double response_time);
-
-// Updates the low-pass filter with a new value and returns the updated filter value
-uint16_t update_low_pass(double *alpha, uint16_t new_value, double *low_pass_value);
 
 // Updates the low-pass filter with a new value and returns the updated filter value
 uint16_t update_low_pass(double *alpha, uint16_t new_value, double *low_pass_value);
