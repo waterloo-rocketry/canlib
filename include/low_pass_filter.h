@@ -3,6 +3,7 @@
 
 #include "common.h"
 #include <stdbool.h>
+#include <stdint.h>
 
 // Macro to calculate the sample frequency based on the time difference in milliseconds
 #define SAMPLE_FREQ(time_diff_ms) (1000.0 / (time_diff_ms))
