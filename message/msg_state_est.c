@@ -3,8 +3,8 @@
 #include <string.h>
 
 #include "can.h"
-#include "common.h"
 #include "message_types.h"
+#include "msg_common.h"
 #include "msg_state_est.h"
 
 bool build_state_est_data_msg(

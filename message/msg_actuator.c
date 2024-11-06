@@ -2,9 +2,9 @@
 #include <stdint.h>
 
 #include "can.h"
-#include "common.h"
 #include "message_types.h"
 #include "msg_actuator.h"
+#include "msg_common.h"
 
 bool build_actuator_cmd_msg(
     enum MESSAGE_PRIO prio, uint32_t timestamp, enum ACTUATOR_ID actuator_id,

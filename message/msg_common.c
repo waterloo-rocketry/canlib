@@ -2,7 +2,6 @@
 #include <stdint.h>
 
 #include "can.h"
-#include "common.h"
 #include "message_types.h"
 #include "msg_common.h"
 

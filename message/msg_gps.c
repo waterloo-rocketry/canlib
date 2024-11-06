@@ -2,8 +2,8 @@
 #include <stdint.h>
 
 #include "can.h"
-#include "common.h"
 #include "message_types.h"
+#include "msg_common.h"
 #include "msg_gps.h"
 
 bool build_gps_time_msg(
