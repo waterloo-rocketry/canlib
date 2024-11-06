@@ -4,85 +4,102 @@
 /* REMINDER: Any changes to this file should be reflected in parsley.
  *
  * If parsley and this file differ, this file is the source of truth.
- *
- * Message SIDs are 11 bit unique identifiers.
- * Bottom 5 bits: IDs that are unique to the board sending the message
- * Top 6 bits: message types. The message types defined here therefore
- * have the bottom 5 bits set to 0.
- *
- * MESSAGE_SID = MESSAGE_TYPE | BOARD_UNIQUE_ID
- *
  */
 
+// Message Priority
+enum MESSAGE_PRIO {
+    PRIO_HIGHEST = 0x0,
+    PRIO_HIGH = 0x1,
+    PRIO_MEDIUM = 0x2,
+    PRIO_LOW = 0x3,
+};
+
 // Message Types
-#define MSG_GENERAL_CMD           0x060
-#define MSG_ACTUATOR_CMD          0x0C0
-#define MSG_ALT_ARM_CMD           0x140
-#define MSG_RESET_CMD             0x160
+enum MESSAGE_TYPES {
+    MSG_GENERAL_CMD = 0x001,
+    MSG_ACTUATOR_CMD = 0x002,
+    MSG_ALT_ARM_CMD = 0x003,
+    MSG_RESET_CMD = 0x004,
+    MSG_DEBUG_MSG = 0x005,
+    MSG_DEBUG_PRINTF = 0x006,
+    MSG_DEBUG_RADIO_CMD = 0x007,
+    MSG_ACT_ANALOG_CMD = 0x008,
+    MSG_ALT_ARM_STATUS = 0x009,
+    MSG_ACTUATOR_STATUS = 0x00A,
+    MSG_GENERAL_BOARD_STATUS = 0x00B,
+    MSG_SENSOR_TEMP = 0x00C,
+    MSG_SENSOR_ALTITUDE = 0x00D,
+    MSG_SENSOR_ACC = 0x00E,
+    MSG_SENSOR_ACC2 = 0x00F,
+    MSG_SENSOR_GYRO = 0x010,
+    MSG_STATE_EST_CALIB = 0x011,
+    MSG_SENSOR_MAG = 0x012,
+    MSG_SENSOR_ANALOG = 0x013,
+    MSG_GPS_TIMESTAMP = 0x014,
+    MSG_GPS_LATITUDE = 0x015,
+    MSG_GPS_LONGITUDE = 0x016,
+    MSG_GPS_ALTITUDE = 0x017,
+    MSG_GPS_INFO = 0x018,
+    MSG_FILL_LVL = 0x019,
+    MSG_STATE_EST_DATA = 0x01A,
+    MSG_LEDS_ON = 0x01B,
+    MSG_LEDS_OFF = 0x01C,
+};
 
-#define MSG_DEBUG_MSG             0x180
-#define MSG_DEBUG_PRINTF          0x1E0
-#define MSG_DEBUG_RADIO_CMD       0x200
-#define MSG_ACT_ANALOG_CMD        0x220
+// Board Type IDs
+enum BOARD_TYPE_ID {
+    BOARD_TYPE_ID_ANY = 0x00,
+    BOARD_TYPE_ID_INJ_SENSOR = 0x01,
+    BOARD_TYPE_ID_CANARD_MOTOR = 0x02,
+    BOARD_TYPE_ID_CAMERA = 0x03,
+    BOARD_TYPE_ID_ROCKET_POWER = 0x04,
+    BOARD_TYPE_ID_LOGGER = 0x05,
+    BOARD_TYPE_ID_PROCESSOR = 0x06,
+    BOARD_TYPE_ID_TELEMETRY = 0x07,
+    BOARD_TYPE_ID_GPS = 0x08,
+    BOARD_TYPE_ID_SRAD_GNSS = 0x09,
+    BOARD_TYPE_ID_ALTIMETER = 0x0A,
+    BOARD_TYPE_ID_ARMING = 0x0B,
+    BOARD_TYPE_ID_PAY_SENSOR = 0x40,
+    BOARD_TYPE_ID_PAY_MOTOR = 0x41,
+    BOARD_TYPE_ID_RLCS_GLS = 0x80,
+    BOARD_TYPE_ID_RLCS_RELAY = 0x81,
+    BOARD_TYPE_ID_RLCS_HEATING = 0x82,
+    BOARD_TYPE_ID_DAQ = 0x83,
+    BOARD_TYPE_ID_CHARGING = 0x84,
+    BOARD_TYPE_ID_THERMOCOUPLE = 0x85,
+    BOARD_TYPE_ID_USB = 0x86,
+};
 
+// Board Instance IDs
+enum BOARD_INST_ID {
+    BOARD_INST_ID_ANY = 0x00,
+    BOARD_INST_ID_GENERIC = 0x01,
+};
 
-#define MSG_ALT_ARM_STATUS        0x440
-#define MSG_ACTUATOR_STATUS       0x460
-#define MSG_GENERAL_BOARD_STATUS  0x520
+enum BOARD_INST_ID_CAMERA {
+    BOARD_INST_ID_CAMERA_INJ_A = 0x04,
+    BOARD_INST_ID_CAMERA_INJ_B = 0x05,
+    BOARD_INST_ID_CAMERA_VENT_A = 0x06,
+    BOARD_INST_ID_CAMERA_VENT_B = 0x07,
+    BOARD_INST_ID_CAMERA_VENT_C = 0x08,
+    BOARD_INST_ID_CAMERA_VENT_D = 0x09,
+    BOARD_INST_ID_CAMERA_RECOVERY = 0x0A,
+};
 
-#define MSG_SENSOR_TEMP           0x540
-#define MSG_SENSOR_ALTITUDE       0x560
-#define MSG_SENSOR_ACC            0x580
-#define MSG_SENSOR_ACC2           0x5A0
-#define MSG_SENSOR_GYRO           0x5E0
+enum BOARD_INST_ID_ROCKET_POWER {
+    BOARD_INST_ID_ROCKET_POWER_ROCKET = 0x02,
+    BOARD_INST_ID_ROCKET_POWER_PAYLOAD = 0x03,
+};
 
-#define MSG_STATE_EST_CALIB       0x620
-#define MSG_SENSOR_MAG            0x640
-#define MSG_SENSOR_ANALOG         0x6A0
-#define MSG_GPS_TIMESTAMP         0x6C0
-#define MSG_GPS_LATITUDE          0x6E0
-#define MSG_GPS_LONGITUDE         0x700
-#define MSG_GPS_ALTITUDE          0x720
-#define MSG_GPS_INFO              0x740
+enum BOARD_INST_ID_THERMOCOUPLE {
+    BOARD_INST_ID_THERMOCOUPLE_1 = 0xB,
+    BOARD_INST_ID_THERMOCOUPLE_2 = 0xC,
+    BOARD_INST_ID_THERMOCOUPLE_3 = 0xD,
+    BOARD_INST_ID_THERMOCOUPLE_4 = 0xE,
+};
 
-
-#define MSG_FILL_LVL              0x780
-#define MSG_STATE_EST_DATA        0x7A0
-
-
-#define MSG_LEDS_ON               0x7E0
-#define MSG_LEDS_OFF              0x7C0
-
-// Board IDs
-// Any
-#define BOARD_ID_ANY               0x00
-// Ground Side
-#define BOARD_ID_DAQ               0x01
-#define BOARD_ID_THERMOCOUPLE_1    0x02
-#define BOARD_ID_THERMOCOUPLE_2    0x03
-#define BOARD_ID_THERMOCOUPLE_3    0x04
-#define BOARD_ID_THERMOCOUPLE_4    0x05
-// Injector/Fill Section
-#define BOARD_ID_PROPULSION_INJ    0x06
-// Vent Section
-#define BOARD_ID_PROPULSION_VENT   0x07
-#define BOARD_ID_CAMERA_1          0x08
-#define BOARD_ID_CAMERA_2          0x09
-// Airbrake Section
-#define BOARD_ID_CHARGING_AIRBRAKE 0x0A
-// Payload Section
-#define BOARD_ID_CHARGING_PAYLOAD  0x0B
-#define BOARD_ID_VIBRATION         0x0C
-// Recovery Electronics(RecElec) Sled
-#define BOARD_ID_CHARGING_CAN      0x0D
-#define BOARD_ID_LOGGER            0x0E
-#define BOARD_ID_PROCESSOR         0x0F
-#define BOARD_ID_GPS               0x10
-#define BOARD_ID_ARMING            0x11
-#define BOARD_ID_TELEMETRY         0x12
-#define BOARD_ID_CAMERA_3          0x13
-// Debug
-#define BOARD_ID_USB               0x14
+// clang-format off
 
 /*
  * General message type format (from spreadsheet):
@@ -91,7 +108,7 @@
  * GENERAL_CMD:     TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L COMMAND_TYPE          None             None               None             None
  * ACTUATOR_CMD:    TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L ACTUATOR_ID           ACTUATOR_STATE   None               None             None
  * ALT_ARM_CMD:     TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L ALT_ARM_STATE & #     None             None               None             None
- * RESET_CMD:       TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L BOARD_ID              None             None               None             None
+ * RESET_CMD:       TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L BOARD_TYPE_ID         BOARD_INST_ID    None               None             None
  * ACT_ANALOG_CMD:  TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L ACTUATOR_ID           ACT_STATE_INT    None               None             None
  *
  * DEBUG_MSG:       TSTAMP_MS_H TSTAMP_MS_M TSTAMP_MS_L DEBUG_LEVEL | LINUM_H LINUM_L          MESSAGE_DEFINED    MESSAGE_DEFINED  MESSAGE_DEFINED
@@ -134,6 +151,8 @@
  * type is added.
  */
 
+// clang-format on
+
 // GENERAL_CMD: COMMAND_TYPE
 enum GEN_CMD {
     BUS_DOWN_WARNING = 0,
@@ -152,6 +171,8 @@ enum ARM_STATE {
     DISARMED = 0,
     ARMED,
 };
+
+// clang-format off
 
 // BOARD GENERAL STATUS ERROR CODES
 //  ERROR CODE (byte 3)         (byte4)             (byte 5)            (byte 6)            (byte 7)
@@ -188,6 +209,8 @@ enum BOARD_STATUS {
     E_UNHANDLED_INTERRUPT,      // x                x                   x                   x
     E_CODING_SCREWUP,           // x                x                   x                   x
 };
+
+// clang-format on
 
 enum SENSOR_ID {
     SENSOR_5V_CURR = 0,

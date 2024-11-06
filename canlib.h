@@ -1,9 +1,16 @@
 #ifndef CANLIB_H
-#define	CANLIB_H
+#define CANLIB_H
 
 #include "can.h"
-#include "can_common.h"
 #include "message_types.h"
+
+#include "message/msg_actuator.h"
+#include "message/msg_common.h"
+#include "message/msg_general.h"
+#include "message/msg_gps.h"
+#include "message/msg_recovery.h"
+#include "message/msg_sensor.h"
+#include "message/msg_state_est.h"
 
 #include "util/can_rcv_buffer.h"
 #include "util/can_tx_buffer.h"
@@ -31,5 +38,4 @@
 
 #endif /* ConfName */
 
-#endif	/* CANLIB_H */
-
+#endif /* CANLIB_H */
