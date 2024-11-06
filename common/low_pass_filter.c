@@ -1,7 +1,7 @@
 #include "low_pass_filter.h"
 #include <stddef.h>
 
-#include <xc.h>
+// #include <xc.h>
 
 // Initialize the low-pass filter
 w_status_t low_pass_filter_init(double *alpha, double response_time) {
@@ -20,7 +20,12 @@ w_status_t update_low_pass(double *alpha, uint16_t new_value, double *low_pass_v
         return W_INVALID_PARAM; // Return specific error for invalid parameters
     }
 
-    // Update the low-pass filter value using the alpha parameter
-    *low_pass_value = (*alpha * (*low_pass_value)) + ((1.0 - *alpha) * new_value);
+    // Ensure alpha is within the valid range
+    if (*alpha <= 0.0 || *alpha >= 1.0) {
+        return W_INVALID_PARAM;
+    }
+
+    // Low pass filter formula: y[n] = alpha * x[n] + (1 - alpha) * y[n-1]
+    *low_pass_value = (*alpha * new_value) + ((1.0 - *alpha) * (*low_pass_value));
     return W_SUCCESS; // Return success after successful update
 }
