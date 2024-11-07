@@ -35,8 +35,8 @@ typedef struct {
 
 // Things that are in a CAN message
 typedef struct {
-    // Standard Identifier - 11 bits long
-    uint16_t sid;
+    // Standard Identifier - 29 bits long
+    uint32_t sid;
     // How many bytes are used in data
     uint8_t data_len;
     // the data you want to transmit

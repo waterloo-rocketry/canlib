@@ -60,7 +60,7 @@ bool can_send(const can_msg_t* message) {
 	FDCAN_TxHeaderTypeDef TxHeader;
 	uint8_t TxData[8] = {0};
 
-	TxHeader.IdType = FDCAN_STANDARD_ID;
+	TxHeader.IdType = FDCAN_EXTENDED_ID;
 	TxHeader.TxFrameType = FDCAN_DATA_FRAME;
 	TxHeader.FDFormat = FDCAN_CLASSIC_CAN;
 	TxHeader.TxEventFifoControl = FDCAN_NO_TX_EVENTS;

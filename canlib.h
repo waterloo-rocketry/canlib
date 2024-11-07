@@ -16,7 +16,6 @@
 #elif ConfName == PIC18F26K83
 
 #include "pic18f26k83/pic18f26k83_can.h"
-#include "pic18f26k83/pic18f26k83_timer.h"
 
 #elif ConfName == MCP2515
 
