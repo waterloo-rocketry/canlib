@@ -7,15 +7,15 @@
  */
 
 // Message Priority
-enum MESSAGE_PRIO {
+typedef enum {
     PRIO_HIGHEST = 0x0,
     PRIO_HIGH = 0x1,
     PRIO_MEDIUM = 0x2,
     PRIO_LOW = 0x3,
-};
+} can_msg_prio_t;
 
 // Message Types
-enum MESSAGE_TYPES {
+typedef enum {
     MSG_GENERAL_CMD = 0x001,
     MSG_ACTUATOR_CMD = 0x002,
     MSG_ALT_ARM_CMD = 0x003,
@@ -44,10 +44,10 @@ enum MESSAGE_TYPES {
     MSG_STATE_EST_DATA = 0x01A,
     MSG_LEDS_ON = 0x01B,
     MSG_LEDS_OFF = 0x01C,
-};
+} can_msg_type_t;
 
 // Board Type IDs
-enum BOARD_TYPE_ID {
+typedef enum {
     BOARD_TYPE_ID_ANY = 0x00,
     BOARD_TYPE_ID_INJ_SENSOR = 0x01,
     BOARD_TYPE_ID_CANARD_MOTOR = 0x02,
@@ -70,15 +70,15 @@ enum BOARD_TYPE_ID {
     BOARD_TYPE_ID_THERMOCOUPLE = 0x85,
     BOARD_TYPE_ID_USB = 0x86,
     BOARD_TYPE_ID_FYDP25_TVCA = 0xC0,
-};
+} can_board_type_id_t;
 
 // Board Instance IDs
-enum BOARD_INST_ID {
+typedef enum {
     BOARD_INST_ID_ANY = 0x00,
     BOARD_INST_ID_GENERIC = 0x01,
-};
+} can_board_inst_id_t;
 
-enum BOARD_INST_ID_CAMERA {
+typedef enum {
     BOARD_INST_ID_CAMERA_INJ_A = 0x04,
     BOARD_INST_ID_CAMERA_INJ_B = 0x05,
     BOARD_INST_ID_CAMERA_VENT_A = 0x06,
@@ -86,19 +86,19 @@ enum BOARD_INST_ID_CAMERA {
     BOARD_INST_ID_CAMERA_VENT_C = 0x08,
     BOARD_INST_ID_CAMERA_VENT_D = 0x09,
     BOARD_INST_ID_CAMERA_RECOVERY = 0x0A,
-};
+} can_board_inst_id_camera_t;
 
-enum BOARD_INST_ID_ROCKET_POWER {
+typedef enum {
     BOARD_INST_ID_ROCKET_POWER_ROCKET = 0x02,
     BOARD_INST_ID_ROCKET_POWER_PAYLOAD = 0x03,
-};
+} can_board_inst_id_rocket_power_t;
 
-enum BOARD_INST_ID_THERMOCOUPLE {
+typedef enum {
     BOARD_INST_ID_THERMOCOUPLE_1 = 0xB,
     BOARD_INST_ID_THERMOCOUPLE_2 = 0xC,
     BOARD_INST_ID_THERMOCOUPLE_3 = 0xD,
     BOARD_INST_ID_THERMOCOUPLE_4 = 0xE,
-};
+} can_board_inst_id_thermocouple_t;
 
 // clang-format off
 

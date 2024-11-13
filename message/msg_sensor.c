@@ -7,8 +7,7 @@
 #include "msg_sensor.h"
 
 bool build_imu_data_msg(
-    enum MESSAGE_PRIO prio, uint16_t message_type,
-    uint32_t timestamp, // acc, gyro, mag
+    can_msg_prio_t prio, can_msg_type_t message_type, uint32_t timestamp,
     const uint16_t *imu_data, // x, y, z
     can_msg_t *output
 ) {
@@ -45,7 +44,7 @@ bool build_imu_data_msg(
 }
 
 bool build_analog_data_msg(
-    enum MESSAGE_PRIO prio, uint32_t timestamp, enum SENSOR_ID sensor_id, uint16_t sensor_data,
+    can_msg_prio_t prio, uint32_t timestamp, enum SENSOR_ID sensor_id, uint16_t sensor_data,
     can_msg_t *output
 ) {
     if (!output) {
@@ -65,7 +64,7 @@ bool build_analog_data_msg(
 }
 
 bool build_temp_data_msg(
-    enum MESSAGE_PRIO prio, uint32_t timestamp, uint8_t sensor_num, int32_t temp, can_msg_t *output
+    can_msg_prio_t prio, uint32_t timestamp, uint8_t sensor_num, int32_t temp, can_msg_t *output
 ) {
     if (!output) {
         return false;
@@ -84,7 +83,7 @@ bool build_temp_data_msg(
 }
 
 bool build_altitude_data_msg(
-    enum MESSAGE_PRIO prio, uint32_t timestamp, int32_t altitude, can_msg_t *output
+    can_msg_prio_t prio, uint32_t timestamp, int32_t altitude, can_msg_t *output
 ) {
     if (!output) {
         return false;
@@ -197,7 +196,7 @@ bool get_altitude_data(const can_msg_t *msg, int32_t *altitude) {
 }
 
 bool build_fill_msg(
-    enum MESSAGE_PRIO prio, uint32_t timestamp, uint8_t lvl, uint8_t direction, can_msg_t *output
+    can_msg_prio_t prio, uint32_t timestamp, uint8_t lvl, uint8_t direction, can_msg_t *output
 ) {
     if (!output) {
         return false;

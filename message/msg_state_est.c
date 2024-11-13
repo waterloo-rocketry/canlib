@@ -8,7 +8,7 @@
 #include "msg_state_est.h"
 
 bool build_state_est_data_msg(
-    enum MESSAGE_PRIO prio, uint32_t timestamp, const float *data, enum STATE_ID data_id,
+    can_msg_prio_t prio, uint32_t timestamp, const float *data, enum STATE_ID data_id,
     can_msg_t *output
 ) {
     output->sid = SID(prio, MSG_STATE_EST_DATA);
@@ -21,7 +21,7 @@ bool build_state_est_data_msg(
 }
 
 bool build_state_est_calibration_msg(
-    enum MESSAGE_PRIO prio, uint32_t timestamp, uint8_t ack_flag, uint16_t apogee, can_msg_t *output
+    can_msg_prio_t prio, uint32_t timestamp, uint8_t ack_flag, uint16_t apogee, can_msg_t *output
 ) {
     if (!output) {
         return false;

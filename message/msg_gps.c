@@ -7,8 +7,8 @@
 #include "msg_gps.h"
 
 bool build_gps_time_msg(
-    enum MESSAGE_PRIO prio, uint32_t timestamp, uint8_t utc_hours, uint8_t utc_mins,
-    uint8_t utc_secs, uint8_t utc_dsecs, can_msg_t *output
+    can_msg_prio_t prio, uint32_t timestamp, uint8_t utc_hours, uint8_t utc_mins, uint8_t utc_secs,
+    uint8_t utc_dsecs, can_msg_t *output
 ) {
     if (!output) {
         return false;
@@ -28,7 +28,7 @@ bool build_gps_time_msg(
 }
 
 bool build_gps_lat_msg(
-    enum MESSAGE_PRIO prio, uint32_t timestamp, uint8_t degrees, uint8_t minutes, uint16_t dminutes,
+    can_msg_prio_t prio, uint32_t timestamp, uint8_t degrees, uint8_t minutes, uint16_t dminutes,
     uint8_t direction, can_msg_t *output
 ) {
     if (!output) {
@@ -50,7 +50,7 @@ bool build_gps_lat_msg(
 }
 
 bool build_gps_lon_msg(
-    enum MESSAGE_PRIO prio, uint32_t timestamp, uint8_t degrees, uint8_t minutes, uint16_t dminutes,
+    can_msg_prio_t prio, uint32_t timestamp, uint8_t degrees, uint8_t minutes, uint16_t dminutes,
     uint8_t direction, can_msg_t *output
 ) {
     if (!output) {
@@ -72,7 +72,7 @@ bool build_gps_lon_msg(
 }
 
 bool build_gps_alt_msg(
-    enum MESSAGE_PRIO prio, uint32_t timestamp, uint16_t altitude, uint8_t daltitude, uint8_t units,
+    can_msg_prio_t prio, uint32_t timestamp, uint16_t altitude, uint8_t daltitude, uint8_t units,
     can_msg_t *output
 ) {
     if (!output) {
@@ -93,7 +93,7 @@ bool build_gps_alt_msg(
 }
 
 bool build_gps_info_msg(
-    enum MESSAGE_PRIO prio, uint32_t timestamp, uint8_t num_sat, uint8_t quality, can_msg_t *output
+    can_msg_prio_t prio, uint32_t timestamp, uint8_t num_sat, uint8_t quality, can_msg_t *output
 ) {
     if (!output) {
         return false;

@@ -7,7 +7,7 @@
 #include "msg_recovery.h"
 
 bool build_arm_cmd_msg(
-    enum MESSAGE_PRIO prio, uint32_t timestamp, uint8_t alt_num, enum ARM_STATE arm_cmd,
+    can_msg_prio_t prio, uint32_t timestamp, uint8_t alt_num, enum ARM_STATE arm_cmd,
     can_msg_t *output
 ) {
     if (!output) {
@@ -25,7 +25,7 @@ bool build_arm_cmd_msg(
 }
 
 bool build_arm_stat_msg(
-    enum MESSAGE_PRIO prio, uint32_t timestamp, uint8_t alt_num, enum ARM_STATE arm_state,
+    can_msg_prio_t prio, uint32_t timestamp, uint8_t alt_num, enum ARM_STATE arm_state,
     uint16_t v_drogue, uint16_t v_main, can_msg_t *output
 ) {
     if (!output) {

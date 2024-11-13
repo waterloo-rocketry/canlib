@@ -40,7 +40,7 @@ typedef enum {
  * message_types.h
  */
 bool build_general_cmd_msg(
-    enum MESSAGE_PRIO prio, uint32_t timestamp, enum GEN_CMD cmd, can_msg_t *output
+    can_msg_prio_t prio, uint32_t timestamp, enum GEN_CMD cmd, can_msg_t *output
 );
 
 /*
@@ -49,21 +49,21 @@ bool build_general_cmd_msg(
  * This function may need to be modified to better hide the internals.
  */
 bool build_board_stat_msg(
-    enum MESSAGE_PRIO prio, uint32_t timestamp, enum BOARD_STATUS error_code,
+    can_msg_prio_t prio, uint32_t timestamp, enum BOARD_STATUS error_code,
     const uint8_t *error_data, uint8_t error_data_len, can_msg_t *output
 );
 
 bool build_debug_msg(
-    enum MESSAGE_PRIO prio, uint32_t timestamp, const uint8_t *debug_data, can_msg_t *output
+    can_msg_prio_t prio, uint32_t timestamp, const uint8_t *debug_data, can_msg_t *output
 );
 
-bool build_debug_printf(enum MESSAGE_PRIO prio, const uint8_t *data, can_msg_t *output);
+bool build_debug_printf(can_msg_prio_t prio, const uint8_t *data, can_msg_t *output);
 
 /*
  * Used to Reset a CAN board
  */
 bool build_reset_msg(
-    enum MESSAGE_PRIO prio, uint32_t timestamp, uint8_t board_type_id, uint8_t board_inst_id,
+    can_msg_prio_t prio, uint32_t timestamp, uint8_t board_type_id, uint8_t board_inst_id,
     can_msg_t *output
 );
 
@@ -102,8 +102,7 @@ can_debug_level_t message_debug_level(const can_msg_t *msg);
  *       can_send(&output);
  *   }
  */
-const char *build_printf_can_message(enum MESSAGE_PRIO prio, const char *string, can_msg_t *output);
-const char *
-build_radio_cmd_can_message(enum MESSAGE_PRIO prio, const char *string, can_msg_t *output);
+const char *build_printf_can_message(can_msg_prio_t prio, const char *string, can_msg_t *output);
+const char *build_radio_cmd_can_message(can_msg_prio_t prio, const char *string, can_msg_t *output);
 
 #endif

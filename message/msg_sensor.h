@@ -13,7 +13,7 @@
  * sensor id.
  */
 bool build_analog_data_msg(
-    enum MESSAGE_PRIO prio, uint32_t timestamp, enum SENSOR_ID sensor_id, uint16_t sensor_data,
+    can_msg_prio_t prio, uint32_t timestamp, enum SENSOR_ID sensor_id, uint16_t sensor_data,
     can_msg_t *output
 );
 
@@ -22,7 +22,7 @@ bool build_analog_data_msg(
  * of 3 values is sent (X, Y, and Z axes).
  */
 bool build_imu_data_msg(
-    enum MESSAGE_PRIO prio, uint16_t message_type, // acc, gyro, mag
+    can_msg_prio_t prio, can_msg_type_t message_type, // acc, gyro, mag
     uint32_t timestamp,
     const uint16_t *imu_data, // x, y, z
     can_msg_t *output
@@ -35,14 +35,14 @@ bool build_imu_data_msg(
  * 8388607 will overflow.
  */
 bool build_temp_data_msg(
-    enum MESSAGE_PRIO prio, uint32_t timestamp, uint8_t sensor_num, int32_t temp, can_msg_t *output
+    can_msg_prio_t prio, uint32_t timestamp, uint8_t sensor_num, int32_t temp, can_msg_t *output
 );
 
 /*
  * Used to send altitude recived from altimiters
  */
 bool build_altitude_data_msg(
-    enum MESSAGE_PRIO prio, uint32_t timestamp, int32_t altitude, can_msg_t *output
+    can_msg_prio_t prio, uint32_t timestamp, int32_t altitude, can_msg_t *output
 );
 
 /*
@@ -81,7 +81,7 @@ bool get_altitude_data(const can_msg_t *msg, int32_t *altitude);
  * measured by sensor number, and direction of fill travel.
  */
 bool build_fill_msg(
-    enum MESSAGE_PRIO prio, uint32_t timestamp, uint8_t lvl, uint8_t direction, can_msg_t *output
+    can_msg_prio_t prio, uint32_t timestamp, uint8_t lvl, uint8_t direction, can_msg_t *output
 );
 
 /*

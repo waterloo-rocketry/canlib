@@ -7,7 +7,7 @@
 #include "msg_common.h"
 
 bool build_actuator_cmd_msg(
-    enum MESSAGE_PRIO prio, uint32_t timestamp, enum ACTUATOR_ID actuator_id,
+    can_msg_prio_t prio, uint32_t timestamp, enum ACTUATOR_ID actuator_id,
     enum ACTUATOR_STATE actuator_cmd, can_msg_t *output
 ) {
     if (!output) {
@@ -25,7 +25,7 @@ bool build_actuator_cmd_msg(
 }
 
 bool build_actuator_stat_msg(
-    enum MESSAGE_PRIO prio, uint32_t timestamp, enum ACTUATOR_ID actuator_id,
+    can_msg_prio_t prio, uint32_t timestamp, enum ACTUATOR_ID actuator_id,
     enum ACTUATOR_STATE actuator_state, enum ACTUATOR_STATE req_actuator_state, can_msg_t *output
 ) {
     if (!output) {
@@ -44,7 +44,7 @@ bool build_actuator_stat_msg(
 }
 
 bool build_actuator_cmd_analog(
-    enum MESSAGE_PRIO prio, uint32_t timestamp, enum ACTUATOR_ID actuator_id, uint8_t actuator_cmd,
+    can_msg_prio_t prio, uint32_t timestamp, enum ACTUATOR_ID actuator_id, uint8_t actuator_cmd,
     can_msg_t *output
 ) {
     if (!output) {
