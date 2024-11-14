@@ -5,12 +5,16 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-// Macro to calculate the sample frequency based on the time difference in milliseconds
-#define SAMPLE_FREQ(time_diff_ms) (1000.0 / (time_diff_ms))
+// Inline function to calculate the sample frequency based on the time difference in milliseconds
+static inline double sample_freq(double time_diff_ms) {
+    return 1000.0 / time_diff_ms;
+}
 
-// Macro to calculate the alpha value for the low-pass filter based on the response time
-#define LOW_PASS_ALPHA(TR, time_diff_ms)                                                           \
-    ((SAMPLE_FREQ(time_diff_ms) * TR / 5.0) / (1 + SAMPLE_FREQ(time_diff_ms) * TR / 5.0))
+// Inline function to calculate the alpha value for the low-pass filter based on the response time
+static inline double low_pass_alpha(double TR, double time_diff_ms) {
+    double freq = sample_freq(time_diff_ms);
+    return (freq * TR / 5.0) / (1.0 + freq * TR / 5.0);
+}
 
 // Initializes the low-pass filter by calculating the alpha value based on the response time
 w_status_t low_pass_filter_init(double *alpha, double response_time);

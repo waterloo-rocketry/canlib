@@ -6,8 +6,8 @@ w_status_t low_pass_filter_init(double *alpha, double response_time) {
     if (alpha == NULL || response_time <= 0) {
         return W_INVALID_PARAM; // Return specific error for invalid parameters
     }
-    // Calculate and store the alpha value using the LOW_PASS_ALPHA macro
-    *alpha = LOW_PASS_ALPHA(response_time, response_time);
+    // Calculate and store the alpha value using the low_pass_alpha function
+    *alpha = low_pass_alpha(response_time, response_time);
     return W_SUCCESS; // Return success after initialization
 }
 
