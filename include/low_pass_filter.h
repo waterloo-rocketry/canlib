@@ -16,10 +16,10 @@ static inline double low_pass_alpha(double TR, double time_diff_ms) {
     return (freq * TR / 5.0) / (1.0 + freq * TR / 5.0);
 }
 
-// Initializes the low-pass filter by calculating the alpha value based on the response time
+// Initializes the low-pass filter by calculating and storing the alpha value based on the given response time.
 w_status_t low_pass_filter_init(double *alpha, double response_time);
 
 // Updates the low-pass filter with a new value and returns the operation status
-w_status_t update_low_pass(double *alpha, uint16_t new_value, double *low_pass_value);
+w_status_t update_low_pass(double *alpha, uint16_t new_input_value, double *low_pass_value);
 
 #endif /* ROCKETLIB_LOW_PASS_FILTER_H */
