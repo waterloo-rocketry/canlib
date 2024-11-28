@@ -1,6 +1,9 @@
 #ifndef ROCKETLIB_COMMON_H
 #define ROCKETLIB_COMMON_H
 
+#define ROCKETLIB_VERSION_MAJOR 2025
+#define ROCKETLIB_VERSION_MINOR 1
+
 typedef enum {
     W_SUCCESS = 0,
     W_FAILURE,
