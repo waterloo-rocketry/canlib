@@ -176,12 +176,14 @@ typedef enum {
     SENSOR_FPS,
     SENSOR_CANARD_ENCODER_1,
     SENSOR_CANARD_ENCODER_2,
+    SENSOR_PROC_FLIGHT_PHASE_STATUS,
 } can_analog_sensor_id_t;
 
 typedef enum {
-    STATE_ID_ALT_Q0 = 0,
-    STATE_ID_ALT_Q1,
-    STATE_ID_ALT_Q2,
+    STATE_ID_ATT_Q0 = 0,
+    STATE_ID_ATT_Q1,
+    STATE_ID_ATT_Q2,
+    STATE_ID_ATT_Q3,
     STATE_ID_RATE_WX,
     STATE_ID_RATE_WY,
     STATE_ID_RATE_WZ,
@@ -190,12 +192,6 @@ typedef enum {
     STATE_ID_VEL_VZ,
     STATE_ID_ALT,
     STATE_ID_COEFF_CL,
-    STATE_ID_ANGLE_YAW,
-    STATE_ID_ANGLE_PITCH,
-    STATE_ID_ANGLE_ROLL,
-    STATE_ID_RATE_YAW,
-    STATE_ID_RATE_PITCH,
-    STATE_ID_RATE_ROLL,
     STATE_ID_CANARD_ANGLE,
 } can_state_est_id_t;
 

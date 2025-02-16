@@ -24,17 +24,12 @@
      BOARD_INST_UNIQUE_ID)
 
 void write_timestamp_2bytes(uint16_t timestamp, can_msg_t *output);
-void write_timestamp_3bytes(uint32_t timestamp, can_msg_t *output);
 
 uint16_t get_message_type(const can_msg_t *msg);
 
 uint8_t get_board_type_unique_id(const can_msg_t *msg);
 uint8_t get_board_inst_unique_id(const can_msg_t *msg);
 
-/*
- * Returns the timestamp of the message. This can be either two or
- * three bytes depending on the message type.
- */
-uint32_t get_timestamp(const can_msg_t *msg);
+uint16_t get_timestamp(const can_msg_t *msg);
 
 #endif
