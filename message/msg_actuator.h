@@ -19,7 +19,7 @@ bool build_actuator_analog_cmd_msg(
 
 bool build_actuator_status_msg(
     can_msg_prio_t prio, uint16_t timestamp, can_actuator_id_t actuator_id,
-    can_actuator_state_t actuator_curr_state, can_actuator_id_t actuator_req_state,
+    can_actuator_state_t actuator_curr_state, can_actuator_id_t actuator_cmd_state,
     can_msg_t *output
 );
 
@@ -36,17 +36,17 @@ int get_actuator_id(const can_msg_t *msg);
 int get_curr_actuator_state(const can_msg_t *msg);
 
 /*
- * Returns the requested actuator state from an actuator command or
+ * Returns the commanded actuator state from an actuator command or
  * status message. Returns -1 if the provided message is not
  * an actuator cmd/status.
  */
-int get_req_actuator_state(const can_msg_t *msg);
+int get_cmd_actuator_state(const can_msg_t *msg);
 
 /*
- * Returns the requested actuator state from an analog actuator
+ * Returns the commanded actuator state from an analog actuator
  * command or status message. Returns -1.0 if the provided message is not
  * an actuator cmd/status.
  */
-uint16_t get_req_actuator_state_analog(const can_msg_t *msg);
+uint16_t get_cmd_actuator_state_analog(const can_msg_t *msg);
 
 #endif

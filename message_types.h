@@ -75,25 +75,30 @@ typedef enum {
 } can_board_inst_id_t;
 
 typedef enum {
-    BOARD_INST_ID_CAMERA_INJ_A = 0x02,
-    BOARD_INST_ID_CAMERA_INJ_B = 0x03,
-    BOARD_INST_ID_CAMERA_VENT_A = 0x04,
-    BOARD_INST_ID_CAMERA_VENT_B = 0x05,
-    BOARD_INST_ID_CAMERA_VENT_C = 0x06,
-    BOARD_INST_ID_CAMERA_VENT_D = 0x07,
-    BOARD_INST_ID_CAMERA_RECOVERY = 0x08,
+    BOARD_INST_ID_CANARD_MOTOR_PRIMARY = 0x02,
+    BOARD_INST_ID_CANARD_MOTOR_FAILSAFE = 0x03,
+} can_board_inst_id_canard_motor_t;
+
+typedef enum {
+    BOARD_INST_ID_CAMERA_INJ_A = 0x04,
+    BOARD_INST_ID_CAMERA_INJ_B = 0x05,
+    BOARD_INST_ID_CAMERA_VENT_A = 0x06,
+    BOARD_INST_ID_CAMERA_VENT_B = 0x07,
+    BOARD_INST_ID_CAMERA_VENT_C = 0x08,
+    BOARD_INST_ID_CAMERA_VENT_D = 0x09,
+    BOARD_INST_ID_CAMERA_RECOVERY = 0x0A,
 } can_board_inst_id_camera_t;
 
 typedef enum {
-    BOARD_INST_ID_POWER_ROCKET = 0x09,
-    BOARD_INST_ID_POWER_PAYLOAD = 0x0A,
+    BOARD_INST_ID_POWER_ROCKET = 0x0B,
+    BOARD_INST_ID_POWER_PAYLOAD = 0x0C,
 } can_board_inst_id_power_t;
 
 typedef enum {
-    BOARD_INST_ID_THERMOCOUPLE_1 = 0x0B,
-    BOARD_INST_ID_THERMOCOUPLE_2 = 0x0C,
-    BOARD_INST_ID_THERMOCOUPLE_3 = 0x0D,
-    BOARD_INST_ID_THERMOCOUPLE_4 = 0x0E,
+    BOARD_INST_ID_THERMOCOUPLE_1 = 0x0D,
+    BOARD_INST_ID_THERMOCOUPLE_2 = 0x0E,
+    BOARD_INST_ID_THERMOCOUPLE_3 = 0x0F,
+    BOARD_INST_ID_THERMOCOUPLE_4 = 0x10,
 } can_board_inst_id_thermocouple_t;
 
 typedef enum {
@@ -146,10 +151,10 @@ typedef enum {
 } can_alt_arm_state_t;
 
 typedef enum {
-    IMU_PROC_POLULU_ALTIMU10 = 0,
-    IMU_PROC_MOVELLA_MTI630,
-    IMU_PROC_ST,
-    IMU_SRAD_ALT_POLULU_ALTIMU10,
+    IMU_PROC_ALTIMU10 = 0,
+    IMU_PROC_MTI630,
+    IMU_PROC_LSM6DSO32,
+    IMU_SRAD_ALT_ALTIMU10,
 } can_imu_id_t;
 
 typedef enum {

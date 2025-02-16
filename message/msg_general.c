@@ -1,96 +1,35 @@
 #include <stdbool.h>
 #include <stdint.h>
+#include <string.h>
 
 #include "can.h"
 #include "message_types.h"
 #include "msg_common.h"
 #include "msg_general.h"
 
-bool build_general_cmd_msg(
-    can_msg_prio_t prio, uint32_t timestamp, enum GEN_CMD cmd, can_msg_t *output
+bool build_general_board_status_msg(
+    can_msg_prio_t prio, uint16_t timestamp, uint32_t general_error_bitfield,
+    uint16_t board_specific_error_bitfield, can_msg_t *output
 ) {
     if (!output) {
-        return false;
-    }
-
-    output->sid = SID(prio, MSG_GENERAL_CMD);
-    write_timestamp_3bytes(timestamp, output);
-    output->data[3] = (uint8_t)cmd;
-    output->data_len = 4; // 3 bytes timestamp, 1 byte data
-
-    return true;
-}
-
-bool build_board_stat_msg(
-    can_msg_prio_t prio, uint32_t timestamp, enum BOARD_STATUS error_code,
-    const uint8_t *error_data, uint8_t error_data_len, can_msg_t *output
-) {
-    if (error_data_len > 0 && !error_data) {
-        return false;
-    }
-    if (!output) {
-        return false;
-    }
-    if (error_data_len > 4) {
         return false;
     }
 
     output->sid = SID(prio, MSG_GENERAL_BOARD_STATUS);
-    write_timestamp_3bytes(timestamp, output);
-
-    output->data[3] = (uint8_t)error_code;
-    for (int i = 0; i < error_data_len; ++i) {
-        // error data goes in message bytes 4-7
-        output->data[4 + i] = error_data[i];
-    }
-
-    // ugly but: 3 bytes timestamp, 1 byte error code, x bytes data
-    output->data_len = 4 + error_data_len;
-
-    return true;
-}
-
-bool build_debug_msg(
-    can_msg_prio_t prio, uint32_t timestamp, const uint8_t *debug_data, can_msg_t *output
-) {
-    if (!output) {
-        return false;
-    }
-    if (!debug_data) {
-        return false;
-    }
-
-    output->sid = SID(prio, MSG_DEBUG_MSG);
-    write_timestamp_3bytes(timestamp, output);
-
-    output->data[3] = debug_data[0];
-    output->data[4] = debug_data[1];
-    output->data[5] = debug_data[2];
-    output->data[6] = debug_data[3];
-    output->data[7] = debug_data[4];
-
+    write_timestamp_2bytes(timestamp, output);
+    output->data[2] = (general_error_bitfield >> 24) & 0xff;
+    output->data[3] = (general_error_bitfield >> 16) & 0xff;
+    output->data[4] = (general_error_bitfield >> 8) & 0xff;
+    output->data[5] = general_error_bitfield & 0xff;
+    output->data[6] = (board_specific_error_bitfield >> 8) & 0xff;
+    output->data[7] = board_specific_error_bitfield & 0xff;
     output->data_len = 8;
-    return true;
-}
 
-bool build_debug_printf(can_msg_prio_t prio, const uint8_t *input_data, can_msg_t *output) {
-    if (!output) {
-        return false;
-    }
-    if (!input_data) {
-        return false;
-    }
-
-    output->sid = SID(prio, MSG_DEBUG_PRINTF);
-    for (int i = 0; i < 8; ++i) {
-        output->data[i] = input_data[i];
-    }
-    output->data_len = 8;
     return true;
 }
 
 bool build_reset_msg(
-    can_msg_prio_t prio, uint32_t timestamp, uint8_t board_type_id, uint8_t board_inst_id,
+    can_msg_prio_t prio, uint16_t timestamp, uint8_t board_type_id, uint8_t board_inst_id,
     can_msg_t *output
 ) {
     if (!output) {
@@ -98,27 +37,87 @@ bool build_reset_msg(
     }
 
     output->sid = SID(prio, MSG_RESET_CMD);
-    write_timestamp_3bytes(timestamp, output);
-    output->data[3] = board_type_id;
-    output->data[4] = board_inst_id;
-    output->data_len = 5; // 3 bytes timestamp, 2 byte data
+    write_timestamp_2bytes(timestamp, output);
+    output->data[2] = board_type_id;
+    output->data[3] = board_inst_id;
+    output->data_len = 4;
 
     return true;
 }
 
-// This might need to be made more granular - it doesn't quite hide
-// the data layout properly.
+bool build_debug_raw_msg(
+    can_msg_prio_t prio, uint16_t timestamp, const uint8_t *data, can_msg_t *output
+) {
+    if (!output) {
+        return false;
+    }
 
-int get_general_cmd_type(const can_msg_t *msg) {
+    output->sid = SID(prio, MSG_DEBUG_RAW);
+    write_timestamp_2bytes(timestamp, output);
+
+    memcpy(output->data + 2, data, 6);
+    output->data_len = 8;
+
+    return true;
+}
+
+bool build_config_set_msg(
+    can_msg_prio_t prio, uint16_t timestamp, uint8_t board_type_id, uint8_t board_inst_id,
+    uint16_t config_id, uint16_t config_value, can_msg_t *output
+) {
+    if (!output) {
+        return false;
+    }
+
+    output->sid = SID(prio, MSG_CONFIG_SET);
+    write_timestamp_2bytes(timestamp, output);
+
+    output->data[2] = board_type_id;
+    output->data[3] = board_inst_id;
+    output->data[4] = (config_id >> 8) & 0xff;
+    output->data[5] = config_id & 0xff;
+    output->data[6] = (config_value >> 8) & 0xff;
+    output->data[7] = config_value & 0xff;
+    output->data_len = 8;
+
+    return true;
+}
+
+bool build_config_status_msg(
+    can_msg_prio_t prio, uint16_t timestamp, uint16_t config_id, uint16_t config_value,
+    can_msg_t *output
+) {
+    if (!output) {
+        return false;
+    }
+
+    output->sid = SID(prio, MSG_CONFIG_STATUS);
+    write_timestamp_2bytes(timestamp, output);
+
+    output->data[2] = (config_id >> 8) & 0xff;
+    output->data[3] = config_id & 0xff;
+    output->data[4] = (config_value >> 8) & 0xff;
+    output->data[5] = config_value & 0xff;
+    output->data_len = 6;
+
+    return true;
+}
+
+bool get_general_board_status(
+    const can_msg_t *msg, uint32_t *general_error_bitfield, uint16_t *board_specific_error_bitfield
+) {
     if (!msg) {
-        return -1;
+        return false;
     }
 
     uint16_t msg_type = get_message_type(msg);
-    if (msg_type == MSG_GENERAL_CMD) {
-        return msg->data[3];
+    if (msg_type == MSG_GENERAL_BOARD_STATUS) {
+        *general_error_bitfield =
+            (msg->data[2] << 24) | (msg->data[3] << 16) | (msg->data[4] << 8) | (msg->data[5]);
+        *board_specific_error_bitfield = (msg->data[6] << 8) | (msg->data[7]);
+        return true;
     } else {
-        return -1;
+        return false;
     }
 }
 
@@ -129,8 +128,8 @@ bool get_reset_board_id(const can_msg_t *msg, uint8_t *board_type_id, uint8_t *b
 
     uint16_t msg_type = get_message_type(msg);
     if (msg_type == MSG_RESET_CMD) {
-        *board_type_id = msg->data[3];
-        *board_inst_id = msg->data[4];
+        *board_type_id = msg->data[2];
+        *board_inst_id = msg->data[3];
         return true;
     } else {
         // not a valid field for this message type
@@ -138,59 +137,52 @@ bool get_reset_board_id(const can_msg_t *msg, uint8_t *board_type_id, uint8_t *b
     }
 }
 
-can_debug_level_t message_debug_level(const can_msg_t *msg) {
-    uint16_t type = get_message_type(msg);
-    if (type != MSG_DEBUG_MSG) {
-        return LVL_NONE;
+bool get_debug_raw_data(const can_msg_t *msg, uint8_t *data) {
+    if (!msg) {
+        return false;
+    }
+
+    uint16_t msg_type = get_message_type(msg);
+    if (msg_type == MSG_DEBUG_RAW) {
+        memcpy(data, msg->data + 2, 6);
+        return true;
     } else {
-        // As per the spreadsheet, the debug level of a DEBUG_MSG is
-        // stored in the top nibble of the 4th data byte (yeah, I
-        // know, I'm sorry). To get at it, you right shift the 4th
-        // data byte by 4. bitwise anding with 0xf probably isn't
-        // necessary, but it ensures that the returned data is no more
-        // than 4 bits.
-        return ((msg->data[3] >> 4) & 0xf);
+        return false;
     }
 }
 
-/* In the grand tradition of C programmers, string handling funcitons
- * must be as convoluted as possible.  If you call this function with
- * a string that is longer than 8 bytes, it's impossible to fit all of
- * that into one CAN message. So what this function does is it puts
- * the first 8 bytes of the string into the CAN message output, then
- * returns a pointer that's 8 bytes ahead of the string (string +
- * 8). If it's called with less than 8 characters of data, it returns
- * a pointer to '\0' (the null terminator in string). This lets you
- * write code like the following:
- *
- * const char *string = "a really long message to be sent on CAN";
- * can_msg_t to_send;
- * while (*string) {
- *     string = build_printf_can_message(string, &to_send);
- *     can_send(&to_send);
- * }
- */
-const char *build_printf_can_message(can_msg_prio_t prio, const char *string, can_msg_t *output) {
-    // set the SID of ouput
-    output->sid = SID(prio, MSG_DEBUG_PRINTF);
-    uint8_t i;
-    for (i = 0; i < 8; ++i) {
-        if (*string == '\0') {
-            output->data_len = i;
-            return string;
-        }
-        output->data[i] = *string;
-        string++;
+bool get_config_set_target_board(
+    const can_msg_t *msg, uint8_t *board_type_id, uint8_t *board_inst_id
+) {
+    if (!msg) {
+        return false;
     }
-    output->data_len = i;
-    return string;
+
+    uint16_t msg_type = get_message_type(msg);
+    if (msg_type == MSG_CONFIG_SET) {
+        *board_type_id = msg->data[2];
+        *board_inst_id = msg->data[3];
+        return true;
+    } else {
+        return false;
+    }
 }
 
-const char *
-build_radio_cmd_can_message(can_msg_prio_t prio, const char *string, can_msg_t *output) {
-    // let build_printf_can_message do all the heavy lifting
-    string = build_printf_can_message(prio, string, output);
-    // then just set SID, since that's the only difference in message type
-    output->sid = SID(prio, MSG_DEBUG_RADIO_CMD);
-    return string;
+bool get_config_id_value(const can_msg_t *msg, uint16_t *config_id, uint16_t *config_value) {
+    if (!msg) {
+        return false;
+    }
+
+    uint16_t msg_type = get_message_type(msg);
+    if (msg_type == MSG_CONFIG_SET) {
+        *config_id = (msg->data[4] << 8) | (msg->data[5]);
+        *config_value = (msg->data[6] << 8) | (msg->data[7]);
+        return true;
+    } else if (msg_type == MSG_CONFIG_STATUS) {
+        *config_id = (msg->data[2] << 8) | (msg->data[3]);
+        *config_value = (msg->data[4] << 8) | (msg->data[5]);
+        return true;
+    } else {
+        return false;
+    }
 }

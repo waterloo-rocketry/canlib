@@ -7,8 +7,8 @@
 #include "can.h"
 #include "message_types.h"
 
-// these symbol should be defined in the project's Makefile, but if it
-// isn't, issue a warning and set it to 0
+// these symbol should be defined in the project's Makefile, but if it isn't, issue a warning and
+// set it to 0
 #ifndef BOARD_TYPE_UNIQUE_ID
 #warning BOARD_TYPE_UNIQUE_ID not defined, please set that up in project
 #define BOARD_TYPE_UNIQUE_ID 0

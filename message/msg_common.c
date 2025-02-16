@@ -35,7 +35,7 @@ uint8_t get_board_inst_unique_id(const can_msg_t *msg) {
     return (uint8_t)(msg->sid & 0xFF);
 }
 
-uint32_t get_timestamp(const can_msg_t *msg) {
+uint16_t get_timestamp(const can_msg_t *msg) {
     if (!msg) {
         return 0;
     }

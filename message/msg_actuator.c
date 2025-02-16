@@ -36,9 +36,8 @@ bool build_actuator_analog_cmd_msg(
     write_timestamp_2bytes(timestamp, output);
 
     output->data[2] = actuator_id;
-    output->data[4] = (actuator_cmd >> 8) & 0xff;
+    output->data[3] = (actuator_cmd >> 8) & 0xff;
     output->data[4] = actuator_cmd & 0xff;
-
     output->data_len = 5;
 
     return true;
@@ -46,7 +45,7 @@ bool build_actuator_analog_cmd_msg(
 
 bool build_actuator_status_msg(
     can_msg_prio_t prio, uint16_t timestamp, can_actuator_id_t actuator_id,
-    can_actuator_state_t actuator_curr_state, can_actuator_id_t actuator_req_state,
+    can_actuator_state_t actuator_curr_state, can_actuator_id_t actuator_cmd_state,
     can_msg_t *output
 ) {
     if (!output) {
@@ -58,7 +57,7 @@ bool build_actuator_status_msg(
 
     output->data[2] = (uint8_t)actuator_id;
     output->data[3] = (uint8_t)actuator_curr_state;
-    output->data[4] = (uint8_t)actuator_req_state;
+    output->data[4] = (uint8_t)actuator_cmd_state;
     output->data_len = 5;
 
     return true;
@@ -97,7 +96,7 @@ int get_curr_actuator_state(const can_msg_t *msg) {
     }
 }
 
-int get_req_actuator_state(const can_msg_t *msg) {
+int get_cmd_actuator_state(const can_msg_t *msg) {
     if (!msg) {
         return -1;
     }
@@ -116,7 +115,7 @@ int get_req_actuator_state(const can_msg_t *msg) {
     }
 }
 
-uint16_t get_req_actuator_state_analog(const can_msg_t *msg) {
+uint16_t get_cmd_actuator_state_analog(const can_msg_t *msg) {
     if (!msg) {
         return 0;
     }
