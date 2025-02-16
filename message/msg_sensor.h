@@ -8,61 +8,49 @@
 #include "message_types.h"
 
 /*
- * Used to send analog sensor data. The units of the sensor data are
- * not nailed down at this point and will likely differ based on the
- * sensor id.
- */
-bool build_analog_data_msg(
-    can_msg_prio_t prio, uint32_t timestamp, enum SENSOR_ID sensor_id, uint16_t sensor_data,
-    can_msg_t *output
-);
-
-/*
- * Used to send 16-bit IMU data values. It is assumed that an array
- * of 3 values is sent (X, Y, and Z axes).
- */
-bool build_imu_data_msg(
-    can_msg_prio_t prio, can_msg_type_t message_type, // acc, gyro, mag
-    uint32_t timestamp,
-    const uint16_t *imu_data, // x, y, z
-    can_msg_t *output
-);
-
-/*
  * Used to send tempurature measurement data
  * Units are 1/1024th of a degree C
  * Temp is 24 bit signed, not 32 bit. Values less than -8388608 or greater than
  * 8388607 will overflow.
  */
 bool build_temp_data_msg(
-    can_msg_prio_t prio, uint32_t timestamp, uint8_t sensor_num, int32_t temp, can_msg_t *output
+    can_msg_prio_t prio, uint16_t timestamp, uint8_t sensor_num, int32_t temp, can_msg_t *output
 );
 
 /*
  * Used to send altitude recived from altimiters
  */
 bool build_altitude_data_msg(
-    can_msg_prio_t prio, uint32_t timestamp, int32_t altitude, can_msg_t *output
+    can_msg_prio_t prio, uint16_t timestamp, int32_t altitude, can_msg_t *output
 );
 
 /*
- * Returns true if msg is of type SENSOR_ACC, SENSOR_GYRO, SENSOR_MAG,
- * or SENSOR_ANALOG. Otherwise it returns false
+ * Used to send 16-bit IMU data values.
  */
+bool build_imu_data_msg(
+    can_msg_prio_t prio, uint16_t timestamp, char axis, can_imu_id_t imu_id, uint16_t linear_accel,
+    uint16_t angular_velocity, can_msg_t *output
+);
+
+/*
+ * Used to send 16-bit IMU magnetometer values.
+ */
+bool build_mag_data_msg(
+    can_msg_prio_t prio, uint16_t timestamp, char axis, can_imu_id_t imu_id, uint16_t mag_value,
+    can_msg_t *output
+);
+
+/*
+ * Used to send analog sensor data. The units of the sensor data are
+ * not nailed down at this point and will likely differ based on the
+ * sensor id.
+ */
+bool build_analog_data_msg(
+    can_msg_prio_t prio, uint32_t timestamp, can_analog_sensor_id_t sensor_id, uint16_t sensor_data,
+    can_msg_t *output
+);
+
 bool is_sensor_data(const can_msg_t *msg);
-
-/*
- * Gets IMU data from an IMU message. Returns true if
- * successful, false if the input is invalid.
- */
-bool get_imu_data(const can_msg_t *msg, uint16_t *output_x, uint16_t *output_y, uint16_t *output_z);
-
-/*
- * Gets analog data (the sensor ID and data itself) from an
- * analog message. Returns true if successful, false if
- * the input is invalid.
- */
-bool get_analog_data(const can_msg_t *msg, enum SENSOR_ID *sensor_id, uint16_t *output_data);
 
 /*
  * Gets the temp data and sensor num, returns false if the message is not
@@ -76,18 +64,23 @@ bool get_temp_data(const can_msg_t *msg, uint8_t *sensor_num, int32_t *temp);
  */
 bool get_altitude_data(const can_msg_t *msg, int32_t *altitude);
 
-/*
- * Used to send fill sensing data. Currently senses fill level
- * measured by sensor number, and direction of fill travel.
- */
-bool build_fill_msg(
-    can_msg_prio_t prio, uint32_t timestamp, uint8_t lvl, uint8_t direction, can_msg_t *output
-);
+bool get_imu_mag_id_demension(const can_msg_t *msg, can_imu_id_t *imu_id, char *demension);
 
 /*
- * Populates provided lvl and direction arguments with data unpacked
- * from fill sensing message.
+ * Gets IMU data from an IMU message. Returns true if
+ * successful, false if the input is invalid.
  */
-bool get_fill_info(const can_msg_t *msg, uint8_t *lvl, uint8_t *direction);
+bool get_imu_data(const can_msg_t *msg, uint16_t *linear_accel, uint16_t *angular_velocity);
+
+bool get_mag_data(const can_msg_t *msg, uint16_t *mag_value);
+
+/*
+ * Gets analog data (the sensor ID and data itself) from an
+ * analog message. Returns true if successful, false if
+ * the input is invalid.
+ */
+bool get_analog_data(
+    const can_msg_t *msg, can_analog_sensor_id_t *sensor_id, uint16_t *output_data
+);
 
 #endif
