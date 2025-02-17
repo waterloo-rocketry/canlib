@@ -46,7 +46,7 @@ bool build_mag_data_msg(
  * sensor id.
  */
 bool build_analog_data_msg(
-    can_msg_prio_t prio, uint32_t timestamp, can_analog_sensor_id_t sensor_id, uint16_t sensor_data,
+    can_msg_prio_t prio, uint16_t timestamp, can_analog_sensor_id_t sensor_id, uint16_t sensor_data,
     can_msg_t *output
 );
 

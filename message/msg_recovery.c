@@ -35,8 +35,8 @@ bool build_alt_arm_status_msg(
     output->sid = SID(prio, MSG_ALT_ARM_STATUS);
     write_timestamp_2bytes(timestamp, output);
 
-    output->data[3] = alt_id;
-    output->data[4] = arm_state;
+    output->data[2] = alt_id;
+    output->data[3] = arm_state;
     // drogue voltage
     output->data[4] = v_drogue >> 8; // 8 msb
     output->data[5] = v_drogue & 0x00FF; // 8 lsb

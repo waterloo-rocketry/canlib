@@ -182,6 +182,7 @@ typedef enum {
     SENSOR_CANARD_ENCODER_1,
     SENSOR_CANARD_ENCODER_2,
     SENSOR_PROC_FLIGHT_PHASE_STATUS,
+    SENSOR_VELOCITY,
 } can_analog_sensor_id_t;
 
 typedef enum {
