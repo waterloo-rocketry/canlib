@@ -13,10 +13,15 @@ bool build_state_est_data_msg(
 ) {
     output->sid = SID(prio, MSG_STATE_EST_DATA);
     write_timestamp_2bytes(timestamp, output);
-    output->data[2] = state_id;
-    memcpy(output->data + 3, state_data, sizeof(*state_data));
+    const uint8_t *data = (const uint8_t *)state_data;
 
-    output->data_len = 8;
+    output->data[2] = state_id;
+    output->data[3] = data[3];
+    output->data[4] = data[2];
+    output->data[5] = data[1];
+    output->data[6] = data[0];
+
+    output->data_len = 7;
 
     return true;
 }
@@ -36,7 +41,11 @@ bool get_state_est_data(const can_msg_t *msg, can_state_est_id_t *state_id, floa
     }
 
     *state_id = msg->data[2];
-    memcpy(state_data, msg->data + 3, sizeof(*state_data));
+    uint8_t *data = (uint8_t *)state_data;
+    data[0] = msg->data[6];
+    data[1] = msg->data[5];
+    data[2] = msg->data[4];
+    data[3] = msg->data[3];
 
     return true;
 }
