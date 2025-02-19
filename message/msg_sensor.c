@@ -56,7 +56,7 @@ bool build_imu_data_msg(
         output->sid = SID(prio, MSG_SENSOR_IMU_X);
     } else if (axis == 'Y') {
         output->sid = SID(prio, MSG_SENSOR_IMU_Y);
-    } else if (axis == 'Z') {
+    } else {
         output->sid = SID(prio, MSG_SENSOR_IMU_Z);
     }
 
@@ -83,7 +83,7 @@ bool build_mag_data_msg(
         output->sid = SID(prio, MSG_SENSOR_MAG_X);
     } else if (axis == 'Y') {
         output->sid = SID(prio, MSG_SENSOR_MAG_Y);
-    } else if (axis == 'Z') {
+    } else {
         output->sid = SID(prio, MSG_SENSOR_MAG_Z);
     }
 
