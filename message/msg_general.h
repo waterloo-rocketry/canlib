@@ -25,6 +25,9 @@ bool build_reset_msg(
     can_msg_t *output
 );
 
+/*
+ * Copies first 6 bytes of data
+ */
 bool build_debug_raw_msg(
     can_msg_prio_t prio, uint16_t timestamp, const uint8_t *data, can_msg_t *output
 );

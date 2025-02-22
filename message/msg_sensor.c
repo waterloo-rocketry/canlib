@@ -165,18 +165,18 @@ bool get_altitude_data(const can_msg_t *msg, int32_t *altitude) {
     return true;
 }
 
-bool get_imu_mag_id_demension(const can_msg_t *msg, can_imu_id_t *imu_id, char *demension) {
-    if (!msg || !imu_id || !demension) {
+bool get_imu_mag_id_dimension(const can_msg_t *msg, can_imu_id_t *imu_id, char *dimension) {
+    if (!msg || !imu_id || !dimension) {
         return false;
     }
 
     can_msg_type_t msg_type = get_message_type(msg);
     if ((msg_type == MSG_SENSOR_IMU_X) || (msg_type == MSG_SENSOR_MAG_X)) {
-        *demension = 'X';
+        *dimension = 'X';
     } else if ((msg_type == MSG_SENSOR_IMU_Y) || (msg_type == MSG_SENSOR_MAG_Y)) {
-        *demension = 'Y';
+        *dimension = 'Y';
     } else if ((msg_type == MSG_SENSOR_IMU_Z) || (msg_type == MSG_SENSOR_MAG_Z)) {
-        *demension = 'Z';
+        *dimension = 'Z';
     } else {
         return false;
     }

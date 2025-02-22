@@ -64,7 +64,7 @@ bool get_temp_data(const can_msg_t *msg, uint8_t *sensor_num, int32_t *temp);
  */
 bool get_altitude_data(const can_msg_t *msg, int32_t *altitude);
 
-bool get_imu_mag_id_demension(const can_msg_t *msg, can_imu_id_t *imu_id, char *demension);
+bool get_imu_mag_id_dimension(const can_msg_t *msg, can_imu_id_t *imu_id, char *dimension);
 
 /*
  * Gets IMU data from an IMU message. Returns true if

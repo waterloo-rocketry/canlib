@@ -3,8 +3,8 @@
  * Waterloo Rocketry's CAN implementations
  */
 
-#ifndef _CANLIB_CAN_H
-#define _CANLIB_CAN_H
+#ifndef CANLIB_CAN_H
+#define CANLIB_CAN_H
 
 #include <stdint.h>
 #include <stdbool.h>
