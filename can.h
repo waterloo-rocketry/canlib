@@ -3,14 +3,15 @@
  * Waterloo Rocketry's CAN implementations
  */
 
-#ifndef CAN_H_
-#define CAN_H_
+#ifndef CANLIB_CAN_H
+#define CANLIB_CAN_H
 
 #include <stdint.h>
 #include <stdbool.h>
 
-#define CANLIB_VERSION            "v0.7.0"
 #define CANLIB_BIT_TIME_US        4
+
+typedef uint32_t can_sid_t;
 
 // Timing parameters
 typedef struct {
@@ -36,7 +37,7 @@ typedef struct {
 // Things that are in a CAN message
 typedef struct {
     // Standard Identifier - 29 bits long
-    uint32_t sid;
+    can_sid_t sid;
     // How many bytes are used in data
     uint8_t data_len;
     // the data you want to transmit

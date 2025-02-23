@@ -1,5 +1,5 @@
-#ifndef CANLIB_H
-#define CANLIB_H
+#ifndef CANLIB_CANLIB_H
+#define CANLIB_CANLIB_H
 
 #include "can.h"
 #include "message_types.h"
