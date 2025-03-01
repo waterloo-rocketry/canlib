@@ -134,11 +134,11 @@ typedef enum {
 } can_actuator_id_t;
 
 typedef enum {
-    ACTUATOR_ON = 0x00,
-    ACTUATOR_OFF = 0x01,
-    ACTUATOR_UNK = 0x02,
-    ACTUATOR_ILLEGAL = 0x03,
-    ACTUATOR_ENUM_MAX = 0x04,
+    ACT_STATE_ON = 0x00,
+    ACT_STATE_OFF = 0x01,
+    ACT_STATE_UNK = 0x02,
+    ACT_STATE_ILLEGAL = 0x03,
+    ACT_STATE_ENUM_MAX = 0x04,
 } can_actuator_state_t;
 
 typedef enum {
