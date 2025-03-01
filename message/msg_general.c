@@ -137,6 +137,28 @@ bool get_reset_board_id(const can_msg_t *msg, uint8_t *board_type_id, uint8_t *b
     }
 }
 
+bool check_board_need_reset(const can_msg_t *msg) {
+    uint8_t board_type_id, board_inst_id;
+
+    if (!get_reset_board_id(msg, &board_type_id, &board_inst_id)) {
+        return false;
+    }
+
+    if (board_type_id == BOARD_TYPE_ID_ANY) {
+        return true;
+    } else if (board_type_id == BOARD_TYPE_UNIQUE_ID) {
+        if (board_inst_id == BOARD_INST_ID_ANY) {
+            return true;
+        } else if (board_inst_id == BOARD_INST_UNIQUE_ID) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
+
 bool get_debug_raw_data(const can_msg_t *msg, uint8_t *data) {
     if (!msg) {
         return false;
