@@ -25,8 +25,8 @@ bool build_actuator_cmd_msg(
 }
 
 bool build_actuator_analog_cmd_msg(
-    can_msg_prio_t prio, uint32_t timestamp, can_actuator_state_t actuator_id,
-    uint16_t actuator_cmd, can_msg_t *output
+    can_msg_prio_t prio, uint32_t timestamp, can_actuator_id_t actuator_id, uint16_t actuator_cmd,
+    can_msg_t *output
 ) {
     if (!output) {
         return false;
