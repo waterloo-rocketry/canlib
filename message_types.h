@@ -40,6 +40,7 @@ typedef enum {
     MSG_STATE_EST_DATA = 0x019,
     MSG_LEDS_ON = 0x01A,
     MSG_LEDS_OFF = 0x01B,
+    MSG_ID_ENUM_MAX = 0x01C,
 } can_msg_type_t;
 
 // Board Type IDs
