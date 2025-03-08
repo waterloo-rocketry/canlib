@@ -52,6 +52,8 @@ bool get_general_board_status(
  */
 bool get_reset_board_id(const can_msg_t *msg, uint8_t *board_type_id, uint8_t *board_inst_id);
 
+bool check_board_need_reset(const can_msg_t *msg);
+
 bool get_debug_raw_data(const can_msg_t *msg, uint8_t *data);
 
 bool get_config_set_target_board(

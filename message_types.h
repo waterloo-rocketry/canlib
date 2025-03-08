@@ -40,6 +40,7 @@ typedef enum {
     MSG_STATE_EST_DATA = 0x019,
     MSG_LEDS_ON = 0x01A,
     MSG_LEDS_OFF = 0x01B,
+    MSG_ID_ENUM_MAX = 0x01C,
 } can_msg_type_t;
 
 // Board Type IDs
@@ -130,24 +131,28 @@ typedef enum {
     ACTUATOR_PROC_ESTIMATOR_INIT = 0x0D,
     ACTUATOR_CANARD_ENABLE = 0x0E,
     ACTUATOR_CANARD_ANGLE = 0x0F,
+    ACTUATOR_ENUM_MAX = 0x10,
 } can_actuator_id_t;
 
 typedef enum {
-    ACTUATOR_ON = 0x00,
-    ACTUATOR_OFF = 0x01,
-    ACTUATOR_UNK = 0x02,
-    ACTUATOR_ILLEGAL = 0x03,
+    ACT_STATE_ON = 0x00,
+    ACT_STATE_OFF = 0x01,
+    ACT_STATE_UNK = 0x02,
+    ACT_STATE_ILLEGAL = 0x03,
+    ACT_STATE_ENUM_MAX = 0x04,
 } can_actuator_state_t;
 
 typedef enum {
     ALTIMETER_RAVEN = 0x00,
     ALTIMETER_STRATOLOGGER = 0x01,
     ALTIMETER_SRAD = 0x02,
+    ALTIMETER_ENUM_MAX = 0x03,
 } can_altimeter_id_t;
 
 typedef enum {
     ALT_ARM_STATE_DISARMED = 0x00,
     ALT_ARM_STATE_ARMED = 0x01,
+    ALT_ARM_STATE_ENUM_MAX = 0x02,
 } can_alt_arm_state_t;
 
 typedef enum {
@@ -155,6 +160,7 @@ typedef enum {
     IMU_PROC_MTI630 = 0x01,
     IMU_PROC_LSM6DSO32 = 0x02,
     IMU_SRAD_ALT_ALTIMU10 = 0x03,
+    IMU_ENUM_MAX = 0x04,
 } can_imu_id_t;
 
 typedef enum {
@@ -183,6 +189,7 @@ typedef enum {
     SENSOR_CANARD_ENCODER_2 = 0x16,
     SENSOR_PROC_FLIGHT_PHASE_STATUS = 0x17,
     SENSOR_VELOCITY = 0x18,
+    SENSOR_ENUM_MAX = 0x19,
 } can_analog_sensor_id_t;
 
 typedef enum {
@@ -199,6 +206,7 @@ typedef enum {
     STATE_ID_ALT = 0x0A,
     STATE_ID_COEFF_CL = 0x0B,
     STATE_ID_CANARD_ANGLE = 0x0C,
+    STATE_ID_ENUM_MAX = 0x0D,
 } can_state_est_id_t;
 
 #endif
