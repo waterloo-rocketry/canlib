@@ -139,6 +139,7 @@ typedef enum {
     ACTUATOR_TVC_SAT = 0x16,
     ACTUATOR_TVC_POSITION_1 = 0x17,
     ACTUATOR_TVC_POSITION_2 = 0x18,
+    ACTUATOR_TVC_DEAD = 0x19,
 } can_actuator_id_t;
 
 typedef enum {
