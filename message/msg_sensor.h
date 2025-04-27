@@ -41,6 +41,15 @@ bool build_mag_data_msg(
 );
 
 /*
+ * Used to build barometer raw data message
+ * Note: pressure data is 24 bits only
+ */
+bool build_baro_data_msg(
+    can_msg_prio_t prio, uint16_t timestamp, can_imu_id_t imu_id, uint32_t pressure, uint16_t temp,
+    can_msg_t *output
+);
+
+/*
  * Used to send analog sensor data. The units of the sensor data are
  * not nailed down at this point and will likely differ based on the
  * sensor id.
@@ -73,6 +82,11 @@ bool get_imu_mag_id_dimension(const can_msg_t *msg, can_imu_id_t *imu_id, char *
 bool get_imu_data(const can_msg_t *msg, uint16_t *linear_accel, uint16_t *angular_velocity);
 
 bool get_mag_data(const can_msg_t *msg, uint16_t *mag_value);
+
+/*
+ * Get pressure and temperature data from barometer sensor message
+ */
+bool get_baro_data(const can_msg_t *msg, can_imu_id_t *imu_id, uint32_t *pressure, uint16_t *temp);
 
 /*
  * Gets analog data (the sensor ID and data itself) from an
