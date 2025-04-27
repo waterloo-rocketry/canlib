@@ -16,16 +16,17 @@ static void buffer_to_msg(const unsigned int *buffer, can_msg_t *received);
 // Initialization function for CAN. The driver currently only runs in
 // callback mode, and that callback will be triggered in an interrupt
 // context. Please make the callback as short (in time) as possible.
-void init_can(const can_timing_t *timing,
-              void (*receive_callback)(const can_msg_t *message),
-              bool run_in_loopback) {
+void init_can(
+    const can_timing_t *timing, void (*receive_callback)(const can_msg_t *message),
+    bool run_in_loopback
+) {
     // store pointer to the receive callback
     can_rcv_cb = receive_callback;
 
     // set can module to config mode
     C1CTRL1bits.REQOP = 0x4;
     // wait until that mode takes effect
-    while (C1CTRL1bits.OPMODE != 0x4);
+    while (C1CTRL1bits.OPMODE != 0x4) {}
 
     // allow writing of control bits
     C1CTRL1bits.WIN = 1;
@@ -41,7 +42,7 @@ void init_can(const can_timing_t *timing,
 
     // set up DMA and FIFO: don't use the FIFO, use 32 buffers for DMA
     C1FCTRLbits.DMABS = 0b110;
-    C1FCTRLbits.FSA   = 0b11111;
+    C1FCTRLbits.FSA = 0b11111;
 
     // set up filters and masks
     init_filters_and_masks();
@@ -66,14 +67,14 @@ void init_can(const can_timing_t *timing,
 
     // if you wanna run this driver in loopback mode, we can
     // accomodate that
-    if(run_in_loopback) {
+    if (run_in_loopback) {
         // set loopback mode
         C1CTRL1bits.REQOP = 2;
         // wait until change is applied
-        while (C1CTRL1bits.OPMODE != 0x2);
+        while (C1CTRL1bits.OPMODE != 0x2) {}
     } else {
         C1CTRL1bits.REQOP = 0;
-        while(C1CTRL1bits.OPMODE != 0);
+        while (C1CTRL1bits.OPMODE != 0) {}
     }
 
     // initialize the interrupts
@@ -83,7 +84,7 @@ void init_can(const can_timing_t *timing,
 // Priority must be a 2 bit number defining how high the priority of
 // this message is vs the other ones queued to be sent. 0 is lowest
 // priority, 3 is highest
-void can_send(const can_msg_t* message) {
+void can_send(const can_msg_t *message) {
     // put the SID in buffer 0 of the DMA buffers
     can_msg_buf[0][0] = ((message->sid >> 18) << 2) | 0x3;
     can_msg_buf[0][1] = (message->sid >> 6) & 0xfff;
@@ -114,7 +115,7 @@ bool can_send_rdy(void) {
 void __attribute__((__interrupt__, no_auto_psv)) _C1Interrupt(void) {
     // a transmit successfully finished, we abort the message so it
     // isn't set repeatedly
-    if(C1INTFbits.TBIF) {
+    if (C1INTFbits.TBIF) {
         C1INTFbits.TBIF = 0;
         C1TR01CONbits.TXABT0 = 1;
         return;
@@ -123,22 +124,22 @@ void __attribute__((__interrupt__, no_auto_psv)) _C1Interrupt(void) {
         // check all receive buffers, trigger the callback with every
         // filled buffer
         can_msg_t cb_message;
-        if(C1RXFUL1bits.RXFUL1) {
+        if (C1RXFUL1bits.RXFUL1) {
             buffer_to_msg(can_msg_buf[1], &cb_message);
             C1RXFUL1bits.RXFUL1 = 0;
             can_rcv_cb(&cb_message);
         }
-        if(C1RXFUL1bits.RXFUL2) {
+        if (C1RXFUL1bits.RXFUL2) {
             buffer_to_msg(can_msg_buf[2], &cb_message);
             C1RXFUL1bits.RXFUL2 = 0;
             can_rcv_cb(&cb_message);
         }
-        if(C1RXFUL1bits.RXFUL3) {
+        if (C1RXFUL1bits.RXFUL3) {
             buffer_to_msg(can_msg_buf[3], &cb_message);
             C1RXFUL1bits.RXFUL3 = 0;
             can_rcv_cb(&cb_message);
         }
-        if(C1RXFUL1bits.RXFUL4) {
+        if (C1RXFUL1bits.RXFUL4) {
             buffer_to_msg(can_msg_buf[4], &cb_message);
             C1RXFUL1bits.RXFUL4 = 0;
             can_rcv_cb(&cb_message);
@@ -170,24 +171,25 @@ static void buffer_to_msg(const unsigned int *buffer, can_msg_t *received) {
     received->sid |= (buffer[2] >> 10) & 0x3f;
     received->data_len = (buffer[2] & 0x0f);
     // fallthroughs are intentional
-    switch(received->data_len) {
+    switch (received->data_len) {
         case 8:
             received->data[7] = ((buffer[6] >> 8) & 0xff);
         case 7:
-            received->data[6] =  (buffer[6] & 0xff);
+            received->data[6] = (buffer[6] & 0xff);
         case 6:
             received->data[5] = ((buffer[5] >> 8) & 0xff);
         case 5:
-            received->data[4] =  (buffer[5] & 0xff);
+            received->data[4] = (buffer[5] & 0xff);
         case 4:
             received->data[3] = ((buffer[4] >> 8) & 0xff);
         case 3:
-            received->data[2] =  (buffer[4] & 0xff);
+            received->data[2] = (buffer[4] & 0xff);
         case 2:
             received->data[1] = ((buffer[3] >> 8) & 0xff);
         case 1:
-            received->data[0] =  (buffer[3] & 0xff);
-        case 0: default:
+            received->data[0] = (buffer[3] & 0xff);
+        case 0:
+        default:
             return;
     }
 }
@@ -200,10 +202,10 @@ static void init_dma_channels() {
     DMA0CONbits.AMODE = 0b10; // peripheral indirect addressing mode
     DMA0CONbits.MODE = 0; // continuous mode, disable ping-pong mode
     DMA0REQbits.IRQSEL = 0b01000110; // ECAN1-TX Data request
-    DMA0CNT = 7; //8 words in a CAN message
-    DMA0PAD = (volatile uint16_t) &C1TXD;
-    DMA0STAL = (uint16_t) &can_msg_buf;
-    DMA0STAH = (uint16_t) &can_msg_buf;
+    DMA0CNT = 7; // 8 words in a CAN message
+    DMA0PAD = (volatile uint16_t)&C1TXD;
+    DMA0STAL = (uint16_t)&can_msg_buf;
+    DMA0STAH = (uint16_t)&can_msg_buf;
     DMA0CONbits.CHEN = 1; // we are go for DMA
 
     // enable DMA channel 1 as the CAN Rx channel
@@ -215,8 +217,8 @@ static void init_dma_channels() {
     DMA1REQ = 34;
     DMA1CNT = 7;
     DMA1PAD = (volatile unsigned int)&C1RXD;
-    DMA1STAL = (unsigned int) &can_msg_buf;
-    DMA1STAH = (unsigned int) &can_msg_buf;
+    DMA1STAL = (unsigned int)&can_msg_buf;
+    DMA1STAH = (unsigned int)&can_msg_buf;
     DMA1CONbits.CHEN = 0x1;
 }
 
@@ -241,21 +243,19 @@ static void init_can_interrupts() {
     IEC2bits.C1IE = 1;
 }
 
-
 // macro for the reduction of typing, only used in
 // init_filters_and_masks. Sets filter n to point at mask 0, with
 // filter SID 0, and cause the CAN buffer pointer for that filter to
 // be n+1
-#define INIT_FILTER(n) do {                          \
-        /*point all filters at mask 0*/              \
-        C1FMSKSEL1bits.F##n##MSK = 0;        \
-        /*set the filter SID to 0*/                  \
-        C1RXF##n##SID = 0;                  \
-        /*point filter number at buffer (number+1)*/ \
-        C1BUFPNT1bits.F##n##BP = ((n)+1); \
-        } while(0)
-
-
+#define INIT_FILTER(n)                                                                             \
+    do {                                                                                           \
+        /*point all filters at mask 0*/                                                            \
+        C1FMSKSEL1bits.F##n##MSK = 0;                                                              \
+        /*set the filter SID to 0*/                                                                \
+        C1RXF##n##SID = 0;                                                                         \
+        /*point filter number at buffer (number+1)*/                                               \
+        C1BUFPNT1bits.F##n##BP = ((n) + 1);                                                        \
+    } while (0)
 
 // This driver does not currently support hardware filtering of
 // incoming messages. All messages will be received, all will be

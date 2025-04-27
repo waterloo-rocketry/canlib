@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stddef.h>
-#include "../can.h"
+
+#include "can.h"
 
 /*
  * Initialization function. Sets up memory for the buffer, and caches the
@@ -9,9 +10,9 @@
  * can_tx_ready is a function that returns true if we can currently send a can
  * message, otherwise it returns false
  */
-void txb_init(void *pool, size_t pool_size,
-              void (*can_send_fp)(const can_msg_t *),
-              bool (*can_tx_ready)(void));
+void txb_init(
+    void *pool, size_t pool_size, void (*can_send_fp)(const can_msg_t *), bool (*can_tx_ready)(void)
+);
 
 /*
  * Buffers msg. If there is room in the can_tx buffer, this function will not

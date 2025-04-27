@@ -1,0 +1,22 @@
+name: C Coding Style Check
+
+# Runs on pushes to pull request
+on: pull_request
+
+jobs:
+  # Build job
+  clang-format-style-check:
+    name: C Coding Style Check (clang-format check)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          submodules: 'true'
+      - name: Download clang-format configuration file
+        run: wget https://raw.githubusercontent.com/waterloo-rocketry/rocketlib/refs/heads/main/.clang-format
+      - name: Run formatting check
+        uses: waterloo-rocketry/actions/clang-format-check@main
+        with:
+          clang-format-config-path: '.clang-format'
+          c-source-files: 'message/*.h message/*.c util/*.h util/*.c stm32h7/*.h stm32h7/*.c pic18f26k83/*.h pic18f26k83/*.c mcp2515/*.h mcp2515/*.c dspic33epxxxgp50x/*.h dspic33epxxxgp50x/*.c'

@@ -1,6 +1,7 @@
-#include "pic18f26k83_can.h"
-#include <xc.h>
 #include <string.h>
+#include <xc.h>
+
+#include "pic18f26k83_can.h"
 
 static void (*can_rcv_cb)(const can_msg_t *message);
 
@@ -13,15 +14,14 @@ static void (*can_rcv_cb)(const can_msg_t *message);
  * module. In addition, TRIS and ANSEL registers for whatever pin
  * is being used must be set to the right values.
  */
-void can_init(const can_timing_t *timing,
-              void (*receive_callback)(const can_msg_t *message)) {
-    //keep track of callback, we use it in interrupts
+void can_init(const can_timing_t *timing, void (*receive_callback)(const can_msg_t *message)) {
+    // keep track of callback, we use it in interrupts
     can_rcv_cb = receive_callback;
 
     // set can module to config mode
     CANCONbits.REQOP = 0b100;
     // wait until that mode takes effect
-    while (CANSTATbits.OPMODE != 0x4);
+    while (CANSTATbits.OPMODE != 0x4) {}
 
     // put the can module into legacy mode, which is easier to work
     // with
@@ -53,8 +53,8 @@ void can_init(const can_timing_t *timing,
     RXM1SIDH = 0;
     RXM1SIDL = 0;
 
-    //ignore all receive message mask behaviour
     // ignore all receive message mask behaviour
+    //  ignore all receive message mask behaviour
     RXB0CONbits.RXM0 = 1;
     RXB0CONbits.RXM1 = 1;
 
@@ -79,17 +79,17 @@ void can_init(const can_timing_t *timing,
     // set normal mode
     CANCONbits.REQOP = 0;
     // wait until change is applied
-    while (CANSTATbits.OPMODE != 0x0);
+    while (CANSTATbits.OPMODE != 0x0) {}
 }
 
-void can_send(const can_msg_t* message) {
+void can_send(const can_msg_t *message) {
     // at present, this fails if transmit buffer 0 isn't available
     if (TXB0CONbits.TXREQ != 0) {
         return;
     }
 
     // argument checking
-    if(message->data_len > 8 || message->sid > 0x1FFFFFFF) {
+    if (message->data_len > 8 || message->sid > 0x1FFFFFFF) {
         return;
     }
 
@@ -107,7 +107,7 @@ void can_send(const can_msg_t* message) {
 
     // copy data over. TXB0D1 is immediately after TXB0D0, which is why
     // this is legal
-    memcpy((void*) &TXB0D0, message->data, message->data_len);
+    memcpy((void *)&TXB0D0, message->data, message->data_len);
 
     // Mark transmit buffer 0 ready to transmit
     TXB0CONbits.TXREQ = 1;
@@ -127,9 +127,10 @@ void can_handle_interrupt() {
         COMSTATbits.RXB0OVFL = 0;
         COMSTATbits.RXB1OVFL = 0;
     }
-    
+
     if (TXB0CONbits.TXREQ && TXB0CONbits.TXERR && PIR5bits.IRXIF) {
-        // This condition is true if we tried to send and ran into an error (eg if there is no CAN bus connected)
+        // This condition is true if we tried to send and ran into an error (eg if there is no CAN
+        // bus connected)
         TXB0CONbits.TXREQ = 0; // Cancel the attempted tx
         return;
     }
@@ -145,7 +146,7 @@ void can_handle_interrupt() {
         rcvd_msg.sid |= RXB0EIDL;
 
         rcvd_msg.data_len = RXB0DLCbits.DLC;
-        memcpy(rcvd_msg.data, (const void *) &RXB0D0, rcvd_msg.data_len);
+        memcpy(rcvd_msg.data, (const void *)&RXB0D0, rcvd_msg.data_len);
 
         // call application code callback
         if (NULL != can_rcv_cb) {
@@ -156,7 +157,6 @@ void can_handle_interrupt() {
         RXB0CONbits.RXFUL = 0;
         return;
     } else if (PIR5bits.RXB1IF) {
-
         can_msg_t rcvd_msg;
         rcvd_msg.sid = (uint32_t)RXB1SIDH << 21;
         rcvd_msg.sid |= (((uint32_t)RXB1SIDL >> 5) & 0x7) << 18;
@@ -165,7 +165,7 @@ void can_handle_interrupt() {
         rcvd_msg.sid |= RXB1EIDL;
 
         rcvd_msg.data_len = RXB1DLCbits.DLC;
-        memcpy(rcvd_msg.data, (const void *) &RXB1D0, rcvd_msg.data_len);
+        memcpy(rcvd_msg.data, (const void *)&RXB1D0, rcvd_msg.data_len);
 
         // call application code callback
         if (NULL != can_rcv_cb) {
