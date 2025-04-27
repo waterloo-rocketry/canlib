@@ -97,6 +97,29 @@ bool build_mag_data_msg(
     return true;
 }
 
+bool build_baro_data_msg(
+    can_msg_prio_t prio, uint16_t timestamp, can_imu_id_t imu_id, uint32_t pressure, uint16_t temp,
+    can_msg_t *output
+) {
+    if (!output) {
+        return false;
+    }
+
+    output->sid = SID(prio, MSG_SENSOR_BARO);
+    write_timestamp_2bytes(timestamp, output);
+
+    output->data[2] = imu_id;
+    output->data[3] = (pressure >> 16) & 0xFF;
+    output->data[4] = (pressure >> 8) & 0xFF;
+    output->data[5] = pressure & 0xFF;
+    output->data[6] = (temp >> 8) & 0xFF;
+    output->data[7] = temp & 0xFF;
+
+    output->data_len = 8;
+
+    return true;
+}
+
 bool build_analog_data_msg(
     can_msg_prio_t prio, uint16_t timestamp, can_analog_sensor_id_t sensor_id, uint16_t sensor_data,
     can_msg_t *output
