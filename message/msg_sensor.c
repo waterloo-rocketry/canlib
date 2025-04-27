@@ -148,7 +148,8 @@ bool is_sensor_data(const can_msg_t *msg) {
     uint16_t type = get_message_type(msg);
     if (type == MSG_SENSOR_TEMP || type == MSG_SENSOR_ALTITUDE || type == MSG_SENSOR_IMU_X ||
         type == MSG_SENSOR_IMU_Y || type == MSG_SENSOR_IMU_Z || type == MSG_SENSOR_MAG_Z ||
-        type == MSG_SENSOR_MAG_Y || type == MSG_SENSOR_MAG_Z || type == MSG_SENSOR_ANALOG) {
+        type == MSG_SENSOR_MAG_Y || type == MSG_SENSOR_MAG_Z || type == MSG_SENSOR_BARO ||
+        type == MSG_SENSOR_ANALOG) {
         return true;
     } else {
         return false;
@@ -234,6 +235,26 @@ bool get_mag_data(const can_msg_t *msg, uint16_t *mag_value) {
     }
 
     *mag_value = (uint16_t)msg->data[3] << 8 | msg->data[4];
+
+    return true;
+}
+
+bool get_baro_data(const can_msg_t *msg, can_imu_id_t *imu_id, uint32_t *pressure, uint16_t *temp) {
+    if (!msg) {
+        return false;
+    }
+    if (!pressure) {
+        return false;
+    }
+    if (!temp) {
+        return false;
+    }
+
+    *imu_id = msg->data[2];
+    *pressure = ((uint32_t)msg->data[3] << 16);
+    *pressure |= ((uint32_t)msg->data[4] << 8);
+    *pressure |= msg->data[5];
+    *temp = (uint16_t)msg->data[6] << 8 | msg->data[7];
 
     return true;
 }

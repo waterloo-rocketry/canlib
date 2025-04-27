@@ -83,6 +83,11 @@ bool get_imu_data(const can_msg_t *msg, uint16_t *linear_accel, uint16_t *angula
 bool get_mag_data(const can_msg_t *msg, uint16_t *mag_value);
 
 /*
+ * Get pressure and temperature data from barometer sensor message
+ */
+bool get_baro_data(const can_msg_t *msg, can_imu_id_t *imu_id, uint32_t *pressure, uint16_t *temp);
+
+/*
  * Gets analog data (the sensor ID and data itself) from an
  * analog message. Returns true if successful, false if
  * the input is invalid.
