@@ -1,4 +1,5 @@
 *.o
+*.d
 compile_commands.json
 .cache
 tests/unit_test
