@@ -21,9 +21,10 @@
  * problems.
  */
 
-#include "../can.h"
 #include <stdbool.h>
 #include <stddef.h>
+
+#include "can.h"
 
 /*
  * Initializes the module. Pool is a memory buffer, which must be provided by

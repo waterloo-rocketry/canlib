@@ -12,9 +12,9 @@ static srb_ctx_t buf;
 // context to store pointers to can_send_fp and can_tx_ready
 static cbl_ctx_t ctx;
 
-void txb_init(void *pool, size_t pool_size,
-              void (*can_send_fp)(const can_msg_t *),
-              bool (*can_tx_ready)(void)) {
+void txb_init(
+    void *pool, size_t pool_size, void (*can_send_fp)(const can_msg_t *), bool (*can_tx_ready)(void)
+) {
     ctx.can_send_fp = can_send_fp;
     ctx.can_tx_ready = can_tx_ready;
     srb_init(&buf, pool, pool_size, sizeof(can_msg_t));
