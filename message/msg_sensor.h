@@ -42,6 +42,7 @@ bool build_mag_data_msg(
 
 /*
  * Used to build barometer raw data message
+ * Note: pressure data is 24 bits only
  */
 bool build_baro_data_msg(
     can_msg_prio_t prio, uint16_t timestamp, can_imu_id_t imu_id, uint32_t pressure, uint16_t temp,
