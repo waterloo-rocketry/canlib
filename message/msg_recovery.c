@@ -17,9 +17,9 @@ bool build_alt_arm_cmd_msg(
     output->sid = SID(prio, MSG_ALT_ARM_CMD);
     write_timestamp_2bytes(timestamp, output);
 
-    output->data[3] = alt_id;
-    output->data[4] = arm_cmd;
-    output->data_len = 5;
+    output->data[2] = alt_id;
+    output->data[3] = arm_cmd;
+    output->data_len = 4;
 
     return true;
 }
@@ -59,8 +59,8 @@ bool get_alt_arm_state(
         (get_message_type(msg) != MSG_ALT_ARM_STATUS)) {
         return false;
     }
-    *alt_id = msg->data[3];
-    *arm_state = msg->data[4];
+    *alt_id = msg->data[2];
+    *arm_state = msg->data[3];
 
     return true;
 }
