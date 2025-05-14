@@ -1,5 +1,5 @@
-#include <stdint.h>
 #include <stddef.h>
+#include <stdint.h>
 
 // crc table used for calculation
 uint8_t table[256] = {
