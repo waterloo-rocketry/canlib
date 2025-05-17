@@ -64,6 +64,6 @@ bool srb_peek(const srb_ctx_t *ctx, void *element) {
         return false;
     }
     size_t offset = get_offset_bytes(ctx, ctx->rd_idx);
-    memcpy(element, ctx->memory_pool + offset, ctx->element_size);
+    memcpy(element, ((uint8_t *)ctx->memory_pool) + offset, ctx->element_size);
     return true;
 }
