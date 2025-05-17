@@ -1,10 +1,12 @@
 CANLIB_PATH := ..
 
 CFLAGS := \
+	-std=c99 \
 	-Wall \
 	-Wextra \
 	-pedantic \
 	-MMD \
+	-O2 \
 	-I$(CANLIB_PATH) \
 	-DBOARD_TYPE_UNIQUE_ID=BOARD_TYPE_ID_USB \
 	-DBOARD_INST_UNIQUE_ID=BOARD_INST_ID_GENERIC
@@ -23,7 +25,7 @@ SRCS := \
 	$(CANLIB_PATH)/util/safe_ring_buffer.c
 
 OBJS = $(SRCS:.c=.o)
-DEPS = $(OBJS:.o=.d)
+DEPS = $(SRCS:.c=.d)
 
 unit_test: $(OBJS)
 	$(CC) $^ -o $@
