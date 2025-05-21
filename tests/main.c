@@ -13,7 +13,7 @@ void print_logger_log_line(const can_msg_t *msg) {
     putchar('\n');
 }
 
-int main(int argc, char *argv[]) {
+int main(void) {
     can_msg_t msg;
 
     for (int i = 0; i < 256; i++) {

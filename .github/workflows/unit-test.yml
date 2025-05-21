@@ -1,0 +1,17 @@
+name: Run Unit Tests
+
+# Runs on pushes to pull request
+on: pull_request
+
+jobs:
+  build:
+    name: Compile and Run Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Test
+        run: make
+        working-directory: tests
+      - name: Run Test
+        run: ./unit_test
+        working-directory: tests
