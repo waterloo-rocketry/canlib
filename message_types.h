@@ -179,6 +179,8 @@ typedef enum {
     SENSOR_PROC_FLIGHT_PHASE_STATUS = 0x17,
     SENSOR_VELOCITY = 0x18,
     SENSOR_ENUM_MAX = 0x19,
+    SENSOR_HALL_FUEL_INJ = 0x1A,
+    SENSOR_HALL_OX_INJ = 0x1B,
 } can_analog_sensor_id_t;
 
 typedef enum {
@@ -207,6 +209,7 @@ typedef enum {
     E_12V_UNDER_VOLTAGE_OFFSET = 0x05,
     E_IO_ERROR_OFFSET = 0x06,
     E_FS_ERROR_OFFSET = 0x07,
+    E_PT_OUT_OF_RANGE = 0x08,
 } can_general_board_status_offset_t;
 
 #endif

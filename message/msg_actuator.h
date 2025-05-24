@@ -4,7 +4,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "can.h"
+#include "../can.h"
+#include "../canlib.h"
 #include "message_types.h"
 
 bool build_actuator_cmd_msg(
