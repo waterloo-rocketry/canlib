@@ -21,7 +21,8 @@ bool build_temp_data_msg(
  * Used to send altitude recived from altimiters
  */
 bool build_altitude_data_msg(
-    can_msg_prio_t prio, uint16_t timestamp, int32_t altitude, can_msg_t *output
+    can_msg_prio_t prio, uint16_t timestamp, int32_t altitude, can_apogee_state_t apogee_state,
+    can_msg_t *output
 );
 
 /*
@@ -71,7 +72,7 @@ bool get_temp_data(const can_msg_t *msg, uint8_t *sensor_num, int32_t *temp);
  * Gets the altitude data, returns false if the message is not
  * a SENSOR_ALTITUDE message.
  */
-bool get_altitude_data(const can_msg_t *msg, int32_t *altitude);
+bool get_altitude_data(const can_msg_t *msg, int32_t *altitude, can_apogee_state_t *apogee_state);
 
 bool get_imu_mag_id_dimension(const can_msg_t *msg, can_imu_id_t *imu_id, char *dimension);
 
