@@ -25,7 +25,7 @@
 
 void write_timestamp_2bytes(uint16_t timestamp, can_msg_t *output);
 
-uint16_t get_message_type(const can_msg_t *msg);
+can_msg_type_t get_message_type(const can_msg_t *msg);
 
 uint8_t get_board_type_unique_id(const can_msg_t *msg);
 uint8_t get_board_inst_unique_id(const can_msg_t *msg);
