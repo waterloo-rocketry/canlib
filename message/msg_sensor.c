@@ -27,7 +27,8 @@ bool build_temp_data_msg(
 }
 
 bool build_altitude_data_msg(
-    can_msg_prio_t prio, uint16_t timestamp, int32_t altitude, can_msg_t *output
+    can_msg_prio_t prio, uint16_t timestamp, int32_t altitude, can_apogee_state_t apogee_state,
+    can_msg_t *output
 ) {
     if (!output) {
         return false;
@@ -40,7 +41,8 @@ bool build_altitude_data_msg(
     output->data[3] = (altitude >> 16) & 0xFF;
     output->data[4] = (altitude >> 8) & 0xFF;
     output->data[5] = altitude & 0xFF;
-    output->data_len = 6;
+    output->data[6] = apogee_state;
+    output->data_len = 7;
 
     return true;
 }
@@ -173,7 +175,7 @@ bool get_temp_data(const can_msg_t *msg, uint8_t *sensor_num, int32_t *temp) {
     return true;
 }
 
-bool get_altitude_data(const can_msg_t *msg, int32_t *altitude) {
+bool get_altitude_data(const can_msg_t *msg, int32_t *altitude, can_apogee_state_t *apogee_state) {
     if (!msg || !altitude) {
         return false;
     }
@@ -181,10 +183,12 @@ bool get_altitude_data(const can_msg_t *msg, int32_t *altitude) {
         return false;
     }
 
-    *altitude = ((uint32_t)msg->data[3] << 24);
-    *altitude |= ((uint32_t)msg->data[4] << 16);
-    *altitude |= ((uint32_t)msg->data[5] << 8);
-    *altitude |= msg->data[6];
+    *altitude = ((uint32_t)msg->data[2] << 24);
+    *altitude |= ((uint32_t)msg->data[3] << 16);
+    *altitude |= ((uint32_t)msg->data[4] << 8);
+    *altitude |= msg->data[5];
+
+    *apogee_state = msg->data[6];
 
     return true;
 }
