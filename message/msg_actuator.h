@@ -7,6 +7,10 @@
 #include "can.h"
 #include "message_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 bool build_actuator_cmd_msg(
     can_msg_prio_t prio, uint16_t timestamp, can_actuator_id_t actuator_id,
     can_actuator_state_t actuator_cmd, can_msg_t *output
@@ -48,5 +52,9 @@ int get_cmd_actuator_state(const can_msg_t *msg);
  * an actuator cmd/status.
  */
 uint16_t get_cmd_actuator_state_analog(const can_msg_t *msg);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

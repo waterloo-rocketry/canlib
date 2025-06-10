@@ -7,6 +7,10 @@
 #include "can.h"
 #include "message_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
  * Used to format GPS timestamp data. Data arguments: UTC time in hours,
  * minutes, seconds, and deci-seconds.
@@ -92,5 +96,9 @@ bool get_gps_alt(const can_msg_t *msg, uint16_t *altitude, uint8_t *daltitude, u
  * quality indicator.
  */
 bool get_gps_info(const can_msg_t *msg, uint8_t *num_sat, uint8_t *quality);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

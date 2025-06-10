@@ -7,6 +7,10 @@
 #include "can.h"
 #include "message_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
  * Used to send altimeter arm commands
  */
@@ -36,5 +40,9 @@ bool get_alt_arm_state(
  * if the message is not an ALT_ARM_STATUS message
  */
 bool get_pyro_voltage_data(const can_msg_t *msg, uint16_t *v_drogue, uint16_t *v_main);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
