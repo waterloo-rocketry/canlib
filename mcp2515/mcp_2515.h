@@ -3,6 +3,10 @@
 
 #include "can.h"
 
+#ifdef __cplusplus
+#error "C++ is not supported"
+#endif
+
 void mcp_can_init(
     can_timing_t *can_params, uint8_t (*spi_read_fcn)(void), void (*spi_write_fcn)(uint8_t data),
     void (*cs_drive_fcn)(uint8_t state)

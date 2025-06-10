@@ -7,6 +7,10 @@
 #ifndef _STM32H7_CAN_H
 #define _STM32H7_CAN_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* CAN module should be automatically initialized by static void MX_FDCANx_Init
  * This library is deseigned to use CANRxFIFO0 by default, which is not filtered
  * TODO: For specific message IDs which need higher priority, the chip includes dedicated Rx buffers
@@ -27,5 +31,9 @@ bool can_send(const can_msg_t *message);
 
 // returns true if the CAN module is ready to send a message
 bool can_send_rdy(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

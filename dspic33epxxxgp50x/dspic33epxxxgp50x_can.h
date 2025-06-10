@@ -3,6 +3,10 @@
 
 #include "can.h"
 
+#ifdef __cplusplus
+#error "C++ is not supported"
+#endif
+
 /*
  * Initialize the CAN driver on a dsPIC33whatever. Note that this
  * function DOES NOT setup the inputs and outputs from the CAN module
