@@ -26,6 +26,10 @@
 
 #include "can.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
  * Initializes the module. Pool is a memory buffer, which must be provided by
  * the caller. pool_size is the size of pool, in bytes (not in number of
@@ -87,5 +91,9 @@ bool rcvb_pop_message(can_msg_t *msg);
  * dequeue it. Returns true if we were successfully able to grab a CAN message.
  */
 bool rcvb_peek_message(can_msg_t *msg);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
