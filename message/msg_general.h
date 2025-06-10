@@ -7,6 +7,10 @@
 #include "can.h"
 #include "message_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
  * Used by each board to send status messages. Error codes and their
  * corresponding supplemental data are defined in message_types.h.
@@ -61,5 +65,9 @@ bool get_config_set_target_board(
 );
 
 bool get_config_id_value(const can_msg_t *msg, uint16_t *config_id, uint16_t *config_value);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

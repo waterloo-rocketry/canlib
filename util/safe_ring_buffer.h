@@ -17,6 +17,10 @@ typedef struct {
     size_t wr_idx;
 } srb_ctx_t;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
  * Initialize ring buffer. ctx is the ring buffer context to be initialized,
  * pool is a memory pool for the buffer to use. pool_size is the number of
@@ -59,5 +63,9 @@ bool srb_pop(srb_ctx_t *ctx, void *element);
  * it was successfully able to fetch an element, false otherwise
  */
 bool srb_peek(const srb_ctx_t *ctx, void *element);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

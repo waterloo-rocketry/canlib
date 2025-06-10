@@ -7,6 +7,10 @@
 #include "can.h"
 #include "message_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
  * Used to send tempurature measurement data
  * Units are 1/1024th of a degree C
@@ -97,5 +101,9 @@ bool get_baro_data(const can_msg_t *msg, can_imu_id_t *imu_id, uint32_t *pressur
 bool get_analog_data(
     const can_msg_t *msg, can_analog_sensor_id_t *sensor_id, uint16_t *output_data
 );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

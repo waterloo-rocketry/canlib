@@ -7,6 +7,10 @@
 #include "can.h"
 #include "message_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
  * Used to build state estimation data
  */
@@ -20,5 +24,9 @@ bool build_state_est_data_msg(
  * successful, false if the input is invalid.
  */
 bool get_state_est_data(const can_msg_t *msg, can_state_est_id_t *state_id, float *state_data);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

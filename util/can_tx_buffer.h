@@ -3,6 +3,10 @@
 
 #include "can.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
  * Initialization function. Sets up memory for the buffer, and caches the
  * function pointers
@@ -27,3 +31,8 @@ bool txb_enqueue(const can_msg_t *msg);
  * can_tx_ready() returns true, then can_send will be called with that message
  */
 void txb_heartbeat(void);
+
+#ifdef __cplusplus
+}
+#endif
+

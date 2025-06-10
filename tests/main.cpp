@@ -1,16 +1,16 @@
-#include <stdint.h>
-#include <stdio.h>
+#include <cstdint>
+#include <cstdio>
 
 #include "can.h"
 #include "message/msg_general.h"
 #include "message_types.h"
 
 void print_logger_log_line(const can_msg_t *msg) {
-    printf("%08X", msg->sid);
+    std::printf("%08X", msg->sid);
     for (uint8_t i = 0; i < msg->data_len; i++) {
-        printf("%02X", msg->data[i]);
+        std::printf("%02X", msg->data[i]);
     }
-    putchar('\n');
+    std::putchar('\n');
 }
 
 int main(void) {

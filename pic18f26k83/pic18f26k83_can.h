@@ -5,6 +5,10 @@
 
 #include "can.h"
 
+#ifdef __cplusplus
+#error "C++ is not supported"
+#endif
+
 /*
  * Initialize the CAN driver on a PI18fC26fk83. Note that this function
  * DOES NOT setup the inputs and outputs from the CAN module to the
