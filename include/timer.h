@@ -3,6 +3,10 @@
 
 #include <stdint.h>
 
+#ifdef __cplusplus
+#error "C++ is not supported"
+#endif
+
 // utilities for handling the timer used in millis()
 void timer0_init(void);
 
