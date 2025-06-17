@@ -1,9 +1,14 @@
 #ifndef ROCKETLIB_LOW_PASS_FILTER_H
 #define ROCKETLIB_LOW_PASS_FILTER_H
 
-#include "common.h"
 #include <stdbool.h>
 #include <stdint.h>
+
+#include "common.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 // Inline function to calculate the sample frequency based on the time difference in milliseconds
 static inline double sample_freq(double time_diff_ms) {
@@ -22,5 +27,9 @@ w_status_t low_pass_filter_init(double *alpha, double response_time);
 
 // Updates the low-pass filter with a new value and returns the operation status
 w_status_t update_low_pass(double alpha, uint16_t new_input_value, double *low_pass_value);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* ROCKETLIB_LOW_PASS_FILTER_H */

@@ -14,7 +14,15 @@ typedef enum {
     W_OVERFLOW
 } w_status_t;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void w_assert_fail(const char *file, int line, const char *statement);
+
+#ifdef __cplusplus
+}
+#endif
 
 #ifdef W_DEBUG
 
