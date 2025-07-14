@@ -212,8 +212,10 @@ typedef enum {
     E_BATT_OVER_CURRENT_OFFSET = 0x06,
     E_BATT_OVER_VOLTAGE_OFFSET = 0x07,
     E_BATT_UNDER_VOLTAGE_OFFSET = 0x08,
-    E_IO_ERROR_OFFSET = 0x09,
-    E_FS_ERROR_OFFSET = 0x0A,
+    E_MOTOR_OVER_CURRENT_OFFSET = 0x09,
+    E_IO_ERROR_OFFSET = 0x0A,
+    E_FS_ERROR_OFFSET = 0x0B,
+    E_WATCHDOG_TIMEOUT_OFFSET = 0x0C,
 } can_general_board_status_offset_t;
 
 typedef enum {
