@@ -16,8 +16,8 @@ jobs:
         run: |
           wget https://ww1.microchip.com/downloads/aemDocuments/documents/DEV/ProductDocuments/SoftwareTools/xc8-v3.00-full-install-linux-x64-installer.run
           chmod +x ./xc8-v3.00-full-install-linux-x64-installer.run
-          sudo ./xc8-v3.00-full-install-linux-x64-installer.run --mode unattended  --netservername localhost --debuglevel 4
+          sudo ./xc8-v3.00-full-install-linux-x64-installer.run --mode unattended --netservername localhost --debuglevel 4
           
       - name: Run Compile
         run: |
-          /opt/microchip/xc8/v3.00/bin/xc8-cc -mcpu=18F26K83 -I. -c -DBOARD_TYPE_UNIQUE_ID=BOARD_TYPE_ID_ANY -DBOARD_INST_UNIQUE_ID=BOARD_INST_ID_ROCKET -mwarn=-9 -std=c99 -Wpedantic message/msg_recovery.c 
+          /opt/microchip/xc8/v3.00/bin/xc8-cc -mcpu=18F26K83 -I. -c -DBOARD_TYPE_UNIQUE_ID=BOARD_TYPE_ID_ANY -DBOARD_INST_UNIQUE_ID=BOARD_INST_ID_ROCKET -mwarn=-9 -std=c99 -Wpedantic message/msg_actuator.c message/msg_common.c message/msg_general.c message/msg_gps.c message/msg_recovery.c message/msg_sensor.c message/msg_state_est.c
