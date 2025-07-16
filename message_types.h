@@ -172,8 +172,10 @@ typedef enum {
     SENSOR_CANARD_ENCODER_1 = 0x1B,
     SENSOR_CANARD_ENCODER_2 = 0x1C,
     SENSOR_PROC_FLIGHT_PHASE_STATUS = 0x1D,
-    SENSOR_VELOCITY = 0x1E,
-    SENSOR_ENUM_MAX = 0x1F,
+    SENSOR_PAYLOAD_LIM_1 = 0x1E,
+    SENSOR_PAYLOAD_LIM_2 = 0x1F,
+    SENSOR_PAYLOAD_INFRARED = 0x20,
+    SENSOR_ENUM_MAX = 0x21,
 } can_analog_sensor_id_t;
 
 typedef enum {
@@ -210,8 +212,16 @@ typedef enum {
     E_BATT_OVER_CURRENT_OFFSET = 0x06,
     E_BATT_OVER_VOLTAGE_OFFSET = 0x07,
     E_BATT_UNDER_VOLTAGE_OFFSET = 0x08,
-    E_IO_ERROR_OFFSET = 0x09,
-    E_FS_ERROR_OFFSET = 0x0A,
+    E_MOTOR_OVER_CURRENT_OFFSET = 0x09,
+    E_IO_ERROR_OFFSET = 0x0A,
+    E_FS_ERROR_OFFSET = 0x0B,
+    E_WATCHDOG_TIMEOUT_OFFSET = 0x0C,
 } can_general_board_status_offset_t;
+
+typedef enum {
+    E_12V_EFUSE_FAULT_OFFSET = 0x00,
+    E_5V_EFUSE_FAULT_OFFSET = 0x01,
+    E_PT_OUT_OF_RANGE_OFFSET = 0x02,
+} can_board_specific_status_offset_t;
 
 #endif
