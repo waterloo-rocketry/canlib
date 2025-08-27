@@ -1,4 +1,4 @@
-# Waterloo Rocketry Configuration file for clang-format 21
+# Configuration file for clang-format 21
 ---
 AccessModifierOffset: -4
 AlignAfterOpenBracket: Align
@@ -258,7 +258,7 @@ SpacesInSquareBrackets: false
 Standard:        Latest
 TableGenBreakInsideDAGArg: DontBreak
 TabWidth:        4
-UseTab:          Never
+UseTab:          Always
 VerilogBreakBetweenInstancePorts: true
 WrapNamespaceBodyWithEmptyLines: Always
 ...
