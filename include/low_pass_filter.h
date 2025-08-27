@@ -12,13 +12,13 @@ extern "C" {
 
 // Inline function to calculate the sample frequency based on the time difference in milliseconds
 static inline double sample_freq(double time_diff_ms) {
-    return 1000.0 / time_diff_ms;
+	return 1000.0 / time_diff_ms;
 }
 
 // Inline function to calculate the alpha value for the low-pass filter based on the response time
 static inline double low_pass_alpha(double TR, double time_diff_ms) {
-    double freq = sample_freq(time_diff_ms);
-    return (freq * TR / 5.0) / (1.0 + freq * TR / 5.0);
+	double freq = sample_freq(time_diff_ms);
+	return (freq * TR / 5.0) / (1.0 + freq * TR / 5.0);
 }
 
 // Initializes the low-pass filter by calculating and storing the alpha value based on the given
