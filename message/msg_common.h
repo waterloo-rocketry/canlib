@@ -20,8 +20,8 @@
 #endif
 
 #define SID(prio, msg)                                                                             \
-    (((uint32_t)prio << 27) | ((uint32_t)msg << 18) | ((uint32_t)BOARD_TYPE_UNIQUE_ID << 8) |      \
-     BOARD_INST_UNIQUE_ID)
+	(((uint32_t)prio << 27) | ((uint32_t)msg << 18) | ((uint32_t)BOARD_TYPE_UNIQUE_ID << 8) |      \
+	 BOARD_INST_UNIQUE_ID)
 
 #ifdef __cplusplus
 extern "C" {
