@@ -1,25 +1,15 @@
-#include <cstdint>
-#include <cstdio>
+#include <cstdlib>
+#include <ctime>
+#include <iostream>
 
-#include "can.h"
-#include "message/msg_general.h"
-#include "message_types.h"
-
-void print_logger_log_line(const can_msg_t *msg) {
-	std::printf("%08X", msg->sid);
-	for (uint8_t i = 0; i < msg->data_len; i++) {
-		std::printf("%02X", msg->data[i]);
-	}
-	std::putchar('\n');
-}
+#include "test_msg_sensor.hpp"
 
 int main(void) {
-	can_msg_t msg;
+	int seed = std::time({});
+	std::cout << "Random seed " << seed << std::endl;
+	std::srand(seed);
 
-	for (int i = 0; i < 256; i++) {
-		build_general_board_status_msg(PRIO_HIGHEST, 12345, i, 6, &msg);
-		print_logger_log_line(&msg);
-	}
+	test_analog_sensor_msg();
 
 	return 0;
 }
