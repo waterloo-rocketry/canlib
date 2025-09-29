@@ -9,6 +9,7 @@ int main(void) {
 	std::cout << "Random seed " << seed << std::endl;
 	std::srand(seed);
 
+	test_temp_data_msg();
 	test_analog_sensor_msg();
 
 	return 0;

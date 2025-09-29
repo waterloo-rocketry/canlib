@@ -54,7 +54,7 @@ bool build_analog_data_msg(can_msg_prio_t prio, uint16_t timestamp,
 						   can_analog_sensor_id_t sensor_id, uint16_t sensor_data,
 						   can_msg_t *output);
 
-bool is_sensor_data(const can_msg_t *msg);
+bool msg_is_sensor_data(const can_msg_t *msg);
 
 /*
  * Gets the temp data and sensor num, returns false if the message is not

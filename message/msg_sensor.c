@@ -132,7 +132,7 @@ bool build_analog_data_msg(can_msg_prio_t prio, uint16_t timestamp,
 	return true;
 }
 
-bool is_sensor_data(const can_msg_t *msg) {
+bool msg_is_sensor_data(const can_msg_t *msg) {
 	if (!msg) {
 		return false;
 	}
