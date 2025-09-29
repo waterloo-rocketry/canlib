@@ -10,11 +10,11 @@
  * context variables for each ring buffer.
  */
 typedef struct {
-    void *memory_pool;
-    size_t element_size;
-    size_t max_elements;
-    size_t rd_idx;
-    size_t wr_idx;
+	void *memory_pool;
+	size_t element_size;
+	size_t max_elements;
+	size_t rd_idx;
+	size_t wr_idx;
 } srb_ctx_t;
 
 #ifdef __cplusplus
