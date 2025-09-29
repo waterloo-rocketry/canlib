@@ -9,6 +9,8 @@
 #define CONSOLE_COLOUR_RED "\033[1;31m"
 #define CONSOLE_COLOUR_GREEN "\033[1;32m"
 
+extern bool test_failed;
+
 #define test_assert(statement)                                                                     \
 	if ((statement)) {                                                                             \
 		std::cout << CONSOLE_COLOUR_GREEN << "PASSED " << CONSOLE_COLOUR_RESET << __FILE__ << ':'  \
@@ -16,6 +18,7 @@
 	} else {                                                                                       \
 		std::cout << CONSOLE_COLOUR_RED << "FAILED " << CONSOLE_COLOUR_RESET << __FILE__ << ':'    \
 				  << __LINE__ << ' ' << #statement << std::endl;                                   \
+		test_failed = true;                                                                        \
 	}
 
 template <typename T, std::uint32_t mask = 0xffffffff> T test_rand() {
