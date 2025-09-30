@@ -12,7 +12,7 @@ void test_temp_data_msg() {
 
 	can_msg_prio_t prio_before = test_rand<can_msg_prio_t, 0x3>();
 	std::uint16_t timestamp_before = test_rand<std::uint16_t>();
-	uint8_t sensor_num_before = test_rand<std::uint8_t>();
+	std::uint8_t sensor_num_before = test_rand<std::uint8_t>();
 	std::int32_t temp_before = test_rand<std::int32_t>();
 
 	build_temp_data_msg(prio_before, timestamp_before, sensor_num_before, temp_before, &msg);
