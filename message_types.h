@@ -13,6 +13,7 @@ typedef enum {
 
 // Message Types
 typedef enum {
+	MSG_UNDEFINED = 0x000,
 	MSG_GENERAL_BOARD_STATUS = 0x001,
 	MSG_RESET_CMD = 0x002,
 	MSG_DEBUG_RAW = 0x003,
