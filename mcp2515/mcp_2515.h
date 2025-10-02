@@ -1,6 +1,8 @@
 #ifndef MCP_2515_H_
 #define MCP_2515_H_
 
+#include <stdint.h>
+
 #include "can.h"
 
 #ifdef __cplusplus

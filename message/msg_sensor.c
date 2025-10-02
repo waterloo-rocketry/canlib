@@ -139,7 +139,7 @@ bool msg_is_sensor_data(const can_msg_t *msg) {
 
 	uint16_t type = get_message_type(msg);
 	if (type == MSG_SENSOR_TEMP || type == MSG_SENSOR_ALTITUDE || type == MSG_SENSOR_IMU_X ||
-		type == MSG_SENSOR_IMU_Y || type == MSG_SENSOR_IMU_Z || type == MSG_SENSOR_MAG_Z ||
+		type == MSG_SENSOR_IMU_Y || type == MSG_SENSOR_IMU_Z || type == MSG_SENSOR_MAG_X ||
 		type == MSG_SENSOR_MAG_Y || type == MSG_SENSOR_MAG_Z || type == MSG_SENSOR_BARO ||
 		type == MSG_SENSOR_ANALOG) {
 		return true;

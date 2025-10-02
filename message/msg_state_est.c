@@ -1,6 +1,5 @@
 #include <stdbool.h>
 #include <stdint.h>
-#include <string.h>
 
 #include "can.h"
 #include "message_types.h"
