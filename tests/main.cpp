@@ -2,21 +2,43 @@
 #include <ctime>
 #include <iostream>
 
-#include "test_msg_sensor.hpp"
-
-bool test_failed = false;
+#include "test_common.hpp"
 
 int main(void) {
 	int seed = std::time({});
 	std::cout << "Random seed " << seed << std::endl;
 	std::srand(seed);
 
-	test_temp_data_msg();
-	test_analog_sensor_msg();
+	bool all_passed = true;
 
-	if (test_failed) {
-		return EXIT_FAILURE;
+	for (rocketry_test *rt : rocketry_test::tests) {
+		if (!(*rt)()) {
+			all_passed = false;
+		}
 	}
 
-	return EXIT_SUCCESS;
+	if(all_passed){
+		return EXIT_SUCCESS;
+	}
+
+	return EXIT_FAILURE;	
+}
+
+std::vector<rocketry_test *> rocketry_test::tests;
+
+rocketry_test::rocketry_test() {
+	tests.push_back(this);
+}
+
+bool rocketry_test::operator()() {
+	std::cout << "Running " << get_name() << std::endl;
+	bool test_result = run_test();
+	if (test_result == true) {
+		std::cout << CONSOLE_COLOUR_GREEN << "PASSED " << CONSOLE_COLOUR_RESET << get_name()
+				  << std::endl;
+	} else {
+		std::cout << CONSOLE_COLOUR_RED << "FAILED " << CONSOLE_COLOUR_RESET << get_name()
+				  << std::endl;
+	}
+	return test_result;
 }
