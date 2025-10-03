@@ -3,7 +3,7 @@
 #include <getopt.h>
 #include <iostream>
 
-#include "test_common.hpp"
+#include "rockettest.hpp"
 
 int main(int argc, char *argv[]) {
 	int seed = std::time({});
@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
 
 	bool all_passed = true;
 
-	for (auto &rt : rocketry_test::tests) {
+	for (auto &rt : rockettest_test::tests) {
 		if (!(*rt.second)()) {
 			all_passed = false;
 		}
@@ -39,13 +39,13 @@ int main(int argc, char *argv[]) {
 	return EXIT_FAILURE;
 }
 
-std::map<const char *, rocketry_test *> rocketry_test::tests;
+std::map<const char *, rockettest_test *> rockettest_test::tests;
 
-rocketry_test::rocketry_test(const char *test_name) : name(test_name) {
+rockettest_test::rockettest_test(const char *test_name) : name(test_name) {
 	tests[test_name] = this;
 }
 
-bool rocketry_test::operator()() {
+bool rockettest_test::operator()() {
 	std::cout << "Running " << name << std::endl;
 	bool test_result = run_test();
 	if (test_result == true) {

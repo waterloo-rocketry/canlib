@@ -10,25 +10,25 @@
 #define CONSOLE_COLOUR_RED "\033[1;31m"
 #define CONSOLE_COLOUR_GREEN "\033[1;32m"
 
-#define test_assert(statement)                                                                     \
+#define rockettest_assert(statement)                                                               \
 	if (!(statement)) {                                                                            \
 		std::cout << "Assertion failed " << __FILE__ << ':' << __LINE__ << ' ' << #statement       \
 				  << std::endl;                                                                    \
 		test_passed = false;                                                                       \
 	}
 
-template <typename T, std::uint32_t mask = 0xffffffff> T test_rand() {
+template <typename T, std::uint32_t mask = 0xffffffff> T rockettest_rand() {
 	return static_cast<T>(std::rand() & mask);
 }
 
-class rocketry_test {
+class rockettest_test {
 	const char *name;
 
 public:
-	static std::map<const char *, rocketry_test *> tests;
+	static std::map<const char *, rockettest_test *> tests;
 
-	rocketry_test() = delete;
-	rocketry_test(const char *test_name);
+	rockettest_test() = delete;
+	rockettest_test(const char *test_name);
 
 	virtual bool run_test() = 0;
 
