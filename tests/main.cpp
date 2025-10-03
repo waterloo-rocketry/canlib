@@ -1,11 +1,26 @@
 #include <cstdlib>
 #include <ctime>
+#include <getopt.h>
 #include <iostream>
 
 #include "test_common.hpp"
 
-int main(void) {
+int main(int argc, char *argv[]) {
 	int seed = std::time({});
+
+	int opt;
+	while ((opt = getopt(argc, argv, "s:")) != -1) {
+		switch (opt) {
+			case 's':
+				seed = atoi(optarg);
+				break;
+
+			default:
+				std::cout << "Usage: unit_test [-s random_seed]" << std::endl;
+				return EXIT_FAILURE;
+		}
+	}
+
 	std::cout << "Random seed " << seed << std::endl;
 	std::srand(seed);
 
