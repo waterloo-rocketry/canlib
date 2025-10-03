@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <cstdlib>
 #include <iostream>
-#include <vector>
+#include <map>
 
 #define CONSOLE_COLOUR_RESET "\033[0m"
 #define CONSOLE_COLOUR_RED "\033[1;31m"
@@ -22,13 +22,15 @@ template <typename T, std::uint32_t mask = 0xffffffff> T test_rand() {
 }
 
 class rocketry_test {
-public:
-	static std::vector<rocketry_test *> tests;
+	const char *name;
 
-	rocketry_test();
+public:
+	static std::map<const char *, rocketry_test *> tests;
+
+	rocketry_test() = delete;
+	rocketry_test(const char *test_name);
 
 	virtual bool run_test() = 0;
-	virtual const char *get_name() = 0;
 
 	bool operator()();
 };

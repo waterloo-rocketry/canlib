@@ -9,9 +9,7 @@
 
 class temp_data_msg_test : rocketry_test {
 public:
-	const char *get_name() override {
-		return "temp_data_msg_test";
-	}
+	temp_data_msg_test() : rocketry_test("temp_data_msg_test") {}
 
 	bool run_test() override {
 		bool test_passed = true;
@@ -50,9 +48,7 @@ temp_data_msg_test temp_data_msg_test_inst;
 
 class altitude_data_msg_test : rocketry_test {
 public:
-	const char *get_name() override {
-		return "altitide_data_msg_test";
-	}
+	altitude_data_msg_test() : rocketry_test("altitude_data_msg_test") {}
 
 	bool run_test() override {
 		bool test_passed = true;
@@ -92,9 +88,7 @@ altitude_data_msg_test altitude_data_msg_test_inst;
 
 class analog_sensor_message_test : rocketry_test {
 public:
-	const char *get_name() override {
-		return "analog_sensor_msg_test";
-	}
+	analog_sensor_message_test() : rocketry_test("analog_sensor_message_test") {}
 
 	bool run_test() override {
 		bool test_passed = true;
