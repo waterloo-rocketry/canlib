@@ -17,7 +17,7 @@ typedef enum {
 	W_INVALID_PARAM,
 	/// @brief IO error, for example no SD card was plugged in
 	W_IO_ERROR,
-	/// @brief IO timeout, for example SD car takes too long to respond
+	/// @brief IO timeout, for example SD card takes too long to respond
 	W_IO_TIMEOUT,
 	/// @brief Math error, for example divide by zero
 	W_MATH_ERROR,
