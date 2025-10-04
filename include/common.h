@@ -30,6 +30,15 @@ typedef enum {
 extern "C" {
 #endif
 
+/**
+ * @brief Assertion fail handler
+ *
+ * Assertion fail handler, shall be implemented in the firmware, only used if `W_DEBUG` is defined
+ *
+ * @param file Path to C source file contains assertion failure
+ * @param line C source line number of assertion failure
+ * @param statement Statement caused assertion failure
+ */
 void w_assert_fail(const char *file, int line, const char *statement);
 
 #ifdef __cplusplus
@@ -45,6 +54,12 @@ void w_assert_fail(const char *file, int line, const char *statement);
 
 #else
 
+/**
+ * @brief Assertion
+ *
+ * Works just like standard C assertion, except use can define custom assertion failure handler(see
+ * `w_assert_fail`), only active when `W_DEBUG` is defined
+ */
 #define w_assert(statement)
 
 #endif
