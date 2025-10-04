@@ -1,18 +1,27 @@
 #ifndef ROCKETLIB_COMMON_H
 #define ROCKETLIB_COMMON_H
 
-// Rocketlib Version
-#define ROCKETLIB_VERSION_MAJOR 2025
+/// @brief Rocketlib major release number, shall be design cycle year
+#define ROCKETLIB_VERSION_MAJOR 2026
+
+/// @brief Rocketlib minor release number, shall be the Nth release of the design cycle
 #define ROCKETLIB_VERSION_MINOR 1
 
-// Standard Error Code
+/// @brief Standard error code
 typedef enum {
+	/// @brief Success
 	W_SUCCESS = 0,
+	/// @brief Failure, if not one of the more specific case below
 	W_FAILURE,
+	/// @brief Illegal function call arguments/parameters
 	W_INVALID_PARAM,
+	/// @brief IO error, for example no SD card was plugged in
 	W_IO_ERROR,
+	/// @brief IO timeout, for example SD car takes too long to respond
 	W_IO_TIMEOUT,
+	/// @brief Math error, for example divide by zero
 	W_MATH_ERROR,
+	/// @brief Buffer overflow, for example trying to write to a full FIFO
 	W_OVERFLOW
 } w_status_t;
 
