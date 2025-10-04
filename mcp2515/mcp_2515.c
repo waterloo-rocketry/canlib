@@ -1,3 +1,6 @@
+#include <stdint.h>
+
+#include "can.h"
 #include "mcp_2515.h"
 
 // FIXME: chip select pin handling

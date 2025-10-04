@@ -1,3 +1,6 @@
+#include <stddef.h>
+
+#include "can.h"
 #include "can_rcv_buffer.h"
 #include "safe_ring_buffer.h"
 

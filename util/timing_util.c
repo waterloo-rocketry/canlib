@@ -1,3 +1,6 @@
+#include <stdint.h>
+
+#include "can.h"
 #include "timing_util.h"
 
 #if (CANLIB_BIT_TIME_US != 4)
