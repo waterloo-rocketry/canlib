@@ -125,3 +125,137 @@ public:
 };
 
 analog_sensor_message_test analog_sensor_message_test_inst;
+
+class imu_data_msg_test : rockettest_test {
+public:
+	imu_data_msg_test() : rockettest_test("imu_data_msg_test") {}
+
+	bool run_test() override {
+		bool test_passed = true;
+
+		can_msg_t msg;
+
+		can_msg_prio_t prio_before = rockettest_rand<can_msg_prio_t, 0x3>();
+		std::uint16_t timestamp_before = rockettest_rand<std::uint16_t>();
+		char axis_before = 'X';
+		can_imu_id_t imu_id_before = rockettest_rand<can_imu_id_t, IMU_ENUM_MAX - 1>();
+		std::uint16_t linear_accel_before = rockettest_rand<std::uint16_t>();
+		std::uint16_t angular_velocity_before = rockettest_rand<std::uint16_t>();
+
+		build_imu_data_msg(prio_before, timestamp_before, axis_before, imu_id_before,
+						   linear_accel_before, angular_velocity_before, &msg);
+
+		bool msg_is_sensor_data_after;
+		can_msg_type_t type_after;
+		std::uint16_t timestamp_after;
+		can_imu_id_t imu_id_after;
+		char axis_after;
+		std::uint16_t linear_accel_after;
+		std::uint16_t angular_velocity_after;
+
+		msg_is_sensor_data_after = msg_is_sensor_data(&msg);
+		type_after = get_message_type(&msg);
+		timestamp_after = get_timestamp(&msg);
+		get_imu_mag_id_dimension(&msg, &imu_id_after, &axis_after);
+		get_imu_data(&msg, &linear_accel_after, &angular_velocity_after);
+
+		rockettest_assert(msg_is_sensor_data_after == true);
+		rockettest_assert(type_after == MSG_SENSOR_IMU_X);
+		rockettest_assert(timestamp_after == timestamp_before);
+		rockettest_assert(imu_id_after == imu_id_before);
+		rockettest_assert(axis_after == axis_before);
+		rockettest_assert(linear_accel_after == linear_accel_before);
+		rockettest_assert(angular_velocity_after == angular_velocity_before);
+
+		return test_passed;
+	}
+};
+
+imu_data_msg_test imu_data_msg_test_inst;
+
+class mag_data_msg_test : rockettest_test {
+public:
+	mag_data_msg_test() : rockettest_test("mag_data_msg_test") {}
+
+	bool run_test() override {
+		bool test_passed = true;
+
+		can_msg_t msg;
+
+		can_msg_prio_t prio_before = rockettest_rand<can_msg_prio_t, 0x3>();
+		std::uint16_t timestamp_before = rockettest_rand<std::uint16_t>();
+		char axis_before = 'Y';
+		can_imu_id_t imu_id_before = rockettest_rand<can_imu_id_t, IMU_ENUM_MAX - 1>();
+		std::uint16_t mag_value_before = rockettest_rand<std::uint16_t>();
+
+		build_mag_data_msg(prio_before, timestamp_before, axis_before, imu_id_before,
+						   mag_value_before, &msg);
+
+		bool msg_is_sensor_data_after;
+		can_msg_type_t type_after;
+		std::uint16_t timestamp_after;
+		can_imu_id_t imu_id_after;
+		char axis_after;
+		std::uint16_t mag_value_after;
+
+		msg_is_sensor_data_after = msg_is_sensor_data(&msg);
+		type_after = get_message_type(&msg);
+		timestamp_after = get_timestamp(&msg);
+		get_imu_mag_id_dimension(&msg, &imu_id_after, &axis_after);
+		get_mag_data(&msg, &mag_value_after);
+
+		rockettest_assert(msg_is_sensor_data_after == true);
+		rockettest_assert(type_after == MSG_SENSOR_MAG_Y);
+		rockettest_assert(timestamp_after == timestamp_before);
+		rockettest_assert(imu_id_after == imu_id_before);
+		rockettest_assert(axis_after == axis_before);
+		rockettest_assert(mag_value_after == mag_value_before);
+
+		return test_passed;
+	}
+};
+
+mag_data_msg_test mag_data_msg_test_inst;
+
+class baro_data_msg_test : rockettest_test {
+public:
+	baro_data_msg_test() : rockettest_test("baro_data_msg_test") {}
+
+	bool run_test() override {
+		bool test_passed = true;
+
+		can_msg_t msg;
+
+		can_msg_prio_t prio_before = rockettest_rand<can_msg_prio_t, 0x3>();
+		std::uint16_t timestamp_before = rockettest_rand<std::uint16_t>();
+		can_imu_id_t imu_id_before = rockettest_rand<can_imu_id_t, IMU_ENUM_MAX - 1>();
+		std::uint32_t pressure_before = rockettest_rand<std::uint32_t, 0xFFFFFF>(); // 24-bit
+		std::uint16_t temp_before = rockettest_rand<std::uint16_t>();
+
+		build_baro_data_msg(prio_before, timestamp_before, imu_id_before, pressure_before,
+							temp_before, &msg);
+
+		bool msg_is_sensor_data_after;
+		can_msg_type_t type_after;
+		std::uint16_t timestamp_after;
+		can_imu_id_t imu_id_after;
+		std::uint32_t pressure_after;
+		std::uint16_t temp_after;
+
+		msg_is_sensor_data_after = msg_is_sensor_data(&msg);
+		type_after = get_message_type(&msg);
+		timestamp_after = get_timestamp(&msg);
+		get_baro_data(&msg, &imu_id_after, &pressure_after, &temp_after);
+
+		rockettest_assert(msg_is_sensor_data_after == true);
+		rockettest_assert(type_after == MSG_SENSOR_BARO);
+		rockettest_assert(timestamp_after == timestamp_before);
+		rockettest_assert(imu_id_after == imu_id_before);
+		rockettest_assert(pressure_after == pressure_before);
+		rockettest_assert(temp_after == temp_before);
+
+		return test_passed;
+	}
+};
+
+baro_data_msg_test baro_data_msg_test_inst;
