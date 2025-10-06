@@ -35,7 +35,7 @@ CANLIB_SRCS := \
 	$(CANLIB_PATH)/util/safe_ring_buffer.c
 
 TEST_SRCS := \
-	main.cpp \
+	rockettest.cpp \
 	test_msg_sensor.cpp
 
 CANLIB_OBJS = $(CANLIB_SRCS:.c=.o)
