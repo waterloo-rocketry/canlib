@@ -12,6 +12,7 @@
 #include <cstdint>
 
 #include "rockettest.hpp"
+#include "test_msg_sensor.hpp"
 
 #include "can.h"
 #include "message/msg_common.h"
