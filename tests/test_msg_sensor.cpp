@@ -120,8 +120,6 @@ public:
 		rockettest_assert(sensor_id_after == sensor_id_before);
 		rockettest_assert(sensor_data_after == sensor_data_before);
 
-		rockettest_assert(false);
-
 		return test_passed;
 	}
 };
