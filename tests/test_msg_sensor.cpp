@@ -24,12 +24,13 @@
  *
  * Tests temperature measurement data transmission.
  * Temperature is stored as 24-bit signed value in units of 1/1024th degree C.
+ * Range: approximately -8192°C to +8192°C with 0.001°C resolution.
  *
  * Message format:
- * - Priority: 2 bits
- * - Timestamp: 16 bits (2 bytes)
- * - Sensor number: 8 bits (1 byte)
- * - Temperature: 32 bits (4 bytes, only 24 bits used)
+ * - Priority: 2 bits (0-3)
+ * - Timestamp: 16 bits (2 bytes) - milliseconds
+ * - Sensor number: 8 bits (1 byte) - identifies which temperature sensor
+ * - Temperature: 32 bits (4 bytes, only 24 bits used) - signed, in 1/1024°C units
  */
 class temp_data_msg_test : rockettest_test {
 public:
@@ -41,10 +42,10 @@ public:
 		can_msg_t msg;
 
 		// Generate random test data
-		can_msg_prio_t prio_before = rockettest_rand<can_msg_prio_t, 0x3>();
-		std::uint16_t timestamp_before = rockettest_rand<std::uint16_t>();
-		std::uint8_t sensor_num_before = rockettest_rand<std::uint8_t>();
-		std::int32_t temp_before = rockettest_rand<std::int32_t>();
+		can_msg_prio_t prio_before = rockettest_rand<can_msg_prio_t, 0x3>(); // 0x3 = 2-bit mask (priority range 0-3)
+		std::uint16_t timestamp_before = rockettest_rand<std::uint16_t>();   // Full 16-bit range
+		std::uint8_t sensor_num_before = rockettest_rand<std::uint8_t>();    // Any sensor ID
+		std::int32_t temp_before = rockettest_rand<std::int32_t>();          // Full 32-bit range (24 bits used)
 
 		// Build message from test data
 		build_temp_data_msg(prio_before, timestamp_before, sensor_num_before, temp_before, &msg);
@@ -61,29 +62,31 @@ public:
 		timestamp_after = get_timestamp(&msg);
 		get_temp_data(&msg, &sensor_num_after, &temp_after);
 
-		// Verify round-trip consistency
-		rockettest_assert(is_sensor_data_after == true);
-		rockettest_assert(type_after == MSG_SENSOR_TEMP);
-		rockettest_assert(timestamp_after == timestamp_before);
-		rockettest_assert(sensor_num_after == sensor_num_before);
-		rockettest_assert(temp_after == temp_before);
+		// Verify round-trip consistency: all data should match original values
+		rockettest_assert(is_sensor_data_after == true);           // Message correctly identified as sensor data
+		rockettest_assert(type_after == MSG_SENSOR_TEMP);          // Message type preserved
+		rockettest_assert(timestamp_after == timestamp_before);    // Timestamp preserved
+		rockettest_assert(sensor_num_after == sensor_num_before);  // Sensor ID preserved
+		rockettest_assert(temp_after == temp_before);              // Temperature value preserved
 
 		return test_passed;
 	}
 };
 
+// Global instance auto-registers test with rockettest framework on program initialization
 temp_data_msg_test temp_data_msg_test_inst;
 
 /*
  * Altitude Sensor Message Test (MSG_SENSOR_ALTITUDE)
  *
  * Tests altitude data from altimeters with apogee detection state.
+ * Altitude is signed to support both above and below launch site elevation.
  *
  * Message format:
- * - Priority: 2 bits
- * - Timestamp: 16 bits (2 bytes)
- * - Altitude: 32 bits (4 bytes) - signed
- * - Apogee state: 8 bits (1 byte) - UNKNOWN, NOT_REACHED, or REACHED
+ * - Priority: 2 bits (0-3)
+ * - Timestamp: 16 bits (2 bytes) - milliseconds
+ * - Altitude: 32 bits (4 bytes) - signed, in meters or feet (system-dependent)
+ * - Apogee state: 8 bits (1 byte) - APOGEE_UNKNOWN, APOGEE_NOT_REACHED, or APOGEE_REACHED
  */
 class altitude_data_msg_test : rockettest_test {
 public:
@@ -95,10 +98,10 @@ public:
 		can_msg_t msg;
 
 		// Generate random test data
-		can_msg_prio_t prio_before = rockettest_rand<can_msg_prio_t, 0x3>();
-		std::uint16_t timestamp_before = rockettest_rand<std::uint16_t>();
-		std::int32_t altitude_before = rockettest_rand<std::int32_t>();
-		can_apogee_state_t apogee_state_before = rockettest_rand<can_apogee_state_t, 0xff>();
+		can_msg_prio_t prio_before = rockettest_rand<can_msg_prio_t, 0x3>();           // 0x3 = 2-bit mask (priority range 0-3)
+		std::uint16_t timestamp_before = rockettest_rand<std::uint16_t>();             // Full 16-bit range
+		std::int32_t altitude_before = rockettest_rand<std::int32_t>();                // Full 32-bit signed range
+		can_apogee_state_t apogee_state_before = rockettest_rand<can_apogee_state_t, 0xff>(); // 0xff allows any enum value
 
 		// Build message from test data
 		build_altitude_data_msg(
@@ -116,12 +119,12 @@ public:
 		timestamp_after = get_timestamp(&msg);
 		get_altitude_data(&msg, &altitude_after, &apogee_state_after);
 
-		// Verify round-trip consistency
-		rockettest_assert(msg_is_sensor_data_after == true);
-		rockettest_assert(type_after == MSG_SENSOR_ALTITUDE);
-		rockettest_assert(timestamp_after == timestamp_before);
-		rockettest_assert(altitude_after == altitude_before);
-		rockettest_assert(apogee_state_after == apogee_state_before);
+		// Verify round-trip consistency: all data should match original values
+		rockettest_assert(msg_is_sensor_data_after == true);           // Message correctly identified as sensor data
+		rockettest_assert(type_after == MSG_SENSOR_ALTITUDE);          // Message type preserved
+		rockettest_assert(timestamp_after == timestamp_before);        // Timestamp preserved
+		rockettest_assert(altitude_after == altitude_before);          // Altitude value preserved
+		rockettest_assert(apogee_state_after == apogee_state_before);  // Apogee detection state preserved
 
 		return test_passed;
 	}
@@ -133,13 +136,14 @@ altitude_data_msg_test altitude_data_msg_test_inst;
  * Analog Sensor Message Test (MSG_SENSOR_ANALOG)
  *
  * Tests generic analog sensor data (voltages, currents, pressures, etc.).
- * Sensor ID determines the specific sensor and units.
+ * Sensor ID determines the specific sensor type and units for interpretation.
+ * Examples: battery voltage, current draw, tank pressure, continuity checks.
  *
  * Message format:
- * - Priority: 2 bits
- * - Timestamp: 16 bits (2 bytes)
- * - Sensor ID: 8 bits (1 byte) - identifies specific analog sensor
- * - Sensor data: 16 bits (2 bytes) - units depend on sensor ID
+ * - Priority: 2 bits (0-3)
+ * - Timestamp: 16 bits (2 bytes) - milliseconds
+ * - Sensor ID: 8 bits (1 byte) - identifies specific analog sensor and its units
+ * - Sensor data: 16 bits (2 bytes) - raw ADC value or scaled reading (ID-dependent)
  */
 class analog_sensor_message_test : rockettest_test {
 public:
@@ -151,10 +155,10 @@ public:
 		can_msg_t msg;
 
 		// Generate random test data
-		can_msg_prio_t prio_before = rockettest_rand<can_msg_prio_t, 0x3>();
-		std::uint16_t timestamp_before = rockettest_rand<std::uint16_t>();
-		can_analog_sensor_id_t sensor_id_before = rockettest_rand<can_analog_sensor_id_t, 0xff>();
-		std::uint16_t sensor_data_before = rockettest_rand<std::uint16_t>();
+		can_msg_prio_t prio_before = rockettest_rand<can_msg_prio_t, 0x3>();           // 0x3 = 2-bit mask (priority range 0-3)
+		std::uint16_t timestamp_before = rockettest_rand<std::uint16_t>();             // Full 16-bit range
+		can_analog_sensor_id_t sensor_id_before = rockettest_rand<can_analog_sensor_id_t, 0xff>(); // 0xff allows any sensor ID
+		std::uint16_t sensor_data_before = rockettest_rand<std::uint16_t>();           // Full 16-bit range
 
 		// Build message from test data
 		build_analog_data_msg(
@@ -172,12 +176,12 @@ public:
 		timestamp_after = get_timestamp(&msg);
 		get_analog_data(&msg, &sensor_id_after, &sensor_data_after);
 
-		// Verify round-trip consistency
-		rockettest_assert(msg_is_sensor_data_after == true);
-		rockettest_assert(type_after == MSG_SENSOR_ANALOG);
-		rockettest_assert(timestamp_after == timestamp_before);
-		rockettest_assert(sensor_id_after == sensor_id_before);
-		rockettest_assert(sensor_data_after == sensor_data_before);
+		// Verify round-trip consistency: all data should match original values
+		rockettest_assert(msg_is_sensor_data_after == true);           // Message correctly identified as sensor data
+		rockettest_assert(type_after == MSG_SENSOR_ANALOG);            // Message type preserved
+		rockettest_assert(timestamp_after == timestamp_before);        // Timestamp preserved
+		rockettest_assert(sensor_id_after == sensor_id_before);        // Sensor ID preserved
+		rockettest_assert(sensor_data_after == sensor_data_before);    // Sensor data preserved
 
 		return test_passed;
 	}
@@ -188,16 +192,17 @@ analog_sensor_message_test analog_sensor_message_test_inst;
 /*
  * IMU Data Message Test (MSG_SENSOR_IMU_X/Y/Z)
  *
- * Tests inertial measurement unit data (accelerometer + gyroscope).
- * Separate messages for X, Y, Z axes. This test uses X axis.
+ * Tests inertial measurement unit data (accelerometer + gyroscope combined).
+ * IMUs send separate messages for X, Y, Z axes. This test uses X axis as
+ * representative example (Y and Z follow identical format with different axis).
  *
  * Message format:
- * - Priority: 2 bits
- * - Timestamp: 16 bits (2 bytes)
- * - Axis: char (X, Y, or Z) - encoded in message type
- * - IMU ID: 8 bits (1 byte) - identifies specific IMU
- * - Linear acceleration: 16 bits (2 bytes)
- * - Angular velocity: 16 bits (2 bytes)
+ * - Priority: 2 bits (0-3)
+ * - Timestamp: 16 bits (2 bytes) - milliseconds
+ * - Axis: char (X, Y, or Z) - encoded in message type (MSG_SENSOR_IMU_X/Y/Z)
+ * - IMU ID: 8 bits (1 byte) - identifies which IMU (multiple IMUs supported)
+ * - Linear acceleration: 16 bits (2 bytes) - in m/s² or g's (scaled)
+ * - Angular velocity: 16 bits (2 bytes) - in rad/s or degrees/s (scaled)
  */
 class imu_data_msg_test : rockettest_test {
 public:
@@ -209,12 +214,12 @@ public:
 		can_msg_t msg;
 
 		// Generate random test data
-		can_msg_prio_t prio_before = rockettest_rand<can_msg_prio_t, 0x3>();
-		std::uint16_t timestamp_before = rockettest_rand<std::uint16_t>();
-		char axis_before = 'X';
-		can_imu_id_t imu_id_before = rockettest_rand<can_imu_id_t, IMU_ENUM_MAX - 1>();
-		std::uint16_t linear_accel_before = rockettest_rand<std::uint16_t>();
-		std::uint16_t angular_velocity_before = rockettest_rand<std::uint16_t>();
+		can_msg_prio_t prio_before = rockettest_rand<can_msg_prio_t, 0x3>();           // 0x3 = 2-bit mask (priority range 0-3)
+		std::uint16_t timestamp_before = rockettest_rand<std::uint16_t>();             // Full 16-bit range
+		char axis_before = 'X';                                                        // Testing X axis (Y/Z use same pattern)
+		can_imu_id_t imu_id_before = rockettest_rand<can_imu_id_t, IMU_ENUM_MAX - 1>(); // Limit to valid IMU IDs
+		std::uint16_t linear_accel_before = rockettest_rand<std::uint16_t>();          // Full 16-bit range
+		std::uint16_t angular_velocity_before = rockettest_rand<std::uint16_t>();      // Full 16-bit range
 
 		// Build message from test data
 		build_imu_data_msg(prio_before, timestamp_before, axis_before, imu_id_before,
@@ -235,14 +240,14 @@ public:
 		get_imu_mag_id_dimension(&msg, &imu_id_after, &axis_after);
 		get_imu_data(&msg, &linear_accel_after, &angular_velocity_after);
 
-		// Verify round-trip consistency
-		rockettest_assert(msg_is_sensor_data_after == true);
-		rockettest_assert(type_after == MSG_SENSOR_IMU_X);
-		rockettest_assert(timestamp_after == timestamp_before);
-		rockettest_assert(imu_id_after == imu_id_before);
-		rockettest_assert(axis_after == axis_before);
-		rockettest_assert(linear_accel_after == linear_accel_before);
-		rockettest_assert(angular_velocity_after == angular_velocity_before);
+		// Verify round-trip consistency: all data should match original values
+		rockettest_assert(msg_is_sensor_data_after == true);                   // Message correctly identified as sensor data
+		rockettest_assert(type_after == MSG_SENSOR_IMU_X);                     // Message type preserved (X axis)
+		rockettest_assert(timestamp_after == timestamp_before);                // Timestamp preserved
+		rockettest_assert(imu_id_after == imu_id_before);                      // IMU ID preserved
+		rockettest_assert(axis_after == axis_before);                          // Axis dimension preserved
+		rockettest_assert(linear_accel_after == linear_accel_before);          // Acceleration value preserved
+		rockettest_assert(angular_velocity_after == angular_velocity_before);  // Angular velocity preserved
 
 		return test_passed;
 	}
@@ -253,15 +258,16 @@ imu_data_msg_test imu_data_msg_test_inst;
 /*
  * Magnetometer Data Message Test (MSG_SENSOR_MAG_X/Y/Z)
  *
- * Tests magnetometer (compass) data for navigation.
- * Separate messages for X, Y, Z axes. This test uses Y axis.
+ * Tests magnetometer (compass/magnetic field sensor) data for orientation and navigation.
+ * Magnetometers send separate messages for X, Y, Z axes. This test uses Y axis as
+ * representative example (X and Z follow identical format with different axis).
  *
  * Message format:
- * - Priority: 2 bits
- * - Timestamp: 16 bits (2 bytes)
- * - Axis: char (X, Y, or Z) - encoded in message type
- * - IMU ID: 8 bits (1 byte) - magnetometer is part of IMU
- * - Magnetic field value: 16 bits (2 bytes)
+ * - Priority: 2 bits (0-3)
+ * - Timestamp: 16 bits (2 bytes) - milliseconds
+ * - Axis: char (X, Y, or Z) - encoded in message type (MSG_SENSOR_MAG_X/Y/Z)
+ * - IMU ID: 8 bits (1 byte) - magnetometer is integrated with IMU
+ * - Magnetic field value: 16 bits (2 bytes) - in Gauss or Tesla (scaled)
  */
 class mag_data_msg_test : rockettest_test {
 public:
@@ -273,11 +279,11 @@ public:
 		can_msg_t msg;
 
 		// Generate random test data
-		can_msg_prio_t prio_before = rockettest_rand<can_msg_prio_t, 0x3>();
-		std::uint16_t timestamp_before = rockettest_rand<std::uint16_t>();
-		char axis_before = 'Y';
-		can_imu_id_t imu_id_before = rockettest_rand<can_imu_id_t, IMU_ENUM_MAX - 1>();
-		std::uint16_t mag_value_before = rockettest_rand<std::uint16_t>();
+		can_msg_prio_t prio_before = rockettest_rand<can_msg_prio_t, 0x3>();           // 0x3 = 2-bit mask (priority range 0-3)
+		std::uint16_t timestamp_before = rockettest_rand<std::uint16_t>();             // Full 16-bit range
+		char axis_before = 'Y';                                                        // Testing Y axis (X/Z use same pattern)
+		can_imu_id_t imu_id_before = rockettest_rand<can_imu_id_t, IMU_ENUM_MAX - 1>(); // Limit to valid IMU IDs
+		std::uint16_t mag_value_before = rockettest_rand<std::uint16_t>();             // Full 16-bit range
 
 		// Build message from test data
 		build_mag_data_msg(prio_before, timestamp_before, axis_before, imu_id_before,
@@ -297,13 +303,13 @@ public:
 		get_imu_mag_id_dimension(&msg, &imu_id_after, &axis_after);
 		get_mag_data(&msg, &mag_value_after);
 
-		// Verify round-trip consistency
-		rockettest_assert(msg_is_sensor_data_after == true);
-		rockettest_assert(type_after == MSG_SENSOR_MAG_Y);
-		rockettest_assert(timestamp_after == timestamp_before);
-		rockettest_assert(imu_id_after == imu_id_before);
-		rockettest_assert(axis_after == axis_before);
-		rockettest_assert(mag_value_after == mag_value_before);
+		// Verify round-trip consistency: all data should match original values
+		rockettest_assert(msg_is_sensor_data_after == true);           // Message correctly identified as sensor data
+		rockettest_assert(type_after == MSG_SENSOR_MAG_Y);             // Message type preserved (Y axis)
+		rockettest_assert(timestamp_after == timestamp_before);        // Timestamp preserved
+		rockettest_assert(imu_id_after == imu_id_before);              // IMU ID preserved
+		rockettest_assert(axis_after == axis_before);                  // Axis dimension preserved
+		rockettest_assert(mag_value_after == mag_value_before);        // Magnetic field value preserved
 
 		return test_passed;
 	}
@@ -314,15 +320,16 @@ mag_data_msg_test mag_data_msg_test_inst;
 /*
  * Barometer Data Message Test (MSG_SENSOR_BARO)
  *
- * Tests barometric pressure and temperature data.
- * Pressure is 24-bit only (not full 32-bit).
+ * Tests barometric pressure and temperature data from barometric altimeter sensors.
+ * IMPORTANT: Pressure field is limited to 24 bits (not full 32-bit) due to CAN message
+ * size constraints. This provides range of 0 to 16,777,215 units.
  *
  * Message format:
- * - Priority: 2 bits
- * - Timestamp: 16 bits (2 bytes)
- * - IMU ID: 8 bits (1 byte) - barometer is part of IMU
- * - Pressure: 32 bits (4 bytes, only 24 bits used)
- * - Temperature: 16 bits (2 bytes)
+ * - Priority: 2 bits (0-3)
+ * - Timestamp: 16 bits (2 bytes) - milliseconds
+ * - IMU ID: 8 bits (1 byte) - barometer is integrated with IMU
+ * - Pressure: 32 bits (4 bytes, only 24 bits used) - in Pascals or mbar (scaled)
+ * - Temperature: 16 bits (2 bytes) - barometer's internal temperature sensor
  */
 class baro_data_msg_test : rockettest_test {
 public:
@@ -334,11 +341,11 @@ public:
 		can_msg_t msg;
 
 		// Generate random test data
-		can_msg_prio_t prio_before = rockettest_rand<can_msg_prio_t, 0x3>();
-		std::uint16_t timestamp_before = rockettest_rand<std::uint16_t>();
-		can_imu_id_t imu_id_before = rockettest_rand<can_imu_id_t, IMU_ENUM_MAX - 1>();
-		std::uint32_t pressure_before = rockettest_rand<std::uint32_t, 0xFFFFFF>(); // 24-bit mask
-		std::uint16_t temp_before = rockettest_rand<std::uint16_t>();
+		can_msg_prio_t prio_before = rockettest_rand<can_msg_prio_t, 0x3>();           // 0x3 = 2-bit mask (priority range 0-3)
+		std::uint16_t timestamp_before = rockettest_rand<std::uint16_t>();             // Full 16-bit range
+		can_imu_id_t imu_id_before = rockettest_rand<can_imu_id_t, IMU_ENUM_MAX - 1>(); // Limit to valid IMU IDs
+		std::uint32_t pressure_before = rockettest_rand<std::uint32_t, 0xFFFFFF>();    // 0xFFFFFF = 24-bit mask (hardware limitation)
+		std::uint16_t temp_before = rockettest_rand<std::uint16_t>();                  // Full 16-bit range
 
 		// Build message from test data
 		build_baro_data_msg(prio_before, timestamp_before, imu_id_before, pressure_before,
@@ -357,13 +364,13 @@ public:
 		timestamp_after = get_timestamp(&msg);
 		get_baro_data(&msg, &imu_id_after, &pressure_after, &temp_after);
 
-		// Verify round-trip consistency
-		rockettest_assert(msg_is_sensor_data_after == true);
-		rockettest_assert(type_after == MSG_SENSOR_BARO);
-		rockettest_assert(timestamp_after == timestamp_before);
-		rockettest_assert(imu_id_after == imu_id_before);
-		rockettest_assert(pressure_after == pressure_before);
-		rockettest_assert(temp_after == temp_before);
+		// Verify round-trip consistency: all data should match original values
+		rockettest_assert(msg_is_sensor_data_after == true);           // Message correctly identified as sensor data
+		rockettest_assert(type_after == MSG_SENSOR_BARO);              // Message type preserved
+		rockettest_assert(timestamp_after == timestamp_before);        // Timestamp preserved
+		rockettest_assert(imu_id_after == imu_id_before);              // IMU ID preserved
+		rockettest_assert(pressure_after == pressure_before);          // Pressure value preserved (24-bit)
+		rockettest_assert(temp_after == temp_before);                  // Temperature value preserved
 
 		return test_passed;
 	}
