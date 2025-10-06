@@ -1,10 +1,11 @@
-#ifndef TEST_COMMON_H
-#define TEST_COMMON_H
+#ifndef ROCKETTEST_H
+#define ROCKETTEST_H
 
 #include <cstdint>
 #include <cstdlib>
 #include <iostream>
 #include <map>
+#include <string>
 
 #define CONSOLE_COLOUR_RESET "\033[0m"
 #define CONSOLE_COLOUR_RED "\033[1;31m"
@@ -25,7 +26,7 @@ class rockettest_test {
 	const char *name;
 
 public:
-	static std::map<const char *, rockettest_test *> tests;
+	static std::map<std::string, rockettest_test *> tests;
 
 	rockettest_test() = delete;
 	rockettest_test(const char *test_name);
