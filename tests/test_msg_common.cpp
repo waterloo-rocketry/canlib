@@ -1,5 +1,6 @@
 #include <cstdint>
 
+#include "message_types.h"
 #include "rockettest.hpp"
 
 #include "can.h"
@@ -36,3 +37,39 @@ public:
 };
 
 timestamp_test timestamp_test_inst;
+
+class sid_extract_test : rockettest_test {
+public:
+	sid_extract_test() : rockettest_test("sid_extract_test") {}
+
+	bool run_test() override {
+		bool test_passed = true;
+
+		can_msg_t msg;
+		msg.sid = rockettest_rand<can_sid_t, 0x1fffffff>();
+
+		can_msg_type_t msg_type_extracted;
+		uint8_t board_type_id_extracted;
+		uint8_t board_inst_id_extracted;
+
+		msg_type_extracted = static_cast<can_msg_type_t>((msg.sid >> 18) & 0x1ff);
+		board_type_id_extracted = (msg.sid >> 8) & 0xff;
+		board_inst_id_extracted = msg.sid & 0xff;
+
+		can_msg_type_t msg_type_after;
+		uint8_t board_type_id_after;
+		uint8_t board_inst_id_after;
+
+		msg_type_after = get_message_type(&msg);
+		board_type_id_after = get_board_type_unique_id(&msg);
+		board_inst_id_after = get_board_inst_unique_id(&msg);
+
+		rockettest_assert(msg_type_after == msg_type_extracted);
+		rockettest_assert(board_type_id_after == board_type_id_extracted);
+		rockettest_assert(board_inst_id_after == board_inst_id_extracted);
+
+		return test_passed;
+	}
+};
+
+sid_extract_test sid_extract_test_inst;
