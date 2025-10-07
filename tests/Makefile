@@ -66,10 +66,10 @@ run_test: unit_test
 ifeq ($(COVERAGE), 1)
 
 coverage.info: run_test
-	lcov --capture --directory ../message --directory ../util --output-file $@
+	lcov --capture --branch-coverage --directory ../message --directory ../util --output-file $@
 
 html: coverage.info
-	genhtml $^ --output-directory $@
+	genhtml $^ --branch-coverage --output-directory $@
 
 endif
 
