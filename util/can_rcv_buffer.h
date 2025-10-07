@@ -75,14 +75,15 @@ void rcvb_clear_overflow_flag(void);
 bool rcvb_is_full(void);
 
 /*
- * Returns false if there's a CAN message that has been buffered, but has not yet
- * been read. Returns true otherwise
+ * Returns false if there's a CAN message that has been buffered, but has not
+ * yet been read. Returns true otherwise
  */
 bool rcvb_is_empty(void);
 
 /*
  * Gets the oldest buffered CAN message and puts it into msg, then dequeues
- * that message. Returns true if we were successfully able to grab a CAN message.
+ * that message. Returns true if we were successfully able to grab a CAN
+ * message.
  */
 bool rcvb_pop_message(can_msg_t *msg);
 

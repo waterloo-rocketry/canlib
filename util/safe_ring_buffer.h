@@ -10,11 +10,11 @@
  * context variables for each ring buffer.
  */
 typedef struct {
-	void *memory_pool;
-	size_t element_size;
-	size_t max_elements;
-	size_t rd_idx;
-	size_t wr_idx;
+  void *memory_pool;
+  size_t element_size;
+  size_t max_elements;
+  size_t rd_idx;
+  size_t wr_idx;
 } srb_ctx_t;
 
 #ifdef __cplusplus
@@ -31,7 +31,8 @@ extern "C" {
  * Note that each ring buffer can only hold one type of element, it is
  * impossible to store elements of different size in the same ring buffer.
  */
-void srb_init(srb_ctx_t *ctx, void *pool, size_t pool_size, size_t element_size);
+void srb_init(srb_ctx_t *ctx, void *pool, size_t pool_size,
+              size_t element_size);
 
 /*
  * Push an element into the ring buffer. If there is not enough space left in

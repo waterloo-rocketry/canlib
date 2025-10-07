@@ -11,17 +11,20 @@
 extern "C" {
 #endif
 
-bool build_actuator_cmd_msg(can_msg_prio_t prio, uint16_t timestamp, can_actuator_id_t actuator_id,
-							can_actuator_state_t actuator_cmd, can_msg_t *output);
+bool build_actuator_cmd_msg(can_msg_prio_t prio, uint16_t timestamp,
+                            can_actuator_id_t actuator_id,
+                            can_actuator_state_t actuator_cmd,
+                            can_msg_t *output);
 
 bool build_actuator_analog_cmd_msg(can_msg_prio_t prio, uint32_t timestamp,
-								   can_actuator_id_t actuator_id, uint16_t actuator_cmd,
-								   can_msg_t *output);
+                                   can_actuator_id_t actuator_id,
+                                   uint16_t actuator_cmd, can_msg_t *output);
 
 bool build_actuator_status_msg(can_msg_prio_t prio, uint16_t timestamp,
-							   can_actuator_id_t actuator_id,
-							   can_actuator_state_t actuator_curr_state,
-							   can_actuator_id_t actuator_cmd_state, can_msg_t *output);
+                               can_actuator_id_t actuator_id,
+                               can_actuator_state_t actuator_curr_state,
+                               can_actuator_id_t actuator_cmd_state,
+                               can_msg_t *output);
 
 /*
  * Returns the actuator id from an actuator command or status message.

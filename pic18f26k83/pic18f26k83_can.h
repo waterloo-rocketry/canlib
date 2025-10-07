@@ -18,7 +18,8 @@
  * module. In addition, TRIS and ANSEL registers for whatever pin
  * is being used must be set to the right values.
  */
-void can_init(const can_timing_t *timing, void (*receive_callback)(const can_msg_t *message));
+void can_init(const can_timing_t *timing,
+              void (*receive_callback)(const can_msg_t *message));
 
 // send a CAN message
 void can_send(const can_msg_t *message);
