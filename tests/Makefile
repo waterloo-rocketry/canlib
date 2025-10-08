@@ -48,7 +48,8 @@ CANLIB_SRCS := \
 TEST_SRCS := \
 	rockettest.cpp \
 	test_msg_sensor.cpp \
-	test_msg_common.cpp
+	test_msg_common.cpp \
+	test_msg_actuator.cpp
 
 CANLIB_OBJS = $(CANLIB_SRCS:.c=.o)
 CANLIB_DEPS = $(CANLIB_SRCS:.c=.d)
