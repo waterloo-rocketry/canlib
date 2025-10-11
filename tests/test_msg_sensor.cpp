@@ -23,6 +23,17 @@ public:
 
 		build_temp_data_msg(prio_before, timestamp_before, sensor_num_before, temp_before, &msg);
 
+		std::uint8_t sensor_num_extracted;
+		std::int32_t temp_extracted;
+
+		sensor_num_extracted = msg.data[2];
+		temp_extracted =
+			(msg.data[3] << 24) | (msg.data[4] << 16) | (msg.data[5] << 8) | msg.data[6];
+
+		rockettest_assert(msg.data_len == 7);
+		rockettest_assert(sensor_num_extracted == sensor_num_before);
+		rockettest_assert(temp_extracted == temp_before);
+
 		bool is_sensor_data_after;
 		can_msg_type_t type_after;
 		std::uint16_t timestamp_after;
@@ -63,6 +74,17 @@ public:
 		build_altitude_data_msg(
 			prio_before, timestamp_before, altitude_before, apogee_state_before, &msg);
 
+		std::int32_t altitude_extracted;
+		can_apogee_state_t apogee_state_extracted;
+
+		altitude_extracted =
+			(msg.data[2] << 24) | (msg.data[3] << 16) | (msg.data[4] << 8) | msg.data[5];
+		apogee_state_extracted = static_cast<can_apogee_state_t>(msg.data[6]);
+
+		rockettest_assert(altitude_extracted == altitude_before);
+		rockettest_assert(apogee_state_extracted == apogee_state_before);
+		rockettest_assert(msg.data_len == 7);
+
 		bool msg_is_sensor_data_after;
 		can_msg_type_t type_after;
 		std::uint16_t timestamp_after;
@@ -102,6 +124,16 @@ public:
 
 		build_analog_data_msg(
 			prio_before, timestamp_before, sensor_id_before, sensor_data_before, &msg);
+
+		can_analog_sensor_id_t sensor_id_extracted;
+		std::uint16_t sensor_data_extracted;
+
+		sensor_id_extracted = static_cast<can_analog_sensor_id_t>(msg.data[2]);
+		sensor_data_extracted = (msg.data[3] << 8) | msg.data[4];
+
+		rockettest_assert(msg.data_len == 5);
+		rockettest_assert(sensor_id_extracted == sensor_id_before);
+		rockettest_assert(sensor_data_extracted == sensor_data_before);
 
 		bool msg_is_sensor_data_after;
 		can_msg_type_t type_after;
