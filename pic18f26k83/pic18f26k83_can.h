@@ -18,15 +18,16 @@
  * module. In addition, TRIS and ANSEL registers for whatever pin
  * is being used must be set to the right values.
  */
-void can_init(const can_timing_t *timing, void (*receive_callback)(const can_msg_t *message));
+void pic18f26k83_can_init(const can_timing_t *timing,
+						  void (*receive_callback)(const can_msg_t *message));
 
 // send a CAN message
-void can_send(const can_msg_t *message);
+void pic18f26k83_can_send(const can_msg_t *message);
 
 // returns true if the CAN module is ready to send a message
-bool can_send_rdy(void);
+bool pic18f26k83_can_send_rdy(void);
 
 // call this function in an interrupt context whenever PIR5 is nonzero
-void can_handle_interrupt(void);
+void pic18f26k83_can_handle_interrupt(void);
 
 #endif // compile guard

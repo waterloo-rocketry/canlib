@@ -14,7 +14,8 @@ static void (*can_rcv_cb)(const can_msg_t *message);
  * module. In addition, TRIS and ANSEL registers for whatever pin
  * is being used must be set to the right values.
  */
-void can_init(const can_timing_t *timing, void (*receive_callback)(const can_msg_t *message)) {
+void pic18f26k83_can_init(const can_timing_t *timing,
+						  void (*receive_callback)(const can_msg_t *message)) {
 	// keep track of callback, we use it in interrupts
 	can_rcv_cb = receive_callback;
 
@@ -82,7 +83,7 @@ void can_init(const can_timing_t *timing, void (*receive_callback)(const can_msg
 	while (CANSTATbits.OPMODE != 0x0) {}
 }
 
-void can_send(const can_msg_t *message) {
+void pic18f26k83_can_send(const can_msg_t *message) {
 	// at present, this fails if transmit buffer 0 isn't available
 	if (TXB0CONbits.TXREQ != 0) {
 		return;
@@ -113,13 +114,13 @@ void can_send(const can_msg_t *message) {
 	TXB0CONbits.TXREQ = 1;
 }
 
-bool can_send_rdy(void) {
+bool pic18f26k83_can_send_rdy(void) {
 	return TXB0CONbits.TXREQ == 0;
 }
 
 // if any bit is set in PIR5 during an interrupt service routine, call
 // this funtion, and it will handle it
-void can_handle_interrupt() {
+void pic18f26k83_can_handle_interrupt() {
 	// if there was already a message in the receive buffer and we
 	// received another message, just drop that message. Apparently
 	// your code isn't fast enough.

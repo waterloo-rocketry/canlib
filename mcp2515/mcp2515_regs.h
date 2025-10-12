@@ -1,21 +1,7 @@
-#ifndef MCP_2515_H_
-#define MCP_2515_H_
+#ifndef MCP2515_MCP2515_REGS_H
+#define MCP2515_MCP2515_REGS_H
 
-#include <stdint.h>
-
-#include "can.h"
-
-#ifdef __cplusplus
-#error "C++ is not supported"
-#endif
-
-void mcp_can_init(can_timing_t *can_params, uint8_t (*spi_read_fcn)(void),
-				  void (*spi_write_fcn)(uint8_t data), void (*cs_drive_fcn)(uint8_t state));
-void mcp_can_send(can_msg_t *msg);
-bool mcp_can_send_rdy(void);
-bool mcp_can_receive(can_msg_t *msg);
-
-// register addresses
+// MCP2515 register addresses
 #define RXF0SIDH 0x00
 #define RXF3SIDH 0x10
 #define RXM0SIDH 0x20
@@ -145,4 +131,4 @@ bool mcp_can_receive(can_msg_t *msg);
 #define CANSTAT 0x0E
 #define CANCTRL 0x0F
 
-#endif // MCP_2515_H_
+#endif
