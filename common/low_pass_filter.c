@@ -1,5 +1,8 @@
-#include "low_pass_filter.h"
 #include <stddef.h>
+#include <stdint.h>
+
+#include "common.h"
+#include "low_pass_filter.h"
 
 // Initialize the low-pass filter
 w_status_t low_pass_filter_init(double *alpha, double response_time) {
