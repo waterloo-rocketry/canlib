@@ -4,11 +4,12 @@
 
 #include "stm32h7/stm32h7_can.h"
 
-static can_receive_callback can_rcv_cb;
+static void (*can_rcv_cb)(const can_msg_t *message);
 // static uint16_t RxBufferIdx = 0;
 static FDCAN_HandleTypeDef *fdcan_handle;
 
-bool stm32h7_can_init(FDCAN_HandleTypeDef *handle, can_receive_callback receive_callback) {
+bool stm32h7_can_init(FDCAN_HandleTypeDef *handle,
+					  void (*receive_callback)(const can_msg_t *message)) {
 	// bind user callback function and fdcan handle
 	can_rcv_cb = receive_callback;
 	fdcan_handle = handle;
@@ -45,7 +46,7 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 		RxHeader.DataLength; // For CAN 2.0 message FDCAN_DLC equals to actual length
 	rcvd_msg.sid = RxHeader.Identifier;
 	memcpy(rcvd_msg.data, RxData, rcvd_msg.data_len);
-	can_rcv_cb(&rcvd_msg, RxHeader.RxTimestamp);
+	can_rcv_cb(&rcvd_msg);
 }
 
 bool stm32h7_can_send(const can_msg_t *message) {
