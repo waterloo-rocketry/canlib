@@ -54,7 +54,7 @@ static void mcp2515_bit_modify(uint8_t addr, uint8_t mask, uint8_t data) {
 	__cs_drive(1);
 }
 
-void mcp2515_can_init(can_timing_t *can_params, uint8_t (*spi_read_fcn)(void),
+void mcp2515_can_init(can_timing_t *timing, uint8_t (*spi_read_fcn)(void),
 					  void (*spi_write_fcn)(uint8_t data), void (*cs_drive_fcn)(uint8_t state)) {
 	__spi_read = spi_read_fcn;
 	__spi_write = spi_write_fcn;
@@ -66,11 +66,10 @@ void mcp2515_can_init(can_timing_t *can_params, uint8_t (*spi_read_fcn)(void),
 	mcp2515_write_reg(CANCTRL, 0x4 << 5);
 	while (!(mcp2515_read_reg(CANCTRL))) {}
 
-	mcp2515_write_reg(CNF1, can_params->sjw << 6 | can_params->brp);
-	mcp2515_write_reg(CNF2,
-					  can_params->btlmode << 7 | can_params->sam << 6 | can_params->seg1ph << 3 |
-						  can_params->prseg);
-	mcp2515_write_reg(CNF3, can_params->seg2ph);
+	mcp2515_write_reg(CNF1, timing->sjw << 6 | timing->brp);
+	mcp2515_write_reg(
+		CNF2, timing->btlmode << 7 | timing->sam << 6 | timing->seg1ph << 3 | timing->prseg);
+	mcp2515_write_reg(CNF3, timing->seg2ph);
 
 	// receive mode interrupts
 	mcp2515_write_reg(RXB0CTRL, 0b0110000);
@@ -89,23 +88,23 @@ void mcp2515_can_init(can_timing_t *can_params, uint8_t (*spi_read_fcn)(void),
 	while ((mcp2515_read_reg(CANCTRL) & 0xe0) != 0) {} // wait for normal mode
 }
 
-void mcp2515_can_send(can_msg_t *msg) {
+void mcp2515_can_send(can_msg_t *message) {
 	mcp2515_write_reg(CANINTF, 0); // clear interrupt flag register
 	mcp2515_write_reg(EFLG, 0);
 
-	mcp2515_write_reg(TXB0SIDH, msg->sid >> 21);
-	mcp2515_write_reg(TXB0SIDL,
-					  (((msg->sid >> 18) & 0x7) << 5) | (1 << 3) | ((msg->sid >> 16) & 0x3));
-	mcp2515_write_reg(TXB0EID8, msg->sid >> 8);
-	mcp2515_write_reg(TXB0EID0, msg->sid);
+	mcp2515_write_reg(TXB0SIDH, message->sid >> 21);
+	mcp2515_write_reg(
+		TXB0SIDL, (((message->sid >> 18) & 0x7) << 5) | (1 << 3) | ((message->sid >> 16) & 0x3));
+	mcp2515_write_reg(TXB0EID8, message->sid >> 8);
+	mcp2515_write_reg(TXB0EID0, message->sid);
 
 	// data registers are consecutive
-	for (int i = 0; i < msg->data_len; ++i) {
-		mcp2515_write_reg(TXB0D0 + i, msg->data[i]);
+	for (int i = 0; i < message->data_len; ++i) {
+		mcp2515_write_reg(TXB0D0 + i, message->data[i]);
 	}
 
 	// data message w/ some number of bytes
-	mcp2515_write_reg(TXB0DLC, msg->data_len);
+	mcp2515_write_reg(TXB0DLC, message->data_len);
 	mcp2515_write_reg(TXB0CTRL, 1 << 3); // set txreq
 }
 
@@ -113,7 +112,7 @@ bool mcp2515_can_send_rdy(void) {
 	return (mcp2515_read_reg(TXB0CTRL) & 0b00001000) == 0;
 }
 
-bool mcp2515_can_receive(can_msg_t *msg) {
+bool mcp2515_can_receive(can_msg_t *message) {
 	uint8_t set = mcp2515_read_reg(CANINTF);
 	if (set & 0b1) {
 		// rxb0 is full
@@ -121,15 +120,15 @@ bool mcp2515_can_receive(can_msg_t *msg) {
 		uint8_t sid_l = mcp2515_read_reg(RXB0SIDL);
 		uint8_t eid_h = mcp2515_read_reg(RXB0EID8);
 		uint8_t eid_l = mcp2515_read_reg(RXB0EID0);
-		msg->sid = (uint32_t)sid_h << 21;
-		msg->sid |= (((uint32_t)sid_l >> 5) & 0x7) << 18;
-		msg->sid |= ((uint32_t)sid_l & 0x3) << 16;
-		msg->sid |= (uint32_t)eid_h << 8;
-		msg->sid |= eid_l;
+		message->sid = (uint32_t)sid_h << 21;
+		message->sid |= (((uint32_t)sid_l >> 5) & 0x7) << 18;
+		message->sid |= ((uint32_t)sid_l & 0x3) << 16;
+		message->sid |= (uint32_t)eid_h << 8;
+		message->sid |= eid_l;
 
-		msg->data_len = mcp2515_read_reg(RXB0DLC) & 0xf;
-		for (int i = 0; i < msg->data_len; ++i) {
-			msg->data[i] = mcp2515_read_reg(RXB0D0 + i);
+		message->data_len = mcp2515_read_reg(RXB0DLC) & 0xf;
+		for (int i = 0; i < message->data_len; ++i) {
+			message->data[i] = mcp2515_read_reg(RXB0D0 + i);
 		}
 		mcp2515_bit_modify(CANINTF, 0b1, 0);
 		return true;
@@ -139,15 +138,15 @@ bool mcp2515_can_receive(can_msg_t *msg) {
 		uint8_t sid_l = mcp2515_read_reg(RXB1SIDL);
 		uint8_t eid_h = mcp2515_read_reg(RXB1EID8);
 		uint8_t eid_l = mcp2515_read_reg(RXB1EID0);
-		msg->sid = (uint32_t)sid_h << 21;
-		msg->sid |= (((uint32_t)sid_l >> 5) & 0x7) << 18;
-		msg->sid |= ((uint32_t)sid_l & 0x3) << 16;
-		msg->sid |= (uint32_t)eid_h << 8;
-		msg->sid |= eid_l;
+		message->sid = (uint32_t)sid_h << 21;
+		message->sid |= (((uint32_t)sid_l >> 5) & 0x7) << 18;
+		message->sid |= ((uint32_t)sid_l & 0x3) << 16;
+		message->sid |= (uint32_t)eid_h << 8;
+		message->sid |= eid_l;
 
-		msg->data_len = mcp2515_read_reg(RXB1DLC) & 0xf;
-		for (int i = 0; i < msg->data_len; ++i) {
-			msg->data[i] = mcp2515_read_reg(RXB1D0 + i);
+		message->data_len = mcp2515_read_reg(RXB1DLC) & 0xf;
+		for (int i = 0; i < message->data_len; ++i) {
+			message->data[i] = mcp2515_read_reg(RXB1D0 + i);
 		}
 		mcp2515_bit_modify(CANINTF, 0b10, 0);
 		return true;
