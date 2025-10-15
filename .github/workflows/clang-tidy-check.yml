@@ -5,7 +5,7 @@ on: pull_request
 
 jobs:
   # Build job
-  clang-format-style-check:
+  clang-tidy-lint-check:
     name: C Lint Check (clang-tidy check)
     runs-on: ubuntu-latest
     steps:

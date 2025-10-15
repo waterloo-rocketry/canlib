@@ -24,7 +24,7 @@ static uint8_t (*__spi_read)(void);
 // write a byte through the spi module
 static void (*__spi_write)(uint8_t data);
 
-// drive the chip select pin for the MCP2562
+// drive the chip select pin for the MCP2515
 // 1: drive pin high, 0: drive pin low
 static void (*__cs_drive)(uint8_t state);
 

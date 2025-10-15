@@ -1,5 +1,5 @@
-#ifndef STM32H7_STM32H7_CAN_H
-#define STM32H7_STM32H7_CAN_H
+#ifndef CANLIB_STM32H7_CAN_H
+#define CANLIB_STM32H7_CAN_H
 
 #include <stdbool.h>
 
@@ -27,7 +27,7 @@ bool stm32h7_can_init(FDCAN_HandleTypeDef *handle,
  * @brief Send a CAN message
  *
  * @param message CAN message to be sent
- * @return `true` of succeed
+ * @return `true` if succeed
  */
 bool stm32h7_can_send(const can_msg_t *message);
 

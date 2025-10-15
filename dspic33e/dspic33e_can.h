@@ -1,5 +1,5 @@
-#ifndef DSPIC33E_DSPIC33E_CAN_H
-#define DSPIC33E_DSPIC33E_CAN_H
+#ifndef CANLIB_DSPIC33E_CAN_H
+#define CANLIB_DSPIC33E_CAN_H
 
 #include "can.h"
 

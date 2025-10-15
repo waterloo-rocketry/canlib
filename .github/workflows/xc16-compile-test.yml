@@ -4,7 +4,7 @@ name: XC16 Compile Check
 on: pull_request
 
 jobs:
-  xc8-compile-check:
+  xc16-compile-check:
     name: XC16 Compile Check
     runs-on: ubuntu-latest
     steps:

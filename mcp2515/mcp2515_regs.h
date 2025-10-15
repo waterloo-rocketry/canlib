@@ -1,5 +1,5 @@
-#ifndef MCP2515_MCP2515_REGS_H
-#define MCP2515_MCP2515_REGS_H
+#ifndef CANLIB_MCP2515_REGS_H
+#define CANLIB_MCP2515_REGS_H
 
 // MCP2515 register addresses
 #define RXF0SIDH 0x00

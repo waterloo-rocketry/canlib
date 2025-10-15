@@ -1,6 +1,7 @@
-#ifndef MCP2515_MCP2515_H
-#define MCP2515_MCP2515_H
+#ifndef CANLIB_MCP2515_H
+#define CANLIB_MCP2515_H
 
+#include <stdbool.h>
 #include <stdint.h>
 
 #include "can.h"
