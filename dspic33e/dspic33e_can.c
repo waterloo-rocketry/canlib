@@ -1,5 +1,6 @@
-#include "dspic33epxxxgp50x_can.h"
 #include <xc.h>
+
+#include "dspic33e_can.h"
 
 static void (*can_rcv_cb)(const can_msg_t *message);
 
@@ -16,8 +17,8 @@ static void buffer_to_msg(const unsigned int *buffer, can_msg_t *received);
 // Initialization function for CAN. The driver currently only runs in
 // callback mode, and that callback will be triggered in an interrupt
 // context. Please make the callback as short (in time) as possible.
-void init_can(const can_timing_t *timing, void (*receive_callback)(const can_msg_t *message),
-			  bool run_in_loopback) {
+void dspic33e_can_init(const can_timing_t *timing,
+					   void (*receive_callback)(const can_msg_t *message), bool run_in_loopback) {
 	// store pointer to the receive callback
 	can_rcv_cb = receive_callback;
 
@@ -82,7 +83,7 @@ void init_can(const can_timing_t *timing, void (*receive_callback)(const can_msg
 // Priority must be a 2 bit number defining how high the priority of
 // this message is vs the other ones queued to be sent. 0 is lowest
 // priority, 3 is highest
-void can_send(const can_msg_t *message) {
+void dspic33e_can_send(const can_msg_t *message) {
 	// put the SID in buffer 0 of the DMA buffers
 	can_msg_buf[0][0] = ((message->sid >> 18) << 2) | 0x3;
 	can_msg_buf[0][1] = (message->sid >> 6) & 0xfff;
@@ -105,7 +106,7 @@ void can_send(const can_msg_t *message) {
 }
 
 // Returns true if a message is ready to be sent
-bool can_send_rdy(void) {
+bool dspic33e_can_send_rdy(void) {
 	return C1TR01CONbits.TXREQ0 == 0;
 }
 
