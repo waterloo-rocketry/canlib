@@ -13,7 +13,7 @@ bool build_stream_status_msg(can_msg_prio_t prio, uint16_t timestamp, uint32_t t
     if (!output) {
         return false;
     }
-    if (total_size > STREAM_SIZE_MAX || tx_size > STREAM_SIZE_MAX) {
+    if ((total_size > STREAM_SIZE_MAX) || (tx_size > STREAM_SIZE_MAX)) {
         return false;
     }
 
@@ -36,10 +36,7 @@ bool build_stream_data_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t seq_
     if (!output) {
         return false;
     }
-    if (payload_len > STREAM_DATA_MAX_PAYLOAD_LEN) {
-        return false;
-    }
-    if (payload_len > 0 && !payload) {
+    if ((payload_len > STREAM_DATA_MAX_PAYLOAD_LEN) && (payload_len <= 0)) {
         return false;
     }
 
@@ -47,9 +44,7 @@ bool build_stream_data_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t seq_
     write_timestamp_2bytes(timestamp, output);
 
     output->data[2] = seq_id;
-    if (payload_len > 0) {
-        memcpy(&output->data[3], payload, payload_len);
-    }
+    memcpy(&output->data[3], payload, payload_len);
 
     output->data_len = (uint8_t)(payload_len + 3);
 
@@ -86,11 +81,11 @@ bool get_stream_status(const can_msg_t *msg, uint32_t *total_size, uint32_t *tx_
 }
 
 bool get_stream_data(const can_msg_t *msg, uint8_t *seq_id, uint8_t *payload,
-                     uint8_t payload_buf_len, uint8_t *payload_len) {
-    if (!msg || !seq_id || !payload_len) {
+                     uint8_t *payload_len) {
+    if (!msg || !seq_id || !payload || !payload_len) {
         return false;
     }
-    if (get_message_type(msg) != MSG_STREAM_DATA || msg->data_len < 3) {
+    if ((get_message_type(msg) != MSG_STREAM_DATA) || (msg->data_len < 4) || (msg->data_len > 8)) {
         return false;
     }
 
@@ -98,12 +93,7 @@ bool get_stream_data(const can_msg_t *msg, uint8_t *seq_id, uint8_t *payload,
     if (msg_payload_len > STREAM_DATA_MAX_PAYLOAD_LEN) {
         return false;
     }
-    if (msg_payload_len > 0) {
-        if (!payload || payload_buf_len < msg_payload_len) {
-            return false;
-        }
-        memcpy(payload, &msg->data[3], msg_payload_len);
-    }
+    memcpy(payload, &msg->data[3], msg_payload_len);
 
     *seq_id = msg->data[2];
     *payload_len = msg_payload_len;

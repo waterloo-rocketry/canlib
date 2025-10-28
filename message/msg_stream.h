@@ -26,7 +26,7 @@ bool build_stream_retry_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t seq
 bool get_stream_status(const can_msg_t *msg, uint32_t *total_size, uint32_t *tx_size);
 
 bool get_stream_data(const can_msg_t *msg, uint8_t *seq_id, uint8_t *payload,
-                     uint8_t payload_buf_len, uint8_t *payload_len);
+                     uint8_t *payload_len);
 
 bool get_stream_retry_seq_id(const can_msg_t *msg, uint8_t *seq_id);
 
