@@ -1,6 +1,8 @@
 #ifndef CANLIB_CANLIB_H
 #define CANLIB_CANLIB_H
 
+// NOLINTBEGIN
+
 #include "can.h"
 #include "message_types.h"
 
@@ -37,6 +39,8 @@
 
 #error "canlib project configuration not set."
 
-#endif /* ConfName */
+#endif
 
-#endif /* CANLIB_H */
+// NOLINTEND
+
+#endif
