@@ -8,10 +8,10 @@
 #include "message/msg_common.h"
 #include "message/msg_general.h"
 #include "message/msg_gps.h"
-#include "message/msg_stream.h"
 #include "message/msg_recovery.h"
 #include "message/msg_sensor.h"
 #include "message/msg_state_est.h"
+#include "message/msg_stream.h"
 
 #include "util/can_rcv_buffer.h"
 #include "util/can_tx_buffer.h"
