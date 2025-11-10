@@ -1,4 +1,5 @@
-#include <mbr.h>
+#include "mbr.h"
+#include "common.h"
 
 #define MBR_PT_OFFSET 0x1BE
 #define MBR_PT_SIZE 16
