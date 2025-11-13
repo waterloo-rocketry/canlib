@@ -1,10 +1,10 @@
-#ifndef BUFFER_RECEIVED_CAN_MESSAGE_H_
-#define BUFFER_RECEIVED_CAN_MESSAGE_H_
+#ifndef CANLIB_CAN_RCV_BUFFER_H
+#define CANLIB_CAN_RCV_BUFFER_H
 
-/*
- * A module for buffering CAN messages that are received from the CAN module.
- * The module operates as a ring buffer, with the memory provided by the caller
- * of the module.
+/**
+ * @file can_rcv_buffer.h
+ * @brief A module for buffering CAN messages that are received from the CAN module. The module
+ * operates as a ring buffer, with the memory provided by the caller of the module.
  *
  * The whole goal of this module is allowing you to write application code that
  * doesn't have to concern itself with ISR vs main thread code. If you set
@@ -30,24 +30,26 @@
 extern "C" {
 #endif
 
-/*
- * Initializes the module. Pool is a memory buffer, which must be provided by
- * the caller. pool_size is the size of pool, in bytes (not in number of
- * can_t's)
+/**
+ * @brief Initializes the reecive buffer module
+ * @param pool memory buffer, which must be provided by the caller
+ * @param pool_size the size of pool, in bytes
  */
 void rcvb_init(void *pool, size_t pool_size);
 
-/*
- * Copies msg into our internal buffering system.
+/**
+ * @brief Copies msg into our internal buffering system.
  *
  * This function fails silently if we're out of memory/space to hold the CAN
  * message. This is so that you can use this buffering system as the CAN
  * callback, whose signature is void
+ *
+ * @param msg message to be sent
  */
 void rcvb_push_message(const can_msg_t *msg);
 
-/*
- * Returns true if the CAN receive buffer has ever overflowed.
+/**
+ * @brief returns true if the CAN receive buffer has ever overflowed.
  *
  * Because the push function is meant to be called from an ISR, it won't be
  * able to do anything if it runs out of memory, it will just drop the
@@ -57,7 +59,7 @@ void rcvb_push_message(const can_msg_t *msg);
  */
 bool rcvb_has_overflowed(void);
 
-/*
+/**
  * Clears the overflow flag, so that rcvb_has_overflowed will start
  * returning false again. This function isn't perfectly concurrency safe:
  * If you call this function and during the call the receive buffer
@@ -65,8 +67,8 @@ bool rcvb_has_overflowed(void);
  */
 void rcvb_clear_overflow_flag(void);
 
-/*
- * Returns true if the receive buffer is full
+/**
+ * @brief returns true if the receive buffer is full
  *
  * This function exists to make up for the signature of
  * rcvb_push_message. If this function returns true, then you know
@@ -74,21 +76,25 @@ void rcvb_clear_overflow_flag(void);
  */
 bool rcvb_is_full(void);
 
-/*
- * Returns false if there's a CAN message that has been buffered, but has not yet
+/**
+ * @brief returns false if there's a CAN message that has been buffered, but has not yet
  * been read. Returns true otherwise
  */
 bool rcvb_is_empty(void);
 
-/*
- * Gets the oldest buffered CAN message and puts it into msg, then dequeues
- * that message. Returns true if we were successfully able to grab a CAN message.
+/**
+ * @brief gets the oldest buffered CAN message and puts it into msg, then dequeues
+ * that message.
+ * @param msg message buffer
+ * @return true if we were successfully able to grab a CAN message.
  */
 bool rcvb_pop_message(can_msg_t *msg);
 
-/*
- * Gets the oldest buffered CAN message and puts it into msg, and does not
- * dequeue it. Returns true if we were successfully able to grab a CAN message.
+/**
+ * @brief gets the oldest buffered CAN message and puts it into msg, and does not
+ * dequeue it.
+ * @param msg message buffer
+ * @return true if we were successfully able to grab a CAN message.
  */
 bool rcvb_peek_message(can_msg_t *msg);
 

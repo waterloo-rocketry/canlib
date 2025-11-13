@@ -1,5 +1,5 @@
-#ifndef SAFE_RING_BUFFER_H_
-#define SAFE_RING_BUFFER_H_
+#ifndef CANLIB_SAFE_RING_BUFFER_H
+#define CANLIB_SAFE_RING_BUFFER_H
 
 #include <stdbool.h>
 #include <stddef.h>
