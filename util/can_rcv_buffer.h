@@ -43,6 +43,8 @@ void rcvb_init(void *pool, size_t pool_size);
  * This function fails silently if we're out of memory/space to hold the CAN
  * message. This is so that you can use this buffering system as the CAN
  * callback, whose signature is void
+ *
+ * @param msg message to be sent
  */
 void rcvb_push_message(const can_msg_t *msg);
 
@@ -82,13 +84,17 @@ bool rcvb_is_empty(void);
 
 /**
  * @brief gets the oldest buffered CAN message and puts it into msg, then dequeues
- * that message. Returns true if we were successfully able to grab a CAN message.
+ * that message.
+ * @param msg message buffer
+ * @return true if we were successfully able to grab a CAN message.
  */
 bool rcvb_pop_message(can_msg_t *msg);
 
 /**
  * @brief gets the oldest buffered CAN message and puts it into msg, and does not
- * dequeue it. Returns true if we were successfully able to grab a CAN message.
+ * dequeue it.
+ * @param msg message buffer
+ * @return true if we were successfully able to grab a CAN message.
  */
 bool rcvb_peek_message(can_msg_t *msg);
 
