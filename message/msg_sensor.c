@@ -6,25 +6,6 @@
 #include "msg_common.h"
 #include "msg_sensor.h"
 
-bool build_temp_data_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t sensor_num, int32_t temp,
-						 can_msg_t *output) {
-	if (!output) {
-		return false;
-	}
-
-	output->sid = SID(prio, MSG_SENSOR_TEMP);
-	write_timestamp_2bytes(timestamp, output);
-
-	output->data[2] = sensor_num;
-	output->data[3] = (temp >> 24) & 0xFF;
-	output->data[4] = (temp >> 16) & 0xFF;
-	output->data[5] = (temp >> 8) & 0xFF;
-	output->data[6] = temp & 0xFF;
-	output->data_len = 7;
-
-	return true;
-}
-
 bool build_altitude_data_msg(can_msg_prio_t prio, uint16_t timestamp, int32_t altitude,
 							 can_apogee_state_t apogee_state, can_msg_t *output) {
 	if (!output) {
@@ -138,31 +119,13 @@ bool msg_is_sensor_data(const can_msg_t *msg) {
 	}
 
 	uint16_t type = get_message_type(msg);
-	if (type == MSG_SENSOR_TEMP || type == MSG_SENSOR_ALTITUDE || type == MSG_SENSOR_IMU_X ||
-		type == MSG_SENSOR_IMU_Y || type == MSG_SENSOR_IMU_Z || type == MSG_SENSOR_MAG_X ||
-		type == MSG_SENSOR_MAG_Y || type == MSG_SENSOR_MAG_Z || type == MSG_SENSOR_BARO ||
-		type == MSG_SENSOR_ANALOG) {
+	if (type == MSG_SENSOR_ALTITUDE || type == MSG_SENSOR_IMU_X || type == MSG_SENSOR_IMU_Y ||
+		type == MSG_SENSOR_IMU_Z || type == MSG_SENSOR_MAG_X || type == MSG_SENSOR_MAG_Y ||
+		type == MSG_SENSOR_MAG_Z || type == MSG_SENSOR_BARO || type == MSG_SENSOR_ANALOG) {
 		return true;
 	} else {
 		return false;
 	}
-}
-
-bool get_temp_data(const can_msg_t *msg, uint8_t *sensor_num, int32_t *temp) {
-	if (!msg || !sensor_num || !temp) {
-		return false;
-	}
-	if (get_message_type(msg) != MSG_SENSOR_TEMP) {
-		return false;
-	}
-
-	*sensor_num = msg->data[2];
-	*temp = ((uint32_t)msg->data[3] << 24);
-	*temp |= ((uint32_t)msg->data[4] << 16);
-	*temp |= ((uint32_t)msg->data[5] << 8);
-	*temp |= msg->data[6];
-
-	return true;
 }
 
 bool get_altitude_data(const can_msg_t *msg, int32_t *altitude, can_apogee_state_t *apogee_state) {
