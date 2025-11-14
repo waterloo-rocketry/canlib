@@ -34,7 +34,6 @@ CXXFLAGS := \
 
 CANLIB_SRCS := \
 	$(CANLIB_PATH)/message/msg_actuator.c \
-	$(CANLIB_PATH)/message/msg_common.c \
 	$(CANLIB_PATH)/message/msg_general.c \
 	$(CANLIB_PATH)/message/msg_gps.c \
 	$(CANLIB_PATH)/message/msg_recovery.c \
