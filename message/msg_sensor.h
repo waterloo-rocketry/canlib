@@ -12,15 +12,6 @@ extern "C" {
 #endif
 
 /*
- * Used to send tempurature measurement data
- * Units are 1/1024th of a degree C
- * Temp is 24 bit signed, not 32 bit. Values less than -8388608 or greater than
- * 8388607 will overflow.
- */
-bool build_temp_data_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t sensor_num, int32_t temp,
-						 can_msg_t *output);
-
-/*
  * Used to send altitude recived from altimiters
  */
 bool build_altitude_data_msg(can_msg_prio_t prio, uint16_t timestamp, int32_t altitude,
@@ -55,12 +46,6 @@ bool build_analog_data_msg(can_msg_prio_t prio, uint16_t timestamp,
 						   can_msg_t *output);
 
 bool msg_is_sensor_data(const can_msg_t *msg);
-
-/*
- * Gets the temp data and sensor num, returns false if the message is not
- * a SENSOR_TEMP message.
- */
-bool get_temp_data(const can_msg_t *msg, uint8_t *sensor_num, int32_t *temp);
 
 /*
  * Gets the altitude data, returns false if the message is not

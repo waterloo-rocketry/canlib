@@ -7,56 +7,6 @@
 #include "message/msg_sensor.h"
 #include "message_types.h"
 
-class temp_data_msg_test : rockettest_test {
-public:
-	temp_data_msg_test() : rockettest_test("temp_data_msg_test") {}
-
-	bool run_test() override {
-		bool test_passed = true;
-
-		can_msg_t msg;
-
-		can_msg_prio_t prio_before = rockettest_rand<can_msg_prio_t, 0x3>();
-		std::uint16_t timestamp_before = rockettest_rand<std::uint16_t>();
-		std::uint8_t sensor_num_before = rockettest_rand<std::uint8_t>();
-		std::int32_t temp_before = rockettest_rand<std::int32_t>();
-
-		build_temp_data_msg(prio_before, timestamp_before, sensor_num_before, temp_before, &msg);
-
-		std::uint8_t sensor_num_extracted;
-		std::int32_t temp_extracted;
-
-		sensor_num_extracted = msg.data[2];
-		temp_extracted =
-			(msg.data[3] << 24) | (msg.data[4] << 16) | (msg.data[5] << 8) | msg.data[6];
-
-		rockettest_assert(msg.data_len == 7);
-		rockettest_assert(sensor_num_extracted == sensor_num_before);
-		rockettest_assert(temp_extracted == temp_before);
-
-		bool is_sensor_data_after;
-		can_msg_type_t type_after;
-		std::uint16_t timestamp_after;
-		std::uint8_t sensor_num_after;
-		std::int32_t temp_after;
-
-		is_sensor_data_after = msg_is_sensor_data(&msg);
-		type_after = get_message_type(&msg);
-		timestamp_after = get_timestamp(&msg);
-		get_temp_data(&msg, &sensor_num_after, &temp_after);
-
-		rockettest_assert(is_sensor_data_after == true);
-		rockettest_assert(type_after == MSG_SENSOR_TEMP);
-		rockettest_assert(timestamp_after == timestamp_before);
-		rockettest_assert(sensor_num_after == sensor_num_before);
-		rockettest_assert(temp_after == temp_before);
-
-		return test_passed;
-	}
-};
-
-temp_data_msg_test temp_data_msg_test_inst;
-
 class altitude_data_msg_test : rockettest_test {
 public:
 	altitude_data_msg_test() : rockettest_test("altitude_data_msg_test") {}
