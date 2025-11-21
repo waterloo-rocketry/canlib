@@ -39,6 +39,7 @@ CANLIB_SRCS := \
 	$(CANLIB_PATH)/message/msg_gps.c \
 	$(CANLIB_PATH)/message/msg_recovery.c \
 	$(CANLIB_PATH)/message/msg_sensor.c \
+	$(CANLIB_PATH)/message/msg_stream.c \
 	$(CANLIB_PATH)/message/msg_state_est.c \
 	$(CANLIB_PATH)/util/can_rcv_buffer.c \
 	$(CANLIB_PATH)/util/can_tx_buffer.c \
@@ -47,6 +48,7 @@ CANLIB_SRCS := \
 
 TEST_SRCS := \
 	rockettest.cpp \
+	test_msg_stream.cpp \
 	test_msg_sensor.cpp \
 	test_msg_common.cpp
 
