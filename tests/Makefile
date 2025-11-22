@@ -30,11 +30,13 @@ CXXFLAGS := \
 
 ROCKETLIB_SRCS := \
 	$(ROCKETLIB_PATH)/common/crc8.c \
-	$(ROCKETLIB_PATH)/common/low_pass_filter.c
+	$(ROCKETLIB_PATH)/common/low_pass_filter.c \
+	$(ROCKETLIB_PATH)/common/mbr.c
 
 TEST_SRCS := \
 	rockettest.cpp \
-	test_low_pass_filter.cpp
+	test_low_pass_filter.cpp \
+	test_mbr.cpp
 
 ROCKETLIB_OBJS = $(ROCKETLIB_SRCS:.c=.o)
 ROCKETLIB_DEPS = $(ROCKETLIB_SRCS:.c=.d)
