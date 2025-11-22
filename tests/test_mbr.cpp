@@ -30,6 +30,13 @@ public:
 		entry[10] = 0x11;
 		entry[11] = 0x00; // LBA high byte
 
+		// Test with invalid boot signature
+		rockettest_assert(mbr_parse(first_sector, partition_type, &sector_lba) == W_FAILURE);
+
+		uint8_t *boot_signature = first_sector + 0x1FE;
+		boot_signature[0] = 0x55;
+		boot_signature[1] = 0xAA;
+
 		// Test with valid input
 		rockettest_assert(mbr_parse(first_sector, partition_type, &sector_lba) == W_SUCCESS);
 		// Test with invalid input (NULL first sector)
