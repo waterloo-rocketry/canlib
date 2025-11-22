@@ -1,7 +1,14 @@
+#ifndef ROCKETLIB_MBR_H
+#define ROCKETLIB_MBR_H
+
 #include <stdbool.h>
 #include <stdint.h>
 
 #include "common.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /**
  * @brief To find the starting sector of a given type of partition
@@ -16,3 +23,9 @@
  * @return w_status_t Returns W_SUCCESS on success, W_FAILURE if partition cannot be found
  */
 w_status_t mbr_parse(uint8_t *first_sector, uint8_t partition_type, uint32_t *sector_lba);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* ROCKETLIB_MBR_H */

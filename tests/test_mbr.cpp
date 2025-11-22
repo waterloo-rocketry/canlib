@@ -44,8 +44,10 @@ public:
 		// Test with invalid input (NULL LBA)
 		rockettest_assert(mbr_parse(first_sector, partition_type, nullptr) == W_INVALID_PARAM);
 		// Test with a partition type that cannot be found
-		rockettest_assert(mbr_parse(first_sector, 0x00, &sector_lba) == W_FAILURE);
+		rockettest_assert(mbr_parse(first_sector, 0x06, &sector_lba) == W_FAILURE);
 
 		return test_passed;
 	}
 };
+
+mbr_test mbr_test_inst;
