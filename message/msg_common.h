@@ -20,7 +20,7 @@
 #endif
 
 #define SID(prio, msg)                                                                             \
-	(((uint32_t)prio << 27) | ((uint32_t)msg << 18) | ((uint32_t)BOARD_TYPE_UNIQUE_ID << 8) |      \
+	(((uint32_t)(prio) << 27) | ((uint32_t)(msg) << 18) | ((uint32_t)BOARD_TYPE_UNIQUE_ID << 8) |  \
 	 BOARD_INST_UNIQUE_ID)
 
 #else
@@ -29,7 +29,7 @@ extern uint8_t board_type_unique_id;
 extern uint8_t board_inst_unique_id;
 
 #define SID(prio, msg)                                                                             \
-	(((uint32_t)prio << 27) | ((uint32_t)msg << 18) | ((uint32_t)board_type_unique_id << 8) |      \
+	(((uint32_t)(prio) << 27) | ((uint32_t)(msg) << 18) | ((uint32_t)board_type_unique_id << 8) |  \
 	 board_inst_unique_id)
 
 #endif
