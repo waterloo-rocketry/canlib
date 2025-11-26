@@ -5,6 +5,13 @@
 #include "message_types.h"
 #include "msg_common.h"
 
+#ifdef CANLIB_DYNAMIC_BOARD_ID
+
+uint8_t board_type_unique_id = BOARD_TYPE_ID_ANY;
+uint8_t board_inst_unique_id = BOARD_INST_ID_ANY;
+
+#endif
+
 // Helper function for populating CAN messages
 void write_timestamp_2bytes(uint16_t timestamp, can_msg_t *output) {
 	output->data[0] = (timestamp >> 8) & 0xff;
@@ -42,3 +49,12 @@ uint16_t get_timestamp(const can_msg_t *msg) {
 
 	return ((uint16_t)msg->data[0] << 8) | msg->data[1];
 }
+
+#ifdef CANLIB_DYNAMIC_BOARD_ID
+
+void set_board_id(uint8_t board_type_id, uint8_t board_inst_id) {
+	board_type_unique_id = board_type_id;
+	board_inst_unique_id = board_inst_id;
+}
+
+#endif

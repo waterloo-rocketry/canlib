@@ -136,12 +136,17 @@ bool check_board_need_reset(const can_msg_t *msg) {
 		return false;
 	}
 
+#ifndef CANLIB_DYNAMIC_BOARD_ID
+	const uint8_t board_type_unique_id = BOARD_TYPE_UNIQUE_ID;
+	const uint8_t board_inst_unique_id = BOARD_INST_UNIQUE_ID;
+#endif
+
 	if (board_type_id == BOARD_TYPE_ID_ANY) {
 		return true;
-	} else if (board_type_id == BOARD_TYPE_UNIQUE_ID) {
+	} else if (board_type_id == board_type_unique_id) {
 		if (board_inst_id == BOARD_INST_ID_ANY) {
 			return true;
-		} else if (board_inst_id == BOARD_INST_UNIQUE_ID) {
+		} else if (board_inst_id == board_inst_unique_id) {
 			return true;
 		} else {
 			return false;
