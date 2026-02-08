@@ -57,11 +57,10 @@ bool build_stream_retry_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t seq
 		return false;
 	}
 
-	output->sid = build_sid(prio, MSG_STREAM_RETRY, 0);
+	output->sid = build_sid(prio, MSG_STREAM_RETRY, seq_id);
 	write_timestamp(timestamp, output);
 
-	output->data[2] = seq_id;
-	output->data_len = 3;
+	output->data_len = 2;
 
 	return true;
 }
@@ -102,11 +101,11 @@ bool get_stream_retry_seq_id(const can_msg_t *msg, uint8_t *seq_id) {
 	if (!msg || !seq_id) {
 		return false;
 	}
-	if (get_message_type(msg) != MSG_STREAM_RETRY || msg->data_len != 3) {
+	if (get_message_type(msg) != MSG_STREAM_RETRY || msg->data_len != 2) {
 		return false;
 	}
 
-	*seq_id = msg->data[2];
+	*seq_id = get_message_metadata(msg);
 
 	return true;
 }

@@ -67,10 +67,10 @@ bool get_pyro_voltage_data(const can_msg_t *msg, uint16_t *v_drogue, uint16_t *v
 		return false;
 	}
 
-	*v_drogue = (msg->data[4] << 8);
-	*v_drogue += msg->data[5];
-	*v_main = (msg->data[6] << 8);
-	*v_main += msg->data[7];
+	*v_drogue = (msg->data[3] << 8);
+	*v_drogue += msg->data[4];
+	*v_main = (msg->data[5] << 8);
+	*v_main += msg->data[6];
 
 	return true;
 }
