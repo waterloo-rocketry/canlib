@@ -6,28 +6,22 @@
 #include "msg_actuator.h"
 #include "msg_common.h"
 
-bool build_actuator_cmd_msg(can_msg_prio_t prio, uint16_t timestamp, can_actuator_id_t actuator_id,
+void build_actuator_cmd_msg(can_msg_prio_t prio, uint16_t timestamp, can_actuator_id_t actuator_id,
 							can_actuator_state_t actuator_cmd, can_msg_t *output) {
-	if (!output) {
-		return false;
-	}
+	w_assert(output);
 
-	output->sid = build_sid(prio, MSG_ACTUATOR_CMD, actuator_cmd);
+	output->sid = build_sid(prio, MSG_ACTUATOR_CMD, actuator_id);
 	write_timestamp(timestamp, output);
 
 	output->data[2] = (uint8_t)actuator_cmd;
 	output->data_len = 3;
-
-	return true;
 }
 
-bool build_actuator_status_msg(can_msg_prio_t prio, uint16_t timestamp,
+void build_actuator_status_msg(can_msg_prio_t prio, uint16_t timestamp,
 							   can_actuator_id_t actuator_id,
 							   can_actuator_state_t actuator_curr_state,
 							   can_actuator_state_t actuator_cmd_state, can_msg_t *output) {
-	if (!output) {
-		return false;
-	}
+	w_assert(output);
 
 	output->sid = build_sid(prio, MSG_ACTUATOR_STATUS, actuator_id);
 	write_timestamp(timestamp, output);
@@ -35,14 +29,10 @@ bool build_actuator_status_msg(can_msg_prio_t prio, uint16_t timestamp,
 	output->data[2] = (uint8_t)actuator_curr_state;
 	output->data[3] = (uint8_t)actuator_cmd_state;
 	output->data_len = 4;
-
-	return true;
 }
 
 int get_actuator_id(const can_msg_t *msg) {
-	if (!msg) {
-		return -1;
-	}
+	w_assert(msg);
 
 	uint16_t msg_type = get_message_type(msg);
 	switch (msg_type) {
@@ -58,9 +48,7 @@ int get_actuator_id(const can_msg_t *msg) {
 }
 
 int get_curr_actuator_state(const can_msg_t *msg) {
-	if (!msg) {
-		return -1;
-	}
+	w_assert(msg);
 
 	uint16_t msg_type = get_message_type(msg);
 	if (msg_type == MSG_ACTUATOR_STATUS) {

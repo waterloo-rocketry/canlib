@@ -9,7 +9,7 @@
 void build_analog_data_16bit_msg(can_msg_prio_t prio, uint16_t timestamp,
 								 can_analog_sensor_id_t sensor_id, uint16_t sensor_data,
 								 can_msg_t *output) {
-	assert(output);
+	w_assert(output);
 
 	output->sid = build_sid(prio, MSG_SENSOR_ANALOG16, sensor_id);
 	write_timestamp(timestamp, output);
@@ -23,7 +23,7 @@ void build_analog_data_16bit_msg(can_msg_prio_t prio, uint16_t timestamp,
 void build_analog_data_32bit_msg(can_msg_prio_t prio, uint16_t timestamp,
 								 can_analog_sensor_id_t sensor_id, uint32_t sensor_data,
 								 can_msg_t *output) {
-	assert(output);
+	w_assert(output);
 
 	output->sid = build_sid(prio, MSG_SENSOR_ANALOG32, sensor_id);
 	write_timestamp(timestamp, output);
@@ -40,7 +40,7 @@ void build_dem_analog_data_16bit_msg(can_msg_prio_t prio, uint16_t timestamp,
 									 can_dem_sensor_id_t dem_sensor_id, uint16_t sensor_data_x,
 									 uint16_t sensor_data_y, uint16_t sensor_data_z,
 									 can_msg_t *output) {
-	assert(output);
+	w_assert(output);
 
 	output->sid = build_sid(prio, MSG_SENSOR_DEM_ANALOG16, dem_sensor_id);
 	write_timestamp(timestamp, output);
