@@ -8,13 +8,9 @@
 #include "message_types.h"
 
 #ifndef LINT
-
 #include "common.h"
-
 #else
-
-#define w_assert(expr)
-
+#define w_assert(statement)
 #endif
 
 #ifndef CANLIB_DYNAMIC_BOARD_ID

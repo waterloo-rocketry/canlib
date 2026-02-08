@@ -36,4 +36,6 @@ public:
 	bool operator()();
 };
 
+extern bool rocketlib_assert_failed;
+
 #endif
