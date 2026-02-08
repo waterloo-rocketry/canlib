@@ -18,8 +18,8 @@ bool build_stream_status_msg(can_msg_prio_t prio, uint16_t timestamp, uint32_t t
 		return false;
 	}
 
-	output->sid = SID(prio, MSG_STREAM_STATUS);
-	write_timestamp_2bytes(timestamp, output);
+	output->sid = build_sid(prio, MSG_STREAM_STATUS, 0);
+	write_timestamp(timestamp, output);
 
 	output->data[2] = (uint8_t)((total_size >> 16) & 0xFF);
 	output->data[3] = (uint8_t)((total_size >> 8) & 0xFF);
@@ -41,13 +41,12 @@ bool build_stream_data_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t seq_
 		return false;
 	}
 
-	output->sid = SID(prio, MSG_STREAM_DATA);
-	write_timestamp_2bytes(timestamp, output);
+	output->sid = build_sid(prio, MSG_STREAM_DATA, seq_id);
+	write_timestamp(timestamp, output);
 
-	output->data[2] = seq_id;
-	memcpy(&output->data[3], payload, payload_len);
+	memcpy(&output->data[2], payload, payload_len);
 
-	output->data_len = (uint8_t)(payload_len + 3);
+	output->data_len = (uint8_t)(payload_len + 2);
 
 	return true;
 }
@@ -58,8 +57,8 @@ bool build_stream_retry_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t seq
 		return false;
 	}
 
-	output->sid = SID(prio, MSG_STREAM_RETRY);
-	write_timestamp_2bytes(timestamp, output);
+	output->sid = build_sid(prio, MSG_STREAM_RETRY, 0);
+	write_timestamp(timestamp, output);
 
 	output->data[2] = seq_id;
 	output->data_len = 3;
