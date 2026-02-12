@@ -13,7 +13,7 @@ extern "C" {
 
 // Max payload bytes that fit in a classic CAN frame once timestamp and seqId
 // are included.
-#define STREAM_DATA_MAX_PAYLOAD_LEN 5
+#define STREAM_DATA_MAX_PAYLOAD_LEN 6
 
 bool build_stream_status_msg(can_msg_prio_t prio, uint16_t timestamp, uint32_t total_size,
 							 uint32_t tx_size, can_msg_t *output);

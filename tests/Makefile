@@ -7,6 +7,7 @@ CFLAGS := \
 	-pedantic \
 	-MMD \
 	-O2 \
+	-I. \
 	-I$(CANLIB_PATH) \
 	-DBOARD_TYPE_UNIQUE_ID=BOARD_TYPE_ID_ARMING \
 	-DBOARD_INST_UNIQUE_ID=BOARD_INST_ID_ROCKET
@@ -28,19 +29,18 @@ CXXFLAGS := \
 	-pedantic \
 	-MMD \
 	-O2 \
+	-I. \
 	-I$(CANLIB_PATH) \
 	-DBOARD_TYPE_UNIQUE_ID=BOARD_TYPE_ID_ARMING \
 	-DBOARD_INST_UNIQUE_ID=BOARD_INST_ID_ROCKET
 
 CANLIB_SRCS := \
 	$(CANLIB_PATH)/message/msg_actuator.c \
-	$(CANLIB_PATH)/message/msg_common.c \
 	$(CANLIB_PATH)/message/msg_general.c \
 	$(CANLIB_PATH)/message/msg_gps.c \
 	$(CANLIB_PATH)/message/msg_recovery.c \
 	$(CANLIB_PATH)/message/msg_sensor.c \
 	$(CANLIB_PATH)/message/msg_stream.c \
-	$(CANLIB_PATH)/message/msg_state_est.c \
 	$(CANLIB_PATH)/util/can_rcv_buffer.c \
 	$(CANLIB_PATH)/util/can_tx_buffer.c \
 	$(CANLIB_PATH)/util/safe_ring_buffer.c \
@@ -48,7 +48,6 @@ CANLIB_SRCS := \
 
 TEST_SRCS := \
 	rockettest.cpp \
-	test_msg_stream.cpp \
 	test_msg_sensor.cpp \
 	test_msg_common.cpp
 

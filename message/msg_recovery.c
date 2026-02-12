@@ -12,12 +12,11 @@ bool build_alt_arm_cmd_msg(can_msg_prio_t prio, uint16_t timestamp, can_altimete
 		return false;
 	}
 
-	output->sid = SID(prio, MSG_ALT_ARM_CMD);
-	write_timestamp_2bytes(timestamp, output);
+	output->sid = build_sid(prio, MSG_ALT_ARM_CMD, alt_id);
+	write_timestamp(timestamp, output);
 
-	output->data[2] = alt_id;
-	output->data[3] = arm_cmd;
-	output->data_len = 4;
+	output->data[2] = arm_cmd;
+	output->data_len = 3;
 
 	return true;
 }
@@ -29,19 +28,18 @@ bool build_alt_arm_status_msg(can_msg_prio_t prio, uint16_t timestamp, can_altim
 		return false;
 	}
 
-	output->sid = SID(prio, MSG_ALT_ARM_STATUS);
-	write_timestamp_2bytes(timestamp, output);
+	output->sid = build_sid(prio, MSG_ALT_ARM_STATUS, alt_id);
+	write_timestamp(timestamp, output);
 
-	output->data[2] = alt_id;
-	output->data[3] = arm_state;
+	output->data[2] = arm_state;
 	// drogue voltage
-	output->data[4] = v_drogue >> 8; // 8 msb
-	output->data[5] = v_drogue & 0x00FF; // 8 lsb
+	output->data[3] = v_drogue >> 8; // 8 msb
+	output->data[4] = v_drogue & 0x00FF; // 8 lsb
 	// main voltage
-	output->data[6] = v_main >> 8; // 8 msb
-	output->data[7] = v_main & 0x00FF; // 8 lsb
+	output->data[5] = v_main >> 8; // 8 msb
+	output->data[6] = v_main & 0x00FF; // 8 lsb
 
-	output->data_len = 8;
+	output->data_len = 7;
 
 	return true;
 }
@@ -55,8 +53,8 @@ bool get_alt_arm_state(const can_msg_t *msg, can_altimeter_id_t *alt_id,
 		(get_message_type(msg) != MSG_ALT_ARM_STATUS)) {
 		return false;
 	}
-	*alt_id = msg->data[2];
-	*arm_state = msg->data[3];
+	*alt_id = get_message_metadata(msg);
+	*arm_state = msg->data[2];
 
 	return true;
 }
@@ -69,10 +67,10 @@ bool get_pyro_voltage_data(const can_msg_t *msg, uint16_t *v_drogue, uint16_t *v
 		return false;
 	}
 
-	*v_drogue = (msg->data[4] << 8);
-	*v_drogue += msg->data[5];
-	*v_main = (msg->data[6] << 8);
-	*v_main += msg->data[7];
+	*v_drogue = (msg->data[3] << 8);
+	*v_drogue += msg->data[4];
+	*v_main = (msg->data[5] << 8);
+	*v_main += msg->data[6];
 
 	return true;
 }

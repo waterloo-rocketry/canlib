@@ -11,70 +11,30 @@
 extern "C" {
 #endif
 
-/*
- * Used to send altitude recived from altimiters
- */
-bool build_altitude_data_msg(can_msg_prio_t prio, uint16_t timestamp, int32_t altitude,
-							 can_apogee_state_t apogee_state, can_msg_t *output);
+void build_analog_data_16bit_msg(can_msg_prio_t prio, uint16_t timestamp,
+								 can_analog_sensor_id_t sensor_id, uint16_t sensor_data,
+								 can_msg_t *output);
 
-/*
- * Used to send 16-bit IMU data values.
- */
-bool build_imu_data_msg(can_msg_prio_t prio, uint16_t timestamp, char axis, can_imu_id_t imu_id,
-						uint16_t linear_accel, uint16_t angular_velocity, can_msg_t *output);
+void build_analog_data_32bit_msg(can_msg_prio_t prio, uint16_t timestamp,
+								 can_analog_sensor_id_t sensor_id, uint32_t sensor_data,
+								 can_msg_t *output);
 
-/*
- * Used to send 16-bit IMU magnetometer values.
- */
-bool build_mag_data_msg(can_msg_prio_t prio, uint16_t timestamp, char axis, can_imu_id_t imu_id,
-						uint16_t mag_value, can_msg_t *output);
-
-/*
- * Used to build barometer raw data message
- * Note: pressure data is 24 bits only
- */
-bool build_baro_data_msg(can_msg_prio_t prio, uint16_t timestamp, can_imu_id_t imu_id,
-						 uint32_t pressure, uint16_t temp, can_msg_t *output);
-
-/*
- * Used to send analog sensor data. The units of the sensor data are
- * not nailed down at this point and will likely differ based on the
- * sensor id.
- */
-bool build_analog_data_msg(can_msg_prio_t prio, uint16_t timestamp,
-						   can_analog_sensor_id_t sensor_id, uint16_t sensor_data,
-						   can_msg_t *output);
+void build_dem_analog_data_16bit_msg(can_msg_prio_t prio, uint16_t timestamp,
+									 can_dem_sensor_id_t dem_sensor_id, uint16_t sensor_data_x,
+									 uint16_t sensor_data_y, uint16_t sensor_data_z,
+									 can_msg_t *output);
 
 bool msg_is_sensor_data(const can_msg_t *msg);
 
-/*
- * Gets the altitude data, returns false if the message is not
- * a SENSOR_ALTITUDE message.
- */
-bool get_altitude_data(const can_msg_t *msg, int32_t *altitude, can_apogee_state_t *apogee_state);
+bool get_analog_data_16bit(const can_msg_t *msg, can_analog_sensor_id_t *sensor_id,
+						   uint16_t *output_data);
 
-bool get_imu_mag_id_dimension(const can_msg_t *msg, can_imu_id_t *imu_id, char *dimension);
+bool get_analog_data_32bit(const can_msg_t *msg, can_analog_sensor_id_t *sensor_id,
+						   uint32_t *output_data);
 
-/*
- * Gets IMU data from an IMU message. Returns true if
- * successful, false if the input is invalid.
- */
-bool get_imu_data(const can_msg_t *msg, uint16_t *linear_accel, uint16_t *angular_velocity);
-
-bool get_mag_data(const can_msg_t *msg, uint16_t *mag_value);
-
-/*
- * Get pressure and temperature data from barometer sensor message
- */
-bool get_baro_data(const can_msg_t *msg, can_imu_id_t *imu_id, uint32_t *pressure, uint16_t *temp);
-
-/*
- * Gets analog data (the sensor ID and data itself) from an
- * analog message. Returns true if successful, false if
- * the input is invalid.
- */
-bool get_analog_data(const can_msg_t *msg, can_analog_sensor_id_t *sensor_id,
-					 uint16_t *output_data);
+bool get_dem_analog_data_16bit(const can_msg_t *msg, can_dem_sensor_id_t *dem_sensor_id,
+							   uint16_t *output_data_x, uint16_t *output_data_y,
+							   uint16_t *output_data_z);
 
 #ifdef __cplusplus
 }

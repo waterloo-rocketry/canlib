@@ -12,8 +12,8 @@ bool build_gps_time_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t utc_hou
 		return false;
 	}
 
-	output->sid = SID(prio, MSG_GPS_TIMESTAMP);
-	write_timestamp_2bytes(timestamp, output);
+	output->sid = build_sid(prio, MSG_GPS_TIMESTAMP, 0);
+	write_timestamp(timestamp, output);
 
 	output->data[2] = utc_hours;
 	output->data[3] = utc_mins;
@@ -31,8 +31,8 @@ bool build_gps_lat_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t degrees,
 		return false;
 	}
 
-	output->sid = SID(prio, MSG_GPS_LATITUDE);
-	write_timestamp_2bytes(timestamp, output);
+	output->sid = build_sid(prio, MSG_GPS_LATITUDE, 0);
+	write_timestamp(timestamp, output);
 
 	output->data[2] = degrees;
 	output->data[3] = minutes;
@@ -51,8 +51,8 @@ bool build_gps_lon_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t degrees,
 		return false;
 	}
 
-	output->sid = SID(prio, MSG_GPS_LONGITUDE);
-	write_timestamp_2bytes(timestamp, output);
+	output->sid = build_sid(prio, MSG_GPS_LONGITUDE, 0);
+	write_timestamp(timestamp, output);
 
 	output->data[2] = degrees;
 	output->data[3] = minutes;
@@ -71,8 +71,8 @@ bool build_gps_alt_msg(can_msg_prio_t prio, uint16_t timestamp, uint16_t altitud
 		return false;
 	}
 
-	output->sid = SID(prio, MSG_GPS_ALTITUDE);
-	write_timestamp_2bytes(timestamp, output);
+	output->sid = build_sid(prio, MSG_GPS_ALTITUDE, 0);
+	write_timestamp(timestamp, output);
 
 	output->data[2] = (altitude >> 8) & 0xff;
 	output->data[3] = (altitude >> 0) & 0xff;
@@ -90,8 +90,8 @@ bool build_gps_info_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t num_sat
 		return false;
 	}
 
-	output->sid = SID(prio, MSG_GPS_INFO);
-	write_timestamp_2bytes(timestamp, output);
+	output->sid = build_sid(prio, MSG_GPS_INFO, 0);
+	write_timestamp(timestamp, output);
 
 	output->data[2] = num_sat;
 	output->data[3] = quality;

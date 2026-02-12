@@ -76,3 +76,18 @@ bool rockettest_test::operator()() {
 	}
 	return test_result;
 }
+
+bool rocketlib_assert_failed = false;
+
+void rocketlib_assert_result_cpp(const char *file, int line, const char *statement, bool result) {
+	if (!result) {
+		rocketlib_assert_failed = true;
+	}
+}
+
+extern "C" void rocketlib_assert_result_c(const char *file, int line, const char *statement,
+										  bool result) {
+	if (!result) {
+		rocketlib_assert_failed = true;
+	}
+}
