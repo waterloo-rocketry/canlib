@@ -10,7 +10,8 @@
 #ifndef LINT
 #include "common.h"
 #else
-#define w_assert(statement)
+#define w_assert(statement)                                                                        \
+	if (statement) {}
 #endif
 
 #ifndef CANLIB_DYNAMIC_BOARD_ID

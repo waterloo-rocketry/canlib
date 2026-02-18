@@ -23,7 +23,7 @@ LDFLAGS += -Wl,-lgcov
 endif
 
 CXXFLAGS := \
-	-std=c++23 \
+	-std=c++20 \
 	-Wall \
 	-Wextra \
 	-pedantic \
