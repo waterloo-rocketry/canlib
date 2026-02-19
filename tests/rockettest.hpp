@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <cstdlib>
+#include <functional>
 #include <iostream>
 #include <map>
 #include <string>
@@ -13,8 +14,8 @@
 
 #define rockettest_assert(statement)                                                               \
 	if (!(statement)) {                                                                            \
-		std::cout << "Assertion failed " << __FILE__ << ':' << __LINE__ << ' ' << #statement       \
-				  << std::endl;                                                                    \
+		std::cout << "RocketTest Assertion failed " << __FILE__ << ':' << __LINE__ << ' '          \
+				  << #statement << std::endl;                                                      \
 		test_passed = false;                                                                       \
 	}
 
@@ -36,6 +37,6 @@ public:
 	bool operator()();
 };
 
-extern bool rocketlib_assert_failed;
+bool rockettest_check_assert_trigger(std::function<void(void)> funccall);
 
 #endif
