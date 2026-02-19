@@ -70,7 +70,7 @@ coverage.info: run_test
 	lcov --capture --branch-coverage --directory ../message --directory ../util --output-file $@
 
 html: coverage.info
-	genhtml $^ --branch-coverage --output-directory $@
+	genhtml $^ --flat --branch-coverage --output-directory $@
 
 endif
 
