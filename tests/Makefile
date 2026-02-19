@@ -6,7 +6,17 @@ CFLAGS := \
 	-Wextra \
 	-pedantic \
 	-MMD \
-	-O2 \
+	-I. \
+	-I$(CANLIB_PATH) \
+	-DBOARD_TYPE_UNIQUE_ID=BOARD_TYPE_ID_ARMING \
+	-DBOARD_INST_UNIQUE_ID=BOARD_INST_ID_ROCKET
+
+CXXFLAGS := \
+	-std=c++20 \
+	-Wall \
+	-Wextra \
+	-pedantic \
+	-MMD \
 	-I. \
 	-I$(CANLIB_PATH) \
 	-DBOARD_TYPE_UNIQUE_ID=BOARD_TYPE_ID_ARMING \
@@ -18,21 +28,27 @@ CFLAGS += \
 	-fprofile-arcs \
 	-ftest-coverage
 
+CXXFLAGS += \
+	-fprofile-arcs \
+	-ftest-coverage
+
 LDFLAGS += -Wl,-lgcov
 
 endif
 
-CXXFLAGS := \
-	-std=c++23 \
-	-Wall \
-	-Wextra \
-	-pedantic \
-	-MMD \
-	-O2 \
-	-I. \
-	-I$(CANLIB_PATH) \
-	-DBOARD_TYPE_UNIQUE_ID=BOARD_TYPE_ID_ARMING \
-	-DBOARD_INST_UNIQUE_ID=BOARD_INST_ID_ROCKET
+ifeq ($(DEBUG), 1)
+
+CFLAGS += -Og -g
+
+CXXFLAGS += -Og -g
+
+else
+
+CFLAGS += -O2
+
+CXXFLAGS += -O2
+
+endif
 
 CANLIB_SRCS := \
 	$(CANLIB_PATH)/message/msg_actuator.c \
@@ -49,7 +65,8 @@ CANLIB_SRCS := \
 TEST_SRCS := \
 	rockettest.cpp \
 	test_msg_sensor.cpp \
-	test_msg_common.cpp
+	test_msg_common.cpp \
+	test_nullptr_reject.cpp
 
 CANLIB_OBJS = $(CANLIB_SRCS:.c=.o)
 CANLIB_DEPS = $(CANLIB_SRCS:.c=.d)
@@ -67,10 +84,13 @@ run_test: unit_test
 ifeq ($(COVERAGE), 1)
 
 coverage.info: run_test
-	lcov --capture --branch-coverage --directory ../message --directory ../util --output-file $@
+	lcov --capture --branch-coverage --no-external --directory ../message --directory ../util --directory . -o $@
 
-html: coverage.info
-	genhtml $^ --branch-coverage --output-directory $@
+coverage-filtered.info: coverage.info
+	lcov --remove $^ "*/tests/*" -o $@ --branch-coverage
+
+html: coverage-filtered.info
+	genhtml $^ --flat --branch-coverage --output-directory $@
 
 endif
 
@@ -79,4 +99,4 @@ endif
 
 .PHONY: clean
 clean:
-	rm -rf $(CANLIB_OBJS) $(CANLIB_DEPS) $(TEST_OBJS) $(TEST_DEPS) *.o ../message/*.gcda ../message/*.gcno ../util/*.gcda ../util/*.gcno unit_test coverage.info html
+	rm -rf $(CANLIB_OBJS) $(CANLIB_DEPS) $(TEST_OBJS) $(TEST_DEPS) *.o ../message/*.gcda ../message/*.gcno ../util/*.gcda ../util/*.gcno *.gcda *.gcno unit_test *.info html

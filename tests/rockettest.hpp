@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <cstdlib>
+#include <functional>
 #include <iostream>
 #include <map>
 #include <string>
@@ -11,10 +12,19 @@
 #define CONSOLE_COLOUR_RED "\033[1;31m"
 #define CONSOLE_COLOUR_GREEN "\033[1;32m"
 
-#define rockettest_assert(statement)                                                               \
-	if (!(statement)) {                                                                            \
-		std::cout << "Assertion failed " << __FILE__ << ':' << __LINE__ << ' ' << #statement       \
+#define rockettest_check_expr_true(expr)                                                           \
+	if (!(expr)) {                                                                                 \
+		std::cout << CONSOLE_COLOUR_RED << "E: " << CONSOLE_COLOUR_RESET                           \
+				  << "Expression should be true " << __FILE__ << ':' << __LINE__ << ' ' << #expr   \
 				  << std::endl;                                                                    \
+		test_passed = false;                                                                       \
+	}
+
+#define rockettest_check_assert_triggered(funccall)                                                \
+	if (!rockettest_check_assert_sjlj((funccall))) {                                               \
+		std::cout << CONSOLE_COLOUR_RED << "E: " << CONSOLE_COLOUR_RESET                           \
+				  << "Rocketlib w_assert did not trigger on " << __FILE__ << ':' << __LINE__       \
+				  << ' ' << #funccall << std::endl;                                                \
 		test_passed = false;                                                                       \
 	}
 
@@ -36,6 +46,6 @@ public:
 	bool operator()();
 };
 
-extern bool rocketlib_assert_failed;
+bool rockettest_check_assert_sjlj(std::function<void(void)> funccall);
 
 #endif

@@ -30,9 +30,9 @@ public:
 		sensor_id_extracted = static_cast<can_analog_sensor_id_t>(msg.sid & 0xff);
 		sensor_data_extracted = (msg.data[2] << 8) | msg.data[3];
 
-		rockettest_assert(msg.data_len == 4);
-		rockettest_assert(sensor_id_extracted == sensor_id_before);
-		rockettest_assert(sensor_data_extracted == sensor_data_before);
+		rockettest_check_expr_true(msg.data_len == 4);
+		rockettest_check_expr_true(sensor_id_extracted == sensor_id_before);
+		rockettest_check_expr_true(sensor_data_extracted == sensor_data_before);
 
 		bool msg_is_sensor_data_after;
 		can_msg_type_t type_after;
@@ -45,11 +45,11 @@ public:
 		timestamp_after = get_timestamp(&msg);
 		get_analog_data_16bit(&msg, &sensor_id_after, &sensor_data_after);
 
-		rockettest_assert(msg_is_sensor_data_after == true);
-		rockettest_assert(type_after == MSG_SENSOR_ANALOG16);
-		rockettest_assert(timestamp_after == timestamp_before);
-		rockettest_assert(sensor_id_after == sensor_id_before);
-		rockettest_assert(sensor_data_after == sensor_data_before);
+		rockettest_check_expr_true(msg_is_sensor_data_after == true);
+		rockettest_check_expr_true(type_after == MSG_SENSOR_ANALOG16);
+		rockettest_check_expr_true(timestamp_after == timestamp_before);
+		rockettest_check_expr_true(sensor_id_after == sensor_id_before);
+		rockettest_check_expr_true(sensor_data_after == sensor_data_before);
 
 		return test_passed;
 	}

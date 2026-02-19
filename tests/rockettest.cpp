@@ -1,3 +1,4 @@
+#include <csetjmp>
 #include <cstdlib>
 #include <ctime>
 #include <getopt.h>
@@ -77,17 +78,24 @@ bool rockettest_test::operator()() {
 	return test_result;
 }
 
-bool rocketlib_assert_failed = false;
+static std::jmp_buf assert_test_env;
 
-void rocketlib_assert_result_cpp(const char *file, int line, const char *statement, bool result) {
-	if (!result) {
-		rocketlib_assert_failed = true;
-	}
+void rocketlib_assert_pass_cpp(const char *file, int line, const char *statement) {}
+
+void rocketlib_assert_fail_cpp(const char *file, int line, const char *statement) {
+	std::longjmp(assert_test_env, 1);
 }
 
-extern "C" void rocketlib_assert_result_c(const char *file, int line, const char *statement,
-										  bool result) {
-	if (!result) {
-		rocketlib_assert_failed = true;
+extern "C" void rocketlib_assert_pass_c(const char *file, int line, const char *statement) {}
+
+extern "C" void rocketlib_assert_fail_c(const char *file, int line, const char *statement) {
+	std::longjmp(assert_test_env, 1);
+}
+
+bool rockettest_check_assert_sjlj(std::function<void(void)> funccall) {
+	if (setjmp(assert_test_env) == 0) {
+		funccall();
+		return false;
 	}
+	return true;
 }

@@ -2,8 +2,8 @@
 *.d
 *.gcda
 *.gcno
+*.info
 compile_commands.json
 .cache
 tests/unit_test
-tests/coverage.info
 tests/html
