@@ -79,15 +79,14 @@ bool rockettest_test::operator()() {
 
 bool rocketlib_assert_failed = false;
 
-void rocketlib_assert_result_cpp(const char *file, int line, const char *statement, bool result) {
-	if (!result) {
-		rocketlib_assert_failed = true;
-	}
+void rocketlib_assert_pass_cpp(const char *file, int line, const char *statement) {}
+
+void rocketlib_assert_fail_cpp(const char *file, int line, const char *statement) {
+	rocketlib_assert_failed = true;
 }
 
-extern "C" void rocketlib_assert_result_c(const char *file, int line, const char *statement,
-										  bool result) {
-	if (!result) {
-		rocketlib_assert_failed = true;
-	}
+extern "C" void rocketlib_assert_pass_c(const char *file, int line, const char *statement) {}
+
+extern "C" void rocketlib_assert_fail_c(const char *file, int line, const char *statement) {
+	rocketlib_assert_failed = true;
 }
