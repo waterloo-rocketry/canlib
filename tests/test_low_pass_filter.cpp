@@ -20,13 +20,13 @@ public:
 
 		double alpha;
 		// Test with valid input
-		rockettest_assert(low_pass_filter_init(&alpha, 1.0) == W_SUCCESS);
+		rockettest_check_expr_true(low_pass_filter_init(&alpha, 1.0) == W_SUCCESS);
 		// Test with invalid input (NULL pointer)
-		rockettest_assert(low_pass_filter_init(NULL, 1.0) == W_INVALID_PARAM);
+		rockettest_check_expr_true(low_pass_filter_init(NULL, 1.0) == W_INVALID_PARAM);
 		// Test with invalid input (negative response time)
-		rockettest_assert(low_pass_filter_init(&alpha, -1.0) == W_INVALID_PARAM);
+		rockettest_check_expr_true(low_pass_filter_init(&alpha, -1.0) == W_INVALID_PARAM);
 		// Test with invalid input (zero response time)
-		rockettest_assert(low_pass_filter_init(&alpha, 0.0) == W_INVALID_PARAM);
+		rockettest_check_expr_true(low_pass_filter_init(&alpha, 0.0) == W_INVALID_PARAM);
 
 		return test_passed;
 	}
@@ -59,30 +59,30 @@ public:
 			double expected = (alpha * new_input_value) + ((1.0 - alpha) * previous_low_pass);
 			// Update the low-pass filter with the fixed input value
 			result = update_low_pass(alpha, new_input_value, &low_pass_value);
-			rockettest_assert(result == W_SUCCESS);
+			rockettest_check_expr_true(result == W_SUCCESS);
 			// Print the current iteration and values
 			printf("Iteration %2d: Low-Pass Value = %.4f | Expected ~ %.4f\n",
 				   i,
 				   low_pass_value,
 				   expected);
 			// Verify the correctness of the low-pass update
-			rockettest_assert(fabs(low_pass_value - expected) < EPSILON);
+			rockettest_check_expr_true(fabs(low_pass_value - expected) < EPSILON);
 		}
 
 		printf("\nAll iterations completed successfully.\n\n");
 
 		// Test with alpha out of range
 		result = update_low_pass(-0.1, new_input_value, &low_pass_value);
-		rockettest_assert(result == W_INVALID_PARAM);
+		rockettest_check_expr_true(result == W_INVALID_PARAM);
 		printf("Invalid alpha (negative) test passed.\n");
 
 		result = update_low_pass(1.1, new_input_value, &low_pass_value);
-		rockettest_assert(result == W_INVALID_PARAM);
+		rockettest_check_expr_true(result == W_INVALID_PARAM);
 		printf("Invalid alpha (greater than 1) test passed.\n");
 
 		// Test with NULL low_pass_value
 		result = update_low_pass(alpha, new_input_value, NULL);
-		rockettest_assert(result == W_INVALID_PARAM);
+		rockettest_check_expr_true(result == W_INVALID_PARAM);
 		printf("Null low_pass_value test passed.\n");
 
 		return test_passed;

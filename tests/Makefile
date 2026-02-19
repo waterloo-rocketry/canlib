@@ -6,7 +6,14 @@ CFLAGS := \
 	-Wextra \
 	-pedantic \
 	-MMD \
-	-O2 \
+	-I$(ROCKETLIB_PATH)/include
+
+CXXFLAGS := \
+	-std=c++20 \
+	-Wall \
+	-Wextra \
+	-pedantic \
+	-MMD \
 	-I$(ROCKETLIB_PATH)/include
 
 ifeq ($(COVERAGE), 1)
@@ -15,18 +22,27 @@ CFLAGS += \
 	-fprofile-arcs \
 	-ftest-coverage
 
+CXXFLAGS += \
+	-fprofile-arcs \
+	-ftest-coverage
+
 LDFLAGS += -Wl,-lgcov
 
 endif
 
-CXXFLAGS := \
-	-std=c++23 \
-	-Wall \
-	-Wextra \
-	-pedantic \
-	-MMD \
-	-O2 \
-	-I$(ROCKETLIB_PATH)/include
+ifeq ($(DEBUG), 1)
+
+CFLAGS += -Og -g
+
+CXXFLAGS += -Og -g
+
+else
+
+CFLAGS += -O2
+
+CXXFLAGS += -O2
+
+endif
 
 ROCKETLIB_SRCS := \
 	$(ROCKETLIB_PATH)/common/crc8.c \
@@ -54,10 +70,13 @@ run_test: unit_test
 ifeq ($(COVERAGE), 1)
 
 coverage.info: run_test
-	lcov --capture --branch-coverage --directory ../common --output-file $@
+	lcov --capture --branch-coverage --no-external --directory ../common --directory . -o $@
 
-html: coverage.info
-	genhtml $^ --branch-coverage --output-directory $@
+coverage-filtered.info: coverage.info
+	lcov --remove $^ "*/tests/*" -o $@ --branch-coverage
+
+html: coverage-filtered.info
+	genhtml $^ --flat --branch-coverage --output-directory $@
 
 endif
 
@@ -66,4 +85,4 @@ endif
 
 .PHONY: clean
 clean:
-	rm -rf $(ROCKETLIB_OBJS) $(ROCKETLIB_DEPS) $(TEST_OBJS) $(TEST_DEPS) *.o ../common/*.gcda ../common/*.gcno unit_test coverage.info html
+	rm -rf $(ROCKETLIB_OBJS) $(ROCKETLIB_DEPS) $(TEST_OBJS) $(TEST_DEPS) *.o ../common/*.gcda ../common/*.gcno *.gcda *.gcno unit_test *.info html

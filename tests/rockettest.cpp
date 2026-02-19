@@ -1,3 +1,4 @@
+#include <csetjmp>
 #include <cstdlib>
 #include <ctime>
 #include <getopt.h>
@@ -75,4 +76,26 @@ bool rockettest_test::operator()() {
 		std::cout << CONSOLE_COLOUR_RED << "FAILED " << CONSOLE_COLOUR_RESET << name << std::endl;
 	}
 	return test_result;
+}
+
+static std::jmp_buf assert_test_env;
+
+void rocketlib_assert_pass_cpp(const char *file, int line, const char *statement) {}
+
+void rocketlib_assert_fail_cpp(const char *file, int line, const char *statement) {
+	std::longjmp(assert_test_env, 1);
+}
+
+extern "C" void rocketlib_assert_pass_c(const char *file, int line, const char *statement) {}
+
+extern "C" void rocketlib_assert_fail_c(const char *file, int line, const char *statement) {
+	std::longjmp(assert_test_env, 1);
+}
+
+bool rockettest_check_assert_sjlj(std::function<void(void)> funccall) {
+	if (setjmp(assert_test_env) == 0) {
+		funccall();
+		return false;
+	}
+	return true;
 }
