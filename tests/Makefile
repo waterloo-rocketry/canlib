@@ -28,6 +28,10 @@ CFLAGS += \
 	-fprofile-arcs \
 	-ftest-coverage
 
+CXXFLAGS += \
+	-fprofile-arcs \
+	-ftest-coverage
+
 LDFLAGS += -Wl,-lgcov
 
 endif
@@ -80,9 +84,12 @@ run_test: unit_test
 ifeq ($(COVERAGE), 1)
 
 coverage.info: run_test
-	lcov --capture --branch-coverage --directory ../message --directory ../util --output-file $@
+	lcov --capture --branch-coverage --no-external --directory ../message --directory ../util --directory . -o $@
 
-html: coverage.info
+coverage-filtered.info: coverage.info
+	lcov --remove $^ "*/tests/*" -o $@ --branch-coverage
+
+html: coverage-filtered.info
 	genhtml $^ --flat --branch-coverage --output-directory $@
 
 endif
@@ -92,4 +99,4 @@ endif
 
 .PHONY: clean
 clean:
-	rm -rf $(CANLIB_OBJS) $(CANLIB_DEPS) $(TEST_OBJS) $(TEST_DEPS) *.o ../message/*.gcda ../message/*.gcno ../util/*.gcda ../util/*.gcno unit_test coverage.info html
+	rm -rf $(CANLIB_OBJS) $(CANLIB_DEPS) $(TEST_OBJS) $(TEST_DEPS) *.o ../message/*.gcda ../message/*.gcno ../util/*.gcda ../util/*.gcno *.gcda *.gcno unit_test *.info html
