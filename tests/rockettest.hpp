@@ -19,6 +19,14 @@
 		test_passed = false;                                                                       \
 	}
 
+#define rockettest_check_assert_triggered(funccall)                                                \
+	if (!rockettest_check_assert_sjlj((funccall))) {                                               \
+		std::cout << CONSOLE_COLOUR_RED << "E: " << CONSOLE_COLOUR_RESET                           \
+				  << "rocketlib w_assert did not trigger on " << __FILE__ << ':' << __LINE__       \
+				  << ' ' << #funccall << std::endl;                                                \
+		test_passed = false;                                                                       \
+	}
+
 template <typename T, std::uint32_t mask = 0xffffffff> T rockettest_rand() {
 	return static_cast<T>(std::rand() & mask);
 }
@@ -37,6 +45,6 @@ public:
 	bool operator()();
 };
 
-bool rockettest_check_assert_trigger(std::function<void(void)> funccall);
+bool rockettest_check_assert_sjlj(std::function<void(void)> funccall);
 
 #endif

@@ -92,11 +92,10 @@ extern "C" void rocketlib_assert_fail_c(const char *file, int line, const char *
 	std::longjmp(assert_test_env, 1);
 }
 
-bool rockettest_check_assert_trigger(std::function<void(void)> funccall) {
+bool rockettest_check_assert_sjlj(std::function<void(void)> funccall) {
 	if (setjmp(assert_test_env) == 0) {
 		funccall();
-		return true;
-	} else {
 		return false;
 	}
+	return true;
 }
