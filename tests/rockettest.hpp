@@ -12,17 +12,18 @@
 #define CONSOLE_COLOUR_RED "\033[1;31m"
 #define CONSOLE_COLOUR_GREEN "\033[1;32m"
 
-#define rockettest_assert(statement)                                                               \
-	if (!(statement)) {                                                                            \
-		std::cout << "RocketTest Assertion failed " << __FILE__ << ':' << __LINE__ << ' '          \
-				  << #statement << std::endl;                                                      \
+#define rockettest_check_expr_true(expr)                                                           \
+	if (!(expr)) {                                                                                 \
+		std::cout << CONSOLE_COLOUR_RED << "E: " << CONSOLE_COLOUR_RESET                           \
+				  << "Expression should be true " << __FILE__ << ':' << __LINE__ << ' ' << #expr   \
+				  << std::endl;                                                                    \
 		test_passed = false;                                                                       \
 	}
 
 #define rockettest_check_assert_triggered(funccall)                                                \
 	if (!rockettest_check_assert_sjlj((funccall))) {                                               \
 		std::cout << CONSOLE_COLOUR_RED << "E: " << CONSOLE_COLOUR_RESET                           \
-				  << "rocketlib w_assert did not trigger on " << __FILE__ << ':' << __LINE__       \
+				  << "Rocketlib w_assert did not trigger on " << __FILE__ << ':' << __LINE__       \
 				  << ' ' << #funccall << std::endl;                                                \
 		test_passed = false;                                                                       \
 	}

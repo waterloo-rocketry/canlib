@@ -24,13 +24,13 @@ public:
 
 		timestamp_extracted = (static_cast<std::uint16_t>(msg.data[0]) << 8) | msg.data[1];
 
-		rockettest_assert(timestamp_extracted == timestamp_before);
+		rockettest_check_expr_true(timestamp_extracted == timestamp_before);
 
 		std::uint16_t timestamp_after;
 
 		timestamp_after = get_timestamp(&msg);
 
-		rockettest_assert(timestamp_after == timestamp_before);
+		rockettest_check_expr_true(timestamp_after == timestamp_before);
 
 		return test_passed;
 	}
@@ -68,10 +68,10 @@ public:
 		board_inst_id_after = get_board_inst_unique_id(&msg);
 		metadata_after = get_message_metadata(&msg);
 
-		rockettest_assert(msg_type_after == msg_type_extracted);
-		rockettest_assert(board_type_id_after == board_type_id_extracted);
-		rockettest_assert(board_inst_id_after == board_inst_id_extracted);
-		rockettest_assert(metadata_after == metadata_extracted);
+		rockettest_check_expr_true(msg_type_after == msg_type_extracted);
+		rockettest_check_expr_true(board_type_id_after == board_type_id_extracted);
+		rockettest_check_expr_true(board_inst_id_after == board_inst_id_extracted);
+		rockettest_check_expr_true(metadata_after == metadata_extracted);
 
 		return test_passed;
 	}
