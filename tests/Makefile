@@ -6,7 +6,17 @@ CFLAGS := \
 	-Wextra \
 	-pedantic \
 	-MMD \
-	-O2 \
+	-I. \
+	-I$(CANLIB_PATH) \
+	-DBOARD_TYPE_UNIQUE_ID=BOARD_TYPE_ID_ARMING \
+	-DBOARD_INST_UNIQUE_ID=BOARD_INST_ID_ROCKET
+
+CXXFLAGS := \
+	-std=c++20 \
+	-Wall \
+	-Wextra \
+	-pedantic \
+	-MMD \
 	-I. \
 	-I$(CANLIB_PATH) \
 	-DBOARD_TYPE_UNIQUE_ID=BOARD_TYPE_ID_ARMING \
@@ -22,17 +32,19 @@ LDFLAGS += -Wl,-lgcov
 
 endif
 
-CXXFLAGS := \
-	-std=c++20 \
-	-Wall \
-	-Wextra \
-	-pedantic \
-	-MMD \
-	-O2 \
-	-I. \
-	-I$(CANLIB_PATH) \
-	-DBOARD_TYPE_UNIQUE_ID=BOARD_TYPE_ID_ARMING \
-	-DBOARD_INST_UNIQUE_ID=BOARD_INST_ID_ROCKET
+ifeq ($(DEBUG), 1)
+
+CFLAGS += -Og -g
+
+CXXFLAGS += -Og -g
+
+else
+
+CFLAGS += -O2
+
+CXXFLAGS += -O2
+
+endif
 
 CANLIB_SRCS := \
 	$(CANLIB_PATH)/message/msg_actuator.c \
