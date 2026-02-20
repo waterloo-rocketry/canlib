@@ -6,6 +6,7 @@ CFLAGS := \
 	-Wextra \
 	-pedantic \
 	-MMD \
+	-DUNIT_TEST \
 	-I$(ROCKETLIB_PATH)/include
 
 CXXFLAGS := \
@@ -14,6 +15,7 @@ CXXFLAGS := \
 	-Wextra \
 	-pedantic \
 	-MMD \
+	-DUNIT_TEST \
 	-I$(ROCKETLIB_PATH)/include
 
 ifeq ($(COVERAGE), 1)
@@ -51,6 +53,7 @@ ROCKETLIB_SRCS := \
 
 TEST_SRCS := \
 	rockettest.cpp \
+	test_crc8.cpp \
 	test_low_pass_filter.cpp \
 	test_mbr.cpp
 

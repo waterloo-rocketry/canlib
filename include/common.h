@@ -25,6 +25,8 @@ typedef enum {
 	W_OVERFLOW
 } w_status_t;
 
+#ifndef UNIT_TEST
+
 // Assertion Macro
 #ifdef __cplusplus
 extern "C" {
@@ -61,6 +63,36 @@ void w_assert_fail(const char *file, int line, const char *statement);
  * `w_assert_fail`), only active when `W_DEBUG` is defined
  */
 #define w_assert(statement)
+
+#endif
+
+#else
+
+#ifdef __cplusplus
+
+extern void rocketlib_assert_pass_cpp(const char *file, int line, const char *statement);
+extern void rocketlib_assert_fail_cpp(const char *file, int line, const char *statement);
+
+#define w_assert(statement)                                                                        \
+	if (statement) {                                                                               \
+		rocketlib_assert_pass_cpp(__FILE__, __LINE__, #statement);                                 \
+	} else {                                                                                       \
+		rocketlib_assert_fail_cpp(__FILE__, __LINE__, #statement);                                 \
+	}
+
+#else
+
+extern void rocketlib_assert_pass_c(const char *file, int line, const char *statement);
+extern void rocketlib_assert_fail_c(const char *file, int line, const char *statement);
+
+#define w_assert(statement)                                                                        \
+	if (statement) {                                                                               \
+		rocketlib_assert_pass_c(__FILE__, __LINE__, #statement);                                   \
+	} else {                                                                                       \
+		rocketlib_assert_fail_c(__FILE__, __LINE__, #statement);                                   \
+	}
+
+#endif
 
 #endif
 
