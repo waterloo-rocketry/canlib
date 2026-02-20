@@ -16,7 +16,10 @@ public:
 			[] { crc8_checksum(nullptr, 0, 0); }); // nullptr reject with zero input size
 
 		rockettest_check_assert_triggered(
-			[] { crc8_checksum(nullptr, 5, 0); }); // nullptr reject with not-zero input size
+			[] { crc8_checksum(nullptr, 5, 0); }); // nullptr reject with non-zero input size
+
+		const uint8_t input[5] = {'A', 'B', 'C', 'D', 'E'};
+		rockettest_check_expr_true(crc8_checksum(input, sizeof(input), 0) == 0xf5);
 
 		return test_passed;
 	}
