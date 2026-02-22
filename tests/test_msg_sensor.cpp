@@ -160,6 +160,10 @@ public:
 		std::uint16_t sensor_data_x_after;
 		std::uint16_t sensor_data_y_after;
 		std::uint16_t sensor_data_z_after;
+
+		msg_is_sensor_data_after = msg_is_sensor_data(&msg);
+		type_after = get_message_type(&msg);
+		timestamp_after = get_timestamp(&msg);
 		get_dem_analog_data_16bit(&msg,
 								  &sensor_id_after,
 								  &sensor_data_x_after,
