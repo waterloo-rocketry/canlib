@@ -68,3 +68,65 @@ public:
 };
 
 gps_timestamp_message_test gps_timestamp_message_test_inst;
+
+class gps_latitude_message_test : rockettest_test {
+public:
+    gps_latitude_message_test() : rockettest_test("gps_latitude_message_test") {}
+
+    bool run_test() override {
+        bool test_passed = true;
+
+        can_msg_t msg;
+
+        can_msg_prio_t prio_before = rockettest_rand<can_msg_prio_t, 0x3>();
+        std::uint16_t timestamp_before = rockettest_rand<std::uint16_t>();
+        std::uint8_t degrees_before = rockettest_rand<std::uint8_t, 0xff>();
+        std::uint8_t minutes_before = rockettest_rand<std::uint8_t, 0xff>();
+        std::uint16_t dminutes_before = rockettest_rand<std::uint16_t>();
+        std::uint8_t direction_before = rockettest_rand<std::uint8_t, 0xff>();
+
+        build_gps_lat_msg(prio_before, timestamp_before, degrees_before, minutes_before, dminutes_before, direction_before, &msg);
+
+        std::uint16_t timestamp_extracted;
+        std::uint8_t degrees_extracted;
+        std::uint8_t minutes_extracted;
+        std::uint16_t dminutes_extracted;
+        std::uint8_t direction_extracted;
+
+        timestamp_extracted = (static_cast<std::uint16_t>(msg.data[0]) << 8) | msg.data[1];
+        degrees_extracted = msg.data[2];
+        minutes_extracted = msg.data[3];
+        dminutes_extracted = (static_cast<std::uint16_t>(msg.data[4]) << 8) | msg.data[5];
+        direction_extracted = msg.data[6];
+
+        rockettest_check_expr_true(msg.data_len == 7);
+        rockettest_check_expr_true(timestamp_extracted == timestamp_before);
+        rockettest_check_expr_true(degrees_extracted == degrees_before);
+        rockettest_check_expr_true(minutes_extracted == minutes_before);
+        rockettest_check_expr_true(dminutes_extracted == dminutes_before);
+        rockettest_check_expr_true(direction_extracted == direction_before);
+
+        can_msg_type_t type_after;
+        std::uint16_t timestamp_after;
+        uint8_t degrees_after;
+        uint8_t minutes_after;
+        uint16_t dminutes_after;
+        uint8_t direction_after;
+
+        type_after = get_message_type(&msg);
+        timestamp_after = get_timestamp(&msg);
+        get_gps_lat(&msg, &degrees_after, &minutes_after, &dminutes_after, &direction_after);
+
+        rockettest_check_expr_true(type_after == MSG_GPS_LATITUDE);
+        rockettest_check_expr_true(timestamp_after == timestamp_before);
+        rockettest_check_expr_true(degrees_after == degrees_before);
+        rockettest_check_expr_true(minutes_after == minutes_before);
+        rockettest_check_expr_true(dminutes_after == dminutes_before);
+        rockettest_check_expr_true(direction_after == direction_before);
+        
+        return test_passed;
+    }
+};
+
+gps_latitude_message_test gps_latitude_message_test_inst;
+
