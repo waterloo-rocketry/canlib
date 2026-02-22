@@ -95,7 +95,7 @@ bool get_analog_data_32bit(const can_msg_t *msg, can_analog_sensor_id_t *sensor_
 	if (!output_data) {
 		return false;
 	}
-	if (get_message_type(msg) != MSG_SENSOR_ANALOG16) {
+	if (get_message_type(msg) != MSG_SENSOR_ANALOG32) {
 		return false;
 	}
 
