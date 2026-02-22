@@ -245,3 +245,52 @@ public:
 };
 
 gps_altitude_message_test gps_altitude_message_test_inst;
+
+class gps_info_message_test : rockettest_test {
+public:
+    gps_info_message_test() : rockettest_test("gps_info_message_test") {}
+
+    bool run_test() override {
+        bool test_passed = true;
+
+        can_msg_t msg;
+
+        can_msg_prio_t prio_before = rockettest_rand<can_msg_prio_t, 0x3>();
+        std::uint16_t timestamp_before = rockettest_rand<std::uint16_t>();
+        std::uint8_t num_sat_before = rockettest_rand<std::uint8_t, 0xff>();
+        std::uint8_t quality_before = rockettest_rand<std::uint8_t, 0xff>();
+
+        build_gps_info_msg(prio_before, timestamp_before, num_sat_before, quality_before, &msg);
+
+        std::uint16_t timestamp_extracted;
+        std::uint8_t num_sat_extracted;
+        std::uint8_t quality_extracted;
+
+        timestamp_extracted = (static_cast<std::uint16_t>(msg.data[0]) << 8) | msg.data[1];
+        num_sat_extracted = msg.data[2];
+        quality_extracted = msg.data[3];
+
+        rockettest_check_expr_true(msg.data_len == 4);
+        rockettest_check_expr_true(timestamp_extracted == timestamp_before);
+        rockettest_check_expr_true(num_sat_extracted == num_sat_before);
+        rockettest_check_expr_true(quality_extracted == quality_before);
+
+        can_msg_type_t type_after;
+        std::uint16_t timestamp_after;
+        uint8_t num_sat_after;
+        uint8_t quality_after;
+
+        type_after = get_message_type(&msg);
+        timestamp_after = get_timestamp(&msg);
+        get_gps_info(&msg, &num_sat_after, &quality_after);
+
+        rockettest_check_expr_true(type_after == MSG_GPS_INFO);
+        rockettest_check_expr_true(timestamp_after == timestamp_before);
+        rockettest_check_expr_true(num_sat_after == num_sat_before);
+        rockettest_check_expr_true(quality_after == quality_before);
+
+        return test_passed;
+    }
+};
+
+gps_info_message_test gps_info_message_test_inst;
