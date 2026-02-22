@@ -69,8 +69,9 @@ public:
 		can_msg_prio_t prio_before = rockettest_rand<can_msg_prio_t, 0x3>();
 		std::uint16_t timestamp_before = rockettest_rand<std::uint16_t>();
 		can_analog_sensor_id_t sensor_id_before = rockettest_rand<can_analog_sensor_id_t, 0xff>();
-		std::uint32_t sensor_data_before = (static_cast<std::uint32_t>(rockettest_rand<uint16_t>()) << 16) |
-										   rockettest_rand<uint16_t>();
+		std::uint32_t sensor_data_before =
+			(static_cast<std::uint32_t>(rockettest_rand<uint16_t>()) << 16) |
+			rockettest_rand<uint16_t>();
 
 		build_analog_data_32bit_msg(
 			prio_before, timestamp_before, sensor_id_before, sensor_data_before, &msg);
@@ -113,7 +114,8 @@ analog_sensor_32bit_message_test analog_sensor_32bit_message_test_inst;
 
 class analog_sensor_dem_16bit_message_test : rockettest_test {
 public:
-	analog_sensor_dem_16bit_message_test() : rockettest_test("analog_sensor_dem_16bit_message_test") {}
+	analog_sensor_dem_16bit_message_test()
+		: rockettest_test("analog_sensor_dem_16bit_message_test") {}
 
 	bool run_test() override {
 		bool test_passed = true;
@@ -127,9 +129,13 @@ public:
 		std::uint16_t sensor_data_y_before = rockettest_rand<std::uint16_t>();
 		std::uint16_t sensor_data_z_before = rockettest_rand<std::uint16_t>();
 
-		build_dem_analog_data_16bit_msg(prio_before, timestamp_before, sensor_id_before,
-										sensor_data_x_before, sensor_data_y_before,
-										sensor_data_z_before, &msg);
+		build_dem_analog_data_16bit_msg(prio_before,
+										timestamp_before,
+										sensor_id_before,
+										sensor_data_x_before,
+										sensor_data_y_before,
+										sensor_data_z_before,
+										&msg);
 
 		can_dem_sensor_id_t sensor_id_extracted;
 		std::uint16_t sensor_data_x_extracted;
@@ -154,7 +160,11 @@ public:
 		std::uint16_t sensor_data_x_after;
 		std::uint16_t sensor_data_y_after;
 		std::uint16_t sensor_data_z_after;
-		get_dem_analog_data_16bit(&msg, &sensor_id_after, &sensor_data_x_after, &sensor_data_y_after, &sensor_data_z_after);
+		get_dem_analog_data_16bit(&msg,
+								  &sensor_id_after,
+								  &sensor_data_x_after,
+								  &sensor_data_y_after,
+								  &sensor_data_z_after);
 
 		rockettest_check_expr_true(msg_is_sensor_data_after == true);
 		rockettest_check_expr_true(type_after == MSG_SENSOR_DEM_ANALOG16);
