@@ -41,7 +41,7 @@ public:
 
 		type_after = get_message_type(&msg);
 		timestamp_after = get_timestamp(&msg);
-        actuator_id_after = (can_actuator_id_t)get_message_metadata(&msg);
+		actuator_id_after = (can_actuator_id_t)get_message_metadata(&msg);
 		actuator_state_after = (can_actuator_state_t)get_cmd_actuator_state(&msg);
 
 		rockettest_check_expr_true(type_after == MSG_ACTUATOR_CMD);
@@ -67,8 +67,10 @@ public:
 		can_msg_prio_t prio_before = rockettest_rand<can_msg_prio_t, 0x3>();
 		std::uint16_t timestamp_before = rockettest_rand<std::uint16_t>();
 		can_actuator_id_t actuator_id_before = rockettest_rand<can_actuator_id_t, 0xff>();
-		can_actuator_state_t actuator_curr_state_before = rockettest_rand<can_actuator_state_t, 0xff>();
-		can_actuator_state_t actuator_cmd_state_before = rockettest_rand<can_actuator_state_t, 0xff>();
+		can_actuator_state_t actuator_curr_state_before =
+			rockettest_rand<can_actuator_state_t, 0xff>();
+		can_actuator_state_t actuator_cmd_state_before =
+			rockettest_rand<can_actuator_state_t, 0xff>();
 
 		build_actuator_status_msg(prio_before,
 								  timestamp_before,
