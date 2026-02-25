@@ -66,7 +66,10 @@ TEST_SRCS := \
 	rockettest.cpp \
 	test_msg_sensor.cpp \
 	test_msg_common.cpp \
-	test_nullptr_reject.cpp
+	test_nullptr_reject.cpp \
+	test_msg_actuator.cpp \
+	test_msg_gps.cpp \
+	test_msg_general.cpp \
 
 CANLIB_OBJS = $(CANLIB_SRCS:.c=.o)
 CANLIB_DEPS = $(CANLIB_SRCS:.c=.d)
