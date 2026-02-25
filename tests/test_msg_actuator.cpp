@@ -41,7 +41,8 @@ public:
 
 		type_after = get_message_type(&msg);
 		timestamp_after = get_timestamp(&msg);
-		get_cmd_actuator_state(&msg);
+        actuator_id_after = (can_actuator_id_t)get_actuator_id(&msg);
+		actuator_state_after = (can_actuator_state_t)get_cmd_actuator_state(&msg);
 
 		rockettest_check_expr_true(type_after == MSG_ACTUATOR_CMD);
 		rockettest_check_expr_true(timestamp_after == timestamp_before);
@@ -97,9 +98,9 @@ public:
 
 		type_after = get_message_type(&msg);
 		timestamp_after = get_timestamp(&msg);
-		get_actuator_id(&msg);
-		get_curr_actuator_state(&msg);
-		get_cmd_actuator_state(&msg);
+		actuator_id_after = (can_actuator_id_t)get_actuator_id(&msg);
+		actuator_curr_state_after = (can_actuator_state_t)get_curr_actuator_state(&msg);
+		actuator_cmd_state_after = (can_actuator_state_t)get_cmd_actuator_state(&msg);
 
 		rockettest_check_expr_true(type_after == MSG_ACTUATOR_STATUS);
 		rockettest_check_expr_true(timestamp_after == timestamp_before);
