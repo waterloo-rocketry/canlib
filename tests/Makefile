@@ -70,6 +70,7 @@ TEST_SRCS := \
 	test_msg_actuator.cpp \
 	test_msg_gps.cpp \
 	test_msg_general.cpp \
+	test_msg_recovery.cpp \
 
 CANLIB_OBJS = $(CANLIB_SRCS:.c=.o)
 CANLIB_DEPS = $(CANLIB_SRCS:.c=.d)
