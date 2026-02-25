@@ -95,7 +95,7 @@ bool get_analog_data_32bit(const can_msg_t *msg, can_analog_sensor_id_t *sensor_
 	if (!output_data) {
 		return false;
 	}
-	if (get_message_type(msg) != MSG_SENSOR_ANALOG16) {
+	if (get_message_type(msg) != MSG_SENSOR_ANALOG32) {
 		return false;
 	}
 
@@ -115,7 +115,7 @@ bool get_dem_analog_data_16bit(const can_msg_t *msg, can_dem_sensor_id_t *dem_se
 	if (!output_data_x) {
 		return false;
 	}
-	if (get_message_type(msg) != MSG_SENSOR_ANALOG16) {
+	if (get_message_type(msg) != MSG_SENSOR_DEM_ANALOG16) {
 		return false;
 	}
 
