@@ -26,11 +26,15 @@ ifeq ($(COVERAGE), 1)
 
 CFLAGS += \
 	-fprofile-arcs \
-	-ftest-coverage
+	-ftest-coverage \
+	-fcondition-coverage \
+	-fpath-coverage
 
 CXXFLAGS += \
 	-fprofile-arcs \
-	-ftest-coverage
+	-ftest-coverage \
+	-fcondition-coverage \
+	-fpath-coverage
 
 LDFLAGS += -Wl,-lgcov
 
@@ -88,13 +92,13 @@ run_test: unit_test
 ifeq ($(COVERAGE), 1)
 
 coverage.info: run_test
-	lcov --capture --branch-coverage --no-external --directory ../message --directory ../util --directory . -o $@
+	lcov --capture --branch-coverage --mcdc-coverage --no-external --directory ../message --directory ../util --directory . -o $@
 
 coverage-filtered.info: coverage.info
-	lcov --remove $^ "*/tests/*" -o $@ --branch-coverage
+	lcov --remove $^ "*/tests/*" -o $@ --branch-coverage --mcdc-coverage
 
 html: coverage-filtered.info
-	genhtml $^ --flat --branch-coverage --output-directory $@
+	genhtml $^ --flat --branch-coverage --mcdc-coverage --output-directory $@
 
 endif
 
