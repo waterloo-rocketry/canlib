@@ -2,6 +2,7 @@
 
 #include "can.h"
 #include "can_tx_buffer.h"
+#include "message/msg_common.h"
 #include "safe_ring_buffer.h"
 
 typedef struct {
@@ -17,12 +18,18 @@ static cbl_ctx_t ctx;
 
 void txb_init(void *pool, size_t pool_size, void (*can_send)(const can_msg_t *),
 			  bool (*can_tx_ready)(void)) {
+	w_assert(pool);
+	w_assert(can_send);
+	w_assert(can_tx_ready);
+
 	ctx.can_send_fp = can_send;
 	ctx.can_tx_ready_fp = can_tx_ready;
 	srb_init(&buf, pool, pool_size, sizeof(can_msg_t));
 }
 
 bool txb_enqueue(const can_msg_t *msg) {
+	w_assert(msg);
+
 	if (srb_is_full(&buf)) {
 		return false;
 	}
