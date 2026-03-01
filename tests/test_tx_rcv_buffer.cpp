@@ -62,6 +62,8 @@ public:
 			txb_heartbeat();
 		}
 
+		std::free(pool);
+
 		return test_passed;
 	}
 };
