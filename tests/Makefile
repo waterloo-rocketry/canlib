@@ -71,6 +71,7 @@ TEST_SRCS := \
 	test_msg_gps.cpp \
 	test_msg_general.cpp \
 	test_msg_recovery.cpp \
+	test_tx_rcv_buffer.cpp
 
 CANLIB_OBJS = $(CANLIB_SRCS:.c=.o)
 CANLIB_DEPS = $(CANLIB_SRCS:.c=.d)
