@@ -1,9 +1,18 @@
+#include "can.h"
 #include "rockettest.hpp"
 
 #include "message/msg_common.h"
 #include "util/can_rcv_buffer.h"
 #include "util/can_tx_buffer.h"
 #include "util/safe_ring_buffer.h"
+
+namespace {
+
+	template <typename T = void> T *notnullptr() {
+		return reinterpret_cast<T *>((void *)1);
+	}
+
+} // namespace
 
 class msg_ptr_nullptr_reject_test : rockettest_test {
 public:
@@ -39,15 +48,35 @@ public:
 		// TODO
 
 		// safe_ring_buffer tests
+		rockettest_check_assert_triggered([] { srb_init(nullptr, notnullptr(), 0, 0); });
+		rockettest_check_assert_triggered([] { srb_init(notnullptr<srb_ctx_t>(), nullptr, 0, 0); });
 		rockettest_check_assert_triggered([] { srb_init(nullptr, nullptr, 0, 0); });
+
+		rockettest_check_assert_triggered([] { srb_push(nullptr, notnullptr()); });
+		rockettest_check_assert_triggered([] { srb_push(notnullptr<srb_ctx_t>(), nullptr); });
 		rockettest_check_assert_triggered([] { srb_push(nullptr, nullptr); });
+
 		rockettest_check_assert_triggered([] { srb_is_full(nullptr); });
 		rockettest_check_assert_triggered([] { srb_is_empty(nullptr); });
+
+		rockettest_check_assert_triggered([] { srb_pop(nullptr, notnullptr()); });
+		rockettest_check_assert_triggered([] { srb_pop(notnullptr<srb_ctx_t>(), nullptr); });
 		rockettest_check_assert_triggered([] { srb_pop(nullptr, nullptr); });
+
+		rockettest_check_assert_triggered([] { srb_peek(nullptr, notnullptr()); });
+		rockettest_check_assert_triggered([] { srb_peek(notnullptr<srb_ctx_t>(), nullptr); });
 		rockettest_check_assert_triggered([] { srb_peek(nullptr, nullptr); });
 
 		// can_tx_buffer tests
+		rockettest_check_assert_triggered([] {
+			txb_init(nullptr, 0, notnullptr<void(const can_msg_t *)>(), notnullptr<bool()>());
+		});
+		rockettest_check_assert_triggered(
+			[] { txb_init(notnullptr(), 0, nullptr, notnullptr<bool()>()); });
+		rockettest_check_assert_triggered(
+			[] { txb_init(notnullptr(), 0, notnullptr<void(const can_msg_t *)>(), nullptr); });
 		rockettest_check_assert_triggered([] { txb_init(nullptr, 0, nullptr, nullptr); });
+
 		rockettest_check_assert_triggered([] { txb_enqueue(nullptr); });
 
 		// can_rx_buffer tests
