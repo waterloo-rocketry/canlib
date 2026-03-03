@@ -72,6 +72,7 @@ TEST_SRCS := \
 	test_msg_sensor.cpp \
 	test_msg_stream.cpp \
 	test_nullptr_reject.cpp \
+	test_tx_rcv_buffer.cpp
 
 CANLIB_OBJS = $(CANLIB_SRCS:.c=.o)
 CANLIB_DEPS = $(CANLIB_SRCS:.c=.d)

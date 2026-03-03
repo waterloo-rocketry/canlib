@@ -1,9 +1,12 @@
 #include <stdint.h>
 #include <string.h>
 
+#include "message/msg_common.h"
 #include "safe_ring_buffer.h"
 
 static size_t get_offset_bytes(const srb_ctx_t *ctx, size_t index) {
+	w_assert(ctx);
+
 	if (index >= ctx->max_elements) {
 		return 0;
 	}
@@ -11,6 +14,9 @@ static size_t get_offset_bytes(const srb_ctx_t *ctx, size_t index) {
 }
 
 void srb_init(srb_ctx_t *ctx, void *pool, size_t pool_size, size_t element_size) {
+	w_assert(ctx);
+	w_assert(pool);
+
 	ctx->memory_pool = pool;
 	ctx->element_size = element_size;
 	ctx->max_elements = (pool_size / (element_size));
@@ -19,6 +25,9 @@ void srb_init(srb_ctx_t *ctx, void *pool, size_t pool_size, size_t element_size)
 }
 
 bool srb_push(srb_ctx_t *ctx, const void *element) {
+	w_assert(ctx);
+	w_assert(element);
+
 	if (srb_is_full(ctx)) {
 		return false;
 	}
@@ -31,6 +40,8 @@ bool srb_push(srb_ctx_t *ctx, const void *element) {
 }
 
 bool srb_is_full(const srb_ctx_t *ctx) {
+	w_assert(ctx);
+
 	if ((ctx->wr_idx + 1 == ctx->rd_idx) ||
 		(ctx->wr_idx + 1 == ctx->max_elements && ctx->rd_idx == 0)) {
 		return true;
@@ -40,6 +51,8 @@ bool srb_is_full(const srb_ctx_t *ctx) {
 }
 
 bool srb_is_empty(const srb_ctx_t *ctx) {
+	w_assert(ctx);
+
 	if (ctx->wr_idx == ctx->rd_idx) {
 		return true;
 	} else {
@@ -48,6 +61,9 @@ bool srb_is_empty(const srb_ctx_t *ctx) {
 }
 
 bool srb_pop(srb_ctx_t *ctx, void *element) {
+	w_assert(ctx);
+	w_assert(element);
+
 	if (srb_is_empty(ctx)) {
 		return false;
 	}
@@ -60,6 +76,9 @@ bool srb_pop(srb_ctx_t *ctx, void *element) {
 }
 
 bool srb_peek(const srb_ctx_t *ctx, void *element) {
+	w_assert(ctx);
+	w_assert(element);
+
 	if (srb_is_empty(ctx)) {
 		return false;
 	}
