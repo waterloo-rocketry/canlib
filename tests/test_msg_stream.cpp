@@ -30,7 +30,7 @@ public:
 
 		bool build_result = build_stream_status_msg(prio, timestamp, total_size, tx_size, &msg);
 		rockettest_check_expr_true(build_result);
-		rockettest_check_expr_true(msg.sid == SID(prio, MSG_STREAM_STATUS));
+		rockettest_check_expr_true(msg.sid == build_sid(prio, MSG_STREAM_STATUS, 0));
 		rockettest_check_expr_true(msg.data_len == 8);
 
 		std::uint32_t total_size_out = 0;
@@ -49,7 +49,7 @@ public:
 		rockettest_check_expr_true(oversized_tx == false);
 
 		can_msg_t invalid_msg = msg;
-		invalid_msg.sid = SID(prio, MSG_STREAM_DATA);
+		invalid_msg.sid = build_sid(prio, MSG_STREAM_DATA, 0);
 		bool invalid_type = get_stream_status(&invalid_msg, &total_size_out, &tx_size_out);
 		rockettest_check_expr_true(invalid_type == false);
 
@@ -70,7 +70,7 @@ public:
 
 		can_msg_prio_t prio = rockettest_rand<can_msg_prio_t, 0x3>();
 		std::uint16_t timestamp = rockettest_rand<std::uint16_t>();
-		std::uint8_t seq_id = rockettest_rand<std::uint8_t>();
+		std::uint8_t seq_id = rockettest_rand<std::uint8_t, 0xff>();
 		std::uint8_t payload_len = STREAM_DATA_MAX_PAYLOAD_LEN;
 		std::uint8_t payload[STREAM_DATA_MAX_PAYLOAD_LEN];
 		for (std::uint8_t i = 0; i < payload_len; ++i) {
@@ -80,14 +80,15 @@ public:
 		bool build_result =
 			build_stream_data_msg(prio, timestamp, seq_id, payload, payload_len, &msg);
 		rockettest_check_expr_true(build_result);
-		rockettest_check_expr_true(msg.sid == SID(prio, MSG_STREAM_DATA));
-		rockettest_check_expr_true(msg.data_len == static_cast<std::uint8_t>(payload_len + 3));
-		rockettest_check_expr_true(msg.data[2] == seq_id);
-		rockettest_check_expr_true(std::memcmp(&msg.data[3], payload, payload_len) == 0);
+		rockettest_check_expr_true(msg.sid == build_sid(prio, MSG_STREAM_DATA, seq_id));
+		rockettest_check_expr_true(msg.data_len == static_cast<std::uint8_t>(payload_len + 2));
+		rockettest_check_expr_true((msg.sid & 0xff) == seq_id);
+		rockettest_check_expr_true(std::memcmp(&msg.data[2], payload, payload_len) == 0);
 
 		std::uint8_t seq_id_out = 0;
 		std::uint8_t payload_out[STREAM_DATA_MAX_PAYLOAD_LEN] = {};
 		std::uint8_t payload_len_out = 0;
+
 		bool parsed = get_stream_data(&msg, &seq_id_out, payload_out, &payload_len_out);
 		rockettest_check_expr_true(parsed);
 		rockettest_check_expr_true(seq_id_out == seq_id);
@@ -100,14 +101,14 @@ public:
 		rockettest_check_expr_true(overflow_result == false);
 
 		can_msg_t invalid_len_msg = msg;
-		invalid_len_msg.sid = SID(prio, MSG_STREAM_DATA);
+		invalid_len_msg.sid = build_sid(prio, MSG_STREAM_DATA, seq_id);
 		invalid_len_msg.data_len = 3;
 		bool invalid_len =
 			get_stream_data(&invalid_len_msg, &seq_id_out, payload_out, &payload_len_out);
 		rockettest_check_expr_true(invalid_len == false);
 
 		can_msg_t invalid_type_msg = msg;
-		invalid_type_msg.sid = SID(prio, MSG_STREAM_RETRY);
+		invalid_type_msg.sid = build_sid(prio, MSG_STREAM_RETRY, seq_id);
 		invalid_type_msg.data_len = msg.data_len;
 		bool invalid_type =
 			get_stream_data(&invalid_type_msg, &seq_id_out, payload_out, &payload_len_out);
@@ -130,13 +131,13 @@ public:
 
 		can_msg_prio_t prio = rockettest_rand<can_msg_prio_t, 0x3>();
 		std::uint16_t timestamp = rockettest_rand<std::uint16_t>();
-		std::uint8_t seq_id = rockettest_rand<std::uint8_t>();
+		std::uint8_t seq_id = rockettest_rand<std::uint8_t, 0xff>();
 
 		bool build_result = build_stream_retry_msg(prio, timestamp, seq_id, &msg);
 		rockettest_check_expr_true(build_result);
-		rockettest_check_expr_true(msg.sid == SID(prio, MSG_STREAM_RETRY));
-		rockettest_check_expr_true(msg.data_len == 3);
-		rockettest_check_expr_true(msg.data[2] == seq_id);
+		rockettest_check_expr_true(msg.sid == build_sid(prio, MSG_STREAM_RETRY, seq_id));
+		rockettest_check_expr_true(msg.data_len == 2);
+		rockettest_check_expr_true((msg.sid & 0xff) == seq_id);
 
 		std::uint8_t seq_id_out = 0;
 		bool parsed = get_stream_retry_seq_id(&msg, &seq_id_out);
@@ -144,12 +145,12 @@ public:
 		rockettest_check_expr_true(seq_id_out == seq_id);
 
 		can_msg_t invalid_type_msg = msg;
-		invalid_type_msg.sid = SID(prio, MSG_STREAM_STATUS);
+		invalid_type_msg.sid = build_sid(prio, MSG_STREAM_STATUS, seq_id);
 		bool invalid_type = get_stream_retry_seq_id(&invalid_type_msg, &seq_id_out);
 		rockettest_check_expr_true(invalid_type == false);
 
 		can_msg_t invalid_len_msg = msg;
-		invalid_len_msg.data_len = 2;
+		invalid_len_msg.data_len = 3;
 		bool invalid_len = get_stream_retry_seq_id(&invalid_len_msg, &seq_id_out);
 		rockettest_check_expr_true(invalid_len == false);
 

@@ -88,10 +88,10 @@ bool get_stream_data(const can_msg_t *msg, uint8_t *seq_id, uint8_t *payload,
 		return false;
 	}
 
-	uint8_t msg_payload_len = (uint8_t)(msg->data_len - 3);
-	memcpy(payload, &msg->data[3], msg_payload_len);
+	uint8_t msg_payload_len = (uint8_t)(msg->data_len - 2);
+	memcpy(payload, &msg->data[2], msg_payload_len);
 
-	*seq_id = msg->data[2];
+	*seq_id = msg->sid & 0xff;
 	*payload_len = msg_payload_len;
 
 	return true;
