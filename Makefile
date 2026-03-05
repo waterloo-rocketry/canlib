@@ -42,6 +42,7 @@ TEST_SRCS := \
 	tests/test_msg_sensor.cpp \
 	tests/test_msg_stream.cpp \
 	tests/test_nullptr_reject.cpp \
+	tests/test_timing_util.cpp \
 	tests/test_tx_rcv_buffer.cpp
 
 ROCKETLIB_SUBMODULE_PATH := rocketlib
