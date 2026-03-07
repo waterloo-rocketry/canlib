@@ -1,15 +1,32 @@
 CLANG_FORMAT := clang-format
 CLANG_TIDY := clang-tidy
 
-INCLUDE_PATH_FLAGS := $(foreach inc, $(INCLUDE_PATH), $(addprefix -I, $(inc)))
+INCLUDE_PATH_C_CXX_FLAGS := $(foreach inc, $(INCLUDE_PATH), $(addprefix -I, $(inc)))
+INCLUDE_PATH_CLANG_TIDY_FLAGS := $(foreach inc, $(INCLUDE_PATH), $(addprefix --extra-arg-before="-I, $(addsuffix ", $(inc))))
 
 C_CXX_FLAGS := \
-	$(INCLUDE_PATH_FLAGS) \
+	$(INCLUDE_PATH_C_CXX_FLAGS) \
 	-Wall \
 	-Wextra \
 	-pedantic \
 	-MMD \
 	-DUNIT_TEST
+
+ifeq ($(DEBUG), 1)
+C_CXX_FLAGS += -Og -g
+else
+C_CXX_FLAGS += -O2
+endif
+
+ifeq ($(COVERAGE), 1)
+C_CXX_FLAGS += \
+	-fprofile-arcs \
+	-ftest-coverage \
+	-fcondition-coverage \
+	-fpath-coverage
+
+LDFLAGS += -Wl,-lgcov
+endif
 
 CFLAGS := \
 	$(C_CXX_FLAGS) \
@@ -18,47 +35,17 @@ CFLAGS := \
 CXXFLAGS := \
 	$(C_CXX_FLAGS) \
 	-std=c++20 \
-	-Irockettest
+	-I$(ROCKETTEST_PATH)
 
 CLANG_TIDY_FLAGS := \
 	--warnings-as-errors="*" \
 	--checks="clang-*,misc-*" \
 	--extra-arg-before="-std=c99" \
 	--extra-arg-before="-pedantic" \
-	--extra-arg-before="-Iinclude"
-
-ifeq ($(COVERAGE), 1)
-
-CFLAGS += \
-	-fprofile-arcs \
-	-ftest-coverage \
-	-fcondition-coverage \
-	-fpath-coverage
-
-CXXFLAGS += \
-	-fprofile-arcs \
-	-ftest-coverage
-
-LDFLAGS += -Wl,-lgcov
-
-endif
-
-ifeq ($(DEBUG), 1)
-
-CFLAGS += -Og -g
-
-CXXFLAGS += -Og -g
-
-else
-
-CFLAGS += -O2
-
-CXXFLAGS += -O2
-
-endif
+	$(INCLUDE_PATH_CLANG_TIDY_FLAGS)
 
 CPP_SRCS := \
-	rockettest/rockettest.cpp \
+	$(ROCKETTEST_PATH)/rockettest.cpp \
 	$(TEST_SRCS)
 
 ifeq ($(COVERAGE), 1)
