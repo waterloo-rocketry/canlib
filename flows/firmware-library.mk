@@ -1,11 +1,11 @@
 CLANG_FORMAT := clang-format
 CLANG_TIDY := clang-tidy
 
-INCLUDE_PATH_C_CXX_FLAGS := $(foreach inc, $(INCLUDE_PATH), $(addprefix -I, $(inc)))
-INCLUDE_PATH_CLANG_TIDY_FLAGS := $(foreach inc, $(INCLUDE_PATH), $(addprefix --extra-arg-before="-I, $(addsuffix ", $(inc))))
+INCLUDE_PATHS_C_CXX_FLAGS := $(foreach inc, $(INCLUDE_PATHS), $(addprefix -I, $(inc)))
+INCLUDE_PATHS_CLANG_TIDY_FLAGS := $(foreach inc, $(INCLUDE_PATHS), $(addprefix --extra-arg-before="-I, $(addsuffix ", $(inc))))
 
 C_CXX_FLAGS := \
-	$(INCLUDE_PATH_C_CXX_FLAGS) \
+	$(INCLUDE_PATHS_C_CXX_FLAGS) \
 	-Wall \
 	-Wextra \
 	-pedantic \
@@ -35,17 +35,17 @@ CFLAGS := \
 CXXFLAGS := \
 	$(C_CXX_FLAGS) \
 	-std=c++20 \
-	-I$(ROCKETTEST_PATH)
+	-I$(ROCKETTEST_INCLUDE_PATH)
 
 CLANG_TIDY_FLAGS := \
 	--warnings-as-errors="*" \
 	--checks="clang-*,misc-*" \
 	--extra-arg-before="-std=c99" \
 	--extra-arg-before="-pedantic" \
-	$(INCLUDE_PATH_CLANG_TIDY_FLAGS)
+	$(INCLUDE_PATHS_CLANG_TIDY_FLAGS)
 
 CPP_SRCS := \
-	$(ROCKETTEST_PATH)/rockettest.cpp \
+	$(ROCKETTEST_SRCS) \
 	$(TEST_SRCS)
 
 ifeq ($(COVERAGE), 1)
@@ -95,7 +95,7 @@ lint:
 
 .PHONY: format
 format:
-	$(CLANG_FORMAT) -i $(COMMON_C_SRCS) $(COMMON_C_HEADERS) $(PIC18_C_SRCS) $(PIC18_C_HEADERS) $(STM32H7_C_SRCS) $(STM32H7_C_HEADERS) $(TEST_SRCS)
+	$(CLANG_FORMAT) -i $(COMMON_C_SRCS) $(COMMON_C_HEADERS) $(PIC18_C_SRCS) $(PIC18_C_HEADERS) $(STM32H7_C_SRCS) $(STM32H7_C_HEADERS) $(TEST_SRCS) $(ROCKETTEST_SRCS) $(ROCKETTEST_HEADERS)
 
 -include $(COMMON_C_DEPS)
 -include $(CPP_DEPS)
