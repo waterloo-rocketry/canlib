@@ -31,7 +31,9 @@ ifeq ($(COVERAGE), 1)
 
 CFLAGS += \
 	-fprofile-arcs \
-	-ftest-coverage
+	-ftest-coverage \
+	-fcondition-coverage \
+	-fpath-coverage
 
 CXXFLAGS += \
 	-fprofile-arcs \
