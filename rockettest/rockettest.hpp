@@ -28,8 +28,14 @@
 		test_passed = false;                                                                       \
 	}
 
-template <typename T, std::uint32_t mask = 0xffffffff> T rockettest_rand() {
+template <typename T, std::uint32_t mask = 0xffffffff> T rockettest_rand_field() {
 	return static_cast<T>(std::rand() & mask);
+}
+
+// Generate a random number in [min,max)
+template <typename T> T rockettest_rand_range(T min, T max) {
+	return static_cast<T>((std::rand() % (static_cast<int>(max) - static_cast<int>(min))) +
+						  static_cast<int>(min));
 }
 
 class rockettest_test {
