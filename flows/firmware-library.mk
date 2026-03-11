@@ -64,7 +64,7 @@ XC8 := /opt/microchip/xc8/v3.10/bin/xc8-cc
 
 ifeq ($(filter xc8-build,$(MAKECMDGOALS)),xc8-build)
 	CC := $(XC8)
-	CFLAGS := -mcpu=18F26K83 -mdfp=$(XC8_DFP_PATH) -mwarn=-9 -std=c99 -Wpedantic $(INCLUDE_PATHS_C_CXX_FLAGS)
+	CFLAGS := -mcpu=18F26K83 -mdfp=$(XC8_DFP_PATH) -mwarn=-9 -std=c99 -Wpedantic $(INCLUDE_PATHS_C_CXX_FLAGS) $(EXTRA_C_CXX_FLAGS)
 	BUILD_DIR := build/xc8
 endif
 
@@ -76,7 +76,7 @@ XC16 := /opt/microchip/xc16/v2.10/bin/xc16-gcc
 
 ifeq ($(filter xc16-build,$(MAKECMDGOALS)),xc16-build)
 	CC := $(XC16)
-	CFLAGS := -mcpu=33EP256GP502 -std=c99 -Wall $(INCLUDE_PATHS_C_CXX_FLAGS)
+	CFLAGS := -mcpu=33EP256GP502 -std=c99 -Wall $(INCLUDE_PATHS_C_CXX_FLAGS) $(EXTRA_C_CXX_FLAGS)
 	BUILD_DIR := build/xc16
 endif
 
