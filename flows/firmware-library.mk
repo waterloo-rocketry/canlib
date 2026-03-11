@@ -1,4 +1,12 @@
 ###########################
+# Source FIle Path Variables
+###########################
+
+CPP_SRCS := \
+	$(ROCKETTEST_SRCS) \
+	$(TEST_SRCS)
+
+###########################
 # Common Build Variables
 ###########################
 
@@ -18,14 +26,20 @@ else
 C_CXX_FLAGS += -O2
 endif
 
-ifeq ($(COVERAGE), 1)
-C_CXX_FLAGS += \
-	-fprofile-arcs \
-	-ftest-coverage \
-	-fcondition-coverage \
-	-fpath-coverage
+ifeq ($(filter run-test,$(MAKECMDGOALS)),run-test)
+	BUILD_DIR := build/test
+endif
 
-LDFLAGS += -Wl,-lgcov
+ifneq ($(filter run-test-cov gen-cov-html,$(MAKECMDGOALS)),)
+	BUILD_DIR := build/test-cov
+
+	C_CXX_FLAGS += \
+		-fprofile-arcs \
+		-ftest-coverage \
+		-fcondition-coverage \
+		-fpath-coverage
+
+	LDFLAGS += -Wl,-lgcov
 endif
 
 CFLAGS := \
@@ -36,23 +50,6 @@ CXXFLAGS := \
 	$(C_CXX_FLAGS) \
 	-std=c++20 \
 	-I$(ROCKETTEST_INCLUDE_PATH)
-
-
-CPP_SRCS := \
-	$(ROCKETTEST_SRCS) \
-	$(TEST_SRCS)
-
-ifeq ($(filter run-test,$(MAKECMDGOALS)),run-test)
-	BUILD_DIR := build/test-cov
-endif
-
-ifeq ($(filter run-test-cov,$(MAKECMDGOALS)),run-test-cov)
-	BUILD_DIR := build/test-cov
-endif
-
-ifeq ($(filter gen-cov-html,$(MAKECMDGOALS)),gen-cov-html)
-	BUILD_DIR := build/test-cov
-endif
 
 #######################
 # XC8 Compile Variables
