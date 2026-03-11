@@ -16,10 +16,11 @@ public:
 
 		can_msg_t msg;
 
-		can_msg_prio_t prio_before = rockettest_rand<can_msg_prio_t, 0x3>();
-		std::uint16_t timestamp_before = rockettest_rand<std::uint16_t>();
-		can_altimeter_id_t alt_id_before = rockettest_rand<can_altimeter_id_t, 0xff>();
-		can_alt_arm_state_t alt_arm_state_before = rockettest_rand<can_alt_arm_state_t, 0xff>();
+		can_msg_prio_t prio_before = rockettest_rand_field<can_msg_prio_t, 0x3>();
+		std::uint16_t timestamp_before = rockettest_rand_field<std::uint16_t>();
+		can_altimeter_id_t alt_id_before = rockettest_rand_field<can_altimeter_id_t, 0xff>();
+		can_alt_arm_state_t alt_arm_state_before =
+			rockettest_rand_field<can_alt_arm_state_t, 0xff>();
 
 		build_alt_arm_cmd_msg(
 			prio_before, timestamp_before, alt_id_before, alt_arm_state_before, &msg);
@@ -63,12 +64,13 @@ public:
 
 		can_msg_t msg;
 
-		can_msg_prio_t prio_before = rockettest_rand<can_msg_prio_t, 0x3>();
-		std::uint16_t timestamp_before = rockettest_rand<std::uint16_t>();
-		can_altimeter_id_t alt_id_before = rockettest_rand<can_altimeter_id_t, 0xff>();
-		can_alt_arm_state_t alt_arm_state_before = rockettest_rand<can_alt_arm_state_t, 0xff>();
-		std::uint16_t v_drogue_before = rockettest_rand<std::uint16_t>();
-		std::uint16_t v_main_before = rockettest_rand<std::uint16_t>();
+		can_msg_prio_t prio_before = rockettest_rand_field<can_msg_prio_t, 0x3>();
+		std::uint16_t timestamp_before = rockettest_rand_field<std::uint16_t>();
+		can_altimeter_id_t alt_id_before = rockettest_rand_field<can_altimeter_id_t, 0xff>();
+		can_alt_arm_state_t alt_arm_state_before =
+			rockettest_rand_field<can_alt_arm_state_t, 0xff>();
+		std::uint16_t v_drogue_before = rockettest_rand_field<std::uint16_t>();
+		std::uint16_t v_main_before = rockettest_rand_field<std::uint16_t>();
 
 		build_alt_arm_status_msg(prio_before,
 								 timestamp_before,

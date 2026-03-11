@@ -17,7 +17,7 @@ public:
 
 	static bool can_tx_ready() {
 		// Tx ready one in 4 chance
-		return (rockettest_rand<int, 0x3>() == 0);
+		return (rockettest_rand_field<int, 0x3>() == 0);
 	}
 
 	static void can_send(const can_msg_t *msg) {
@@ -41,16 +41,16 @@ public:
 
 		for (int cycle = 0; cycle < 1000; cycle++) {
 			// Push a message one in 8 chance
-			if (rockettest_rand<int, 0x7>() == 0) {
+			if (rockettest_rand_field<int, 0x7>() == 0) {
 				// Generate a random can message
 				can_msg_t msg;
-				msg.sid = rockettest_rand<can_sid_t, 0x1fffffff>();
-				msg.data_len = rockettest_rand<uint8_t, 0xf>(); // 0 to 15
+				msg.sid = rockettest_rand_field<can_sid_t, 0x1fffffff>();
+				msg.data_len = rockettest_rand_field<uint8_t, 0xf>(); // 0 to 15
 				if (msg.data_len > 8) {
 					msg.data_len = 8;
 				}
 				for (std::size_t j = 0; j < 8; j++) {
-					msg.data[j] = rockettest_rand<std::uint8_t, 0xff>();
+					msg.data[j] = rockettest_rand_field<std::uint8_t, 0xff>();
 				}
 
 				// Push the message to both canlib tx queue and reference queue

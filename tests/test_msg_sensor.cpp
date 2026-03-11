@@ -16,10 +16,11 @@ public:
 
 		can_msg_t msg;
 
-		can_msg_prio_t prio_before = rockettest_rand<can_msg_prio_t, 0x3>();
-		std::uint16_t timestamp_before = rockettest_rand<std::uint16_t>();
-		can_analog_sensor_id_t sensor_id_before = rockettest_rand<can_analog_sensor_id_t, 0xff>();
-		std::uint16_t sensor_data_before = rockettest_rand<std::uint16_t>();
+		can_msg_prio_t prio_before = rockettest_rand_field<can_msg_prio_t, 0x3>();
+		std::uint16_t timestamp_before = rockettest_rand_field<std::uint16_t>();
+		can_analog_sensor_id_t sensor_id_before =
+			rockettest_rand_field<can_analog_sensor_id_t, 0xff>();
+		std::uint16_t sensor_data_before = rockettest_rand_field<std::uint16_t>();
 
 		build_analog_data_16bit_msg(
 			prio_before, timestamp_before, sensor_id_before, sensor_data_before, &msg);
@@ -66,12 +67,13 @@ public:
 
 		can_msg_t msg;
 
-		can_msg_prio_t prio_before = rockettest_rand<can_msg_prio_t, 0x3>();
-		std::uint16_t timestamp_before = rockettest_rand<std::uint16_t>();
-		can_analog_sensor_id_t sensor_id_before = rockettest_rand<can_analog_sensor_id_t, 0xff>();
+		can_msg_prio_t prio_before = rockettest_rand_field<can_msg_prio_t, 0x3>();
+		std::uint16_t timestamp_before = rockettest_rand_field<std::uint16_t>();
+		can_analog_sensor_id_t sensor_id_before =
+			rockettest_rand_field<can_analog_sensor_id_t, 0xff>();
 		std::uint32_t sensor_data_before =
-			(static_cast<std::uint32_t>(rockettest_rand<uint16_t>()) << 16) |
-			rockettest_rand<uint16_t>();
+			(static_cast<std::uint32_t>(rockettest_rand_field<uint16_t>()) << 16) |
+			rockettest_rand_field<uint16_t>();
 
 		build_analog_data_32bit_msg(
 			prio_before, timestamp_before, sensor_id_before, sensor_data_before, &msg);
@@ -122,12 +124,12 @@ public:
 
 		can_msg_t msg;
 
-		can_msg_prio_t prio_before = rockettest_rand<can_msg_prio_t, 0x3>();
-		std::uint16_t timestamp_before = rockettest_rand<std::uint16_t>();
-		can_dem_sensor_id_t sensor_id_before = rockettest_rand<can_dem_sensor_id_t, 0xff>();
-		std::uint16_t sensor_data_x_before = rockettest_rand<std::uint16_t>();
-		std::uint16_t sensor_data_y_before = rockettest_rand<std::uint16_t>();
-		std::uint16_t sensor_data_z_before = rockettest_rand<std::uint16_t>();
+		can_msg_prio_t prio_before = rockettest_rand_field<can_msg_prio_t, 0x3>();
+		std::uint16_t timestamp_before = rockettest_rand_field<std::uint16_t>();
+		can_dem_sensor_id_t sensor_id_before = rockettest_rand_field<can_dem_sensor_id_t, 0xff>();
+		std::uint16_t sensor_data_x_before = rockettest_rand_field<std::uint16_t>();
+		std::uint16_t sensor_data_y_before = rockettest_rand_field<std::uint16_t>();
+		std::uint16_t sensor_data_z_before = rockettest_rand_field<std::uint16_t>();
 
 		build_dem_analog_data_16bit_msg(prio_before,
 										timestamp_before,

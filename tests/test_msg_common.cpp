@@ -16,7 +16,7 @@ public:
 		can_msg_t msg;
 		msg.data_len = 8;
 
-		std::uint16_t timestamp_before = rockettest_rand<std::uint16_t>();
+		std::uint16_t timestamp_before = rockettest_rand_field<std::uint16_t>();
 
 		write_timestamp(timestamp_before, &msg);
 
@@ -46,7 +46,7 @@ public:
 		bool test_passed = true;
 
 		can_msg_t msg;
-		msg.sid = rockettest_rand<can_sid_t, 0x1fffffff>();
+		msg.sid = rockettest_rand_field<can_sid_t, 0x1fffffff>();
 
 		can_msg_type_t msg_type_extracted;
 		uint8_t board_type_id_extracted;

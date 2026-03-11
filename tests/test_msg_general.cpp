@@ -16,10 +16,10 @@ public:
 
 		can_msg_t msg;
 
-		can_msg_prio_t prio_before = rockettest_rand<can_msg_prio_t, 0x3>();
-		std::uint16_t timestamp_before = rockettest_rand<std::uint16_t>();
-		std::uint32_t general_error_bitfield_before = rockettest_rand<std::uint32_t>();
-		std::uint16_t board_error_bitfield_before = rockettest_rand<std::uint16_t>();
+		can_msg_prio_t prio_before = rockettest_rand_field<can_msg_prio_t, 0x3>();
+		std::uint16_t timestamp_before = rockettest_rand_field<std::uint16_t>();
+		std::uint32_t general_error_bitfield_before = rockettest_rand_field<std::uint32_t>();
+		std::uint16_t board_error_bitfield_before = rockettest_rand_field<std::uint16_t>();
 
 		build_general_board_status_msg(prio_before,
 									   timestamp_before,

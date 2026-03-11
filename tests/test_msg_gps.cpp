@@ -16,12 +16,12 @@ public:
 
 		can_msg_t msg;
 
-		can_msg_prio_t prio_before = rockettest_rand<can_msg_prio_t, 0x3>();
-		std::uint16_t timestamp_before = rockettest_rand<std::uint16_t>(); // byte 0-1
-		std::uint8_t utc_hours_before = rockettest_rand<std::uint8_t, 0xff>(); // byte 2
-		std::uint8_t utc_mins_before = rockettest_rand<std::uint8_t, 0xff>(); // byte 3
-		std::uint8_t utc_secs_before = rockettest_rand<std::uint8_t, 0xff>(); // byte 4
-		std::uint8_t utc_dsecs_before = rockettest_rand<std::uint8_t, 0xff>(); // byte 5
+		can_msg_prio_t prio_before = rockettest_rand_field<can_msg_prio_t, 0x3>();
+		std::uint16_t timestamp_before = rockettest_rand_field<std::uint16_t>(); // byte 0-1
+		std::uint8_t utc_hours_before = rockettest_rand_field<std::uint8_t, 0xff>(); // byte 2
+		std::uint8_t utc_mins_before = rockettest_rand_field<std::uint8_t, 0xff>(); // byte 3
+		std::uint8_t utc_secs_before = rockettest_rand_field<std::uint8_t, 0xff>(); // byte 4
+		std::uint8_t utc_dsecs_before = rockettest_rand_field<std::uint8_t, 0xff>(); // byte 5
 
 		build_gps_time_msg(prio_before,
 						   timestamp_before,
@@ -84,12 +84,12 @@ public:
 
 		can_msg_t msg;
 
-		can_msg_prio_t prio_before = rockettest_rand<can_msg_prio_t, 0x3>();
-		std::uint16_t timestamp_before = rockettest_rand<std::uint16_t>();
-		std::uint8_t degrees_before = rockettest_rand<std::uint8_t, 0xff>();
-		std::uint8_t minutes_before = rockettest_rand<std::uint8_t, 0xff>();
-		std::uint16_t dminutes_before = rockettest_rand<std::uint16_t>();
-		std::uint8_t direction_before = rockettest_rand<std::uint8_t, 0xff>();
+		can_msg_prio_t prio_before = rockettest_rand_field<can_msg_prio_t, 0x3>();
+		std::uint16_t timestamp_before = rockettest_rand_field<std::uint16_t>();
+		std::uint8_t degrees_before = rockettest_rand_field<std::uint8_t, 0xff>();
+		std::uint8_t minutes_before = rockettest_rand_field<std::uint8_t, 0xff>();
+		std::uint16_t dminutes_before = rockettest_rand_field<std::uint16_t>();
+		std::uint8_t direction_before = rockettest_rand_field<std::uint8_t, 0xff>();
 
 		build_gps_lat_msg(prio_before,
 						  timestamp_before,
@@ -151,12 +151,12 @@ public:
 
 		can_msg_t msg;
 
-		can_msg_prio_t prio_before = rockettest_rand<can_msg_prio_t, 0x3>();
-		std::uint16_t timestamp_before = rockettest_rand<std::uint16_t>();
-		std::uint8_t degrees_before = rockettest_rand<std::uint8_t, 0xff>();
-		std::uint8_t minutes_before = rockettest_rand<std::uint8_t, 0xff>();
-		std::uint16_t dminutes_before = rockettest_rand<std::uint16_t>();
-		std::uint8_t direction_before = rockettest_rand<std::uint8_t, 0xff>();
+		can_msg_prio_t prio_before = rockettest_rand_field<can_msg_prio_t, 0x3>();
+		std::uint16_t timestamp_before = rockettest_rand_field<std::uint16_t>();
+		std::uint8_t degrees_before = rockettest_rand_field<std::uint8_t, 0xff>();
+		std::uint8_t minutes_before = rockettest_rand_field<std::uint8_t, 0xff>();
+		std::uint16_t dminutes_before = rockettest_rand_field<std::uint16_t>();
+		std::uint8_t direction_before = rockettest_rand_field<std::uint8_t, 0xff>();
 
 		build_gps_lon_msg(prio_before,
 						  timestamp_before,
@@ -218,11 +218,11 @@ public:
 
 		can_msg_t msg;
 
-		can_msg_prio_t prio_before = rockettest_rand<can_msg_prio_t, 0x3>();
-		std::uint16_t timestamp_before = rockettest_rand<std::uint16_t>();
-		std::uint16_t altitude_before = rockettest_rand<std::uint16_t>();
-		std::uint8_t daltitude_before = rockettest_rand<std::uint8_t>();
-		std::uint8_t units_before = rockettest_rand<std::uint8_t>();
+		can_msg_prio_t prio_before = rockettest_rand_field<can_msg_prio_t, 0x3>();
+		std::uint16_t timestamp_before = rockettest_rand_field<std::uint16_t>();
+		std::uint16_t altitude_before = rockettest_rand_field<std::uint16_t>();
+		std::uint8_t daltitude_before = rockettest_rand_field<std::uint8_t>();
+		std::uint8_t units_before = rockettest_rand_field<std::uint8_t>();
 
 		build_gps_alt_msg(
 			prio_before, timestamp_before, altitude_before, daltitude_before, units_before, &msg);
@@ -274,10 +274,10 @@ public:
 
 		can_msg_t msg;
 
-		can_msg_prio_t prio_before = rockettest_rand<can_msg_prio_t, 0x3>();
-		std::uint16_t timestamp_before = rockettest_rand<std::uint16_t>();
-		std::uint8_t num_sat_before = rockettest_rand<std::uint8_t, 0xff>();
-		std::uint8_t quality_before = rockettest_rand<std::uint8_t, 0xff>();
+		can_msg_prio_t prio_before = rockettest_rand_field<can_msg_prio_t, 0x3>();
+		std::uint16_t timestamp_before = rockettest_rand_field<std::uint16_t>();
+		std::uint8_t num_sat_before = rockettest_rand_field<std::uint8_t, 0xff>();
+		std::uint8_t quality_before = rockettest_rand_field<std::uint8_t, 0xff>();
 
 		build_gps_info_msg(prio_before, timestamp_before, num_sat_before, quality_before, &msg);
 
