@@ -37,6 +37,15 @@ CXXFLAGS := \
 	-std=c++20 \
 	-I$(ROCKETTEST_INCLUDE_PATH)
 
+XC8_C_FLAGS := \
+	-mcpu=18F26K83 \
+	-mdfp=xc8 \
+	-Iinclude \
+	-c \
+	-mwarn=-9 \
+	-std=c99 \
+	-Wpedantic
+
 CLANG_TIDY_FLAGS := \
 	--warnings-as-errors="*" \
 	--checks="clang-*,misc-*" \
@@ -49,45 +58,89 @@ CPP_SRCS := \
 	$(TEST_SRCS)
 
 ifeq ($(COVERAGE), 1)
-TEST_BUILD_DIR := build/test-cov
+BUILD_DIR := build/test-cov
 else
-TEST_BUILD_DIR := build/test
+BUILD_DIR := build/test
 endif
 
-COMMON_C_OBJS = $(patsubst %.c,$(TEST_BUILD_DIR)/%.o,$(COMMON_C_SRCS))
+COMMON_C_OBJS = $(patsubst %.c,$(BUILD_DIR)/%.o,$(COMMON_C_SRCS))
 COMMON_C_DEPS = $(COMMON_C_SRCS:.c=.d)
 
-CPP_OBJS = $(patsubst %.cpp,$(TEST_BUILD_DIR)/%.o,$(CPP_SRCS))
+CPP_OBJS = $(patsubst %.cpp,$(BUILD_DIR)/%.o,$(CPP_SRCS))
 CPP_DEPS = $(CPP_SRCS:.cpp=.d)
 
-$(TEST_BUILD_DIR)/%.o: %.c
+#######################
+# XC8 Compile Variables
+#######################
+
+XC8 := /opt/microchip/xc8/v3.10/bin/xc8-cc
+xc8-build: CC := $(XC8)
+xc8-build: CFLAGS := -mcpu=18F26K83 -mdfp=xc8 -Iinclude -mwarn=-9 -std=c99 -Wpedantic
+xc8-build: BUILD_DIR := build/xc8
+
+########################
+# XC16 Compile Variables
+########################
+
+XC16 := /opt/microchip/xc16/v2.10/bin/xc16-gcc
+xc16-build: CC := $(XC16)
+xc16-build: CFLAGS := -mcpu=33EP256GP502 -Iinclude -std=c99 -Wall
+xc16-build: BUILD_DIR := build/xc16
+
+######################
+# Object files compile
+######################
+$(BUILD_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(TEST_BUILD_DIR)/%.o: %.cpp
+$(BUILD_DIR)/%.o: %.cpp
 	@mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(TEST_BUILD_DIR)/unit_test: $(COMMON_C_OBJS) $(CPP_OBJS)
+####################
+# Unit Test Build
+####################
+$(BUILD_DIR)/unit_test: $(COMMON_C_OBJS) $(CPP_OBJS)
 	@mkdir -p $(dir $@)
 	$(CXX) $^ $(LDFLAGS) -o $@
 
 .PHONY: run_test
-run_test: $(TEST_BUILD_DIR)/unit_test
-	./$(TEST_BUILD_DIR)/unit_test
+run_test: $(BUILD_DIR)/unit_test
+	./$(BUILD_DIR)/unit_test
+
+###############################
+# Unit Test with Coverage Build
+###############################
 
 ifeq ($(COVERAGE), 1)
 
-$(TEST_BUILD_DIR)/coverage.info: run_test
+$(BUILD_DIR)/coverage.info: run_test
 	lcov --capture --branch-coverage --mcdc-coverage --no-external --directory . -o $@
 
-$(TEST_BUILD_DIR)/coverage-filtered.info: $(TEST_BUILD_DIR)/coverage.info
+$(BUILD_DIR)/coverage-filtered.info: $(BUILD_DIR)/coverage.info
 	lcov --remove $^ "*/tests/*" "*/rockettest/*" -o $@ --branch-coverage --mcdc-coverage
 
-$(TEST_BUILD_DIR)/html: $(TEST_BUILD_DIR)/coverage-filtered.info
+$(BUILD_DIR)/html: $(BUILD_DIR)/coverage-filtered.info
 	genhtml $^ --flat --branch-coverage --mcdc-coverage --output-directory $@
 
 endif
+
+####################
+# XC8 Build
+####################
+
+.PHONY: xc8-build
+xc8-build: $(COMMON_C_OBJS)
+	echo "$(CC) $(COMMON_C_OBJS)"
+
+####################
+# XC16 Build
+####################
+
+.PHONY: xc6-build
+xc16-build: $(COMMON_C_OBJS)
+	echo "$(CC) $(COMMON_C_OBJS)"
 
 ####################
 # Linting
@@ -111,6 +164,10 @@ format-check:
 
 -include $(COMMON_C_DEPS)
 -include $(CPP_DEPS)
+
+####################
+# Clean
+####################
 
 .PHONY: clean
 clean:
