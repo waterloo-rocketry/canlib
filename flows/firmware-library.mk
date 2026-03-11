@@ -75,7 +75,7 @@ CPP_DEPS = $(CPP_SRCS:.cpp=.d)
 
 XC8 := /opt/microchip/xc8/v3.10/bin/xc8-cc
 xc8-build: CC := $(XC8)
-xc8-build: CFLAGS := -mcpu=18F26K83 -mdfp=xc8 -Iinclude -mwarn=-9 -std=c99 -Wpedantic
+xc8-build: CFLAGS := -mcpu=18F26K83 -mdfp=$(XC8_DFP_PATH) -Iinclude -mwarn=-9 -std=c99 -Wpedantic
 xc8-build: BUILD_DIR := build/xc8
 
 ########################
@@ -132,7 +132,7 @@ endif
 
 .PHONY: xc8-build
 xc8-build: $(COMMON_C_OBJS)
-	echo "$(CC) $(COMMON_C_OBJS)"
+	true
 
 ####################
 # XC16 Build
@@ -140,7 +140,7 @@ xc8-build: $(COMMON_C_OBJS)
 
 .PHONY: xc6-build
 xc16-build: $(COMMON_C_OBJS)
-	echo "$(CC) $(COMMON_C_OBJS)"
+	true
 
 ####################
 # Linting
