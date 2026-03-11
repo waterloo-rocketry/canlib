@@ -13,10 +13,15 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: 'true'
-      - name: Download clang-format configuration file
-        run: wget https://raw.githubusercontent.com/waterloo-rocketry/rocketlib/refs/heads/main/.clang-format
-      - name: Run formatting check
-        uses: waterloo-rocketry/actions/clang-format-check@main
-        with:
-          clang-format-config-path: '.clang-format'
-          c-source-files: '*.h message/*.h message/*.c util/*.h util/*.c stm32h7/*.h stm32h7/*.c pic18f26k83/*.h pic18f26k83/*.c mcp2515/*.h mcp2515/*.c dspic33e/*.h dspic33e/*.c tests/*.cpp tests/*.hpp'
+      - name: Install clang-format 21
+        id: llvm-install
+        shell: bash
+        run: |
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          sudo ./llvm.sh 21
+          sudo apt install clang-format-21
+      - name: Run lint check
+        id: run-lint
+        shell: bash
+        run: make format-check CLANG_FORMAT=clang-format-21
