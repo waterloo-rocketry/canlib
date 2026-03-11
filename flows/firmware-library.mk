@@ -1,6 +1,10 @@
 ###########################
-# Source FIle Path Variables
+# Source File Path Variables
 ###########################
+
+ROCKETTEST_SRCS := $(ROCKETLIB_SUBMODULE_PATH)/rockettest/rockettest.cpp
+ROCKETTEST_HEADERS := $(ROCKETLIB_SUBMODULE_PATH)/rockettest/rockettest.hpp
+ROCKETTEST_INCLUDE_PATH := $(ROCKETLIB_SUBMODULE_PATH)/rockettest
 
 CPP_SRCS := \
 	$(ROCKETTEST_SRCS) \
