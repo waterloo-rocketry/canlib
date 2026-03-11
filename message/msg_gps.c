@@ -8,9 +8,7 @@
 
 bool build_gps_time_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t utc_hours,
 						uint8_t utc_mins, uint8_t utc_secs, uint8_t utc_dsecs, can_msg_t *output) {
-	if (!output) {
-		return false;
-	}
+	w_assert(output);
 
 	output->sid = build_sid(prio, MSG_GPS_TIMESTAMP, 0);
 	write_timestamp(timestamp, output);
@@ -27,9 +25,7 @@ bool build_gps_time_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t utc_hou
 
 bool build_gps_lat_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t degrees, uint8_t minutes,
 					   uint16_t dminutes, uint8_t direction, can_msg_t *output) {
-	if (!output) {
-		return false;
-	}
+	w_assert(output);
 
 	output->sid = build_sid(prio, MSG_GPS_LATITUDE, 0);
 	write_timestamp(timestamp, output);
@@ -47,9 +43,7 @@ bool build_gps_lat_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t degrees,
 
 bool build_gps_lon_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t degrees, uint8_t minutes,
 					   uint16_t dminutes, uint8_t direction, can_msg_t *output) {
-	if (!output) {
-		return false;
-	}
+	w_assert(output);
 
 	output->sid = build_sid(prio, MSG_GPS_LONGITUDE, 0);
 	write_timestamp(timestamp, output);
@@ -67,9 +61,7 @@ bool build_gps_lon_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t degrees,
 
 bool build_gps_alt_msg(can_msg_prio_t prio, uint16_t timestamp, uint16_t altitude,
 					   uint8_t daltitude, uint8_t units, can_msg_t *output) {
-	if (!output) {
-		return false;
-	}
+	w_assert(output);
 
 	output->sid = build_sid(prio, MSG_GPS_ALTITUDE, 0);
 	write_timestamp(timestamp, output);
@@ -86,9 +78,7 @@ bool build_gps_alt_msg(can_msg_prio_t prio, uint16_t timestamp, uint16_t altitud
 
 bool build_gps_info_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t num_sat, uint8_t quality,
 						can_msg_t *output) {
-	if (!output) {
-		return false;
-	}
+	w_assert(output);
 
 	output->sid = build_sid(prio, MSG_GPS_INFO, 0);
 	write_timestamp(timestamp, output);
@@ -103,21 +93,12 @@ bool build_gps_info_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t num_sat
 
 bool get_gps_time(const can_msg_t *msg, uint8_t *utc_hours, uint8_t *utc_mins, uint8_t *utc_secs,
 				  uint8_t *utc_dsecs) {
-	if (!msg) {
-		return false;
-	}
-	if (!utc_hours) {
-		return false;
-	}
-	if (!utc_mins) {
-		return false;
-	}
-	if (!utc_secs) {
-		return false;
-	}
-	if (!utc_dsecs) {
-		return false;
-	}
+	w_assert(msg);
+	w_assert(utc_hours);
+	w_assert(utc_mins);
+	w_assert(utc_secs);
+	w_assert(utc_dsecs);
+
 	if (get_message_type(msg) != MSG_GPS_TIMESTAMP) {
 		return false;
 	}
@@ -132,21 +113,12 @@ bool get_gps_time(const can_msg_t *msg, uint8_t *utc_hours, uint8_t *utc_mins, u
 
 bool get_gps_lat(const can_msg_t *msg, uint8_t *degrees, uint8_t *minutes, uint16_t *dminutes,
 				 uint8_t *direction) {
-	if (!msg) {
-		return false;
-	}
-	if (!degrees) {
-		return false;
-	}
-	if (!minutes) {
-		return false;
-	}
-	if (!dminutes) {
-		return false;
-	}
-	if (!direction) {
-		return false;
-	}
+	w_assert(msg);
+	w_assert(degrees);
+	w_assert(minutes);
+	w_assert(dminutes);
+	w_assert(direction);
+
 	if (get_message_type(msg) != MSG_GPS_LATITUDE) {
 		return false;
 	}
@@ -161,21 +133,12 @@ bool get_gps_lat(const can_msg_t *msg, uint8_t *degrees, uint8_t *minutes, uint1
 
 bool get_gps_lon(const can_msg_t *msg, uint8_t *degrees, uint8_t *minutes, uint16_t *dminutes,
 				 uint8_t *direction) {
-	if (!msg) {
-		return false;
-	}
-	if (!degrees) {
-		return false;
-	}
-	if (!minutes) {
-		return false;
-	}
-	if (!dminutes) {
-		return false;
-	}
-	if (!direction) {
-		return false;
-	}
+	w_assert(msg);
+	w_assert(degrees);
+	w_assert(minutes);
+	w_assert(dminutes);
+	w_assert(direction);
+
 	if (get_message_type(msg) != MSG_GPS_LONGITUDE) {
 		return false;
 	}
@@ -189,18 +152,11 @@ bool get_gps_lon(const can_msg_t *msg, uint8_t *degrees, uint8_t *minutes, uint1
 }
 
 bool get_gps_alt(const can_msg_t *msg, uint16_t *altitude, uint8_t *daltitude, uint8_t *units) {
-	if (!msg) {
-		return false;
-	}
-	if (!altitude) {
-		return false;
-	}
-	if (!daltitude) {
-		return false;
-	}
-	if (!units) {
-		return false;
-	}
+	w_assert(msg);
+	w_assert(altitude);
+	w_assert(daltitude);
+	w_assert(units);
+
 	if (get_message_type(msg) != MSG_GPS_ALTITUDE) {
 		return false;
 	}
@@ -213,15 +169,10 @@ bool get_gps_alt(const can_msg_t *msg, uint16_t *altitude, uint8_t *daltitude, u
 }
 
 bool get_gps_info(const can_msg_t *msg, uint8_t *num_sat, uint8_t *quality) {
-	if (!msg) {
-		return false;
-	}
-	if (!num_sat) {
-		return false;
-	}
-	if (!quality) {
-		return false;
-	}
+	w_assert(msg);
+	w_assert(num_sat);
+	w_assert(quality);
+
 	if (get_message_type(msg) != MSG_GPS_INFO) {
 		return false;
 	}

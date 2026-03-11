@@ -11,9 +11,8 @@
 
 bool build_stream_status_msg(can_msg_prio_t prio, uint16_t timestamp, uint32_t total_size,
 							 uint32_t tx_size, can_msg_t *output) {
-	if (!output) {
-		return false;
-	}
+	w_assert(output);
+
 	if ((total_size > STREAM_SIZE_MAX) || (tx_size > STREAM_SIZE_MAX)) {
 		return false;
 	}
@@ -34,9 +33,9 @@ bool build_stream_status_msg(can_msg_prio_t prio, uint16_t timestamp, uint32_t t
 
 bool build_stream_data_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t seq_id,
 						   const uint8_t *payload, uint8_t payload_len, can_msg_t *output) {
-	if (!output) {
-		return false;
-	}
+	w_assert(output);
+	w_assert(payload);
+
 	if (payload_len > STREAM_DATA_MAX_PAYLOAD_LEN) {
 		return false;
 	}
@@ -53,9 +52,7 @@ bool build_stream_data_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t seq_
 
 bool build_stream_retry_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t seq_id,
 							can_msg_t *output) {
-	if (!output) {
-		return false;
-	}
+	w_assert(output);
 
 	output->sid = build_sid(prio, MSG_STREAM_RETRY, seq_id);
 	write_timestamp(timestamp, output);
@@ -66,9 +63,10 @@ bool build_stream_retry_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t seq
 }
 
 bool get_stream_status(const can_msg_t *msg, uint32_t *total_size, uint32_t *tx_size) {
-	if (!msg || !total_size || !tx_size) {
-		return false;
-	}
+	w_assert(msg);
+	w_assert(total_size);
+	w_assert(tx_size);
+
 	if (get_message_type(msg) != MSG_STREAM_STATUS || msg->data_len != 8) {
 		return false;
 	}
@@ -81,9 +79,11 @@ bool get_stream_status(const can_msg_t *msg, uint32_t *total_size, uint32_t *tx_
 
 bool get_stream_data(const can_msg_t *msg, uint8_t *seq_id, uint8_t *payload,
 					 uint8_t *payload_len) {
-	if (!msg || !seq_id || !payload || !payload_len) {
-		return false;
-	}
+	w_assert(msg);
+	w_assert(seq_id);
+	w_assert(payload);
+	w_assert(payload_len);
+
 	if ((get_message_type(msg) != MSG_STREAM_DATA) || (msg->data_len < 4) || (msg->data_len > 8)) {
 		return false;
 	}
@@ -98,9 +98,9 @@ bool get_stream_data(const can_msg_t *msg, uint8_t *seq_id, uint8_t *payload,
 }
 
 bool get_stream_retry_seq_id(const can_msg_t *msg, uint8_t *seq_id) {
-	if (!msg || !seq_id) {
-		return false;
-	}
+	w_assert(msg);
+	w_assert(seq_id);
+
 	if (get_message_type(msg) != MSG_STREAM_RETRY || msg->data_len != 2) {
 		return false;
 	}

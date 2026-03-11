@@ -79,6 +79,8 @@ void build_config_status_msg(can_msg_prio_t prio, uint16_t timestamp, uint16_t c
 bool get_general_board_status(const can_msg_t *msg, uint32_t *general_error_bitfield,
 							  uint16_t *board_specific_error_bitfield) {
 	w_assert(msg);
+	w_assert(general_error_bitfield);
+	w_assert(board_specific_error_bitfield);
 
 	uint16_t msg_type = get_message_type(msg);
 	if (msg_type == MSG_GENERAL_BOARD_STATUS) {
@@ -92,9 +94,9 @@ bool get_general_board_status(const can_msg_t *msg, uint32_t *general_error_bitf
 }
 
 bool get_reset_board_id(const can_msg_t *msg, uint8_t *board_type_id, uint8_t *board_inst_id) {
-	if (!msg) {
-		return false;
-	}
+	w_assert(msg);
+	w_assert(board_type_id);
+	w_assert(board_inst_id);
 
 	uint16_t msg_type = get_message_type(msg);
 	if (msg_type == MSG_RESET_CMD) {
@@ -108,6 +110,8 @@ bool get_reset_board_id(const can_msg_t *msg, uint8_t *board_type_id, uint8_t *b
 }
 
 bool check_board_need_reset(const can_msg_t *msg) {
+	w_assert(msg);
+
 	uint8_t board_type_id, board_inst_id;
 
 	if (!get_reset_board_id(msg, &board_type_id, &board_inst_id)) {
@@ -135,9 +139,8 @@ bool check_board_need_reset(const can_msg_t *msg) {
 }
 
 bool get_debug_raw_data(const can_msg_t *msg, uint8_t *data) {
-	if (!msg) {
-		return false;
-	}
+	w_assert(msg);
+	w_assert(data);
 
 	uint16_t msg_type = get_message_type(msg);
 	if (msg_type == MSG_DEBUG_RAW) {
@@ -150,9 +153,9 @@ bool get_debug_raw_data(const can_msg_t *msg, uint8_t *data) {
 
 bool get_config_set_target_board(const can_msg_t *msg, uint8_t *board_type_id,
 								 uint8_t *board_inst_id) {
-	if (!msg) {
-		return false;
-	}
+	w_assert(msg);
+	w_assert(board_type_id);
+	w_assert(board_inst_id);
 
 	uint16_t msg_type = get_message_type(msg);
 	if (msg_type == MSG_CONFIG_SET) {
@@ -165,9 +168,9 @@ bool get_config_set_target_board(const can_msg_t *msg, uint8_t *board_type_id,
 }
 
 bool get_config_id_value(const can_msg_t *msg, uint16_t *config_id, uint16_t *config_value) {
-	if (!msg) {
-		return false;
-	}
+	w_assert(msg);
+	w_assert(config_id);
+	w_assert(config_value);
 
 	uint16_t msg_type = get_message_type(msg);
 	if (msg_type == MSG_CONFIG_SET) {

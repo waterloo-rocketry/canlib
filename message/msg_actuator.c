@@ -60,9 +60,7 @@ int get_curr_actuator_state(const can_msg_t *msg) {
 }
 
 int get_cmd_actuator_state(const can_msg_t *msg) {
-	if (!msg) {
-		return -1;
-	}
+	w_assert(msg);
 
 	uint16_t msg_type = get_message_type(msg);
 	switch (msg_type) {

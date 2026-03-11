@@ -8,9 +8,7 @@
 
 bool build_alt_arm_cmd_msg(can_msg_prio_t prio, uint16_t timestamp, can_altimeter_id_t alt_id,
 						   can_alt_arm_state_t arm_cmd, can_msg_t *output) {
-	if (!output) {
-		return false;
-	}
+	w_assert(output);
 
 	output->sid = build_sid(prio, MSG_ALT_ARM_CMD, alt_id);
 	write_timestamp(timestamp, output);
@@ -24,9 +22,7 @@ bool build_alt_arm_cmd_msg(can_msg_prio_t prio, uint16_t timestamp, can_altimete
 bool build_alt_arm_status_msg(can_msg_prio_t prio, uint16_t timestamp, can_altimeter_id_t alt_id,
 							  can_alt_arm_state_t arm_state, uint16_t v_drogue, uint16_t v_main,
 							  can_msg_t *output) {
-	if (!output) {
-		return false;
-	}
+	w_assert(output);
 
 	output->sid = build_sid(prio, MSG_ALT_ARM_STATUS, alt_id);
 	write_timestamp(timestamp, output);
@@ -46,9 +42,10 @@ bool build_alt_arm_status_msg(can_msg_prio_t prio, uint16_t timestamp, can_altim
 
 bool get_alt_arm_state(const can_msg_t *msg, can_altimeter_id_t *alt_id,
 					   can_alt_arm_state_t *arm_state) {
-	if (!msg || !alt_id || !arm_state) {
-		return false;
-	}
+	w_assert(msg);
+	w_assert(alt_id);
+	w_assert(arm_state);
+
 	if ((get_message_type(msg) != MSG_ALT_ARM_CMD) &&
 		(get_message_type(msg) != MSG_ALT_ARM_STATUS)) {
 		return false;
@@ -60,9 +57,10 @@ bool get_alt_arm_state(const can_msg_t *msg, can_altimeter_id_t *alt_id,
 }
 
 bool get_pyro_voltage_data(const can_msg_t *msg, uint16_t *v_drogue, uint16_t *v_main) {
-	if (!msg || !v_drogue || !v_main) {
-		return false;
-	}
+	w_assert(msg);
+	w_assert(v_drogue);
+	w_assert(v_main);
+
 	if (get_message_type(msg) != MSG_ALT_ARM_STATUS) {
 		return false;
 	}

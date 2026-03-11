@@ -56,9 +56,7 @@ void build_dem_analog_data_16bit_msg(can_msg_prio_t prio, uint16_t timestamp,
 }
 
 bool msg_is_sensor_data(const can_msg_t *msg) {
-	if (!msg) {
-		return false;
-	}
+	w_assert(msg);
 
 	uint16_t type = get_message_type(msg);
 	if (type == MSG_SENSOR_ANALOG16 || type == MSG_SENSOR_ANALOG32 ||
@@ -71,12 +69,10 @@ bool msg_is_sensor_data(const can_msg_t *msg) {
 
 bool get_analog_data_16bit(const can_msg_t *msg, can_analog_sensor_id_t *sensor_id,
 						   uint16_t *output_data) {
-	if (!msg) {
-		return false;
-	}
-	if (!output_data) {
-		return false;
-	}
+	w_assert(msg);
+	w_assert(sensor_id);
+	w_assert(output_data);
+
 	if (get_message_type(msg) != MSG_SENSOR_ANALOG16) {
 		return false;
 	}
@@ -89,12 +85,10 @@ bool get_analog_data_16bit(const can_msg_t *msg, can_analog_sensor_id_t *sensor_
 
 bool get_analog_data_32bit(const can_msg_t *msg, can_analog_sensor_id_t *sensor_id,
 						   uint32_t *output_data) {
-	if (!msg) {
-		return false;
-	}
-	if (!output_data) {
-		return false;
-	}
+	w_assert(msg);
+	w_assert(sensor_id);
+	w_assert(output_data);
+
 	if (get_message_type(msg) != MSG_SENSOR_ANALOG32) {
 		return false;
 	}
@@ -109,12 +103,12 @@ bool get_analog_data_32bit(const can_msg_t *msg, can_analog_sensor_id_t *sensor_
 bool get_dem_analog_data_16bit(const can_msg_t *msg, can_dem_sensor_id_t *dem_sensor_id,
 							   uint16_t *output_data_x, uint16_t *output_data_y,
 							   uint16_t *output_data_z) {
-	if (!msg) {
-		return false;
-	}
-	if (!output_data_x) {
-		return false;
-	}
+	w_assert(msg);
+	w_assert(dem_sensor_id);
+	w_assert(output_data_x);
+	w_assert(output_data_y);
+	w_assert(output_data_z);
+
 	if (get_message_type(msg) != MSG_SENSOR_DEM_ANALOG16) {
 		return false;
 	}
