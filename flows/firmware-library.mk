@@ -1,8 +1,8 @@
-CLANG_FORMAT := clang-format
-CLANG_TIDY := clang-tidy
+###########################
+# Common Build Variables
+###########################
 
 INCLUDE_PATHS_C_CXX_FLAGS := $(foreach inc, $(INCLUDE_PATHS), $(addprefix -I, $(inc)))
-INCLUDE_PATHS_CLANG_TIDY_FLAGS := $(foreach inc, $(INCLUDE_PATHS), $(addprefix --extra-arg-before="-I, $(addsuffix ", $(inc))))
 
 C_CXX_FLAGS := \
 	$(INCLUDE_PATHS_C_CXX_FLAGS) \
@@ -37,14 +37,53 @@ CXXFLAGS := \
 	-std=c++20 \
 	-I$(ROCKETTEST_INCLUDE_PATH)
 
-XC8_C_FLAGS := \
-	-mcpu=18F26K83 \
-	-mdfp=xc8 \
-	-Iinclude \
-	-c \
-	-mwarn=-9 \
-	-std=c99 \
-	-Wpedantic
+
+CPP_SRCS := \
+	$(ROCKETTEST_SRCS) \
+	$(TEST_SRCS)
+
+ifeq ($(filter run-test,$(MAKECMDGOALS)),run-test)
+	BUILD_DIR := build/test-cov
+endif
+
+ifeq ($(filter run-test-cov,$(MAKECMDGOALS)),run-test-cov)
+	BUILD_DIR := build/test-cov
+endif
+
+ifeq ($(filter gen-cov-html,$(MAKECMDGOALS)),gen-cov-html)
+	BUILD_DIR := build/test-cov
+endif
+
+#######################
+# XC8 Compile Variables
+#######################
+
+XC8 := /opt/microchip/xc8/v3.10/bin/xc8-cc
+
+ifeq ($(filter xc8-build,$(MAKECMDGOALS)),xc8-build)
+	CC := $(XC8)
+	CFLAGS := -mcpu=18F26K83 -mdfp=$(XC8_DFP_PATH) -mwarn=-9 -std=c99 -Wpedantic $(INCLUDE_PATHS_C_CXX_FLAGS)
+	BUILD_DIR := build/xc8
+endif
+
+########################
+# XC16 Compile Variables
+########################
+
+XC16 := /opt/microchip/xc16/v2.10/bin/xc16-gcc
+
+ifeq ($(filter xc16-build,$(MAKECMDGOALS)),xc16-build)
+	CC := $(XC16)
+	CFLAGS := -mcpu=33EP256GP502 -std=c99 -Wall $(INCLUDE_PATHS_C_CXX_FLAGS)
+	BUILD_DIR := build/xc16
+endif
+
+####################
+# Linting Variables
+####################
+
+CLANG_TIDY := clang-tidy
+INCLUDE_PATHS_CLANG_TIDY_FLAGS := $(foreach inc, $(INCLUDE_PATHS), $(addprefix --extra-arg-before="-I, $(addsuffix ", $(inc))))
 
 CLANG_TIDY_FLAGS := \
 	--warnings-as-errors="*" \
@@ -53,43 +92,29 @@ CLANG_TIDY_FLAGS := \
 	--extra-arg-before="-pedantic" \
 	$(INCLUDE_PATHS_CLANG_TIDY_FLAGS)
 
-CPP_SRCS := \
-	$(ROCKETTEST_SRCS) \
-	$(TEST_SRCS)
+######################
+# Formatting Variables
+######################
 
-ifeq ($(COVERAGE), 1)
-BUILD_DIR := build/test-cov
-else
-BUILD_DIR := build/test
-endif
+CLANG_FORMAT := clang-format
+
+###########################################
+# Object File and Dependency File Variables
+###########################################
 
 COMMON_C_OBJS = $(patsubst %.c,$(BUILD_DIR)/%.o,$(COMMON_C_SRCS))
 COMMON_C_DEPS = $(COMMON_C_SRCS:.c=.d)
 
+PIC18_C_OBJS = $(patsubst %.c,$(BUILD_DIR)/%.o,$(PIC18_C_SRCS))
+PIC18_C_DEPS = $(PIC18_C_SRCS:.c=.d)
+
 CPP_OBJS = $(patsubst %.cpp,$(BUILD_DIR)/%.o,$(CPP_SRCS))
 CPP_DEPS = $(CPP_SRCS:.cpp=.d)
-
-#######################
-# XC8 Compile Variables
-#######################
-
-XC8 := /opt/microchip/xc8/v3.10/bin/xc8-cc
-xc8-build: CC := $(XC8)
-xc8-build: CFLAGS := -mcpu=18F26K83 -mdfp=$(XC8_DFP_PATH) -Iinclude -mwarn=-9 -std=c99 -Wpedantic
-xc8-build: BUILD_DIR := build/xc8
-
-########################
-# XC16 Compile Variables
-########################
-
-XC16 := /opt/microchip/xc16/v2.10/bin/xc16-gcc
-xc16-build: CC := $(XC16)
-xc16-build: CFLAGS := -mcpu=33EP256GP502 -Iinclude -std=c99 -Wall
-xc16-build: BUILD_DIR := build/xc16
 
 ######################
 # Object files compile
 ######################
+
 $(BUILD_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -101,21 +126,24 @@ $(BUILD_DIR)/%.o: %.cpp
 ####################
 # Unit Test Build
 ####################
+
 $(BUILD_DIR)/unit_test: $(COMMON_C_OBJS) $(CPP_OBJS)
 	@mkdir -p $(dir $@)
 	$(CXX) $^ $(LDFLAGS) -o $@
 
-.PHONY: run_test
-run_test: $(BUILD_DIR)/unit_test
+.PHONY: run-test
+run-test: $(BUILD_DIR)/unit_test
 	./$(BUILD_DIR)/unit_test
 
 ###############################
 # Unit Test with Coverage Build
 ###############################
 
-ifeq ($(COVERAGE), 1)
+.PHONY: run-test-cov
+run-test-cov: $(BUILD_DIR)/unit_test
+	./$(BUILD_DIR)/unit_test
 
-$(BUILD_DIR)/coverage.info: run_test
+$(BUILD_DIR)/coverage.info: run-test
 	lcov --capture --branch-coverage --mcdc-coverage --no-external --directory . -o $@
 
 $(BUILD_DIR)/coverage-filtered.info: $(BUILD_DIR)/coverage.info
@@ -124,21 +152,23 @@ $(BUILD_DIR)/coverage-filtered.info: $(BUILD_DIR)/coverage.info
 $(BUILD_DIR)/html: $(BUILD_DIR)/coverage-filtered.info
 	genhtml $^ --flat --branch-coverage --mcdc-coverage --output-directory $@
 
-endif
+.PHONY: gen-cov-html
+gen-cov-html: $(BUILD_DIR)/html
+	true
 
 ####################
 # XC8 Build
 ####################
 
 .PHONY: xc8-build
-xc8-build: $(COMMON_C_OBJS)
+xc8-build: $(COMMON_C_OBJS) $(PIC18_C_OBJS)
 	true
 
 ####################
 # XC16 Build
 ####################
 
-.PHONY: xc6-build
+.PHONY: xc16-build
 xc16-build: $(COMMON_C_OBJS)
 	true
 
