@@ -1,7 +1,8 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "message/msg_common.h"
+#include "common.h"
+
 #include "safe_ring_buffer.h"
 
 static size_t get_offset_bytes(const srb_ctx_t *ctx, size_t index) {

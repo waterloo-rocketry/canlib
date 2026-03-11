@@ -1,6 +1,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "common.h"
+
 #include "can.h"
 #include "message_types.h"
 #include "msg_actuator.h"
