@@ -86,13 +86,15 @@ endif
 
 CLANG_TIDY := clang-tidy
 INCLUDE_PATHS_CLANG_TIDY_FLAGS := $(foreach inc, $(INCLUDE_PATHS), $(addprefix --extra-arg-before="-I, $(addsuffix ", $(inc))))
+EXTRA_C_CXX_CLANG_TIDY_FLAGS := $(foreach flag, $(EXTRA_C_CXX_FLAGS), $(addprefix --extra-arg-before=", $(addsuffix ", $(flag))))
 
 CLANG_TIDY_FLAGS := \
 	--warnings-as-errors="*" \
 	--checks="clang-*,misc-*" \
 	--extra-arg-before="-std=c99" \
 	--extra-arg-before="-pedantic" \
-	$(INCLUDE_PATHS_CLANG_TIDY_FLAGS)
+	$(INCLUDE_PATHS_CLANG_TIDY_FLAGS) \
+	$(EXTRA_C_CXX_CLANG_TIDY_FLAGS)
 
 ######################
 # Formatting Variables
