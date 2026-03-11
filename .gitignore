@@ -1,9 +1,4 @@
-*.o
-*.d
-*.gcda
-*.gcno
-*.info
+build
 compile_commands.json
 .cache
-tests/unit_test
-tests/html
+.clangd
