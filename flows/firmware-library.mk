@@ -16,8 +16,9 @@ CPP_SRCS := \
 
 INCLUDE_PATHS_C_CXX_FLAGS := $(foreach inc, $(INCLUDE_PATHS), $(addprefix -I, $(inc)))
 
-C_CXX_FLAGS := \
+C_CXX_FLAGS += \
 	$(INCLUDE_PATHS_C_CXX_FLAGS) \
+	$(EXTRA_C_CXX_FLAGS) \
 	-Wall \
 	-Wextra \
 	-pedantic \
@@ -191,7 +192,7 @@ format:
 
 .PHONY: format-check
 format-check:
-	$(CLANG_FORMAT) --dry-run -Werror $(COMMON_C_SRCS) $(COMMON_C_HEADERS) $(PIC18_C_SRCS) $(PIC18_C_HEADERS) $(STM32H7_C_SRCS) $(STM32H7_C_HEADERS) $(TEST_SRCS) $(ROCKETTEST_SRCS) $(ROCKETTEST_HEADERS)
+	$(CLANG_FORMAT) --dry-run -Werror --style=file:$(ROCKETLIB_SUBMODULE_PATH)/.clang-format $(COMMON_C_SRCS) $(COMMON_C_HEADERS) $(PIC18_C_SRCS) $(PIC18_C_HEADERS) $(STM32H7_C_SRCS) $(STM32H7_C_HEADERS) $(TEST_SRCS) $(ROCKETTEST_SRCS) $(ROCKETTEST_HEADERS)
 
 -include $(COMMON_C_DEPS)
 -include $(CPP_DEPS)
