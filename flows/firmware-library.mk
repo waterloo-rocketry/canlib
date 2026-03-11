@@ -89,13 +89,25 @@ $(TEST_BUILD_DIR)/html: $(TEST_BUILD_DIR)/coverage-filtered.info
 
 endif
 
+####################
+# Linting
+####################
+
 .PHONY: lint
 lint:
 	$(CLANG_TIDY) $(CLANG_TIDY_FLAGS) $(COMMON_C_SRCS) $(COMMON_C_HEADERS)
 
+####################
+# Formatting
+####################
+
 .PHONY: format
 format:
 	$(CLANG_FORMAT) -i $(COMMON_C_SRCS) $(COMMON_C_HEADERS) $(PIC18_C_SRCS) $(PIC18_C_HEADERS) $(STM32H7_C_SRCS) $(STM32H7_C_HEADERS) $(TEST_SRCS) $(ROCKETTEST_SRCS) $(ROCKETTEST_HEADERS)
+
+.PHONY: format-check
+format-check:
+	$(CLANG_FORMAT) --dry-run -Werror $(COMMON_C_SRCS) $(COMMON_C_HEADERS) $(PIC18_C_SRCS) $(PIC18_C_HEADERS) $(STM32H7_C_SRCS) $(STM32H7_C_HEADERS) $(TEST_SRCS) $(ROCKETTEST_SRCS) $(ROCKETTEST_HEADERS)
 
 -include $(COMMON_C_DEPS)
 -include $(CPP_DEPS)
