@@ -1,6 +1,8 @@
 #include <stdint.h>
 #include <string.h>
 
+#include "common.h"
+
 #include "can.h"
 #include "message_types.h"
 #include "msg_common.h"

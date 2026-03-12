@@ -1,8 +1,9 @@
 #include <stddef.h>
 
+#include "common.h"
+
 #include "can.h"
 #include "can_tx_buffer.h"
-#include "message/msg_common.h"
 #include "safe_ring_buffer.h"
 
 typedef struct {

@@ -1,0 +1,3 @@
+[submodule "rocketlib"]
+	path = rocketlib
+	url = https://github.com/waterloo-rocketry/rocketlib.git

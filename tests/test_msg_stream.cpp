@@ -23,10 +23,10 @@ public:
 
 		can_msg_t msg{};
 
-		can_msg_prio_t prio = rockettest_rand<can_msg_prio_t, 0x3>();
-		std::uint16_t timestamp = rockettest_rand<std::uint16_t>();
-		std::uint32_t total_size = rockettest_rand<std::uint32_t, kMax24BitValue>();
-		std::uint32_t tx_size = rockettest_rand<std::uint32_t, kMax24BitValue>();
+		can_msg_prio_t prio = rockettest_rand_field<can_msg_prio_t, 0x3>();
+		std::uint16_t timestamp = rockettest_rand_field<std::uint16_t>();
+		std::uint32_t total_size = rockettest_rand_field<std::uint32_t, kMax24BitValue>();
+		std::uint32_t tx_size = rockettest_rand_field<std::uint32_t, kMax24BitValue>();
 
 		bool build_result = build_stream_status_msg(prio, timestamp, total_size, tx_size, &msg);
 		rockettest_check_expr_true(build_result);
@@ -68,13 +68,13 @@ public:
 
 		can_msg_t msg{};
 
-		can_msg_prio_t prio = rockettest_rand<can_msg_prio_t, 0x3>();
-		std::uint16_t timestamp = rockettest_rand<std::uint16_t>();
-		std::uint8_t seq_id = rockettest_rand<std::uint8_t, 0xff>();
+		can_msg_prio_t prio = rockettest_rand_field<can_msg_prio_t, 0x3>();
+		std::uint16_t timestamp = rockettest_rand_field<std::uint16_t>();
+		std::uint8_t seq_id = rockettest_rand_field<std::uint8_t, 0xff>();
 		std::uint8_t payload_len = STREAM_DATA_MAX_PAYLOAD_LEN;
 		std::uint8_t payload[STREAM_DATA_MAX_PAYLOAD_LEN];
 		for (std::uint8_t i = 0; i < payload_len; ++i) {
-			payload[i] = rockettest_rand<std::uint8_t>();
+			payload[i] = rockettest_rand_field<std::uint8_t>();
 		}
 
 		bool build_result =
@@ -129,9 +129,9 @@ public:
 
 		can_msg_t msg{};
 
-		can_msg_prio_t prio = rockettest_rand<can_msg_prio_t, 0x3>();
-		std::uint16_t timestamp = rockettest_rand<std::uint16_t>();
-		std::uint8_t seq_id = rockettest_rand<std::uint8_t, 0xff>();
+		can_msg_prio_t prio = rockettest_rand_field<can_msg_prio_t, 0x3>();
+		std::uint16_t timestamp = rockettest_rand_field<std::uint16_t>();
+		std::uint8_t seq_id = rockettest_rand_field<std::uint8_t, 0xff>();
 
 		bool build_result = build_stream_retry_msg(prio, timestamp, seq_id, &msg);
 		rockettest_check_expr_true(build_result);
