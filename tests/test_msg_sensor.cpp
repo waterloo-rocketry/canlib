@@ -126,7 +126,7 @@ public:
 
 		can_msg_prio_t prio_before = rockettest_rand_field<can_msg_prio_t, 0x3>();
 		std::uint16_t timestamp_before = rockettest_rand_field<std::uint16_t>();
-		can_dem_sensor_id_t sensor_id_before = rockettest_rand_field<can_dem_sensor_id_t, 0xff>();
+		can_dem_3d_sensor_id_t sensor_id_before = rockettest_rand_field<can_dem_3d_sensor_id_t, 0xff>();
 		std::uint16_t sensor_data_x_before = rockettest_rand_field<std::uint16_t>();
 		std::uint16_t sensor_data_y_before = rockettest_rand_field<std::uint16_t>();
 		std::uint16_t sensor_data_z_before = rockettest_rand_field<std::uint16_t>();
@@ -139,12 +139,12 @@ public:
 										sensor_data_z_before,
 										&msg);
 
-		can_dem_sensor_id_t sensor_id_extracted;
+		can_dem_3d_sensor_id_t sensor_id_extracted;
 		std::uint16_t sensor_data_x_extracted;
 		std::uint16_t sensor_data_y_extracted;
 		std::uint16_t sensor_data_z_extracted;
 
-		sensor_id_extracted = static_cast<can_dem_sensor_id_t>(msg.sid & 0xff);
+		sensor_id_extracted = static_cast<can_dem_3d_sensor_id_t>(msg.sid & 0xff);
 		sensor_data_x_extracted = (msg.data[2] << 8) | msg.data[3];
 		sensor_data_y_extracted = (msg.data[4] << 8) | msg.data[5];
 		sensor_data_z_extracted = (msg.data[6] << 8) | msg.data[7];
@@ -158,7 +158,7 @@ public:
 		bool msg_is_sensor_data_after;
 		can_msg_type_t type_after;
 		std::uint16_t timestamp_after;
-		can_dem_sensor_id_t sensor_id_after;
+		can_dem_3d_sensor_id_t sensor_id_after;
 		std::uint16_t sensor_data_x_after;
 		std::uint16_t sensor_data_y_after;
 		std::uint16_t sensor_data_z_after;
@@ -173,7 +173,7 @@ public:
 								  &sensor_data_z_after);
 
 		rockettest_check_expr_true(msg_is_sensor_data_after == true);
-		rockettest_check_expr_true(type_after == MSG_SENSOR_DEM_ANALOG16);
+		rockettest_check_expr_true(type_after == MSG_SENSOR_3D_ANALOG16);
 		rockettest_check_expr_true(timestamp_after == timestamp_before);
 		rockettest_check_expr_true(sensor_id_after == sensor_id_before);
 		rockettest_check_expr_true(sensor_data_x_after == sensor_data_x_before);

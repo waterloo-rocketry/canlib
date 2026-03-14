@@ -20,7 +20,7 @@ void build_analog_data_32bit_msg(can_msg_prio_t prio, uint16_t timestamp,
 								 can_msg_t *output);
 
 void build_dem_analog_data_16bit_msg(can_msg_prio_t prio, uint16_t timestamp,
-									 can_dem_sensor_id_t dem_sensor_id, uint16_t sensor_data_x,
+									 can_dem_3d_sensor_id_t dem_sensor_id, uint16_t sensor_data_x,
 									 uint16_t sensor_data_y, uint16_t sensor_data_z,
 									 can_msg_t *output);
 
@@ -32,7 +32,7 @@ bool get_analog_data_16bit(const can_msg_t *msg, can_analog_sensor_id_t *sensor_
 bool get_analog_data_32bit(const can_msg_t *msg, can_analog_sensor_id_t *sensor_id,
 						   uint32_t *output_data);
 
-bool get_dem_analog_data_16bit(const can_msg_t *msg, can_dem_sensor_id_t *dem_sensor_id,
+bool get_dem_analog_data_16bit(const can_msg_t *msg, can_dem_3d_sensor_id_t *dem_sensor_id,
 							   uint16_t *output_data_x, uint16_t *output_data_y,
 							   uint16_t *output_data_z);
 

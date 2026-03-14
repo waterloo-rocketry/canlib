@@ -39,12 +39,12 @@ void build_analog_data_32bit_msg(can_msg_prio_t prio, uint16_t timestamp,
 }
 
 void build_dem_analog_data_16bit_msg(can_msg_prio_t prio, uint16_t timestamp,
-									 can_dem_sensor_id_t dem_sensor_id, uint16_t sensor_data_x,
+									 can_dem_3d_sensor_id_t dem_sensor_id, uint16_t sensor_data_x,
 									 uint16_t sensor_data_y, uint16_t sensor_data_z,
 									 can_msg_t *output) {
 	w_assert(output);
 
-	output->sid = build_sid(prio, MSG_SENSOR_DEM_ANALOG16, dem_sensor_id);
+	output->sid = build_sid(prio, MSG_SENSOR_3D_ANALOG16, dem_sensor_id);
 	write_timestamp(timestamp, output);
 
 	output->data[2] = (sensor_data_x >> 8) & 0xff;
@@ -62,7 +62,7 @@ bool msg_is_sensor_data(const can_msg_t *msg) {
 
 	uint16_t type = get_message_type(msg);
 	if (type == MSG_SENSOR_ANALOG16 || type == MSG_SENSOR_ANALOG32 ||
-		type == MSG_SENSOR_DEM_ANALOG16) {
+		type == MSG_SENSOR_3D_ANALOG16) {
 		return true;
 	} else {
 		return false;
@@ -102,7 +102,7 @@ bool get_analog_data_32bit(const can_msg_t *msg, can_analog_sensor_id_t *sensor_
 	return true;
 }
 
-bool get_dem_analog_data_16bit(const can_msg_t *msg, can_dem_sensor_id_t *dem_sensor_id,
+bool get_dem_analog_data_16bit(const can_msg_t *msg, can_dem_3d_sensor_id_t *dem_sensor_id,
 							   uint16_t *output_data_x, uint16_t *output_data_y,
 							   uint16_t *output_data_z) {
 	w_assert(msg);
@@ -111,7 +111,7 @@ bool get_dem_analog_data_16bit(const can_msg_t *msg, can_dem_sensor_id_t *dem_se
 	w_assert(output_data_y);
 	w_assert(output_data_z);
 
-	if (get_message_type(msg) != MSG_SENSOR_DEM_ANALOG16) {
+	if (get_message_type(msg) != MSG_SENSOR_3D_ANALOG16) {
 		return false;
 	}
 
