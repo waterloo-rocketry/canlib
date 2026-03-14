@@ -60,7 +60,7 @@ bool get_3d_analog_sensor_data_16bit(const can_msg_t *msg, can_dem_3d_sensor_id_
  *
  * @return true if message parsed successfully, false if message has format error
  */
-bool get_2d_analog_sensor_data_24bit(const can_msg_t *msg, can_dem_3d_sensor_id_t *sensor_id,
+bool get_2d_analog_sensor_data_24bit(const can_msg_t *msg, can_dem_2d_sensor_id_t *sensor_id,
 									 uint32_t *sensor_data_x, uint32_t *sensor_data_y);
 
 #ifdef __cplusplus

@@ -82,7 +82,7 @@ bool msg_is_analog_sensor(const can_msg_t *msg) {
 
 	uint16_t type = get_message_type(msg);
 	if (type == MSG_SENSOR_ANALOG16 || type == MSG_SENSOR_ANALOG32 ||
-		type == MSG_SENSOR_3D_ANALOG16) {
+		type == MSG_SENSOR_3D_ANALOG16 || type == MSG_SENSOR_2D_ANALOG24) {
 		return true;
 	} else {
 		return false;
@@ -143,7 +143,7 @@ bool get_3d_analog_sensor_data_16bit(const can_msg_t *msg, can_dem_3d_sensor_id_
 	return true;
 }
 
-bool get_2d_analog_sensor_data_24bit(const can_msg_t *msg, can_dem_3d_sensor_id_t *sensor_id,
+bool get_2d_analog_sensor_data_24bit(const can_msg_t *msg, can_dem_2d_sensor_id_t *sensor_id,
 									 uint32_t *sensor_data_x, uint32_t *sensor_data_y) {
 	w_assert(msg);
 	w_assert(sensor_id);
