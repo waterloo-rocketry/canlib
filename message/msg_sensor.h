@@ -46,6 +46,17 @@ bool get_analog_sensor_data_16bit(const can_msg_t *msg, can_analog_sensor_id_t *
 bool get_analog_sensor_data_32bit(const can_msg_t *msg, can_analog_sensor_id_t *sensor_id,
 								  uint32_t *output_data);
 
+/*
+ * @brief Pack a SENSOR_3D_ANALOG16 message from three 16-bits unsigned integer
+ *
+ * @param msg Input message buffer
+ * @param sensor_id Sensor identifier
+ * @param sensor_data_x first 16-bit unsigned integer data
+ * @param sensor_data_y second 16-bit unsigned integer data
+ * @param sensor_data_z third 16-bit unsigned integer data
+ *
+ * @return true if message parsed successfully, false if message has format error
+ */
 bool get_3d_analog_sensor_data_16bit(const can_msg_t *msg, can_dem_3d_sensor_id_t *sensor_id,
 									 uint16_t *output_data_x, uint16_t *output_data_y,
 									 uint16_t *output_data_z);
