@@ -35,8 +35,8 @@ void build_3d_analog_sensor_16bit_msg(can_msg_prio_t prio, uint16_t timestamp,
  * @param output Output message buffer
  */
 void build_2d_analog_sensor_24bit_msg(can_msg_prio_t prio, uint16_t timestamp,
-									  can_dem_2d_sensor_id_t sensor_id, uint16_t sensor_data_x,
-									  uint16_t sensor_data_y, can_msg_t *output);
+									  can_dem_2d_sensor_id_t sensor_id, uint32_t sensor_data_x,
+									  uint32_t sensor_data_y, can_msg_t *output);
 
 bool msg_is_analog_sensor(const can_msg_t *msg);
 
@@ -46,9 +46,22 @@ bool get_analog_sensor_data_16bit(const can_msg_t *msg, can_analog_sensor_id_t *
 bool get_analog_sensor_data_32bit(const can_msg_t *msg, can_analog_sensor_id_t *sensor_id,
 								  uint32_t *output_data);
 
-bool get_3d_analog_sensor_data_16bit(const can_msg_t *msg, can_dem_3d_sensor_id_t *dem_sensor_id,
+bool get_3d_analog_sensor_data_16bit(const can_msg_t *msg, can_dem_3d_sensor_id_t *sensor_id,
 									 uint16_t *output_data_x, uint16_t *output_data_y,
 									 uint16_t *output_data_z);
+
+/*
+ * @brief Pack a SENSOR_2D_ANALOG24 message from two 24-bits unsigned integer
+ *
+ * @param msg Input message buffer
+ * @param sensor_id Sensor identifier
+ * @param sensor_data_x first 24-bit unsigned integer data
+ * @param sensor_data_y second 24-bit unsigned integer data
+ *
+ * @return true if message parsed successfully, false if message has format error
+ */
+bool get_2d_analog_sensor_data_24bit(const can_msg_t *msg, can_dem_3d_sensor_id_t *sensor_id,
+									 uint32_t *sensor_data_x, uint32_t *sensor_data_y);
 
 #ifdef __cplusplus
 }
