@@ -22,7 +22,7 @@ public:
 			rockettest_rand_field<can_analog_sensor_id_t, 0xff>();
 		std::uint16_t sensor_data_before = rockettest_rand_field<std::uint16_t>();
 
-		build_analog_data_16bit_msg(
+		build_analog_sensor_16bit_msg(
 			prio_before, timestamp_before, sensor_id_before, sensor_data_before, &msg);
 
 		can_analog_sensor_id_t sensor_id_extracted;
@@ -41,10 +41,10 @@ public:
 		can_analog_sensor_id_t sensor_id_after;
 		std::uint16_t sensor_data_after;
 
-		msg_is_sensor_data_after = msg_is_sensor_data(&msg);
+		msg_is_sensor_data_after = msg_is_analog_sensor(&msg);
 		type_after = get_message_type(&msg);
 		timestamp_after = get_timestamp(&msg);
-		get_analog_data_16bit(&msg, &sensor_id_after, &sensor_data_after);
+		get_analog_sensor_data_16bit(&msg, &sensor_id_after, &sensor_data_after);
 
 		rockettest_check_expr_true(msg_is_sensor_data_after == true);
 		rockettest_check_expr_true(type_after == MSG_SENSOR_ANALOG16);
@@ -75,7 +75,7 @@ public:
 			(static_cast<std::uint32_t>(rockettest_rand_field<uint16_t>()) << 16) |
 			rockettest_rand_field<uint16_t>();
 
-		build_analog_data_32bit_msg(
+		build_analog_sensor_32bit_msg(
 			prio_before, timestamp_before, sensor_id_before, sensor_data_before, &msg);
 
 		can_analog_sensor_id_t sensor_id_extracted;
@@ -97,10 +97,10 @@ public:
 		can_analog_sensor_id_t sensor_id_after;
 		std::uint32_t sensor_data_after;
 
-		msg_is_sensor_data_after = msg_is_sensor_data(&msg);
+		msg_is_sensor_data_after = msg_is_analog_sensor(&msg);
 		type_after = get_message_type(&msg);
 		timestamp_after = get_timestamp(&msg);
-		get_analog_data_32bit(&msg, &sensor_id_after, &sensor_data_after);
+		get_analog_sensor_data_32bit(&msg, &sensor_id_after, &sensor_data_after);
 
 		rockettest_check_expr_true(msg_is_sensor_data_after == true);
 		rockettest_check_expr_true(type_after == MSG_SENSOR_ANALOG32);
@@ -126,18 +126,19 @@ public:
 
 		can_msg_prio_t prio_before = rockettest_rand_field<can_msg_prio_t, 0x3>();
 		std::uint16_t timestamp_before = rockettest_rand_field<std::uint16_t>();
-		can_dem_3d_sensor_id_t sensor_id_before = rockettest_rand_field<can_dem_3d_sensor_id_t, 0xff>();
+		can_dem_3d_sensor_id_t sensor_id_before =
+			rockettest_rand_field<can_dem_3d_sensor_id_t, 0xff>();
 		std::uint16_t sensor_data_x_before = rockettest_rand_field<std::uint16_t>();
 		std::uint16_t sensor_data_y_before = rockettest_rand_field<std::uint16_t>();
 		std::uint16_t sensor_data_z_before = rockettest_rand_field<std::uint16_t>();
 
-		build_dem_analog_data_16bit_msg(prio_before,
-										timestamp_before,
-										sensor_id_before,
-										sensor_data_x_before,
-										sensor_data_y_before,
-										sensor_data_z_before,
-										&msg);
+		build_3d_analog_sensor_16bit_msg(prio_before,
+										 timestamp_before,
+										 sensor_id_before,
+										 sensor_data_x_before,
+										 sensor_data_y_before,
+										 sensor_data_z_before,
+										 &msg);
 
 		can_dem_3d_sensor_id_t sensor_id_extracted;
 		std::uint16_t sensor_data_x_extracted;
@@ -163,14 +164,14 @@ public:
 		std::uint16_t sensor_data_y_after;
 		std::uint16_t sensor_data_z_after;
 
-		msg_is_sensor_data_after = msg_is_sensor_data(&msg);
+		msg_is_sensor_data_after = msg_is_analog_sensor(&msg);
 		type_after = get_message_type(&msg);
 		timestamp_after = get_timestamp(&msg);
-		get_dem_analog_data_16bit(&msg,
-								  &sensor_id_after,
-								  &sensor_data_x_after,
-								  &sensor_data_y_after,
-								  &sensor_data_z_after);
+		get_3d_analog_sensor_data_16bit(&msg,
+										&sensor_id_after,
+										&sensor_data_x_after,
+										&sensor_data_y_after,
+										&sensor_data_z_after);
 
 		rockettest_check_expr_true(msg_is_sensor_data_after == true);
 		rockettest_check_expr_true(type_after == MSG_SENSOR_3D_ANALOG16);
