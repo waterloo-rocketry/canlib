@@ -17,8 +17,7 @@ extern "C" {
  * This function may need to be modified to better hide the internals.
  */
 void build_general_board_status_msg(can_msg_prio_t prio, uint16_t timestamp,
-									uint32_t general_error_bitfield,
-									uint16_t board_specific_error_bitfield, can_msg_t *output);
+									uint32_t board_error_bitfield, can_msg_t *output);
 
 /*
  * Used to Reset a CAN board
@@ -39,8 +38,7 @@ void build_config_set_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t board
 void build_config_status_msg(can_msg_prio_t prio, uint16_t timestamp, uint16_t config_id,
 							 uint16_t config_value, can_msg_t *output);
 
-bool get_general_board_status(const can_msg_t *msg, uint32_t *general_error_bitfield,
-							  uint16_t *board_specific_error_bitfield);
+bool get_general_board_status(const can_msg_t *msg, uint32_t *board_error_bitfield);
 
 /*
  * Gets the board ID of the board to be reset

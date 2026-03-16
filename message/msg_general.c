@@ -10,19 +10,16 @@
 #include "msg_general.h"
 
 void build_general_board_status_msg(can_msg_prio_t prio, uint16_t timestamp,
-									uint32_t general_error_bitfield,
-									uint16_t board_specific_error_bitfield, can_msg_t *output) {
+									uint32_t board_error_bitfield, can_msg_t *output) {
 	w_assert(output);
 
 	output->sid = build_sid(prio, MSG_GENERAL_BOARD_STATUS, 0);
 	write_timestamp(timestamp, output);
-	output->data[2] = (general_error_bitfield >> 24) & 0xff;
-	output->data[3] = (general_error_bitfield >> 16) & 0xff;
-	output->data[4] = (general_error_bitfield >> 8) & 0xff;
-	output->data[5] = general_error_bitfield & 0xff;
-	output->data[6] = (board_specific_error_bitfield >> 8) & 0xff;
-	output->data[7] = board_specific_error_bitfield & 0xff;
-	output->data_len = 8;
+	output->data[2] = (board_error_bitfield >> 24) & 0xff;
+	output->data[3] = (board_error_bitfield >> 16) & 0xff;
+	output->data[4] = (board_error_bitfield >> 8) & 0xff;
+	output->data[5] = board_error_bitfield & 0xff;
+	output->data_len = 6;
 }
 
 void build_reset_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t board_type_id,
@@ -78,17 +75,14 @@ void build_config_status_msg(can_msg_prio_t prio, uint16_t timestamp, uint16_t c
 	output->data_len = 6;
 }
 
-bool get_general_board_status(const can_msg_t *msg, uint32_t *general_error_bitfield,
-							  uint16_t *board_specific_error_bitfield) {
+bool get_general_board_status(const can_msg_t *msg, uint32_t *board_error_bitfield) {
 	w_assert(msg);
-	w_assert(general_error_bitfield);
-	w_assert(board_specific_error_bitfield);
+	w_assert(board_error_bitfield);
 
 	uint16_t msg_type = get_message_type(msg);
 	if (msg_type == MSG_GENERAL_BOARD_STATUS) {
-		*general_error_bitfield =
+		*board_error_bitfield =
 			(msg->data[2] << 24) | (msg->data[3] << 16) | (msg->data[4] << 8) | (msg->data[5]);
-		*board_specific_error_bitfield = (msg->data[6] << 8) | (msg->data[7]);
 		return true;
 	} else {
 		return false;
