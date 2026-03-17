@@ -76,8 +76,8 @@ public:
 		build_actuator_status_msg(prio_before,
 								  timestamp_before,
 								  actuator_id_before,
-								  actuator_curr_state_before,
 								  actuator_cmd_state_before,
+								  actuator_curr_state_before,
 								  &msg);
 
 		can_actuator_id_t actuator_id_extracted;
@@ -85,8 +85,8 @@ public:
 		can_actuator_state_t actuator_cmd_state_extracted;
 
 		actuator_id_extracted = static_cast<can_actuator_id_t>(msg.sid & 0xff);
-		actuator_curr_state_extracted = static_cast<can_actuator_state_t>(msg.data[2]);
-		actuator_cmd_state_extracted = static_cast<can_actuator_state_t>(msg.data[3]);
+		actuator_cmd_state_extracted = static_cast<can_actuator_state_t>(msg.data[2]);
+		actuator_curr_state_extracted = static_cast<can_actuator_state_t>(msg.data[3]);
 
 		rockettest_check_expr_true(msg.data_len == 4);
 		rockettest_check_expr_true(actuator_id_extracted == actuator_id_before);
