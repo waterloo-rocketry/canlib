@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 #ifndef ROCKETLIB_COMMON_H
 #define ROCKETLIB_COMMON_H
 
@@ -97,15 +99,39 @@ extern void rocketlib_assert_fail_c(const char *file, int line, const char *stat
 #endif
 
 /**
- * @brief Clamp a value between a lower and upper bound
+ * @brief Clamps a 32 bit unsigned integer between a lower and upper bound.
  *
  * @param x The value to clamp
  * @param lo The lower bound, inclusive
  * @param hi The upper bound, inclusive
- *
- * Note: This macro evaluates its arguments multiple times, so do NOT do clamp(x++, 0, 255)
- * to avoid incrementing x multiple times.
+ * @return The clamped value
  */
-#define CLAMP(x, lo, hi) (((x) < (lo)) ? (lo) : (((x) > (hi)) ? (hi) : (x)))
+static inline uint32_t clamp_uint32(uint32_t x, uint32_t lo, uint32_t hi) {
+	return (x < lo) ? lo : ((x > hi) ? hi : x);
+}
+
+/**
+ * @brief Clamps a 32 bit signed integer between a lower and upper bound.
+ *
+ * @param x The value to clamp
+ * @param lo The lower bound, inclusive
+ * @param hi The upper bound, inclusive
+ * @return The clamped value
+ */
+static inline int32_t clamp_int32(int32_t x, int32_t lo, int32_t hi) {
+	return (x < lo) ? lo : ((x > hi) ? hi : x);
+}
+
+/**
+ * @brief Clamps a 32 bit float between a lower and upper bound.
+ *
+ * @param x The value to clamp
+ * @param lo The lower bound, inclusive
+ * @param hi The upper bound, inclusive
+ * @return The clamped value
+ */
+static inline float clamp_float(float x, float lo, float hi) {
+	return (x < lo) ? lo : ((x > hi) ? hi : x);
+}
 
 #endif
