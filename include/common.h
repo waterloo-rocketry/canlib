@@ -96,4 +96,16 @@ extern void rocketlib_assert_fail_c(const char *file, int line, const char *stat
 
 #endif
 
+/**
+ * @brief Clamp a value between a lower and upper bound
+ *
+ * @param x The value to clamp
+ * @param lo The lower bound, inclusive
+ * @param hi The upper bound, inclusive
+ *
+ * Note: This macro evaluates its arguments multiple times, so do NOT do clamp(x++, 0, 255)
+ * to avoid incrementing x multiple times.
+ */
+#define CLAMP(x, lo, hi) (((x) < (lo)) ? (lo) : (((x) > (hi)) ? (hi) : (x)))
+
 #endif
