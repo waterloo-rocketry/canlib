@@ -1,7 +1,8 @@
-#include <stdint.h>
-
 #ifndef ROCKETLIB_COMMON_H
 #define ROCKETLIB_COMMON_H
+
+#include <stdint.h>
+#include "math.h"
 
 /// @brief Rocketlib major release number, shall be design cycle year
 #define ROCKETLIB_VERSION_MAJOR 2026
@@ -102,36 +103,54 @@ extern void rocketlib_assert_fail_c(const char *file, int line, const char *stat
  * @brief Clamps a 32 bit unsigned integer between a lower and upper bound.
  *
  * @param x The value to clamp
- * @param lo The lower bound, inclusive
- * @param hi The upper bound, inclusive
+ * @param low The lower bound, inclusive
+ * @param high The upper bound, inclusive
  * @return The clamped value
  */
-static inline uint32_t clamp_uint32(uint32_t x, uint32_t lo, uint32_t hi) {
-	return (x < lo) ? lo : ((x > hi) ? hi : x);
+static inline uint32_t value_clamp_uint32(uint32_t x, uint32_t low, uint32_t high) {
+	if (x < low) {
+		return low;
+	} else if (x > high) {
+		return high;
+	} else {
+		return x;
+	}
 }
 
 /**
  * @brief Clamps a 32 bit signed integer between a lower and upper bound.
  *
  * @param x The value to clamp
- * @param lo The lower bound, inclusive
- * @param hi The upper bound, inclusive
+ * @param low The lower bound, inclusive
+ * @param high The upper bound, inclusive
  * @return The clamped value
  */
-static inline int32_t clamp_int32(int32_t x, int32_t lo, int32_t hi) {
-	return (x < lo) ? lo : ((x > hi) ? hi : x);
+static inline int32_t value_clamp_int32(int32_t x, int32_t low, int32_t high) {
+	if (x < low) {
+		return low;
+	} else if (x > high) {
+		return high;
+	} else {
+		return x;
+	}
 }
 
 /**
  * @brief Clamps a 32 bit float between a lower and upper bound.
  *
  * @param x The value to clamp
- * @param lo The lower bound, inclusive
- * @param hi The upper bound, inclusive
+ * @param low The lower bound, inclusive
+ * @param high The upper bound, inclusive
  * @return The clamped value
  */
-static inline float clamp_float(float x, float lo, float hi) {
-	return (x < lo) ? lo : ((x > hi) ? hi : x);
+static inline float value_clamp_float(float x, float low, float high) {
+	if (x < low) {
+		return low;
+	} else if (x > high) {
+		return high;
+	} else {
+		return x;
+	}
 }
 
 #endif
