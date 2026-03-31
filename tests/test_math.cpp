@@ -7,8 +7,6 @@
 
 #include "rockettest.hpp"
 
-#include "common/math/math.h"
-
 class value_clamp_uint32_test : rockettest_test {
 public:
 	value_clamp_uint32_test() : rockettest_test("value_clamp_uint32_test") {}

@@ -2,7 +2,6 @@
 #define ROCKETLIB_COMMON_H
 
 #include <stdint.h>
-#include "math.h"
 
 /// @brief Rocketlib major release number, shall be design cycle year
 #define ROCKETLIB_VERSION_MAJOR 2026
