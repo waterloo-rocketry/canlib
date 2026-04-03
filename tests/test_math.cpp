@@ -4,6 +4,7 @@
 #include <limits>
 
 #include "common.h"
+#include "mathops.h"
 
 #include "rockettest.hpp"
 
@@ -93,35 +94,37 @@ public:
 	bool run_test() override {
 		bool test_passed = true;
 
-		printf("value_clamp_float: in-range and boundary behavior\n");
-		rockettest_check_expr_true(value_clamp_float(0.5f, -1.0f, 1.0f) == 0.5f);
-		rockettest_check_expr_true(value_clamp_float(-1.0f, -1.0f, 1.0f) == -1.0f);
-		rockettest_check_expr_true(value_clamp_float(1.0f, -1.0f, 1.0f) == 1.0f);
+		printf("value_clamp_float32: in-range and boundary behavior\n");
+		rockettest_check_expr_true(value_clamp_float32(0.5f, -1.0f, 1.0f) == 0.5f);
+		rockettest_check_expr_true(value_clamp_float32(-1.0f, -1.0f, 1.0f) == -1.0f);
+		rockettest_check_expr_true(value_clamp_float32(1.0f, -1.0f, 1.0f) == 1.0f);
 
-		printf("value_clamp_float: out-of-range behavior\n");
-		rockettest_check_expr_true(value_clamp_float(-2.0f, -1.0f, 1.0f) == -1.0f);
-		rockettest_check_expr_true(value_clamp_float(2.0f, -1.0f, 1.0f) == 1.0f);
+		printf("value_clamp_float32: out-of-range behavior\n");
+		rockettest_check_expr_true(value_clamp_float32(-2.0f, -1.0f, 1.0f) == -1.0f);
+		rockettest_check_expr_true(value_clamp_float32(2.0f, -1.0f, 1.0f) == 1.0f);
 
-		printf("value_clamp_float: finite extreme values\n");
+		printf("value_clamp_float32: finite extreme values\n");
 		rockettest_check_expr_true(
-			value_clamp_float(std::numeric_limits<float>::lowest(), -1.0f, 1.0f) == -1.0f);
+			value_clamp_float32(std::numeric_limits<float32_t>::lowest(), -1.0f, 1.0f) == -1.0f);
 		rockettest_check_expr_true(
-			value_clamp_float(std::numeric_limits<float>::max(), -1.0f, 1.0f) == 1.0f);
+			value_clamp_float32(std::numeric_limits<float32_t>::max(), -1.0f, 1.0f) == 1.0f);
 
-		printf("value_clamp_float: infinity behavior\n");
-		rockettest_check_expr_true(
-			value_clamp_float(-std::numeric_limits<float>::infinity(), -10.0f, 10.0f) == -10.0f);
-		rockettest_check_expr_true(
-			value_clamp_float(std::numeric_limits<float>::infinity(), -10.0f, 10.0f) == 10.0f);
+		printf("value_clamp_float32: infinity behavior\n");
+		rockettest_check_expr_true(value_clamp_float32(-std::numeric_limits<float32_t>::infinity(),
+													   -10.0f,
+													   10.0f) == -10.0f);
+		rockettest_check_expr_true(value_clamp_float32(std::numeric_limits<float32_t>::infinity(),
+													   -10.0f,
+													   10.0f) == 10.0f);
 
-		printf("value_clamp_float: NaN behavior\n");
-		const float nan_value = std::numeric_limits<float>::quiet_NaN();
-		rockettest_check_expr_true(std::isnan(value_clamp_float(nan_value, -1.0f, 1.0f)));
+		printf("value_clamp_float32: NaN behavior\n");
+		const float32_t nan_value = std::numeric_limits<float32_t>::quiet_NaN();
+		rockettest_check_expr_true(std::isnan(value_clamp_float32(nan_value, -1.0f, 1.0f)));
 
-		printf("value_clamp_float: interval with zero width\n");
-		rockettest_check_expr_true(value_clamp_float(-5.0f, 3.5f, 3.5f) == 3.5f);
-		rockettest_check_expr_true(value_clamp_float(3.5f, 3.5f, 3.5f) == 3.5f);
-		rockettest_check_expr_true(value_clamp_float(9.0f, 3.5f, 3.5f) == 3.5f);
+		printf("value_clamp_float32: interval with zero width\n");
+		rockettest_check_expr_true(value_clamp_float32(-5.0f, 3.5f, 3.5f) == 3.5f);
+		rockettest_check_expr_true(value_clamp_float32(3.5f, 3.5f, 3.5f) == 3.5f);
+		rockettest_check_expr_true(value_clamp_float32(9.0f, 3.5f, 3.5f) == 3.5f);
 
 		return test_passed;
 	}
