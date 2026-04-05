@@ -87,9 +87,9 @@ public:
 
 value_clamp_int32_test value_clamp_int32_test_inst;
 
-class value_clamp_float_test : rockettest_test {
+class value_clamp_float32_test : rockettest_test {
 public:
-	value_clamp_float_test() : rockettest_test("value_clamp_float_test") {}
+	value_clamp_float32_test() : rockettest_test("value_clamp_float32_test") {}
 
 	bool run_test() override {
 		bool test_passed = true;
@@ -130,4 +130,4 @@ public:
 	}
 };
 
-value_clamp_float_test value_clamp_float_test_inst;
+value_clamp_float32_test value_clamp_float32_test_inst;

@@ -1,5 +1,5 @@
-#ifndef MATHOPS_H
-#define MATHOPS_H
+#ifndef ROCKETLIB_MATHOPS_H
+#define ROCKETLIB_MATHOPS_H
 
 #include <stdint.h>
 
