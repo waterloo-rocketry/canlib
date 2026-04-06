@@ -7,6 +7,20 @@
 /// @brief Rocketlib minor release number, shall be the Nth release of the design cycle
 #define ROCKETLIB_VERSION_MINOR 1
 
+typedef float float32_t;
+typedef double float64_t;
+
+#ifdef __cplusplus
+#define STATIC_ASSERT(expr, msg) static_assert((expr), msg);
+#elif defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 201112L)
+#define STATIC_ASSERT(expr, msg) _Static_assert((expr), msg);
+#else
+#define STATIC_ASSERT(expr, msg)
+#endif
+
+STATIC_ASSERT(sizeof(float32_t) == 4, "float32_t must be 32 bits")
+STATIC_ASSERT(sizeof(float64_t) == 8, "float64_t must be 64 bits")
+
 /// @brief Standard error code
 typedef enum {
 	/// @brief Success
