@@ -8,7 +8,7 @@
 #include "msg_common.h"
 #include "msg_recovery.h"
 
-bool build_alt_arm_cmd_msg(can_msg_prio_t prio, uint16_t timestamp, can_altimeter_id_t alt_id,
+void build_alt_arm_cmd_msg(can_msg_prio_t prio, uint16_t timestamp, can_altimeter_id_t alt_id,
 						   can_alt_arm_state_t arm_cmd, can_msg_t *output) {
 	w_assert(output);
 
@@ -17,11 +17,9 @@ bool build_alt_arm_cmd_msg(can_msg_prio_t prio, uint16_t timestamp, can_altimete
 
 	output->data[2] = arm_cmd;
 	output->data_len = 3;
-
-	return true;
 }
 
-bool build_alt_arm_status_msg(can_msg_prio_t prio, uint16_t timestamp, can_altimeter_id_t alt_id,
+void build_alt_arm_status_msg(can_msg_prio_t prio, uint16_t timestamp, can_altimeter_id_t alt_id,
 							  can_alt_arm_state_t arm_state, uint16_t v_drogue, uint16_t v_main,
 							  can_msg_t *output) {
 	w_assert(output);
@@ -38,8 +36,6 @@ bool build_alt_arm_status_msg(can_msg_prio_t prio, uint16_t timestamp, can_altim
 	output->data[6] = v_main & 0x00FF; // 8 lsb
 
 	output->data_len = 7;
-
-	return true;
 }
 
 bool get_alt_arm_state(const can_msg_t *msg, can_altimeter_id_t *alt_id,
