@@ -15,7 +15,7 @@ extern "C" {
  * Used to format GPS timestamp data. Data arguments: UTC time in hours,
  * minutes, seconds, and deci-seconds.
  */
-bool build_gps_time_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t utc_hours,
+void build_gps_time_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t utc_hours,
 						uint8_t utc_mins, uint8_t utc_secs, uint8_t utc_dsecs, can_msg_t *output);
 
 /*
@@ -23,7 +23,7 @@ bool build_gps_time_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t utc_hou
  * direction. The minute value is split into integral and decimal parts.
  * Direction is either 'N' or 'S'
  */
-bool build_gps_lat_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t degrees, uint8_t minutes,
+void build_gps_lat_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t degrees, uint8_t minutes,
 					   uint16_t dminutes, uint8_t direction, can_msg_t *output);
 
 /*
@@ -31,21 +31,21 @@ bool build_gps_lat_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t degrees,
  * direction. The minute value is split into integral and decimal parts.
  * Direction is either 'E' or 'W'
  */
-bool build_gps_lon_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t degrees, uint8_t minutes,
+void build_gps_lon_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t degrees, uint8_t minutes,
 					   uint16_t dminutes, uint8_t direction, can_msg_t *output);
 
 /*
  * Used to send GPS altitude data. Altitude is broken into integral
  * and decimal parts. Units are either 'M' (metres) or 'F' (feet).
  */
-bool build_gps_alt_msg(can_msg_prio_t prio, uint16_t timestamp, uint16_t altitude,
+void build_gps_alt_msg(can_msg_prio_t prio, uint16_t timestamp, uint16_t altitude,
 					   uint8_t daltitude, uint8_t units, can_msg_t *output);
 
 /*
  * Used to send general GPS info. Currently sends the number of
  * satellites used to obtain a reading and the quality indicator.
  */
-bool build_gps_info_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t num_sat, uint8_t quality,
+void build_gps_info_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t num_sat, uint8_t quality,
 						can_msg_t *output);
 
 /*

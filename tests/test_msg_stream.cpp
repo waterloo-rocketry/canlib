@@ -28,8 +28,7 @@ public:
 		std::uint32_t total_size = rockettest_rand_field<std::uint32_t, kMax24BitValue>();
 		std::uint32_t tx_size = rockettest_rand_field<std::uint32_t, kMax24BitValue>();
 
-		bool build_result = build_stream_status_msg(prio, timestamp, total_size, tx_size, &msg);
-		rockettest_check_expr_true(build_result);
+		build_stream_status_msg(prio, timestamp, total_size, tx_size, &msg);
 		rockettest_check_expr_true(msg.sid == build_sid(prio, MSG_STREAM_STATUS, 0));
 		rockettest_check_expr_true(msg.data_len == 8);
 
@@ -39,14 +38,6 @@ public:
 		rockettest_check_expr_true(parsed);
 		rockettest_check_expr_true(total_size_out == total_size);
 		rockettest_check_expr_true(tx_size_out == tx_size);
-
-		bool oversized_total =
-			build_stream_status_msg(prio, timestamp, kMax24BitValue + 1u, tx_size, &msg);
-		rockettest_check_expr_true(oversized_total == false);
-
-		bool oversized_tx =
-			build_stream_status_msg(prio, timestamp, total_size, kMax24BitValue + 1u, &msg);
-		rockettest_check_expr_true(oversized_tx == false);
 
 		can_msg_t invalid_msg = msg;
 		invalid_msg.sid = build_sid(prio, MSG_STREAM_DATA, 0);
@@ -77,9 +68,7 @@ public:
 			payload[i] = rockettest_rand_field<std::uint8_t>();
 		}
 
-		bool build_result =
-			build_stream_data_msg(prio, timestamp, seq_id, payload, payload_len, &msg);
-		rockettest_check_expr_true(build_result);
+		build_stream_data_msg(prio, timestamp, seq_id, payload, payload_len, &msg);
 		rockettest_check_expr_true(msg.sid == build_sid(prio, MSG_STREAM_DATA, seq_id));
 		rockettest_check_expr_true(msg.data_len == static_cast<std::uint8_t>(payload_len + 2));
 		rockettest_check_expr_true((msg.sid & 0xff) == seq_id);
@@ -94,11 +83,6 @@ public:
 		rockettest_check_expr_true(seq_id_out == seq_id);
 		rockettest_check_expr_true(payload_len_out == payload_len);
 		rockettest_check_expr_true(std::memcmp(payload_out, payload, payload_len) == 0);
-
-		std::uint8_t overflow_payload[STREAM_DATA_MAX_PAYLOAD_LEN + 1] = {};
-		bool overflow_result = build_stream_data_msg(
-			prio, timestamp, seq_id, overflow_payload, STREAM_DATA_MAX_PAYLOAD_LEN + 1, &msg);
-		rockettest_check_expr_true(overflow_result == false);
 
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.sid = build_sid(prio, MSG_STREAM_DATA, seq_id);
@@ -133,8 +117,7 @@ public:
 		std::uint16_t timestamp = rockettest_rand_field<std::uint16_t>();
 		std::uint8_t seq_id = rockettest_rand_field<std::uint8_t, 0xff>();
 
-		bool build_result = build_stream_retry_msg(prio, timestamp, seq_id, &msg);
-		rockettest_check_expr_true(build_result);
+		build_stream_retry_msg(prio, timestamp, seq_id, &msg);
 		rockettest_check_expr_true(msg.sid == build_sid(prio, MSG_STREAM_RETRY, seq_id));
 		rockettest_check_expr_true(msg.data_len == 2);
 		rockettest_check_expr_true((msg.sid & 0xff) == seq_id);
