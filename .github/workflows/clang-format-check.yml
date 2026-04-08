@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: 'true'
       - name: Install clang-format 21
@@ -21,7 +21,7 @@ jobs:
           chmod +x llvm.sh
           sudo ./llvm.sh 21
           sudo apt install clang-format-21
-      - name: Run lint check
-        id: run-lint
+      - name: Run format check
+        id: run-format-check
         shell: bash
         run: make format-check CLANG_FORMAT=clang-format-21
