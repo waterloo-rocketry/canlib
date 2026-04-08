@@ -99,7 +99,7 @@ bool get_analog_sensor_data_16bit(const can_msg_t *msg, can_analog_sensor_id_t *
 		return false;
 	}
 
-	*sensor_id = get_message_metadata(msg);
+	*sensor_id = (can_analog_sensor_id_t)get_message_metadata(msg);
 	*output_data = ((uint16_t)msg->data[2] << 8) | msg->data[3];
 
 	return true;
@@ -115,7 +115,7 @@ bool get_analog_sensor_data_32bit(const can_msg_t *msg, can_analog_sensor_id_t *
 		return false;
 	}
 
-	*sensor_id = get_message_metadata(msg);
+	*sensor_id = (can_analog_sensor_id_t)get_message_metadata(msg);
 	*output_data = ((uint32_t)msg->data[2] << 24) | ((uint32_t)msg->data[3] << 16) |
 				   ((uint32_t)msg->data[4] << 8) | msg->data[5];
 
@@ -135,7 +135,7 @@ bool get_3d_analog_sensor_data_16bit(const can_msg_t *msg, can_dem_3d_sensor_id_
 		return false;
 	}
 
-	*sensor_id = get_message_metadata(msg);
+	*sensor_id = (can_dem_3d_sensor_id_t)get_message_metadata(msg);
 	*output_data_x = ((uint16_t)msg->data[2] << 8) | msg->data[3];
 	*output_data_y = ((uint16_t)msg->data[4] << 8) | msg->data[5];
 	*output_data_z = ((uint16_t)msg->data[6] << 8) | msg->data[7];
@@ -154,7 +154,7 @@ bool get_2d_analog_sensor_data_24bit(const can_msg_t *msg, can_dem_2d_sensor_id_
 		return false;
 	}
 
-	*sensor_id = get_message_metadata(msg);
+	*sensor_id = (can_dem_2d_sensor_id_t)get_message_metadata(msg);
 	*sensor_data_x = ((uint32_t)msg->data[2] << 16) | ((uint32_t)msg->data[3] << 8) | msg->data[4];
 	*sensor_data_y = ((uint32_t)msg->data[5] << 16) | ((uint32_t)msg->data[6] << 8) | msg->data[7];
 
