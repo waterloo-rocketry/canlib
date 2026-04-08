@@ -48,8 +48,8 @@ bool get_alt_arm_state(const can_msg_t *msg, can_altimeter_id_t *alt_id,
 		(get_message_type(msg) != MSG_ALT_ARM_STATUS)) {
 		return false;
 	}
-	*alt_id = get_message_metadata(msg);
-	*arm_state = msg->data[2];
+	*alt_id = (can_altimeter_id_t)get_message_metadata(msg);
+	*arm_state = (can_alt_arm_state_t)msg->data[2];
 
 	return true;
 }
