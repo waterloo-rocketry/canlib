@@ -3,6 +3,7 @@
 ###########################
 
 ENABLE_GCC_ANALYZER := 0
+ENABLE_SANITIZER := 0
 
 ###########################
 # Source File Path Variables
@@ -32,6 +33,11 @@ C_CXX_FLAGS += \
 	-DUNIT_TEST \
 	-O0 \
 	-g
+
+ifeq ($(ENABLE_SANITIZER), 1)
+	C_CXX_FLAGS += -fsanitize=undefined
+	LDFLAGS += -fsanitize=address,undefined
+endif
 
 ifeq ($(filter run-test,$(MAKECMDGOALS)),run-test)
 	BUILD_DIR := build/test
