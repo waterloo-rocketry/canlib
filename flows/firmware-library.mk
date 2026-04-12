@@ -1,4 +1,10 @@
 ###########################
+# User Configure Variable
+###########################
+
+ENABLE_GCC_ANALYZER := 0
+
+###########################
 # Source File Path Variables
 ###########################
 
@@ -51,6 +57,10 @@ CXXFLAGS := \
 	$(C_CXX_FLAGS) \
 	-std=c++20 \
 	-I$(ROCKETTEST_INCLUDE_PATH)
+
+ifeq ($(ENABLE_GCC_ANALYZER), 1)
+	CFLAGS += -fanalyzer
+endif
 
 #######################
 # XC8 Compile Variables
