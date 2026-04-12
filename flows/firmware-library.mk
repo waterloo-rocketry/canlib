@@ -23,13 +23,9 @@ C_CXX_FLAGS += \
 	-Wextra \
 	-pedantic \
 	-MMD \
-	-DUNIT_TEST
-
-ifeq ($(DEBUG), 1)
-C_CXX_FLAGS += -Og -g
-else
-C_CXX_FLAGS += -O2
-endif
+	-DUNIT_TEST \
+	-O0 \
+	-g
 
 ifeq ($(filter run-test,$(MAKECMDGOALS)),run-test)
 	BUILD_DIR := build/test
