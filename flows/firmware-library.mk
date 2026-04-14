@@ -1,4 +1,11 @@
 ###########################
+# User Configure Variable
+###########################
+
+ENABLE_GCC_ANALYZER := 0
+ENABLE_SANITIZER := 0
+
+###########################
 # Source File Path Variables
 ###########################
 
@@ -23,12 +30,13 @@ C_CXX_FLAGS += \
 	-Wextra \
 	-pedantic \
 	-MMD \
-	-DUNIT_TEST
+	-DUNIT_TEST \
+	-O0 \
+	-g
 
-ifeq ($(DEBUG), 1)
-C_CXX_FLAGS += -Og -g
-else
-C_CXX_FLAGS += -O2
+ifeq ($(ENABLE_SANITIZER), 1)
+	C_CXX_FLAGS += -fsanitize=undefined
+	LDFLAGS += -fsanitize=address,undefined
 endif
 
 ifeq ($(filter run-test,$(MAKECMDGOALS)),run-test)
@@ -55,6 +63,10 @@ CXXFLAGS := \
 	$(C_CXX_FLAGS) \
 	-std=c++20 \
 	-I$(ROCKETTEST_INCLUDE_PATH)
+
+ifeq ($(ENABLE_GCC_ANALYZER), 1)
+	CFLAGS += -fanalyzer
+endif
 
 #######################
 # XC8 Compile Variables
