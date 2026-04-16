@@ -39,24 +39,22 @@ public:
 		rockettest_check_assert_triggered([] { write_timestamp(0, nullptr); });
 		rockettest_check_assert_triggered([] { get_timestamp(nullptr); });
 
-		constexpr can_msg_prio_t dummy_prio = static_cast<can_msg_prio_t>(0);
-
 		// -----------------------
 		// msg_actuator tests
 		// -----------------------
 		rockettest_check_assert_triggered([] {
-			build_actuator_cmd_msg(dummy_prio,
+			build_actuator_cmd_msg(rockettest_rand_field<can_msg_prio_t, 0x3>(),
 								   0,
-								   static_cast<can_actuator_id_t>(0),
-								   static_cast<can_actuator_state_t>(0),
+								   rockettest_rand_field<can_actuator_id_t, 0xff>(),
+								   rockettest_rand_field<can_actuator_state_t, 0xff>(),
 								   nullptr);
 		});
 		rockettest_check_assert_triggered([] {
-			build_actuator_status_msg(dummy_prio,
+			build_actuator_status_msg(rockettest_rand_field<can_msg_prio_t, 0x3>(),
 									  0,
-									  static_cast<can_actuator_id_t>(0),
-									  static_cast<can_actuator_state_t>(0),
-									  static_cast<can_actuator_state_t>(0),
+									  rockettest_rand_field<can_actuator_id_t, 0xff>(),
+									  rockettest_rand_field<can_actuator_state_t, 0xff>(),
+									  rockettest_rand_field<can_actuator_state_t, 0xff>(),
 									  nullptr);
 		});
 		rockettest_check_assert_triggered([] { get_actuator_id(nullptr); });
@@ -66,20 +64,31 @@ public:
 		// -----------------------
 		// msg_general tests
 		// -----------------------
-		rockettest_check_assert_triggered(
-			[] { build_general_board_status_msg(dummy_prio, 0, 0, nullptr); });
+		rockettest_check_assert_triggered([] {
+			build_general_board_status_msg(
+				rockettest_rand_field<can_msg_prio_t, 0x3>(), 0, 0, nullptr);
+		});
 
-		rockettest_check_assert_triggered([] { build_reset_msg(dummy_prio, 0, 0, 0, nullptr); });
+		rockettest_check_assert_triggered([] {
+			build_reset_msg(rockettest_rand_field<can_msg_prio_t, 0x3>(), 0, 0, 0, nullptr);
+		});
 
-		rockettest_check_assert_triggered(
-			[] { build_debug_raw_msg(dummy_prio, 0, nullptr, notnullptr<can_msg_t>()); });
-		rockettest_check_assert_triggered(
-			[] { build_debug_raw_msg(dummy_prio, 0, notnullptr<uint8_t>(), nullptr); });
-		rockettest_check_assert_triggered(
-			[] { build_debug_raw_msg(dummy_prio, 0, nullptr, nullptr); });
+		rockettest_check_assert_triggered([] {
+			build_debug_raw_msg(
+				rockettest_rand_field<can_msg_prio_t, 0x3>(), 0, nullptr, notnullptr<can_msg_t>());
+		});
+		rockettest_check_assert_triggered([] {
+			build_debug_raw_msg(
+				rockettest_rand_field<can_msg_prio_t, 0x3>(), 0, notnullptr<uint8_t>(), nullptr);
+		});
+		rockettest_check_assert_triggered([] {
+			build_debug_raw_msg(rockettest_rand_field<can_msg_prio_t, 0x3>(), 0, nullptr, nullptr);
+		});
 
-		rockettest_check_assert_triggered(
-			[] { build_config_set_msg(dummy_prio, 0, 0, 0, 0, 0, nullptr); });
+		rockettest_check_assert_triggered([] {
+			build_config_set_msg(
+				rockettest_rand_field<can_msg_prio_t, 0x3>(), 0, 0, 0, 0, 0, nullptr);
+		});
 
 		rockettest_check_assert_triggered(
 			[] { get_general_board_status(nullptr, notnullptr<uint32_t>()); });
@@ -126,15 +135,22 @@ public:
 		// -----------------------
 		// msg_gps tests
 		// -----------------------
-		rockettest_check_assert_triggered(
-			[] { build_gps_time_msg(dummy_prio, 0, 0, 0, 0, 0, nullptr); });
-		rockettest_check_assert_triggered(
-			[] { build_gps_lat_msg(dummy_prio, 0, 0, 0, 0, 0, nullptr); });
-		rockettest_check_assert_triggered(
-			[] { build_gps_lon_msg(dummy_prio, 0, 0, 0, 0, 0, nullptr); });
-		rockettest_check_assert_triggered(
-			[] { build_gps_alt_msg(dummy_prio, 0, 0, 0, 0, nullptr); });
-		rockettest_check_assert_triggered([] { build_gps_info_msg(dummy_prio, 0, 0, 0, nullptr); });
+		rockettest_check_assert_triggered([] {
+			build_gps_time_msg(
+				rockettest_rand_field<can_msg_prio_t, 0x3>(), 0, 0, 0, 0, 0, nullptr);
+		});
+		rockettest_check_assert_triggered([] {
+			build_gps_lat_msg(rockettest_rand_field<can_msg_prio_t, 0x3>(), 0, 0, 0, 0, 0, nullptr);
+		});
+		rockettest_check_assert_triggered([] {
+			build_gps_lon_msg(rockettest_rand_field<can_msg_prio_t, 0x3>(), 0, 0, 0, 0, 0, nullptr);
+		});
+		rockettest_check_assert_triggered([] {
+			build_gps_alt_msg(rockettest_rand_field<can_msg_prio_t, 0x3>(), 0, 0, 0, 0, nullptr);
+		});
+		rockettest_check_assert_triggered([] {
+			build_gps_info_msg(rockettest_rand_field<can_msg_prio_t, 0x3>(), 0, 0, 0, nullptr);
+		});
 
 		rockettest_check_assert_triggered([] {
 			get_gps_time(nullptr,
@@ -283,18 +299,18 @@ public:
 		// msg_recovery tests
 		// -----------------------
 		rockettest_check_assert_triggered([] {
-			build_alt_arm_cmd_msg(dummy_prio,
+			build_alt_arm_cmd_msg(rockettest_rand_field<can_msg_prio_t, 0x3>(),
 								  0,
-								  static_cast<can_altimeter_id_t>(0),
-								  static_cast<can_alt_arm_state_t>(0),
+								  rockettest_rand_field<can_altimeter_id_t, 0xff>(),
+								  rockettest_rand_field<can_alt_arm_state_t, 0xff>(),
 								  nullptr);
 		});
 
 		rockettest_check_assert_triggered([] {
-			build_alt_arm_status_msg(dummy_prio,
+			build_alt_arm_status_msg(rockettest_rand_field<can_msg_prio_t, 0x3>(),
 									 0,
-									 static_cast<can_altimeter_id_t>(0),
-									 static_cast<can_alt_arm_state_t>(0),
+									 rockettest_rand_field<can_altimeter_id_t, 0xff>(),
+									 rockettest_rand_field<can_alt_arm_state_t, 0xff>(),
 									 0,
 									 0,
 									 nullptr);
@@ -326,20 +342,35 @@ public:
 		// msg_sensor tests
 		// -----------------------
 		rockettest_check_assert_triggered([] {
-			build_analog_sensor_16bit_msg(
-				dummy_prio, 0, static_cast<can_analog_sensor_id_t>(0), 0, nullptr);
+			build_analog_sensor_16bit_msg(rockettest_rand_field<can_msg_prio_t, 0x3>(),
+										  0,
+										  rockettest_rand_field<can_analog_sensor_id_t, 0xff>(),
+										  0,
+										  nullptr);
 		});
 		rockettest_check_assert_triggered([] {
-			build_analog_sensor_32bit_msg(
-				dummy_prio, 0, static_cast<can_analog_sensor_id_t>(0), 0, nullptr);
+			build_analog_sensor_32bit_msg(rockettest_rand_field<can_msg_prio_t, 0x3>(),
+										  0,
+										  rockettest_rand_field<can_analog_sensor_id_t, 0xff>(),
+										  0,
+										  nullptr);
 		});
 		rockettest_check_assert_triggered([] {
-			build_3d_analog_sensor_16bit_msg(
-				dummy_prio, 0, static_cast<can_dem_3d_sensor_id_t>(0), 0, 0, 0, nullptr);
+			build_3d_analog_sensor_16bit_msg(rockettest_rand_field<can_msg_prio_t, 0x3>(),
+											 0,
+											 rockettest_rand_field<can_dem_3d_sensor_id_t, 0xff>(),
+											 0,
+											 0,
+											 0,
+											 nullptr);
 		});
 		rockettest_check_assert_triggered([] {
-			build_2d_analog_sensor_24bit_msg(
-				dummy_prio, 0, static_cast<can_dem_2d_sensor_id_t>(0), 0, 0, nullptr);
+			build_2d_analog_sensor_24bit_msg(rockettest_rand_field<can_msg_prio_t, 0x3>(),
+											 0,
+											 rockettest_rand_field<can_dem_2d_sensor_id_t, 0xff>(),
+											 0,
+											 0,
+											 nullptr);
 		});
 
 		rockettest_check_assert_triggered([] { msg_is_analog_sensor(nullptr); });
@@ -438,18 +469,34 @@ public:
 		// -----------------------
 		// msg_stream tests
 		// -----------------------
-		rockettest_check_assert_triggered(
-			[] { build_stream_status_msg(dummy_prio, 0, 0, 0, nullptr); });
+		rockettest_check_assert_triggered([] {
+			build_stream_status_msg(rockettest_rand_field<can_msg_prio_t, 0x3>(), 0, 0, 0, nullptr);
+		});
 
-		rockettest_check_assert_triggered(
-			[] { build_stream_data_msg(dummy_prio, 0, 0, nullptr, 0, notnullptr<can_msg_t>()); });
-		rockettest_check_assert_triggered(
-			[] { build_stream_data_msg(dummy_prio, 0, 0, notnullptr<uint8_t>(), 0, nullptr); });
-		rockettest_check_assert_triggered(
-			[] { build_stream_data_msg(dummy_prio, 0, 0, nullptr, 0, nullptr); });
+		rockettest_check_assert_triggered([] {
+			build_stream_data_msg(rockettest_rand_field<can_msg_prio_t, 0x3>(),
+								  0,
+								  0,
+								  nullptr,
+								  0,
+								  notnullptr<can_msg_t>());
+		});
+		rockettest_check_assert_triggered([] {
+			build_stream_data_msg(rockettest_rand_field<can_msg_prio_t, 0x3>(),
+								  0,
+								  0,
+								  notnullptr<uint8_t>(),
+								  0,
+								  nullptr);
+		});
+		rockettest_check_assert_triggered([] {
+			build_stream_data_msg(
+				rockettest_rand_field<can_msg_prio_t, 0x3>(), 0, 0, nullptr, 0, nullptr);
+		});
 
-		rockettest_check_assert_triggered(
-			[] { build_stream_retry_msg(dummy_prio, 0, 0, nullptr); });
+		rockettest_check_assert_triggered([] {
+			build_stream_retry_msg(rockettest_rand_field<can_msg_prio_t, 0x3>(), 0, 0, nullptr);
+		});
 
 		rockettest_check_assert_triggered(
 			[] { get_stream_status(nullptr, notnullptr<uint32_t>(), notnullptr<uint32_t>()); });
