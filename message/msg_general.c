@@ -35,6 +35,7 @@ void build_reset_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t board_type
 
 void build_debug_raw_msg(can_msg_prio_t prio, uint16_t timestamp, const uint8_t *data,
 						 can_msg_t *output) {
+	w_assert(data);
 	w_assert(output);
 
 	output->sid = build_sid(prio, MSG_DEBUG_RAW, 0);
