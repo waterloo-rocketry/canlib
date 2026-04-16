@@ -148,7 +148,7 @@ bool get_2d_analog_sensor_data_24bit(const can_msg_t *msg, can_dem_2d_sensor_id_
 	w_assert(msg);
 	w_assert(sensor_id);
 	w_assert(sensor_data_x);
-	w_assert(sensor_data_x);
+	w_assert(sensor_data_y);
 
 	if (get_message_type(msg) != MSG_SENSOR_2D_ANALOG24) {
 		return false;
