@@ -21,6 +21,7 @@ public:
 		// Example first sector
 		uint8_t first_sector[512] = {0};
 		uint8_t *entry = first_sector + 0x1BE;
+		uint8_t *boot_signature = first_sector + 0x1FE;
 
 		entry[0] = 0x80; // boot flag
 		entry[4] = partition_type; // partition type
@@ -30,11 +31,21 @@ public:
 		entry[10] = 0x11;
 		entry[11] = 0x00; // LBA high byte
 
-		// Test with invalid boot signature
+		// Test with invalid both bytes of boot signature
 		rockettest_check_expr_true(mbr_parse(first_sector, partition_type, &sector_lba) ==
 								   W_FAILURE);
 
-		uint8_t *boot_signature = first_sector + 0x1FE;
+		boot_signature[1] = 0xAA;
+		// Test with invalid first byte of boot signature
+		rockettest_check_expr_true(mbr_parse(first_sector, partition_type, &sector_lba) ==
+								   W_FAILURE);
+
+		boot_signature[0] = 0x55;
+		boot_signature[1] = 0x00;
+		// Test with invalid second byte of boot signature
+		rockettest_check_expr_true(mbr_parse(first_sector, partition_type, &sector_lba) ==
+								   W_FAILURE);
+
 		boot_signature[0] = 0x55;
 		boot_signature[1] = 0xAA;
 
