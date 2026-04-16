@@ -36,7 +36,9 @@ typedef enum {
 	/// @brief Math error, for example divide by zero
 	W_MATH_ERROR,
 	/// @brief Buffer overflow, for example trying to write to a full FIFO
-	W_OVERFLOW
+	W_OVERFLOW,
+	/// @brief Data format error, for example input is a malformed CAN packet
+	W_DATA_FORMAT_ERROR
 } w_status_t;
 
 #ifndef UNIT_TEST
