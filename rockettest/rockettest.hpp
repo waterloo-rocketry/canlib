@@ -8,6 +8,10 @@
 #include <map>
 #include <string>
 
+/**
+ * Base functionality
+ */
+
 #define CONSOLE_COLOUR_RESET "\033[0m"
 #define CONSOLE_COLOUR_RED "\033[1;31m"
 #define CONSOLE_COLOUR_GREEN "\033[1;32m"
@@ -28,16 +32,6 @@
 		test_passed = false;                                                                       \
 	}
 
-template <typename T, std::uint32_t mask = 0xffffffff> T rockettest_rand_field() {
-	return static_cast<T>(std::rand() & mask);
-}
-
-// Generate a random number in [min,max)
-template <typename T> T rockettest_rand_range(T min, T max) {
-	return static_cast<T>((std::rand() % (static_cast<int>(max) - static_cast<int>(min))) +
-						  static_cast<int>(min));
-}
-
 class rockettest_test {
 	const char *name;
 
@@ -53,5 +47,31 @@ public:
 };
 
 bool rockettest_check_assert_sjlj(std::function<void(void)> funccall);
+
+/**
+ * Random Number Generation
+ */
+
+template <typename T, std::uint32_t mask = 0xffffffff> T rockettest_rand_field() {
+	return static_cast<T>(std::rand() & mask);
+}
+
+template <typename T, std::uint32_t mask = 0xffffffff>
+T rockettest_rand_field_with_exclude(T exclude) {
+	T rn = static_cast<T>(std::rand() & mask);
+	return rn;
+}
+
+// Generate a random number in [min,max)
+template <typename T> T rockettest_rand_range(T min, T max) {
+	return static_cast<T>((std::rand() % (static_cast<int>(max) - static_cast<int>(min))) +
+						  static_cast<int>(min));
+}
+
+template <typename T> T rockettest_rand_range_with_exclude(T min, T max, T exclude) {
+	T rn = static_cast<T>((std::rand() % (static_cast<int>(max) - static_cast<int>(min))) +
+						  static_cast<int>(min));
+	return rn;
+}
 
 #endif
