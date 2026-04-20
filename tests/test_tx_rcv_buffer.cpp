@@ -48,7 +48,7 @@ public:
 				// Generate a random can message
 				can_msg_t msg;
 				msg.sid = rockettest_rand_field<can_sid_t, 0x1fffffff>();
-				msg.data_len = rockettest_rand_field<uint8_t, 0xf>(); // 0 to 15
+				msg.data_len = rockettest_rand_field<std::uint8_t, 0xf>(); // 0 to 15
 				if (msg.data_len > 8) {
 					msg.data_len = 8;
 				}
@@ -146,6 +146,8 @@ public:
 					}
 
 					ref_buffer.pop();
+				} else {
+					rockettest_check_expr_true(rcvb_is_empty());
 				}
 			}
 
@@ -158,6 +160,8 @@ public:
 					for (std::uint8_t i = 0; i < msg.data_len; i++) {
 						rockettest_check_expr_true(msg.data[i] == ref_buffer.front().data[i]);
 					}
+				} else {
+					rockettest_check_expr_true(rcvb_is_empty());
 				}
 			}
 
