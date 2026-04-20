@@ -59,6 +59,9 @@ template <typename T, std::uint32_t mask = 0xffffffff> T rockettest_rand_field()
 template <typename T, std::uint32_t mask = 0xffffffff>
 T rockettest_rand_field_with_exclude(T exclude) {
 	T rn = static_cast<T>(std::rand() & mask);
+	if (rn == exclude) {
+		rn = (rn + 1) & mask;
+	}
 	return rn;
 }
 
@@ -71,6 +74,12 @@ template <typename T> T rockettest_rand_range(T min, T max) {
 template <typename T> T rockettest_rand_range_with_exclude(T min, T max, T exclude) {
 	T rn = static_cast<T>((std::rand() % (static_cast<int>(max) - static_cast<int>(min))) +
 						  static_cast<int>(min));
+	if (rn == exclude) {
+		rn += 1;
+		if (rn == max) {
+			rn = min;
+		}
+	}
 	return rn;
 }
 
