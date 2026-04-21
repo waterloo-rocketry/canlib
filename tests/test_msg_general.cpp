@@ -1,5 +1,6 @@
 #include <cstdint>
 
+#include "common.h"
 #include "rockettest.hpp"
 
 #include "can.h"
@@ -41,7 +42,8 @@ public:
 
 		type_after = get_message_type(&msg);
 		timestamp_after = get_timestamp(&msg);
-		get_general_board_status(&msg, &board_error_bitfield_after);
+		rockettest_check_expr_true(get_general_board_status(&msg, &board_error_bitfield_after) ==
+								   W_SUCCESS);
 
 		rockettest_check_expr_true(type_after == MSG_GENERAL_BOARD_STATUS);
 		rockettest_check_expr_true(timestamp_after == timestamp_before);

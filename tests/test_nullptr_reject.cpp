@@ -104,7 +104,7 @@ public:
 			[] { get_reset_board_id(notnullptr<can_msg_t>(), notnullptr<uint8_t>(), nullptr); });
 		rockettest_check_assert_triggered([] { get_reset_board_id(nullptr, nullptr, nullptr); });
 
-		rockettest_check_assert_triggered([] { check_board_need_reset(nullptr); });
+		rockettest_check_assert_triggered([] { check_board_need_reset(nullptr, nullptr); });
 
 		rockettest_check_assert_triggered(
 			[] { get_debug_raw_data(nullptr, notnullptr<uint8_t>()); });
