@@ -63,8 +63,7 @@ void build_gps_alt_msg(can_msg_prio_t prio, uint16_t timestamp, uint32_t altitud
 	write_timestamp(timestamp, output);
 
 	output->data[2] = (altitude >> 24) & 0xff;
-	output->data[2] = (altitude >> 16) & 0xff;
-	output->data[3] = (altitude >> 8) & 0xff;
+	output->data[3] = (altitude >> 16) & 0xff;
 	output->data[4] = (altitude >> 8) & 0xff;
 	output->data[5] = altitude;
 	output->data[6] = daltitude;
