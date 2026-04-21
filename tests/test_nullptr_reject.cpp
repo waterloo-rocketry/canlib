@@ -57,9 +57,9 @@ public:
 									  rockettest_rand_field<can_actuator_state_t, 0xff>(),
 									  nullptr);
 		});
-		rockettest_check_assert_triggered([] { get_actuator_id(nullptr); });
-		rockettest_check_assert_triggered([] { get_curr_actuator_state(nullptr); });
-		rockettest_check_assert_triggered([] { get_cmd_actuator_state(nullptr); });
+		rockettest_check_assert_triggered([] { get_actuator_id(nullptr, nullptr); });
+		rockettest_check_assert_triggered([] { get_curr_actuator_state(nullptr, nullptr); });
+		rockettest_check_assert_triggered([] { get_cmd_actuator_state(nullptr, nullptr); });
 
 		// -----------------------
 		// msg_general tests
