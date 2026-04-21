@@ -89,74 +89,90 @@ bool msg_is_analog_sensor(const can_msg_t *msg) {
 	}
 }
 
-bool get_analog_sensor_data_16bit(const can_msg_t *msg, can_analog_sensor_id_t *sensor_id,
-								  uint16_t *output_data) {
+w_status_t get_analog_sensor_data_16bit(const can_msg_t *msg, can_analog_sensor_id_t *sensor_id,
+										uint16_t *output_data) {
 	w_assert(msg);
 	w_assert(sensor_id);
 	w_assert(output_data);
-
-	if (get_message_type(msg) != MSG_SENSOR_ANALOG16) {
-		return false;
-	}
 
 	*sensor_id = (can_analog_sensor_id_t)get_message_metadata(msg);
 	*output_data = ((uint16_t)msg->data[2] << 8) | msg->data[3];
 
-	return true;
+	if (get_message_type(msg) != MSG_SENSOR_ANALOG16) {
+		return W_INVALID_PARAM;
+	}
+
+	if (msg->data_len != 4) {
+		return W_DATA_FORMAT_ERROR;
+	}
+
+	return W_SUCCESS;
 }
 
-bool get_analog_sensor_data_32bit(const can_msg_t *msg, can_analog_sensor_id_t *sensor_id,
-								  uint32_t *output_data) {
+w_status_t get_analog_sensor_data_32bit(const can_msg_t *msg, can_analog_sensor_id_t *sensor_id,
+										uint32_t *output_data) {
 	w_assert(msg);
 	w_assert(sensor_id);
 	w_assert(output_data);
-
-	if (get_message_type(msg) != MSG_SENSOR_ANALOG32) {
-		return false;
-	}
 
 	*sensor_id = (can_analog_sensor_id_t)get_message_metadata(msg);
 	*output_data = ((uint32_t)msg->data[2] << 24) | ((uint32_t)msg->data[3] << 16) |
 				   ((uint32_t)msg->data[4] << 8) | msg->data[5];
 
-	return true;
+	if (get_message_type(msg) != MSG_SENSOR_ANALOG32) {
+		return W_INVALID_PARAM;
+	}
+
+	if (msg->data_len != 6) {
+		return W_DATA_FORMAT_ERROR;
+	}
+
+	return W_SUCCESS;
 }
 
-bool get_3d_analog_sensor_data_16bit(const can_msg_t *msg, can_dem_3d_sensor_id_t *sensor_id,
-									 uint16_t *output_data_x, uint16_t *output_data_y,
-									 uint16_t *output_data_z) {
+w_status_t get_3d_analog_sensor_data_16bit(const can_msg_t *msg, can_dem_3d_sensor_id_t *sensor_id,
+										   uint16_t *output_data_x, uint16_t *output_data_y,
+										   uint16_t *output_data_z) {
 	w_assert(msg);
 	w_assert(sensor_id);
 	w_assert(output_data_x);
 	w_assert(output_data_y);
 	w_assert(output_data_z);
 
-	if (get_message_type(msg) != MSG_SENSOR_3D_ANALOG16) {
-		return false;
-	}
-
 	*sensor_id = (can_dem_3d_sensor_id_t)get_message_metadata(msg);
 	*output_data_x = ((uint16_t)msg->data[2] << 8) | msg->data[3];
 	*output_data_y = ((uint16_t)msg->data[4] << 8) | msg->data[5];
 	*output_data_z = ((uint16_t)msg->data[6] << 8) | msg->data[7];
 
-	return true;
+	if (get_message_type(msg) != MSG_SENSOR_3D_ANALOG16) {
+		return W_INVALID_PARAM;
+	}
+
+	if (msg->data_len != 8) {
+		return W_DATA_FORMAT_ERROR;
+	}
+
+	return W_SUCCESS;
 }
 
-bool get_2d_analog_sensor_data_24bit(const can_msg_t *msg, can_dem_2d_sensor_id_t *sensor_id,
-									 uint32_t *sensor_data_x, uint32_t *sensor_data_y) {
+w_status_t get_2d_analog_sensor_data_24bit(const can_msg_t *msg, can_dem_2d_sensor_id_t *sensor_id,
+										   uint32_t *sensor_data_x, uint32_t *sensor_data_y) {
 	w_assert(msg);
 	w_assert(sensor_id);
 	w_assert(sensor_data_x);
 	w_assert(sensor_data_y);
 
-	if (get_message_type(msg) != MSG_SENSOR_2D_ANALOG24) {
-		return false;
-	}
-
 	*sensor_id = (can_dem_2d_sensor_id_t)get_message_metadata(msg);
 	*sensor_data_x = ((uint32_t)msg->data[2] << 16) | ((uint32_t)msg->data[3] << 8) | msg->data[4];
 	*sensor_data_y = ((uint32_t)msg->data[5] << 16) | ((uint32_t)msg->data[6] << 8) | msg->data[7];
 
-	return true;
+	if (get_message_type(msg) != MSG_SENSOR_2D_ANALOG24) {
+		return W_INVALID_PARAM;
+	}
+
+	if (msg->data_len != 8) {
+		return W_DATA_FORMAT_ERROR;
+	}
+
+	return W_SUCCESS;
 }
