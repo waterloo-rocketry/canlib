@@ -4,8 +4,9 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "can.h"
 #include "common.h"
+
+#include "can.h"
 #include "message_types.h"
 
 #ifdef __cplusplus
