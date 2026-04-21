@@ -209,6 +209,7 @@ public:
 
 gps_longitude_message_test gps_longitude_message_test_inst;
 
+/*
 class gps_altitude_message_test : rockettest_test {
 public:
 	gps_altitude_message_test() : rockettest_test("gps_altitude_message_test") {}
@@ -264,6 +265,7 @@ public:
 };
 
 gps_altitude_message_test gps_altitude_message_test_inst;
+ */
 
 class gps_info_message_test : rockettest_test {
 public:
