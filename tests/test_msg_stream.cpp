@@ -1,6 +1,7 @@
 #include <cstdint>
 #include <cstring>
 
+#include "common.h"
 #include "rockettest.hpp"
 
 #include "can.h"
@@ -34,15 +35,15 @@ public:
 
 		std::uint32_t total_size_out = 0;
 		std::uint32_t tx_size_out = 0;
-		bool parsed = get_stream_status(&msg, &total_size_out, &tx_size_out);
-		rockettest_check_expr_true(parsed);
+		w_status_t parse_status = get_stream_status(&msg, &total_size_out, &tx_size_out);
+		rockettest_check_expr_true(parse_status == W_SUCCESS);
 		rockettest_check_expr_true(total_size_out == total_size);
 		rockettest_check_expr_true(tx_size_out == tx_size);
 
 		can_msg_t invalid_msg = msg;
 		invalid_msg.sid = build_sid(prio, MSG_STREAM_DATA, 0);
-		bool invalid_type = get_stream_status(&invalid_msg, &total_size_out, &tx_size_out);
-		rockettest_check_expr_true(invalid_type == false);
+		parse_status = get_stream_status(&invalid_msg, &total_size_out, &tx_size_out);
+		rockettest_check_expr_true(parse_status == W_INVALID_PARAM);
 
 		return test_passed;
 	}
@@ -78,8 +79,8 @@ public:
 		std::uint8_t payload_out[STREAM_DATA_MAX_PAYLOAD_LEN] = {};
 		std::uint8_t payload_len_out = 0;
 
-		bool parsed = get_stream_data(&msg, &seq_id_out, payload_out, &payload_len_out);
-		rockettest_check_expr_true(parsed);
+		w_status_t parse_status = get_stream_data(&msg, &seq_id_out, payload_out, &payload_len_out);
+		rockettest_check_expr_true(parse_status == W_SUCCESS);
 		rockettest_check_expr_true(seq_id_out == seq_id);
 		rockettest_check_expr_true(payload_len_out == payload_len);
 		rockettest_check_expr_true(std::memcmp(payload_out, payload, payload_len) == 0);
@@ -87,16 +88,16 @@ public:
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.sid = build_sid(prio, MSG_STREAM_DATA, seq_id);
 		invalid_len_msg.data_len = 3;
-		bool invalid_len =
+		parse_status =
 			get_stream_data(&invalid_len_msg, &seq_id_out, payload_out, &payload_len_out);
-		rockettest_check_expr_true(invalid_len == false);
+		rockettest_check_expr_true(parse_status == W_DATA_FORMAT_ERROR);
 
 		can_msg_t invalid_type_msg = msg;
 		invalid_type_msg.sid = build_sid(prio, MSG_STREAM_RETRY, seq_id);
 		invalid_type_msg.data_len = msg.data_len;
-		bool invalid_type =
+		parse_status =
 			get_stream_data(&invalid_type_msg, &seq_id_out, payload_out, &payload_len_out);
-		rockettest_check_expr_true(invalid_type == false);
+		rockettest_check_expr_true(parse_status == W_INVALID_PARAM);
 
 		return test_passed;
 	}
@@ -123,8 +124,8 @@ public:
 		rockettest_check_expr_true((msg.sid & 0xff) == seq_id);
 
 		std::uint8_t seq_id_out = 0;
-		bool parsed = get_stream_retry_seq_id(&msg, &seq_id_out);
-		rockettest_check_expr_true(parsed);
+		w_status_t parse_status = get_stream_retry_seq_id(&msg, &seq_id_out);
+		rockettest_check_expr_true(parse_status == W_SUCCESS);
 		rockettest_check_expr_true(seq_id_out == seq_id);
 
 		can_msg_t invalid_type_msg = msg;
