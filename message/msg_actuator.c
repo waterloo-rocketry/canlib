@@ -35,10 +35,11 @@ void build_actuator_status_msg(can_msg_prio_t prio, uint16_t timestamp,
 
 w_status_t get_actuator_id(const can_msg_t *msg, can_actuator_id_t *actuator_id) {
 	w_assert(msg);
-
-	uint16_t msg_type = get_message_type(msg);
+	w_assert(actuator_id);
 
 	*actuator_id = (can_actuator_id_t)get_message_metadata(msg);
+
+	can_msg_type_t msg_type = get_message_type(msg);
 
 	if (msg_type == MSG_ACTUATOR_CMD) {
 		if (msg->data_len == 3) {
@@ -60,10 +61,11 @@ w_status_t get_actuator_id(const can_msg_t *msg, can_actuator_id_t *actuator_id)
 w_status_t get_curr_actuator_state(const can_msg_t *msg,
 								   can_actuator_state_t *curr_actuator_state) {
 	w_assert(msg);
-
-	uint16_t msg_type = get_message_type(msg);
+	w_assert(curr_actuator_state);
 
 	*curr_actuator_state = (can_actuator_state_t)msg->data[3];
+
+	can_msg_type_t msg_type = get_message_type(msg);
 
 	if (msg_type != MSG_ACTUATOR_STATUS) {
 		return W_INVALID_PARAM;
@@ -80,10 +82,11 @@ w_status_t get_curr_actuator_state(const can_msg_t *msg,
 
 w_status_t get_cmd_actuator_state(const can_msg_t *msg, can_actuator_state_t *cmd_actuator_state) {
 	w_assert(msg);
-
-	uint16_t msg_type = get_message_type(msg);
+	w_assert(cmd_actuator_state);
 
 	*cmd_actuator_state = (can_actuator_state_t)msg->data[2];
+
+	can_msg_type_t msg_type = get_message_type(msg);
 
 	if (msg_type == MSG_ACTUATOR_CMD) {
 		if (msg->data_len == 3) {

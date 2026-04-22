@@ -116,6 +116,7 @@ w_status_t get_reset_board_id(const can_msg_t *msg, uint8_t *board_type_id,
 
 w_status_t check_board_need_reset(const can_msg_t *msg, bool *board_need_reset) {
 	w_assert(msg);
+	w_assert(board_need_reset);
 
 	uint8_t board_type_id, board_inst_id;
 
@@ -187,7 +188,7 @@ w_status_t get_config_id_value(const can_msg_t *msg, uint16_t *config_id, uint16
 	w_assert(config_id);
 	w_assert(config_value);
 
-	uint16_t msg_type = get_message_type(msg);
+	can_msg_type_t msg_type = get_message_type(msg);
 	if (msg_type == MSG_CONFIG_SET) {
 		*config_id = (msg->data[4] << 8) | (msg->data[5]);
 		*config_value = (msg->data[6] << 8) | (msg->data[7]);

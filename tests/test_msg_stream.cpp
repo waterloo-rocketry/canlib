@@ -87,7 +87,7 @@ public:
 
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.sid = build_sid(prio, MSG_STREAM_DATA, seq_id);
-		invalid_len_msg.data_len = 3;
+		invalid_len_msg.data_len = 2;
 		parse_status =
 			get_stream_data(&invalid_len_msg, &seq_id_out, payload_out, &payload_len_out);
 		rockettest_check_expr_true(parse_status == W_DATA_FORMAT_ERROR);
@@ -130,13 +130,13 @@ public:
 
 		can_msg_t invalid_type_msg = msg;
 		invalid_type_msg.sid = build_sid(prio, MSG_STREAM_STATUS, seq_id);
-		bool invalid_type = get_stream_retry_seq_id(&invalid_type_msg, &seq_id_out);
-		rockettest_check_expr_true(invalid_type == false);
+		parse_status = get_stream_retry_seq_id(&invalid_type_msg, &seq_id_out);
+		rockettest_check_expr_true(parse_status == W_INVALID_PARAM);
 
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.data_len = 3;
-		bool invalid_len = get_stream_retry_seq_id(&invalid_len_msg, &seq_id_out);
-		rockettest_check_expr_true(invalid_len == false);
+		parse_status = get_stream_retry_seq_id(&invalid_len_msg, &seq_id_out);
+		rockettest_check_expr_true(W_DATA_FORMAT_ERROR);
 
 		return test_passed;
 	}

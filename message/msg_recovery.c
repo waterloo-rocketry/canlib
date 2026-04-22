@@ -46,7 +46,7 @@ w_status_t get_alt_arm_state(const can_msg_t *msg, can_altimeter_id_t *alt_id,
 	*alt_id = (can_altimeter_id_t)get_message_metadata(msg);
 	*arm_state = (can_alt_arm_state_t)msg->data[2];
 
-	uint16_t msg_type = get_message_type(msg);
+	can_msg_type_t msg_type = get_message_type(msg);
 	if (msg_type == MSG_ALT_ARM_CMD) {
 		if (msg->data_len == 3) {
 			return W_SUCCESS;
