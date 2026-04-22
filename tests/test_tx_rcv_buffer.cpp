@@ -58,7 +58,7 @@ public:
 				}
 
 				// Push the message to both canlib tx queue and reference queue
-				if (txb_enqueue(&msg)) {
+				if (txb_enqueue(&msg) == W_SUCCESS) {
 					ref_buffer.push(msg);
 				}
 			}

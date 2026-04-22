@@ -4,6 +4,8 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+#include "common.h"
+
 #include "can.h"
 
 #ifdef __cplusplus
@@ -27,9 +29,9 @@ void txb_init(void *pool, size_t pool_size, void (*can_send)(const can_msg_t *),
  * `can_send()` will be made during `txb_heartbeat()`
  *
  * @param msg message to be buffered
- * @return `true` if success, `false` if failed(i.e. buffer is full)
+ * @return `W_SUCCESS` if success
  */
-bool txb_enqueue(const can_msg_t *msg);
+w_status_t txb_enqueue(const can_msg_t *msg);
 
 /**
  * @brief This function is called every iteration through the main application loop.
