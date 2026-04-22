@@ -1,5 +1,7 @@
 #include <stdint.h>
 
+#include "common.h"
+
 #include "can.h"
 #include "timing_util.h"
 
@@ -7,7 +9,9 @@
 #warning "the bit time that can.h is expecting is not what timing_util is expecting"
 #endif
 
-bool can_generate_timing_params(uint32_t system_freq, can_timing_t *timing) {
+w_status_t can_generate_timing_params(uint32_t system_freq, can_timing_t *timing) {
+	w_assert(timing);
+
 	// this function is designed to create a bit time of 4 microseconds
 	switch (system_freq) {
 		case 48000000:
@@ -18,7 +22,7 @@ bool can_generate_timing_params(uint32_t system_freq, can_timing_t *timing) {
 			timing->seg1ph = 4;
 			timing->prseg = 0;
 			timing->seg2ph = 4;
-			return true;
+			return W_SUCCESS;
 		case 12000000:
 			timing->brp = 1;
 			timing->sjw = 3;
@@ -27,7 +31,7 @@ bool can_generate_timing_params(uint32_t system_freq, can_timing_t *timing) {
 			timing->seg1ph = 4;
 			timing->prseg = 0;
 			timing->seg2ph = 4;
-			return true;
+			return W_SUCCESS;
 		case 6000000:
 			timing->brp = 0;
 			timing->sjw = 3;
@@ -36,9 +40,9 @@ bool can_generate_timing_params(uint32_t system_freq, can_timing_t *timing) {
 			timing->seg1ph = 4;
 			timing->prseg = 0;
 			timing->seg2ph = 4;
-			return true;
+			return W_SUCCESS;
 		default:
 			// unhandled can frequency, just abort
-			return false;
+			return W_INVALID_PARAM;
 	}
 }
