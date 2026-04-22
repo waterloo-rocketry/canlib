@@ -4,6 +4,7 @@
 #include <queue>
 
 #include "can.h"
+#include "common.h"
 #include "rockettest.hpp"
 
 #include "util/can_rcv_buffer.h"
@@ -79,31 +80,13 @@ can_tx_buffer_test can_tx_buffer_test_inst;
 // Rcv Buffer Test
 
 class can_rcv_buffer_test : rockettest_test {
-	static std::queue<can_msg_t> ref_buffer;
-	static bool test_passed;
+	std::queue<can_msg_t> ref_buffer;
 
 public:
 	can_rcv_buffer_test() : rockettest_test("can_rcv_buffer_test") {}
 
-	static bool can_tx_ready() {
-		// Tx ready one in 4 chance
-		return (rockettest_rand_field<int, 0x3>() == 0);
-	}
-
-	static void can_send(const can_msg_t *msg) {
-		rockettest_check_expr_true(!ref_buffer.empty());
-
-		rockettest_check_expr_true(msg->sid == ref_buffer.front().sid);
-		rockettest_check_expr_true(msg->data_len == ref_buffer.front().data_len);
-		for (std::uint8_t i = 0; i < msg->data_len; i++) {
-			rockettest_check_expr_true(msg->data[i] == ref_buffer.front().data[i]);
-		}
-
-		ref_buffer.pop();
-	}
-
 	bool run_test() override {
-		test_passed = true;
+		bool test_passed = true;
 
 		void *pool = std::malloc(1000);
 
@@ -138,7 +121,7 @@ public:
 			// Pop a message 1 in 2 chance
 			if (rockettest_rand_field<int, 0x1>() == 0) {
 				can_msg_t msg;
-				if (rcvb_pop_message(&msg)) {
+				if (rcvb_pop_message(&msg) == W_SUCCESS) {
 					rockettest_check_expr_true(msg.sid == ref_buffer.front().sid);
 					rockettest_check_expr_true(msg.data_len == ref_buffer.front().data_len);
 					for (std::uint8_t i = 0; i < msg.data_len; i++) {
@@ -154,7 +137,7 @@ public:
 			// Peek in every cycle
 			{
 				can_msg_t msg;
-				if (rcvb_peek_message(&msg)) {
+				if (rcvb_peek_message(&msg) == W_SUCCESS) {
 					rockettest_check_expr_true(msg.sid == ref_buffer.front().sid);
 					rockettest_check_expr_true(msg.data_len == ref_buffer.front().data_len);
 					for (std::uint8_t i = 0; i < msg.data_len; i++) {
@@ -173,8 +156,5 @@ public:
 		return test_passed;
 	}
 };
-
-bool can_rcv_buffer_test::test_passed;
-std::queue<can_msg_t> can_rcv_buffer_test::ref_buffer;
 
 can_rcv_buffer_test can_rcv_buffer_test_inst;
