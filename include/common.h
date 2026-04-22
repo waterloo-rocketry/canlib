@@ -35,8 +35,10 @@ typedef enum {
 	W_IO_TIMEOUT,
 	/// @brief Math error, for example divide by zero
 	W_MATH_ERROR,
-	/// @brief Buffer overflow, for example trying to write to a full FIFO
+	/// @brief Buffer overflow, for example trying to write/push to a full FIFO buffer
 	W_OVERFLOW,
+	/// @brief Buffer underflow, for example trying to read/pop from an empty FIFO buffer
+	W_UNDERFLOW,
 	/// @brief Data format error, for example input is a malformed CAN packet
 	W_DATA_FORMAT_ERROR
 } w_status_t;
