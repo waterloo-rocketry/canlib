@@ -66,7 +66,7 @@ w_status_t srb_pop(srb_ctx_t *ctx, void *element) {
 	w_assert(element);
 
 	if (srb_is_empty(ctx)) {
-		return W_FAILURE; // TODO in future use W_UNDERFLOW
+		return W_UNDERFLOW;
 	}
 	size_t offset = get_offset_bytes(ctx, ctx->rd_idx);
 	memcpy(element, ((uint8_t *)ctx->memory_pool) + offset, ctx->element_size);
@@ -81,7 +81,7 @@ w_status_t srb_peek(const srb_ctx_t *ctx, void *element) {
 	w_assert(element);
 
 	if (srb_is_empty(ctx)) {
-		return W_FAILURE; // TODO in future use W_UNDERFLOW
+		return W_UNDERFLOW;
 	}
 	size_t offset = get_offset_bytes(ctx, ctx->rd_idx);
 	memcpy(element, ((uint8_t *)ctx->memory_pool) + offset, ctx->element_size);
