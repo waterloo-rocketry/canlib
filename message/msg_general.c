@@ -76,43 +76,56 @@ void build_config_status_msg(can_msg_prio_t prio, uint16_t timestamp, uint16_t c
 	output->data_len = 6;
 }
 
-bool get_general_board_status(const can_msg_t *msg, uint32_t *board_error_bitfield) {
+w_status_t get_general_board_status(const can_msg_t *msg, uint32_t *board_error_bitfield) {
 	w_assert(msg);
 	w_assert(board_error_bitfield);
 
-	uint16_t msg_type = get_message_type(msg);
-	if (msg_type == MSG_GENERAL_BOARD_STATUS) {
-		*board_error_bitfield =
-			(msg->data[2] << 24) | (msg->data[3] << 16) | (msg->data[4] << 8) | (msg->data[5]);
-		return true;
-	} else {
-		return false;
+	*board_error_bitfield =
+		(msg->data[2] << 24) | (msg->data[3] << 16) | (msg->data[4] << 8) | (msg->data[5]);
+
+	if (get_message_type(msg) != MSG_GENERAL_BOARD_STATUS) {
+		return W_INVALID_PARAM;
 	}
+
+	if (msg->data_len != 6) {
+		return W_DATA_FORMAT_ERROR;
+	}
+
+	return W_SUCCESS;
 }
 
-bool get_reset_board_id(const can_msg_t *msg, uint8_t *board_type_id, uint8_t *board_inst_id) {
+w_status_t get_reset_board_id(const can_msg_t *msg, uint8_t *board_type_id,
+							  uint8_t *board_inst_id) {
 	w_assert(msg);
 	w_assert(board_type_id);
 	w_assert(board_inst_id);
 
-	uint16_t msg_type = get_message_type(msg);
-	if (msg_type == MSG_RESET_CMD) {
-		*board_type_id = msg->data[2];
-		*board_inst_id = msg->data[3];
-		return true;
-	} else {
-		// not a valid field for this message type
-		return false;
+	*board_type_id = msg->data[2];
+	*board_inst_id = msg->data[3];
+
+	if (get_message_type(msg) != MSG_RESET_CMD) {
+		return W_INVALID_PARAM;
 	}
+
+	if (msg->data_len != 4) {
+		return W_DATA_FORMAT_ERROR;
+	}
+
+	return W_SUCCESS;
 }
 
-bool check_board_need_reset(const can_msg_t *msg) {
+w_status_t check_board_need_reset(const can_msg_t *msg, bool *board_need_reset) {
 	w_assert(msg);
+	w_assert(board_need_reset);
 
 	uint8_t board_type_id, board_inst_id;
 
-	if (!get_reset_board_id(msg, &board_type_id, &board_inst_id)) {
-		return false;
+	*board_need_reset = false;
+
+	w_status_t status = W_SUCCESS;
+	status = get_reset_board_id(msg, &board_type_id, &board_inst_id);
+	if (status != W_SUCCESS) {
+		return status;
 	}
 
 #ifndef CANLIB_DYNAMIC_BOARD_ID
@@ -121,64 +134,80 @@ bool check_board_need_reset(const can_msg_t *msg) {
 #endif
 
 	if (board_type_id == BOARD_TYPE_ID_ANY) {
-		return true;
+		*board_need_reset = true;
 	} else if (board_type_id == board_type_unique_id) {
 		if (board_inst_id == BOARD_INST_ID_ANY) {
-			return true;
+			*board_need_reset = true;
 		} else if (board_inst_id == board_inst_unique_id) {
-			return true;
-		} else {
-			return false;
+			*board_need_reset = true;
 		}
-	} else {
-		return false;
 	}
+
+	return W_SUCCESS;
 }
 
-bool get_debug_raw_data(const can_msg_t *msg, uint8_t *data) {
+w_status_t get_debug_raw_data(const can_msg_t *msg, uint8_t *data) {
 	w_assert(msg);
 	w_assert(data);
 
-	uint16_t msg_type = get_message_type(msg);
-	if (msg_type == MSG_DEBUG_RAW) {
-		memcpy(data, msg->data + 2, 6);
-		return true;
-	} else {
-		return false;
+	memcpy(data, msg->data + 2, 6);
+
+	if (get_message_type(msg) != MSG_DEBUG_RAW) {
+		return W_INVALID_PARAM;
 	}
+
+	if (msg->data_len != 8) {
+		return W_DATA_FORMAT_ERROR;
+	}
+
+	return W_SUCCESS;
 }
 
-bool get_config_set_target_board(const can_msg_t *msg, uint8_t *board_type_id,
-								 uint8_t *board_inst_id) {
+w_status_t get_config_set_target_board(const can_msg_t *msg, uint8_t *board_type_id,
+									   uint8_t *board_inst_id) {
 	w_assert(msg);
 	w_assert(board_type_id);
 	w_assert(board_inst_id);
 
-	uint16_t msg_type = get_message_type(msg);
-	if (msg_type == MSG_CONFIG_SET) {
-		*board_type_id = msg->data[2];
-		*board_inst_id = msg->data[3];
-		return true;
-	} else {
-		return false;
+	*board_type_id = msg->data[2];
+	*board_inst_id = msg->data[3];
+
+	if (get_message_type(msg) != MSG_CONFIG_SET) {
+		return W_INVALID_PARAM;
 	}
+
+	if (msg->data_len != 8) {
+		return W_DATA_FORMAT_ERROR;
+	}
+
+	return W_SUCCESS;
 }
 
-bool get_config_id_value(const can_msg_t *msg, uint16_t *config_id, uint16_t *config_value) {
+w_status_t get_config_id_value(const can_msg_t *msg, uint16_t *config_id, uint16_t *config_value) {
 	w_assert(msg);
 	w_assert(config_id);
 	w_assert(config_value);
 
-	uint16_t msg_type = get_message_type(msg);
+	can_msg_type_t msg_type = get_message_type(msg);
 	if (msg_type == MSG_CONFIG_SET) {
 		*config_id = (msg->data[4] << 8) | (msg->data[5]);
 		*config_value = (msg->data[6] << 8) | (msg->data[7]);
-		return true;
+
+		if (msg->data_len == 8) {
+			return W_SUCCESS;
+		} else {
+			return W_INVALID_PARAM;
+		}
 	} else if (msg_type == MSG_CONFIG_STATUS) {
 		*config_id = (msg->data[2] << 8) | (msg->data[3]);
 		*config_value = (msg->data[4] << 8) | (msg->data[5]);
-		return true;
-	} else {
-		return false;
+
+		if (msg->data_len == 6) {
+			return W_SUCCESS;
+		} else {
+			return W_INVALID_PARAM;
+		}
 	}
+
+	return W_INVALID_PARAM;
 }

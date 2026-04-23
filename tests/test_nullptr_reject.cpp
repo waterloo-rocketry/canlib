@@ -57,9 +57,9 @@ public:
 									  rockettest_rand_field<can_actuator_state_t, 0xff>(),
 									  nullptr);
 		});
-		rockettest_check_assert_triggered([] { get_actuator_id(nullptr); });
-		rockettest_check_assert_triggered([] { get_curr_actuator_state(nullptr); });
-		rockettest_check_assert_triggered([] { get_cmd_actuator_state(nullptr); });
+		rockettest_check_assert_triggered([] { get_actuator_id(nullptr, nullptr); });
+		rockettest_check_assert_triggered([] { get_curr_actuator_state(nullptr, nullptr); });
+		rockettest_check_assert_triggered([] { get_cmd_actuator_state(nullptr, nullptr); });
 
 		// -----------------------
 		// msg_general tests
@@ -104,7 +104,7 @@ public:
 			[] { get_reset_board_id(notnullptr<can_msg_t>(), notnullptr<uint8_t>(), nullptr); });
 		rockettest_check_assert_triggered([] { get_reset_board_id(nullptr, nullptr, nullptr); });
 
-		rockettest_check_assert_triggered([] { check_board_need_reset(nullptr); });
+		rockettest_check_assert_triggered([] { check_board_need_reset(nullptr, nullptr); });
 
 		rockettest_check_assert_triggered(
 			[] { get_debug_raw_data(nullptr, notnullptr<uint8_t>()); });
@@ -146,7 +146,7 @@ public:
 			build_gps_lon_msg(rockettest_rand_field<can_msg_prio_t, 0x3>(), 0, 0, 0, 0, 0, nullptr);
 		});
 		rockettest_check_assert_triggered([] {
-			build_gps_alt_msg(rockettest_rand_field<can_msg_prio_t, 0x3>(), 0, 0, 0, 0, nullptr);
+			build_gps_alt_msg(rockettest_rand_field<can_msg_prio_t, 0x3>(), 0, 0, 0, nullptr);
 		});
 		rockettest_check_assert_triggered([] {
 			build_gps_info_msg(rockettest_rand_field<can_msg_prio_t, 0x3>(), 0, 0, 0, nullptr);
@@ -268,23 +268,13 @@ public:
 			[] { get_gps_lon(nullptr, nullptr, nullptr, nullptr, nullptr); });
 
 		// get_gps_alt
-		rockettest_check_assert_triggered([] {
-			get_gps_alt(
-				nullptr, notnullptr<uint16_t>(), notnullptr<uint8_t>(), notnullptr<uint8_t>());
-		});
-		rockettest_check_assert_triggered([] {
-			get_gps_alt(
-				notnullptr<can_msg_t>(), nullptr, notnullptr<uint8_t>(), notnullptr<uint8_t>());
-		});
-		rockettest_check_assert_triggered([] {
-			get_gps_alt(
-				notnullptr<can_msg_t>(), notnullptr<uint16_t>(), nullptr, notnullptr<uint8_t>());
-		});
-		rockettest_check_assert_triggered([] {
-			get_gps_alt(
-				notnullptr<can_msg_t>(), notnullptr<uint16_t>(), notnullptr<uint8_t>(), nullptr);
-		});
-		rockettest_check_assert_triggered([] { get_gps_alt(nullptr, nullptr, nullptr, nullptr); });
+		rockettest_check_assert_triggered(
+			[] { get_gps_alt(nullptr, notnullptr<uint32_t>(), notnullptr<uint8_t>()); });
+		rockettest_check_assert_triggered(
+			[] { get_gps_alt(notnullptr<can_msg_t>(), nullptr, notnullptr<uint8_t>()); });
+		rockettest_check_assert_triggered(
+			[] { get_gps_alt(notnullptr<can_msg_t>(), notnullptr<uint32_t>(), nullptr); });
+		rockettest_check_assert_triggered([] { get_gps_alt(nullptr, nullptr, nullptr); });
 
 		// get_gps_info
 		rockettest_check_assert_triggered(

@@ -4,6 +4,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "common.h"
+
 #include "can.h"
 #include "message_types.h"
 
@@ -21,22 +23,18 @@ void build_actuator_status_msg(can_msg_prio_t prio, uint16_t timestamp,
 
 /*
  * Returns the actuator id from an actuator command or status message.
- * Returns -1 if the provided message is not an actuator cmd/status.
  */
-int get_actuator_id(const can_msg_t *msg);
+w_status_t get_actuator_id(const can_msg_t *msg, can_actuator_id_t *actuator_id);
 
 /*
  * Returns the current actuator state based on limit switch readings.
- * Returns -1 if the provided message is not a actuator status message.
  */
-int get_curr_actuator_state(const can_msg_t *msg);
+w_status_t get_curr_actuator_state(const can_msg_t *msg, can_actuator_state_t *curr_actuator_state);
 
 /*
- * Returns the commanded actuator state from an actuator command or
- * status message. Returns -1 if the provided message is not
- * an actuator cmd/status.
+ * Returns the commanded actuator state from an actuator command or status message.
  */
-int get_cmd_actuator_state(const can_msg_t *msg);
+w_status_t get_cmd_actuator_state(const can_msg_t *msg, can_actuator_state_t *cmd_actuator_state);
 
 #ifdef __cplusplus
 }

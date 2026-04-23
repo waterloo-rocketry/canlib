@@ -1,5 +1,7 @@
+#include <cstddef>
 #include <cstdint>
 
+#include "common.h"
 #include "rockettest.hpp"
 
 #include "can.h"
@@ -42,8 +44,9 @@ public:
 
 		type_after = get_message_type(&msg);
 		timestamp_after = get_timestamp(&msg);
-		actuator_id_after = (can_actuator_id_t)get_message_metadata(&msg);
-		actuator_state_after = (can_actuator_state_t)get_cmd_actuator_state(&msg);
+		rockettest_check_expr_true(get_actuator_id(&msg, &actuator_id_after) == W_SUCCESS);
+		rockettest_check_expr_true(get_cmd_actuator_state(&msg, &actuator_state_after) ==
+								   W_SUCCESS);
 
 		rockettest_check_expr_true(type_after == MSG_ACTUATOR_CMD);
 		rockettest_check_expr_true(timestamp_after == timestamp_before);
@@ -101,9 +104,11 @@ public:
 
 		type_after = get_message_type(&msg);
 		timestamp_after = get_timestamp(&msg);
-		actuator_id_after = (can_actuator_id_t)get_message_metadata(&msg);
-		actuator_curr_state_after = (can_actuator_state_t)(get_curr_actuator_state(&msg) & 0xff);
-		actuator_cmd_state_after = (can_actuator_state_t)(get_cmd_actuator_state(&msg) & 0xff);
+		rockettest_check_expr_true(get_actuator_id(&msg, &actuator_id_after) == W_SUCCESS);
+		rockettest_check_expr_true(get_curr_actuator_state(&msg, &actuator_curr_state_after) ==
+								   W_SUCCESS);
+		rockettest_check_expr_true(get_cmd_actuator_state(&msg, &actuator_cmd_state_after) ==
+								   W_SUCCESS);
 
 		rockettest_check_expr_true(type_after == MSG_ACTUATOR_STATUS);
 		rockettest_check_expr_true(timestamp_after == timestamp_before);

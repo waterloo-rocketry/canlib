@@ -33,39 +33,74 @@ void build_actuator_status_msg(can_msg_prio_t prio, uint16_t timestamp,
 	output->data_len = 4;
 }
 
-int get_actuator_id(const can_msg_t *msg) {
+w_status_t get_actuator_id(const can_msg_t *msg, can_actuator_id_t *actuator_id) {
 	w_assert(msg);
+	w_assert(actuator_id);
 
-	uint16_t msg_type = get_message_type(msg);
-	if (msg_type == MSG_ACTUATOR_STATUS) {
-		return get_message_metadata(msg);
+	*actuator_id = (can_actuator_id_t)get_message_metadata(msg);
+
+	can_msg_type_t msg_type = get_message_type(msg);
+
+	if (msg_type == MSG_ACTUATOR_CMD) {
+		if (msg->data_len == 3) {
+			return W_SUCCESS;
+		} else {
+			return W_DATA_FORMAT_ERROR;
+		}
+	} else if (msg_type == MSG_ACTUATOR_STATUS) {
+		if (msg->data_len == 4) {
+			return W_SUCCESS;
+		} else {
+			return W_DATA_FORMAT_ERROR;
+		}
 	}
 
-	// not a valid field for this message type
-	return -1;
+	return W_INVALID_PARAM;
 }
 
-int get_curr_actuator_state(const can_msg_t *msg) {
+w_status_t get_curr_actuator_state(const can_msg_t *msg,
+								   can_actuator_state_t *curr_actuator_state) {
 	w_assert(msg);
+	w_assert(curr_actuator_state);
 
-	uint16_t msg_type = get_message_type(msg);
-	if (msg_type == MSG_ACTUATOR_STATUS) {
-		return msg->data[3];
+	*curr_actuator_state = (can_actuator_state_t)msg->data[3];
+
+	can_msg_type_t msg_type = get_message_type(msg);
+
+	if (msg_type != MSG_ACTUATOR_STATUS) {
+		return W_INVALID_PARAM;
 	}
 
-	// not a valid field for this message type
-	return -1;
+	if (msg->data_len == 4) {
+		return W_SUCCESS;
+	} else {
+		return W_DATA_FORMAT_ERROR;
+	}
+
+	return W_SUCCESS;
 }
 
-int get_cmd_actuator_state(const can_msg_t *msg) {
+w_status_t get_cmd_actuator_state(const can_msg_t *msg, can_actuator_state_t *cmd_actuator_state) {
 	w_assert(msg);
+	w_assert(cmd_actuator_state);
 
-	uint16_t msg_type = get_message_type(msg);
+	*cmd_actuator_state = (can_actuator_state_t)msg->data[2];
 
-	if ((msg_type == MSG_ACTUATOR_CMD) || (msg_type == MSG_ACTUATOR_STATUS)) {
-		return msg->data[2];
+	can_msg_type_t msg_type = get_message_type(msg);
+
+	if (msg_type == MSG_ACTUATOR_CMD) {
+		if (msg->data_len == 3) {
+			return W_SUCCESS;
+		} else {
+			return W_DATA_FORMAT_ERROR;
+		}
+	} else if (msg_type == MSG_ACTUATOR_STATUS) {
+		if (msg->data_len == 4) {
+			return W_SUCCESS;
+		} else {
+			return W_DATA_FORMAT_ERROR;
+		}
 	}
 
-	// not a valid field for this message type
-	return -1;
+	return W_INVALID_PARAM;
 }

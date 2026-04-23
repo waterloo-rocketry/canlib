@@ -220,44 +220,39 @@ public:
 
 		can_msg_prio_t prio_before = rockettest_rand_field<can_msg_prio_t, 0x3>();
 		std::uint16_t timestamp_before = rockettest_rand_field<std::uint16_t>();
-		std::uint16_t altitude_before = rockettest_rand_field<std::uint16_t>();
+		std::uint32_t altitude_before = rockettest_rand_field<std::uint32_t>();
 		std::uint8_t daltitude_before = rockettest_rand_field<std::uint8_t>();
-		std::uint8_t units_before = rockettest_rand_field<std::uint8_t>();
 
-		build_gps_alt_msg(
-			prio_before, timestamp_before, altitude_before, daltitude_before, units_before, &msg);
+		build_gps_alt_msg(prio_before, timestamp_before, altitude_before, daltitude_before, &msg);
 
 		std::uint16_t timestamp_extracted;
-		std::uint16_t altitude_extracted;
+		std::uint32_t altitude_extracted;
 		std::uint8_t daltitude_extracted;
-		std::uint8_t units_extracted;
 
 		timestamp_extracted = (static_cast<std::uint16_t>(msg.data[0]) << 8) | msg.data[1];
-		altitude_extracted = (static_cast<std::uint16_t>(msg.data[2]) << 8) | msg.data[3];
-		daltitude_extracted = msg.data[4];
-		units_extracted = msg.data[5];
+		altitude_extracted = (static_cast<std::uint32_t>(msg.data[2]) << 24) |
+							 (static_cast<std::uint32_t>(msg.data[3]) << 16) |
+							 (static_cast<std::uint32_t>(msg.data[4]) << 8) | msg.data[5];
+		daltitude_extracted = msg.data[6];
 
-		rockettest_check_expr_true(msg.data_len == 6);
+		rockettest_check_expr_true(msg.data_len == 7);
 		rockettest_check_expr_true(timestamp_extracted == timestamp_before);
 		rockettest_check_expr_true(altitude_extracted == altitude_before);
 		rockettest_check_expr_true(daltitude_extracted == daltitude_before);
-		rockettest_check_expr_true(units_extracted == units_before);
 
 		can_msg_type_t type_after;
 		std::uint16_t timestamp_after;
-		uint16_t altitude_after;
+		uint32_t altitude_after;
 		uint8_t daltitude_after;
-		uint8_t units_after;
 
 		type_after = get_message_type(&msg);
 		timestamp_after = get_timestamp(&msg);
-		get_gps_alt(&msg, &altitude_after, &daltitude_after, &units_after);
+		get_gps_alt(&msg, &altitude_after, &daltitude_after);
 
 		rockettest_check_expr_true(type_after == MSG_GPS_ALTITUDE);
 		rockettest_check_expr_true(timestamp_after == timestamp_before);
 		rockettest_check_expr_true(altitude_after == altitude_before);
 		rockettest_check_expr_true(daltitude_after == daltitude_before);
-		rockettest_check_expr_true(units_after == units_before);
 
 		return test_passed;
 	}
