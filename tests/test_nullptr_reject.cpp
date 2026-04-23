@@ -13,6 +13,7 @@
 #include "util/can_rcv_buffer.h"
 #include "util/can_tx_buffer.h"
 #include "util/safe_ring_buffer.h"
+#include "util/timing_util.h"
 
 namespace {
 
@@ -565,6 +566,10 @@ public:
 		rockettest_check_assert_triggered([] { rcvb_pop_message(nullptr); });
 		rockettest_check_assert_triggered([] { rcvb_peek_message(nullptr); });
 
+		// -----------------------
+		// timing_util tests
+		// -----------------------
+		rockettest_check_assert_triggered([] { can_generate_timing_params(48000000, nullptr); });
 		return test_passed;
 	}
 };

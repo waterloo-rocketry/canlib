@@ -4,6 +4,8 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+#include "common.h"
+
 /*
  * Context variable for the module. This allows you to initialize multiple
  * ring buffers in the same application code, and keeping track of different
@@ -35,10 +37,10 @@ void srb_init(srb_ctx_t *ctx, void *pool, size_t pool_size, size_t element_size)
 
 /*
  * Push an element into the ring buffer. If there is not enough space left in
- * the buffer, this function will return false. Otherwise, it will copy the
- * element in (using memcpy, coyping element_size bytes) and return true
+ * the buffer, this function will return W_OVERFLOW. Otherwise, it will copy the
+ * element in (using memcpy, coyping element_size bytes) and return W_SUCCESS
  */
-bool srb_push(srb_ctx_t *ctx, const void *element);
+w_status_t srb_push(srb_ctx_t *ctx, const void *element);
 
 /*
  * Returns true if there is no space left in the ring buffer. False otherwise
@@ -52,17 +54,17 @@ bool srb_is_empty(const srb_ctx_t *ctx);
 
 /*
  * Gets the oldest buffered element in the ring buffer and copies it into
- * element. Then that element is removed from the ring buffer. Returns true
- * if it was successfully able to fetch an element, false otherwise
+ * element. Then that element is removed from the ring buffer. Returns W_SUCCESS
+ * if it was successfully able to fetch an element
  */
-bool srb_pop(srb_ctx_t *ctx, void *element);
+w_status_t srb_pop(srb_ctx_t *ctx, void *element);
 
 /*
  * Gets the oldest buffered element in the ring buffer and copies it into
- * element. This element is not removed from the buffer. Returns true if
- * it was successfully able to fetch an element, false otherwise
+ * element. This element is not removed from the buffer. Returns W_SUCCESS if
+ * it was successfully able to fetch an element
  */
-bool srb_peek(const srb_ctx_t *ctx, void *element);
+w_status_t srb_peek(const srb_ctx_t *ctx, void *element);
 
 #ifdef __cplusplus
 }

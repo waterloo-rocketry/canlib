@@ -28,14 +28,10 @@ void txb_init(void *pool, size_t pool_size, void (*can_send)(const can_msg_t *),
 	srb_init(&buf, pool, pool_size, sizeof(can_msg_t));
 }
 
-bool txb_enqueue(const can_msg_t *msg) {
+w_status_t txb_enqueue(const can_msg_t *msg) {
 	w_assert(msg);
 
-	if (srb_is_full(&buf)) {
-		return false;
-	}
-	srb_push(&buf, msg);
-	return true;
+	return srb_push(&buf, msg);
 }
 
 void txb_heartbeat(void) {

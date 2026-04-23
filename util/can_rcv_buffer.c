@@ -19,7 +19,7 @@ void rcvb_init(void *pool, size_t pool_size) {
 void rcvb_push_message(const can_msg_t *msg) {
 	w_assert(msg);
 
-	if (!srb_push(&buf, (void *)msg)) {
+	if (srb_push(&buf, (void *)msg) == W_OVERFLOW) {
 		overflow_flag = true;
 	}
 }
@@ -40,13 +40,13 @@ bool rcvb_is_empty(void) {
 	return srb_is_empty(&buf);
 }
 
-bool rcvb_pop_message(can_msg_t *msg) {
+w_status_t rcvb_pop_message(can_msg_t *msg) {
 	w_assert(msg);
 
 	return srb_pop(&buf, (void *)msg);
 }
 
-bool rcvb_peek_message(can_msg_t *msg) {
+w_status_t rcvb_peek_message(can_msg_t *msg) {
 	w_assert(msg);
 
 	return srb_peek(&buf, (void *)msg);

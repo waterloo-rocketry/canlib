@@ -24,6 +24,8 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+#include "common.h"
+
 #include "can.h"
 
 #ifdef __cplusplus
@@ -86,17 +88,17 @@ bool rcvb_is_empty(void);
  * @brief gets the oldest buffered CAN message and puts it into msg, then dequeues
  * that message.
  * @param msg message buffer
- * @return true if we were successfully able to grab a CAN message.
+ * @return W_SUCCESS if we were successfully able to grab a CAN message.
  */
-bool rcvb_pop_message(can_msg_t *msg);
+w_status_t rcvb_pop_message(can_msg_t *msg);
 
 /**
  * @brief gets the oldest buffered CAN message and puts it into msg, and does not
  * dequeue it.
  * @param msg message buffer
- * @return true if we were successfully able to grab a CAN message.
+ * @return W_SUCCESS if we were successfully able to grab a CAN message.
  */
-bool rcvb_peek_message(can_msg_t *msg);
+w_status_t rcvb_peek_message(can_msg_t *msg);
 
 #ifdef __cplusplus
 }

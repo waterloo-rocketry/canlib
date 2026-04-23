@@ -25,19 +25,19 @@ void srb_init(srb_ctx_t *ctx, void *pool, size_t pool_size, size_t element_size)
 	ctx->wr_idx = 0;
 }
 
-bool srb_push(srb_ctx_t *ctx, const void *element) {
+w_status_t srb_push(srb_ctx_t *ctx, const void *element) {
 	w_assert(ctx);
 	w_assert(element);
 
 	if (srb_is_full(ctx)) {
-		return false;
+		return W_OVERFLOW;
 	}
 	size_t offset = get_offset_bytes(ctx, ctx->wr_idx);
 	memcpy(((uint8_t *)ctx->memory_pool) + offset, element, ctx->element_size);
 	if (++(ctx->wr_idx) >= ctx->max_elements) {
 		ctx->wr_idx = 0;
 	}
-	return true;
+	return W_SUCCESS;
 }
 
 bool srb_is_full(const srb_ctx_t *ctx) {
@@ -61,29 +61,29 @@ bool srb_is_empty(const srb_ctx_t *ctx) {
 	}
 }
 
-bool srb_pop(srb_ctx_t *ctx, void *element) {
+w_status_t srb_pop(srb_ctx_t *ctx, void *element) {
 	w_assert(ctx);
 	w_assert(element);
 
 	if (srb_is_empty(ctx)) {
-		return false;
+		return W_FAILURE; // TODO in future use W_UNDERFLOW
 	}
 	size_t offset = get_offset_bytes(ctx, ctx->rd_idx);
 	memcpy(element, ((uint8_t *)ctx->memory_pool) + offset, ctx->element_size);
 	if (++(ctx->rd_idx) >= ctx->max_elements) {
 		ctx->rd_idx = 0;
 	}
-	return true;
+	return W_SUCCESS;
 }
 
-bool srb_peek(const srb_ctx_t *ctx, void *element) {
+w_status_t srb_peek(const srb_ctx_t *ctx, void *element) {
 	w_assert(ctx);
 	w_assert(element);
 
 	if (srb_is_empty(ctx)) {
-		return false;
+		return W_FAILURE; // TODO in future use W_UNDERFLOW
 	}
 	size_t offset = get_offset_bytes(ctx, ctx->rd_idx);
 	memcpy(element, ((uint8_t *)ctx->memory_pool) + offset, ctx->element_size);
-	return true;
+	return W_SUCCESS;
 }
