@@ -53,6 +53,11 @@ public:
 		rockettest_check_expr_true(actuator_id_after == actuator_id_before);
 		rockettest_check_expr_true(actuator_state_after == actuator_state_before);
 
+		can_msg_t invalid_len_msg = msg;
+		invalid_len_msg.data_len = 2;
+		w_status_t parse_status = get_actuator_id(&invalid_len_msg, &actuator_id_after);
+		rockettest_check_expr_true(parse_status == W_DATA_FORMAT_ERROR);
+
 		return test_passed;
 	}
 };
@@ -116,8 +121,58 @@ public:
 		rockettest_check_expr_true(actuator_curr_state_after == actuator_curr_state_before);
 		rockettest_check_expr_true(actuator_cmd_state_after == actuator_cmd_state_before);
 
+		can_msg_t invalid_len_msg = msg;
+		invalid_len_msg.data_len = 3;
+
+		w_status_t parse_status = get_actuator_id(&invalid_len_msg, &actuator_id_after);
+		rockettest_check_expr_true(parse_status == W_DATA_FORMAT_ERROR);
+
+		parse_status = get_curr_actuator_state(&invalid_len_msg, &actuator_curr_state_after);
+		rockettest_check_expr_true(parse_status == W_DATA_FORMAT_ERROR);
+
+		can_msg_t invalid_type_msg = msg;
+		invalid_type_msg.sid = build_sid(prio_before, MSG_ACTUATOR_CMD, actuator_id_before);
+		parse_status = get_curr_actuator_state(&invalid_type_msg, &actuator_curr_state_after);
+		rockettest_check_expr_true(parse_status == W_INVALID_PARAM);
+
 		return test_passed;
 	}
 };
 
 actuator_status_message_test actuator_status_message_test_inst;
+
+class actuator_message_general_test : rockettest_test {
+public:
+	actuator_message_general_test() : rockettest_test("actuator_message_general_test") {}
+
+	bool run_test() override {
+		bool test_passed = true;
+
+		can_msg_t msg;
+
+		can_msg_prio_t prio_before = rockettest_rand_field<can_msg_prio_t, 0x3>();
+		std::uint16_t timestamp_before = rockettest_rand_field<std::uint16_t>();
+		can_actuator_id_t actuator_id_before = rockettest_rand_field<can_actuator_id_t, 0xff>();
+		can_actuator_state_t actuator_state_before =
+			rockettest_rand_field<can_actuator_state_t, 0xff>();
+
+		build_actuator_cmd_msg(
+			prio_before, timestamp_before, actuator_id_before, actuator_state_before, &msg);
+
+		can_actuator_id_t actuator_id_after;
+		can_actuator_state_t actuator_state_after;
+
+		can_msg_t invalid_type_msg = msg;
+		invalid_type_msg.sid = build_sid(prio_before, MSG_GENERAL_BOARD_STATUS, actuator_id_before);
+
+		w_status_t parse_status = get_actuator_id(&invalid_type_msg, &actuator_id_after);
+		rockettest_check_expr_true(parse_status == W_INVALID_PARAM);
+
+		parse_status = get_cmd_actuator_state(&invalid_type_msg, &actuator_state_after);
+		rockettest_check_expr_true(parse_status == W_INVALID_PARAM);
+
+		return test_passed;
+	}
+};
+
+actuator_message_general_test actuator_message_general_test_inst;
