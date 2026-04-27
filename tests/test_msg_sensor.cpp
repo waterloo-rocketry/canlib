@@ -60,12 +60,14 @@ public:
 
 		can_msg_t invalid_type_msg = msg;
 		invalid_type_msg.sid = build_sid(prio_before, MSG_SENSOR_ANALOG32, sensor_id_before);
-		w_status_t parse_status = get_analog_sensor_data_16bit(&invalid_type_msg, &sensor_id_after, &sensor_data_after);
+		w_status_t parse_status =
+			get_analog_sensor_data_16bit(&invalid_type_msg, &sensor_id_after, &sensor_data_after);
 		rockettest_check_expr_true(parse_status == W_INVALID_PARAM);
 
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.data_len = 3;
-		parse_status = get_analog_sensor_data_16bit(&invalid_len_msg, &sensor_id_after, &sensor_data_after);
+		parse_status =
+			get_analog_sensor_data_16bit(&invalid_len_msg, &sensor_id_after, &sensor_data_after);
 		rockettest_check_expr_true(parse_status == W_DATA_FORMAT_ERROR);
 
 		return test_passed;
@@ -126,12 +128,14 @@ public:
 
 		can_msg_t invalid_type_msg = msg;
 		invalid_type_msg.sid = build_sid(prio_before, MSG_SENSOR_ANALOG16, sensor_id_before);
-		w_status_t parse_status = get_analog_sensor_data_32bit(&invalid_type_msg, &sensor_id_after, &sensor_data_after);
+		w_status_t parse_status =
+			get_analog_sensor_data_32bit(&invalid_type_msg, &sensor_id_after, &sensor_data_after);
 		rockettest_check_expr_true(parse_status == W_INVALID_PARAM);
 
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.data_len = 5;
-		parse_status = get_analog_sensor_data_32bit(&invalid_len_msg, &sensor_id_after, &sensor_data_after);
+		parse_status =
+			get_analog_sensor_data_32bit(&invalid_len_msg, &sensor_id_after, &sensor_data_after);
 		rockettest_check_expr_true(parse_status == W_DATA_FORMAT_ERROR);
 
 		return test_passed;
@@ -209,12 +213,20 @@ public:
 
 		can_msg_t invalid_type_msg = msg;
 		invalid_type_msg.sid = build_sid(prio_before, MSG_SENSOR_2D_ANALOG24, sensor_id_before);
-		w_status_t parse_status = get_3d_analog_sensor_data_16bit(&invalid_type_msg, &sensor_id_after, &sensor_data_x_after, &sensor_data_y_after, &sensor_data_z_after);
+		w_status_t parse_status = get_3d_analog_sensor_data_16bit(&invalid_type_msg,
+																  &sensor_id_after,
+																  &sensor_data_x_after,
+																  &sensor_data_y_after,
+																  &sensor_data_z_after);
 		rockettest_check_expr_true(parse_status == W_INVALID_PARAM);
 
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.data_len = 7;
-		parse_status = get_3d_analog_sensor_data_16bit(&invalid_len_msg, &sensor_id_after, &sensor_data_x_after, &sensor_data_y_after, &sensor_data_z_after);
+		parse_status = get_3d_analog_sensor_data_16bit(&invalid_len_msg,
+													   &sensor_id_after,
+													   &sensor_data_x_after,
+													   &sensor_data_y_after,
+													   &sensor_data_z_after);
 		rockettest_check_expr_true(parse_status == W_DATA_FORMAT_ERROR);
 
 		return test_passed;
@@ -283,17 +295,33 @@ public:
 		rockettest_check_expr_true(sensor_data_y_after == sensor_data_y_before);
 
 		std::uint32_t invalid_sensor_data = kMax24BitValue + 1;
-		rockettest_check_assert_triggered([=]() mutable {build_2d_analog_sensor_24bit_msg(prio_before, timestamp_before, sensor_id_before, invalid_sensor_data, sensor_data_y_before, &msg); });
-		rockettest_check_assert_triggered([=]() mutable {build_2d_analog_sensor_24bit_msg(prio_before, timestamp_before, sensor_id_before, sensor_data_x_before, invalid_sensor_data, &msg); });
+		rockettest_check_assert_triggered([=]() mutable {
+			build_2d_analog_sensor_24bit_msg(prio_before,
+											 timestamp_before,
+											 sensor_id_before,
+											 invalid_sensor_data,
+											 sensor_data_y_before,
+											 &msg);
+		});
+		rockettest_check_assert_triggered([=]() mutable {
+			build_2d_analog_sensor_24bit_msg(prio_before,
+											 timestamp_before,
+											 sensor_id_before,
+											 sensor_data_x_before,
+											 invalid_sensor_data,
+											 &msg);
+		});
 
 		can_msg_t invalid_type_msg = msg;
 		invalid_type_msg.sid = build_sid(prio_before, MSG_SENSOR_ANALOG32, sensor_id_before);
-		w_status_t parse_status = get_2d_analog_sensor_data_24bit(&invalid_type_msg, &sensor_id_after, &sensor_data_x_after, &sensor_data_y_after);
+		w_status_t parse_status = get_2d_analog_sensor_data_24bit(
+			&invalid_type_msg, &sensor_id_after, &sensor_data_x_after, &sensor_data_y_after);
 		rockettest_check_expr_true(parse_status == W_INVALID_PARAM);
 
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.data_len = 7;
-		parse_status = get_2d_analog_sensor_data_24bit(&invalid_len_msg, &sensor_id_after, &sensor_data_x_after, &sensor_data_y_after);
+		parse_status = get_2d_analog_sensor_data_24bit(
+			&invalid_len_msg, &sensor_id_after, &sensor_data_x_after, &sensor_data_y_after);
 		rockettest_check_expr_true(parse_status == W_DATA_FORMAT_ERROR);
 
 		return test_passed;
@@ -304,8 +332,7 @@ analog_sensor_dem_2d_24bit_message_test analog_sensor_dem_2d_24bit_message_test_
 
 class analog_sensor_message_general_test : rockettest_test {
 public:
-	analog_sensor_message_general_test()
-		: rockettest_test("analog_sensor_message_general_test") {}
+	analog_sensor_message_general_test() : rockettest_test("analog_sensor_message_general_test") {}
 
 	bool run_test() override {
 		bool test_passed = true;
@@ -314,12 +341,10 @@ public:
 
 		can_msg_prio_t prio = rockettest_rand_field<can_msg_prio_t, 0x3>();
 		std::uint16_t timestamp = rockettest_rand_field<std::uint16_t>();
-		can_analog_sensor_id_t sensor_id =
-			rockettest_rand_field<can_analog_sensor_id_t, 0xff>();
+		can_analog_sensor_id_t sensor_id = rockettest_rand_field<can_analog_sensor_id_t, 0xff>();
 		std::uint16_t sensor_data = rockettest_rand_field<std::uint16_t>();
 
-		build_analog_sensor_16bit_msg(
-			prio, timestamp, sensor_id, sensor_data, &msg);
+		build_analog_sensor_16bit_msg(prio, timestamp, sensor_id, sensor_data, &msg);
 
 		can_msg_t invalid_type_msg = msg;
 		invalid_type_msg.sid = build_sid(prio, MSG_GENERAL_BOARD_STATUS, sensor_id);
