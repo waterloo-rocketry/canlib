@@ -33,6 +33,14 @@ public:
 		rockettest_check_expr_true(msg.sid == build_sid(prio, MSG_STREAM_STATUS, 0));
 		rockettest_check_expr_true(msg.data_len == 8);
 
+		std::uint32_t invalid_total_or_tx_size = kMax24BitValue + 1;
+		rockettest_check_assert_triggered([=]() mutable {
+			build_stream_status_msg(prio, timestamp, invalid_total_or_tx_size, tx_size, &msg);
+		});
+		rockettest_check_assert_triggered([=]() mutable {
+			build_stream_status_msg(prio, timestamp, total_size, invalid_total_or_tx_size, &msg);
+		});
+
 		std::uint32_t total_size_out = 0;
 		std::uint32_t tx_size_out = 0;
 		w_status_t parse_status = get_stream_status(&msg, &total_size_out, &tx_size_out);
@@ -40,10 +48,15 @@ public:
 		rockettest_check_expr_true(total_size_out == total_size);
 		rockettest_check_expr_true(tx_size_out == tx_size);
 
-		can_msg_t invalid_msg = msg;
-		invalid_msg.sid = build_sid(prio, MSG_STREAM_DATA, 0);
-		parse_status = get_stream_status(&invalid_msg, &total_size_out, &tx_size_out);
+		can_msg_t invalid_type_msg = msg;
+		invalid_type_msg.sid = build_sid(prio, MSG_STREAM_DATA, 0);
+		parse_status = get_stream_status(&invalid_type_msg, &total_size_out, &tx_size_out);
 		rockettest_check_expr_true(parse_status == W_INVALID_PARAM);
+
+		can_msg_t invalid_len_msg = msg;
+		invalid_len_msg.data_len = 7;
+		parse_status = get_stream_status(&invalid_len_msg, &total_size_out, &tx_size_out);
+		rockettest_check_expr_true(parse_status == W_DATA_FORMAT_ERROR);
 
 		return test_passed;
 	}
@@ -75,6 +88,11 @@ public:
 		rockettest_check_expr_true((msg.sid & 0xff) == seq_id);
 		rockettest_check_expr_true(std::memcmp(&msg.data[2], payload, payload_len) == 0);
 
+		std::uint8_t invalid_payload_len = STREAM_DATA_MAX_PAYLOAD_LEN + 1;
+		rockettest_check_assert_triggered([=]() mutable {
+			build_stream_data_msg(prio, timestamp, seq_id, payload, invalid_payload_len, &msg);
+		});
+
 		std::uint8_t seq_id_out = 0;
 		std::uint8_t payload_out[STREAM_DATA_MAX_PAYLOAD_LEN] = {};
 		std::uint8_t payload_len_out = 0;
@@ -87,7 +105,13 @@ public:
 
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.sid = build_sid(prio, MSG_STREAM_DATA, seq_id);
+		// Too short data_len
 		invalid_len_msg.data_len = 2;
+		parse_status =
+			get_stream_data(&invalid_len_msg, &seq_id_out, payload_out, &payload_len_out);
+		rockettest_check_expr_true(parse_status == W_DATA_FORMAT_ERROR);
+		// Too long data_len
+		invalid_len_msg.data_len = 9;
 		parse_status =
 			get_stream_data(&invalid_len_msg, &seq_id_out, payload_out, &payload_len_out);
 		rockettest_check_expr_true(parse_status == W_DATA_FORMAT_ERROR);

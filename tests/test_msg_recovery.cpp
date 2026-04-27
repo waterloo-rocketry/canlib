@@ -49,6 +49,12 @@ public:
 		rockettest_check_expr_true(alt_id_after == alt_id_before);
 		rockettest_check_expr_true(alt_arm_state_after == alt_arm_state_before);
 
+		can_msg_t invalid_len_msg = msg;
+		invalid_len_msg.data_len = 2;
+		w_status_t parse_status =
+			get_alt_arm_state(&invalid_len_msg, &alt_id_after, &alt_arm_state_after);
+		rockettest_check_expr_true(parse_status == W_DATA_FORMAT_ERROR);
+
 		return test_passed;
 	}
 };
@@ -116,8 +122,63 @@ public:
 		rockettest_check_expr_true(v_drogue_after == v_drogue_before);
 		rockettest_check_expr_true(v_main_after == v_main_before);
 
+		can_msg_t invalid_len_msg = msg;
+		invalid_len_msg.data_len = 6;
+
+		w_status_t parse_status =
+			get_alt_arm_state(&invalid_len_msg, &alt_id_after, &alt_arm_state_after);
+		rockettest_check_expr_true(parse_status == W_DATA_FORMAT_ERROR);
+
+		parse_status = get_pyro_voltage_data(&invalid_len_msg, &v_drogue_after, &v_main_after);
+		rockettest_check_expr_true(parse_status == W_DATA_FORMAT_ERROR);
+
+		can_msg_t invalid_type_msg = msg;
+		invalid_type_msg.sid = build_sid(prio_before, MSG_ALT_ARM_CMD, alt_id_before);
+		parse_status = get_pyro_voltage_data(&invalid_type_msg, &v_drogue_after, &v_main_after);
+		rockettest_check_expr_true(parse_status == W_INVALID_PARAM);
+
 		return test_passed;
 	}
 };
 
 recovery_status_message_test recovery_status_message_test_inst;
+
+class recovery_message_general_test : rockettest_test {
+public:
+	recovery_message_general_test() : rockettest_test("recovery_message_general_test") {}
+
+	bool run_test() override {
+		bool test_passed = true;
+
+		can_msg_t msg;
+
+		can_msg_prio_t prio_before = rockettest_rand_field<can_msg_prio_t, 0x3>();
+		std::uint16_t timestamp_before = rockettest_rand_field<std::uint16_t>();
+		can_altimeter_id_t alt_id_before = rockettest_rand_field<can_altimeter_id_t, 0xff>();
+		can_alt_arm_state_t alt_arm_state_before =
+			rockettest_rand_field<can_alt_arm_state_t, 0xff>();
+		std::uint16_t v_drogue_before = rockettest_rand_field<std::uint16_t>();
+		std::uint16_t v_main_before = rockettest_rand_field<std::uint16_t>();
+
+		build_alt_arm_status_msg(prio_before,
+								 timestamp_before,
+								 alt_id_before,
+								 alt_arm_state_before,
+								 v_drogue_before,
+								 v_main_before,
+								 &msg);
+
+		can_altimeter_id_t alt_id_after;
+		can_alt_arm_state_t alt_arm_state_after;
+
+		can_msg_t invalid_type_msg = msg;
+		invalid_type_msg.sid = build_sid(prio_before, MSG_GENERAL_BOARD_STATUS, alt_id_before);
+		w_status_t parse_status =
+			get_alt_arm_state(&invalid_type_msg, &alt_id_after, &alt_arm_state_after);
+		rockettest_check_expr_true(parse_status == W_INVALID_PARAM);
+
+		return test_passed;
+	}
+};
+
+recovery_message_general_test recovery_message_general_test_inst;
