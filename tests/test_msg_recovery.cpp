@@ -51,7 +51,8 @@ public:
 
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.data_len = 2;
-		w_status_t parse_status = get_alt_arm_state(&invalid_len_msg, &alt_id_after, &alt_arm_state_after);
+		w_status_t parse_status =
+			get_alt_arm_state(&invalid_len_msg, &alt_id_after, &alt_arm_state_after);
 		rockettest_check_expr_true(parse_status == W_DATA_FORMAT_ERROR);
 
 		return test_passed;
@@ -120,11 +121,12 @@ public:
 		rockettest_check_expr_true(alt_arm_state_after == alt_arm_state_before);
 		rockettest_check_expr_true(v_drogue_after == v_drogue_before);
 		rockettest_check_expr_true(v_main_after == v_main_before);
-		
+
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.data_len = 6;
 
-		w_status_t parse_status = get_alt_arm_state(&invalid_len_msg, &alt_id_after, &alt_arm_state_after);
+		w_status_t parse_status =
+			get_alt_arm_state(&invalid_len_msg, &alt_id_after, &alt_arm_state_after);
 		rockettest_check_expr_true(parse_status == W_DATA_FORMAT_ERROR);
 
 		parse_status = get_pyro_voltage_data(&invalid_len_msg, &v_drogue_after, &v_main_after);
@@ -171,7 +173,8 @@ public:
 
 		can_msg_t invalid_type_msg = msg;
 		invalid_type_msg.sid = build_sid(prio_before, MSG_GENERAL_BOARD_STATUS, alt_id_before);
-		w_status_t parse_status = get_alt_arm_state(&invalid_type_msg, &alt_id_after, &alt_arm_state_after);
+		w_status_t parse_status =
+			get_alt_arm_state(&invalid_type_msg, &alt_id_after, &alt_arm_state_after);
 		rockettest_check_expr_true(parse_status == W_INVALID_PARAM);
 
 		return test_passed;
