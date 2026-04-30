@@ -91,6 +91,10 @@ public:
 				rockettest_rand_field<can_msg_prio_t, 0x3>(), 0, 0, 0, 0, 0, nullptr);
 		});
 
+		rockettest_check_assert_triggered([] {
+			build_config_status_msg(rockettest_rand_field<can_msg_prio_t, 0x3>(), 0, 0, 0, nullptr);
+		});
+
 		rockettest_check_assert_triggered(
 			[] { get_general_board_status(nullptr, notnullptr<uint32_t>()); });
 		rockettest_check_assert_triggered(
@@ -105,6 +109,10 @@ public:
 			[] { get_reset_board_id(notnullptr<can_msg_t>(), notnullptr<uint8_t>(), nullptr); });
 		rockettest_check_assert_triggered([] { get_reset_board_id(nullptr, nullptr, nullptr); });
 
+		rockettest_check_assert_triggered(
+			[] { check_board_need_reset(nullptr, notnullptr<bool>()); });
+		rockettest_check_assert_triggered(
+			[] { check_board_need_reset(notnullptr<can_msg_t>(), nullptr); });
 		rockettest_check_assert_triggered([] { check_board_need_reset(nullptr, nullptr); });
 
 		rockettest_check_assert_triggered(
