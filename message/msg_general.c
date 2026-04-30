@@ -196,7 +196,7 @@ w_status_t get_config_id_value(const can_msg_t *msg, uint16_t *config_id, uint16
 		if (msg->data_len == 8) {
 			return W_SUCCESS;
 		} else {
-			return W_INVALID_PARAM;
+			return W_DATA_FORMAT_ERROR;
 		}
 	} else if (msg_type == MSG_CONFIG_STATUS) {
 		*config_id = (msg->data[2] << 8) | (msg->data[3]);
@@ -205,7 +205,7 @@ w_status_t get_config_id_value(const can_msg_t *msg, uint16_t *config_id, uint16
 		if (msg->data_len == 6) {
 			return W_SUCCESS;
 		} else {
-			return W_INVALID_PARAM;
+			return W_DATA_FORMAT_ERROR;
 		}
 	}
 
