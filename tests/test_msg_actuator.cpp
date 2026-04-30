@@ -55,7 +55,10 @@ public:
 
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.data_len = 2;
+
 		w_status_t parse_status = get_actuator_id(&invalid_len_msg, &actuator_id_after);
+		rockettest_check_expr_true(parse_status == W_DATA_FORMAT_ERROR);
+		parse_status = get_cmd_actuator_state(&invalid_len_msg, &actuator_state_after);
 		rockettest_check_expr_true(parse_status == W_DATA_FORMAT_ERROR);
 
 		return test_passed;
@@ -126,8 +129,9 @@ public:
 
 		w_status_t parse_status = get_actuator_id(&invalid_len_msg, &actuator_id_after);
 		rockettest_check_expr_true(parse_status == W_DATA_FORMAT_ERROR);
-
 		parse_status = get_curr_actuator_state(&invalid_len_msg, &actuator_curr_state_after);
+		rockettest_check_expr_true(parse_status == W_DATA_FORMAT_ERROR);
+		parse_status = get_cmd_actuator_state(&invalid_len_msg, &actuator_curr_state_after);
 		rockettest_check_expr_true(parse_status == W_DATA_FORMAT_ERROR);
 
 		can_msg_t invalid_type_msg = msg;
