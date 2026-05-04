@@ -38,6 +38,32 @@ public:
 
 timestamp_test timestamp_test_inst;
 
+class sid_build_test : rockettest_test {
+public:
+	sid_build_test() : rockettest_test("sid_build_test") {}
+
+	bool run_test() override {
+		bool test_passed = true;
+
+		// Test valid data size check for build_sid. Actual building of SIDs is tested in specific
+		// msg type tests
+		rockettest_check_assert_triggered([] {
+			static_cast<void>(build_sid(static_cast<can_msg_prio_t>(0x4),
+										rockettest_rand_field<can_msg_type_t, 0x7f>(),
+										rockettest_rand_field<uint8_t>()));
+		});
+		rockettest_check_assert_triggered([] {
+			static_cast<void>(build_sid(rockettest_rand_field<can_msg_prio_t, 0x3>(),
+										static_cast<can_msg_type_t>(0x80),
+										rockettest_rand_field<uint8_t>()));
+		});
+
+		return test_passed;
+	}
+};
+
+sid_build_test sid_build_test_inst;
+
 class sid_extract_test : rockettest_test {
 public:
 	sid_extract_test() : rockettest_test("sid_extract_test") {}
