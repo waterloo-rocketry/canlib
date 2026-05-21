@@ -76,6 +76,22 @@ void build_config_status_msg(can_msg_prio_t prio, uint16_t timestamp, uint16_t c
 	output->data_len = 6;
 }
 
+void build_canard_module_status_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t module_id,
+									uint32_t error_bitfield, uint8_t severity, can_msg_t *output) {
+	w_assert(output);
+
+	output->sid = build_sid(prio, MSG_CANARD_MODULE_STATUS, 0);
+	write_timestamp(timestamp, output);
+
+	output->data[2] = module_id;
+	output->data[3] = (error_bitfield >> 24) & 0xff;
+	output->data[4] = (error_bitfield >> 16) & 0xff;
+	output->data[5] = (error_bitfield >> 8) & 0xff;
+	output->data[6] = error_bitfield & 0xff;
+	output->data[7] = severity;
+	output->data_len = 8;
+}
+
 w_status_t get_general_board_status(const can_msg_t *msg, uint32_t *board_error_bitfield) {
 	w_assert(msg);
 	w_assert(board_error_bitfield);
