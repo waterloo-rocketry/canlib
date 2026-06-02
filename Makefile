@@ -1,5 +1,6 @@
 COMMON_C_SRCS := \
 	message/msg_actuator.c \
+	message/msg_canards.c \
 	message/msg_general.c \
 	message/msg_gps.c \
 	message/msg_recovery.c \
@@ -12,6 +13,7 @@ COMMON_C_SRCS := \
 
 COMMON_C_HEADERS := \
 	message/msg_actuator.h \
+	message/msg_canards.h \
 	message/msg_common.h \
 	message/msg_general.h \
 	message/msg_gps.h \
