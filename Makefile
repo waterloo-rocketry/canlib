@@ -37,6 +37,7 @@ INCLUDE_PATHS := . rocketlib/include
 
 TEST_SRCS := \
 	tests/test_msg_actuator.cpp \
+	tests/test_msg_canards.cpp \
 	tests/test_msg_common.cpp \
 	tests/test_msg_general.cpp \
 	tests/test_msg_gps.cpp \

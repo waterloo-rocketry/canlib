@@ -52,6 +52,7 @@ endif
 
 CANLIB_SRCS := \
 	$(CANLIB_PATH)/message/msg_actuator.c \
+	$(CANLIB_PATH)/message/msg_canards.c \
 	$(CANLIB_PATH)/message/msg_general.c \
 	$(CANLIB_PATH)/message/msg_gps.c \
 	$(CANLIB_PATH)/message/msg_recovery.c \
@@ -65,6 +66,7 @@ CANLIB_SRCS := \
 TEST_SRCS := \
 	rockettest.cpp \
 	test_msg_actuator.cpp \
+	test_msg_canards.cpp \
 	test_msg_common.cpp \
 	test_msg_general.cpp \
 	test_msg_gps.cpp \
