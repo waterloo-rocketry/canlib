@@ -6,6 +6,7 @@ COMMON_C_SRCS := \
 	message/msg_recovery.c \
 	message/msg_sensor.c \
 	message/msg_stream.c \
+	message/msg_telemetry.c \
 	util/can_rcv_buffer.c \
 	util/can_tx_buffer.c \
 	util/safe_ring_buffer.c \
@@ -20,6 +21,7 @@ COMMON_C_HEADERS := \
 	message/msg_recovery.h \
 	message/msg_sensor.h \
 	message/msg_stream.h \
+	message/msg_telemetry.h \
 	util/can_rcv_buffer.h \
 	util/can_tx_buffer.h \
 	util/safe_ring_buffer.h \
@@ -44,6 +46,7 @@ TEST_SRCS := \
 	tests/test_msg_recovery.cpp \
 	tests/test_msg_sensor.cpp \
 	tests/test_msg_stream.cpp \
+	tests/test_msg_telemetry.cpp \
 	tests/test_nullptr_reject.cpp \
 	tests/test_timing_util.cpp \
 	tests/test_tx_rcv_buffer.cpp

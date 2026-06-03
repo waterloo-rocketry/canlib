@@ -58,6 +58,7 @@ CANLIB_SRCS := \
 	$(CANLIB_PATH)/message/msg_recovery.c \
 	$(CANLIB_PATH)/message/msg_sensor.c \
 	$(CANLIB_PATH)/message/msg_stream.c \
+	$(CANLIB_PATH)/message/msg_telemetry.c \
 	$(CANLIB_PATH)/util/can_rcv_buffer.c \
 	$(CANLIB_PATH)/util/can_tx_buffer.c \
 	$(CANLIB_PATH)/util/safe_ring_buffer.c \
@@ -73,6 +74,7 @@ TEST_SRCS := \
 	test_msg_recovery.cpp \
 	test_msg_sensor.cpp \
 	test_msg_stream.cpp \
+	test_msg_telemetry.cpp \
 	test_nullptr_reject.cpp \
 	test_tx_rcv_buffer.cpp
 

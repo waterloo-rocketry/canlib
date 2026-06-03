@@ -11,6 +11,7 @@
 #include "message/msg_recovery.h"
 #include "message/msg_sensor.h"
 #include "message/msg_stream.h"
+#include "message/msg_telemetry.h"
 #include "util/can_rcv_buffer.h"
 #include "util/can_tx_buffer.h"
 #include "util/safe_ring_buffer.h"
@@ -573,6 +574,34 @@ public:
 		rockettest_check_assert_triggered(
 			[] { get_stream_retry_seq_id(notnullptr<can_msg_t>(), nullptr); });
 		rockettest_check_assert_triggered([] { get_stream_retry_seq_id(nullptr, nullptr); });
+
+		// -----------------------
+		// msg_telemetry tests
+		// -----------------------
+		rockettest_check_assert_triggered([] {
+			build_telemetry_info_msg(
+				rockettest_rand_field<can_msg_prio_t, 0x3>(), 0, 0, 0, 0, nullptr);
+		});
+
+		rockettest_check_assert_triggered([] {
+			get_telemetry_info_msg(
+				nullptr, notnullptr<uint8_t>(), notnullptr<uint8_t>(), notnullptr<uint8_t>());
+		});
+		rockettest_check_assert_triggered([] {
+			get_telemetry_info_msg(
+				notnullptr<can_msg_t>(), nullptr, notnullptr<uint8_t>(), notnullptr<uint8_t>());
+		});
+		rockettest_check_assert_triggered([] {
+			get_telemetry_info_msg(
+				notnullptr<can_msg_t>(), notnullptr<uint8_t>(), nullptr, notnullptr<uint8_t>());
+		});
+		rockettest_check_assert_triggered([] {
+			get_telemetry_info_msg(
+				notnullptr<can_msg_t>(), notnullptr<uint8_t>(), notnullptr<uint8_t>(), nullptr);
+		});
+
+		rockettest_check_assert_triggered(
+			[] { get_telemetry_info_msg(nullptr, nullptr, nullptr, nullptr); });
 
 		// -----------------------
 		// safe_ring_buffer tests
