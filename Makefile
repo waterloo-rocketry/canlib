@@ -1,10 +1,12 @@
 COMMON_C_SRCS := \
 	message/msg_actuator.c \
+	message/msg_canards.c \
 	message/msg_general.c \
 	message/msg_gps.c \
 	message/msg_recovery.c \
 	message/msg_sensor.c \
 	message/msg_stream.c \
+	message/msg_telemetry.c \
 	util/can_rcv_buffer.c \
 	util/can_tx_buffer.c \
 	util/safe_ring_buffer.c \
@@ -12,12 +14,14 @@ COMMON_C_SRCS := \
 
 COMMON_C_HEADERS := \
 	message/msg_actuator.h \
+	message/msg_canards.h \
 	message/msg_common.h \
 	message/msg_general.h \
 	message/msg_gps.h \
 	message/msg_recovery.h \
 	message/msg_sensor.h \
 	message/msg_stream.h \
+	message/msg_telemetry.h \
 	util/can_rcv_buffer.h \
 	util/can_tx_buffer.h \
 	util/safe_ring_buffer.h \
@@ -35,12 +39,14 @@ INCLUDE_PATHS := . rocketlib/include
 
 TEST_SRCS := \
 	tests/test_msg_actuator.cpp \
+	tests/test_msg_canards.cpp \
 	tests/test_msg_common.cpp \
 	tests/test_msg_general.cpp \
 	tests/test_msg_gps.cpp \
 	tests/test_msg_recovery.cpp \
 	tests/test_msg_sensor.cpp \
 	tests/test_msg_stream.cpp \
+	tests/test_msg_telemetry.cpp \
 	tests/test_nullptr_reject.cpp \
 	tests/test_timing_util.cpp \
 	tests/test_tx_rcv_buffer.cpp

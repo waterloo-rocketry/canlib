@@ -4,12 +4,14 @@
 #include "rockettest.hpp"
 
 #include "message/msg_actuator.h"
+#include "message/msg_canards.h"
 #include "message/msg_common.h"
 #include "message/msg_general.h"
 #include "message/msg_gps.h"
 #include "message/msg_recovery.h"
 #include "message/msg_sensor.h"
 #include "message/msg_stream.h"
+#include "message/msg_telemetry.h"
 #include "util/can_rcv_buffer.h"
 #include "util/can_tx_buffer.h"
 #include "util/safe_ring_buffer.h"
@@ -76,6 +78,34 @@ public:
 		rockettest_check_assert_triggered(
 			[] { get_cmd_actuator_state(notnullptr<can_msg_t>(), nullptr); });
 		rockettest_check_assert_triggered([] { get_cmd_actuator_state(nullptr, nullptr); });
+
+		// -----------------------
+		// msg_canards tests
+		// -----------------------
+		rockettest_check_assert_triggered([] {
+			build_canard_firmware_error_msg(
+				rockettest_rand_field<can_msg_prio_t, 0x3>(), 0, 0, 0, 0, nullptr);
+		});
+
+		rockettest_check_assert_triggered([] {
+			get_canard_firmware_error_msg(
+				nullptr, notnullptr<uint8_t>(), notnullptr<uint32_t>(), notnullptr<uint8_t>());
+		});
+		rockettest_check_assert_triggered([] {
+			get_canard_firmware_error_msg(
+				notnullptr<can_msg_t>(), nullptr, notnullptr<uint32_t>(), notnullptr<uint8_t>());
+		});
+		rockettest_check_assert_triggered([] {
+			get_canard_firmware_error_msg(
+				notnullptr<can_msg_t>(), notnullptr<uint8_t>(), nullptr, notnullptr<uint8_t>());
+		});
+		rockettest_check_assert_triggered([] {
+			get_canard_firmware_error_msg(
+				notnullptr<can_msg_t>(), notnullptr<uint8_t>(), notnullptr<uint32_t>(), nullptr);
+		});
+
+		rockettest_check_assert_triggered(
+			[] { get_canard_firmware_error_msg(nullptr, nullptr, nullptr, nullptr); });
 
 		// -----------------------
 		// msg_general tests
@@ -544,6 +574,34 @@ public:
 		rockettest_check_assert_triggered(
 			[] { get_stream_retry_seq_id(notnullptr<can_msg_t>(), nullptr); });
 		rockettest_check_assert_triggered([] { get_stream_retry_seq_id(nullptr, nullptr); });
+
+		// -----------------------
+		// msg_telemetry tests
+		// -----------------------
+		rockettest_check_assert_triggered([] {
+			build_telemetry_info_msg(
+				rockettest_rand_field<can_msg_prio_t, 0x3>(), 0, 0, 0, 0, nullptr);
+		});
+
+		rockettest_check_assert_triggered([] {
+			get_telemetry_info_msg(
+				nullptr, notnullptr<uint8_t>(), notnullptr<uint8_t>(), notnullptr<uint8_t>());
+		});
+		rockettest_check_assert_triggered([] {
+			get_telemetry_info_msg(
+				notnullptr<can_msg_t>(), nullptr, notnullptr<uint8_t>(), notnullptr<uint8_t>());
+		});
+		rockettest_check_assert_triggered([] {
+			get_telemetry_info_msg(
+				notnullptr<can_msg_t>(), notnullptr<uint8_t>(), nullptr, notnullptr<uint8_t>());
+		});
+		rockettest_check_assert_triggered([] {
+			get_telemetry_info_msg(
+				notnullptr<can_msg_t>(), notnullptr<uint8_t>(), notnullptr<uint8_t>(), nullptr);
+		});
+
+		rockettest_check_assert_triggered(
+			[] { get_telemetry_info_msg(nullptr, nullptr, nullptr, nullptr); });
 
 		// -----------------------
 		// safe_ring_buffer tests
