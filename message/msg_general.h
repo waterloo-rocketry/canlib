@@ -40,9 +40,6 @@ void build_config_set_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t board
 void build_config_status_msg(can_msg_prio_t prio, uint16_t timestamp, uint16_t config_id,
 							 uint16_t config_value, can_msg_t *output);
 
-void build_canard_module_status_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t module_id,
-									uint32_t error_bitfield, uint8_t severity, can_msg_t *output);
-
 w_status_t get_general_board_status(const can_msg_t *msg, uint32_t *board_error_bitfield);
 
 /*

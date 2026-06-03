@@ -4,6 +4,7 @@
 #include "rockettest.hpp"
 
 #include "message/msg_actuator.h"
+#include "message/msg_canards.h"
 #include "message/msg_common.h"
 #include "message/msg_general.h"
 #include "message/msg_gps.h"
@@ -76,6 +77,34 @@ public:
 		rockettest_check_assert_triggered(
 			[] { get_cmd_actuator_state(notnullptr<can_msg_t>(), nullptr); });
 		rockettest_check_assert_triggered([] { get_cmd_actuator_state(nullptr, nullptr); });
+
+		// -----------------------
+		// msg_canards tests
+		// -----------------------
+		rockettest_check_assert_triggered([] {
+			build_canard_firmware_error_msg(
+				rockettest_rand_field<can_msg_prio_t, 0x3>(), 0, 0, 0, 0, nullptr);
+		});
+
+		rockettest_check_assert_triggered([] {
+			get_canard_firmware_error_msg(
+				nullptr, notnullptr<uint8_t>(), notnullptr<uint32_t>(), notnullptr<uint8_t>());
+		});
+		rockettest_check_assert_triggered([] {
+			get_canard_firmware_error_msg(
+				notnullptr<can_msg_t>(), nullptr, notnullptr<uint32_t>(), notnullptr<uint8_t>());
+		});
+		rockettest_check_assert_triggered([] {
+			get_canard_firmware_error_msg(
+				notnullptr<can_msg_t>(), notnullptr<uint8_t>(), nullptr, notnullptr<uint8_t>());
+		});
+		rockettest_check_assert_triggered([] {
+			get_canard_firmware_error_msg(
+				notnullptr<can_msg_t>(), notnullptr<uint8_t>(), notnullptr<uint32_t>(), nullptr);
+		});
+
+		rockettest_check_assert_triggered(
+			[] { get_canard_firmware_error_msg(nullptr, nullptr, nullptr, nullptr); });
 
 		// -----------------------
 		// msg_general tests
