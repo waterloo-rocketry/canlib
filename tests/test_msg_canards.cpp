@@ -65,15 +65,17 @@ public:
 
 		can_msg_t invalid_type_msg = msg;
 		invalid_type_msg.sid = build_sid(prio_before, MSG_SENSOR_ANALOG32, 0);
-		w_status_t parse_status = get_canard_firmware_error_msg(
-			&invalid_type_msg, &module_id_after, &error_bitfield_after, &severity_after);
-		rockettest_check_expr_true(parse_status == W_INVALID_PARAM);
+		rockettest_check_expr_true(
+			get_canard_firmware_error_msg(
+				&invalid_type_msg, &module_id_after, &error_bitfield_after, &severity_after) ==
+			W_INVALID_PARAM);
 
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.data_len = 3;
-		parse_status = get_canard_firmware_error_msg(
-			&invalid_len_msg, &module_id_after, &error_bitfield_after, &severity_after);
-		rockettest_check_expr_true(parse_status == W_DATA_FORMAT_ERROR);
+		rockettest_check_expr_true(
+			get_canard_firmware_error_msg(
+				&invalid_len_msg, &module_id_after, &error_bitfield_after, &severity_after) ==
+			W_DATA_FORMAT_ERROR);
 
 		return test_passed;
 	}

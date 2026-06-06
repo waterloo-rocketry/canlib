@@ -104,10 +104,9 @@ public:
 
 		type_after = get_message_type(&msg);
 		timestamp_after = get_timestamp(&msg);
-		w_status_t parse_status =
-			get_reset_board_id(&msg, &board_type_id_after, &board_inst_id_after);
+		rockettest_check_expr_true(
+			get_reset_board_id(&msg, &board_type_id_after, &board_inst_id_after) == W_SUCCESS);
 
-		rockettest_check_expr_true(parse_status == W_SUCCESS);
 		rockettest_check_expr_true(type_after == MSG_RESET_CMD);
 		rockettest_check_expr_true(timestamp_after == timestamp_before);
 		rockettest_check_expr_true(board_type_id_after == board_type_id_before);
@@ -119,12 +118,12 @@ public:
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.data_len = 3;
 
-		parse_status =
-			get_reset_board_id(&invalid_type_msg, &board_type_id_after, &board_inst_id_after);
-		rockettest_check_expr_true(parse_status == W_INVALID_PARAM);
-		parse_status =
-			get_reset_board_id(&invalid_len_msg, &board_type_id_after, &board_inst_id_after);
-		rockettest_check_expr_true(parse_status == W_DATA_FORMAT_ERROR);
+		rockettest_check_expr_true(get_reset_board_id(&invalid_type_msg,
+													  &board_type_id_after,
+													  &board_inst_id_after) == W_INVALID_PARAM);
+		rockettest_check_expr_true(get_reset_board_id(&invalid_len_msg,
+													  &board_type_id_after,
+													  &board_inst_id_after) == W_DATA_FORMAT_ERROR);
 
 		// Test check_board_need_reset()
 		// Tests are compiled with BOARD_TYPE_UNIQUE_ID=BOARD_TYPE_ID_ARMING and
@@ -134,39 +133,34 @@ public:
 
 		// Type any
 		build_reset_msg(prio, timestamp_before, BOARD_TYPE_ID_ANY, board_inst_id_before, &msg);
-		parse_status = check_board_need_reset(&msg, &board_need_reset);
-		rockettest_check_expr_true(parse_status == W_SUCCESS);
+		rockettest_check_expr_true(check_board_need_reset(&msg, &board_need_reset) == W_SUCCESS);
 		rockettest_check_expr_true(board_need_reset);
 
 		// Type matching, inst any
 		build_reset_msg(prio, timestamp_before, BOARD_TYPE_UNIQUE_ID, BOARD_INST_ID_ANY, &msg);
-		parse_status = check_board_need_reset(&msg, &board_need_reset);
-		rockettest_check_expr_true(parse_status == W_SUCCESS);
+		rockettest_check_expr_true(check_board_need_reset(&msg, &board_need_reset) == W_SUCCESS);
 		rockettest_check_expr_true(board_need_reset);
 
 		// Type matching, inst matching
 		build_reset_msg(prio, timestamp_before, BOARD_TYPE_UNIQUE_ID, BOARD_INST_UNIQUE_ID, &msg);
-		parse_status = check_board_need_reset(&msg, &board_need_reset);
-		rockettest_check_expr_true(parse_status == W_SUCCESS);
+		rockettest_check_expr_true(check_board_need_reset(&msg, &board_need_reset) == W_SUCCESS);
 		rockettest_check_expr_true(board_need_reset);
 
 		// Type matching, inst not matching
 		build_reset_msg(prio, timestamp_before, BOARD_TYPE_UNIQUE_ID, BOARD_INST_ID_GROUND, &msg);
-		parse_status = check_board_need_reset(&msg, &board_need_reset);
-		rockettest_check_expr_true(parse_status == W_SUCCESS);
+		rockettest_check_expr_true(check_board_need_reset(&msg, &board_need_reset) == W_SUCCESS);
 		rockettest_check_expr_true(!board_need_reset);
 
 		// Type not matching
 		build_reset_msg(
 			prio, timestamp_before, BOARD_TYPE_ID_ALTIMETER, BOARD_INST_UNIQUE_ID, &msg);
-		parse_status = check_board_need_reset(&msg, &board_need_reset);
-		rockettest_check_expr_true(parse_status == W_SUCCESS);
+		rockettest_check_expr_true(check_board_need_reset(&msg, &board_need_reset) == W_SUCCESS);
 		rockettest_check_expr_true(!board_need_reset);
 
-		parse_status = check_board_need_reset(&invalid_type_msg, &board_need_reset);
-		rockettest_check_expr_true(parse_status == W_INVALID_PARAM);
-		parse_status = check_board_need_reset(&invalid_len_msg, &board_need_reset);
-		rockettest_check_expr_true(parse_status == W_DATA_FORMAT_ERROR);
+		rockettest_check_expr_true(check_board_need_reset(&invalid_type_msg, &board_need_reset) ==
+								   W_INVALID_PARAM);
+		rockettest_check_expr_true(check_board_need_reset(&invalid_len_msg, &board_need_reset) ==
+								   W_DATA_FORMAT_ERROR);
 
 		return test_passed;
 	}
@@ -208,8 +202,7 @@ public:
 
 		type_after = get_message_type(&msg);
 		timestamp_after = get_timestamp(&msg);
-		w_status_t parse_status = get_debug_raw_data(&msg, data_after);
-		rockettest_check_expr_true(parse_status == W_SUCCESS);
+		rockettest_check_expr_true(get_debug_raw_data(&msg, data_after) == W_SUCCESS);
 
 		rockettest_check_expr_true(type_after == MSG_DEBUG_RAW)
 			rockettest_check_expr_true(timestamp_after == timestamp_before);
@@ -219,13 +212,13 @@ public:
 
 		can_msg_t invalid_type_msg = msg;
 		invalid_type_msg.sid = build_sid(prio, MSG_GENERAL_BOARD_STATUS, 0);
-		parse_status = get_debug_raw_data(&invalid_type_msg, data_after);
-		rockettest_check_expr_true(parse_status == W_INVALID_PARAM);
+		rockettest_check_expr_true(get_debug_raw_data(&invalid_type_msg, data_after) ==
+								   W_INVALID_PARAM);
 
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.data_len = 7;
-		parse_status = get_debug_raw_data(&invalid_len_msg, data_after);
-		rockettest_check_expr_true(parse_status == W_DATA_FORMAT_ERROR);
+		rockettest_check_expr_true(get_debug_raw_data(&invalid_len_msg, data_after) ==
+								   W_DATA_FORMAT_ERROR);
 
 		return test_passed;
 	}
@@ -282,11 +275,11 @@ public:
 		std::uint16_t config_value_after;
 
 		type_after = get_message_type(&msg);
-		w_status_t parse_status =
-			get_config_set_target_board(&msg, &board_type_id_after, &board_inst_id_after);
-		rockettest_check_expr_true(parse_status == W_SUCCESS);
-		parse_status = get_config_id_value(&msg, &config_id_after, &config_value_after);
-		rockettest_check_expr_true(parse_status == W_SUCCESS);
+		rockettest_check_expr_true(get_config_set_target_board(&msg,
+															   &board_type_id_after,
+															   &board_inst_id_after) == W_SUCCESS);
+		rockettest_check_expr_true(
+			get_config_id_value(&msg, &config_id_after, &config_value_after) == W_SUCCESS);
 
 		rockettest_check_expr_true(type_after == MSG_CONFIG_SET);
 		rockettest_check_expr_true(board_type_id_after == board_type_id_before);
@@ -296,17 +289,19 @@ public:
 
 		can_msg_t invalid_type_msg = msg;
 		invalid_type_msg.sid = build_sid(prio, MSG_CONFIG_STATUS, 0);
-		parse_status = get_config_set_target_board(
-			&invalid_type_msg, &board_type_id_after, &board_inst_id_after);
-		rockettest_check_expr_true(parse_status == W_INVALID_PARAM);
+		rockettest_check_expr_true(
+			get_config_set_target_board(
+				&invalid_type_msg, &board_type_id_after, &board_inst_id_after) == W_INVALID_PARAM);
 
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.data_len = 7;
-		parse_status = get_config_set_target_board(
-			&invalid_len_msg, &board_type_id_after, &board_inst_id_after);
-		rockettest_check_expr_true(parse_status == W_DATA_FORMAT_ERROR);
-		parse_status = get_config_id_value(&invalid_len_msg, &config_id_after, &config_value_after);
-		rockettest_check_expr_true(parse_status == W_DATA_FORMAT_ERROR);
+		rockettest_check_expr_true(get_config_set_target_board(&invalid_len_msg,
+															   &board_type_id_after,
+															   &board_inst_id_after) ==
+								   W_DATA_FORMAT_ERROR);
+		rockettest_check_expr_true(get_config_id_value(&invalid_len_msg,
+													   &config_id_after,
+													   &config_value_after) == W_DATA_FORMAT_ERROR);
 
 		return test_passed;
 	}
@@ -348,8 +343,8 @@ public:
 		std::uint16_t config_value_after;
 
 		type_after = get_message_type(&msg);
-		w_status_t parse_status = get_config_id_value(&msg, &config_id_after, &config_value_after);
-		rockettest_check_expr_true(parse_status == W_SUCCESS);
+		rockettest_check_expr_true(
+			get_config_id_value(&msg, &config_id_after, &config_value_after) == W_SUCCESS);
 
 		rockettest_check_expr_true(type_after == MSG_CONFIG_STATUS);
 		rockettest_check_expr_true(config_id_after == config_id_before);
@@ -357,8 +352,9 @@ public:
 
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.data_len = 5;
-		parse_status = get_config_id_value(&invalid_len_msg, &config_id_after, &config_value_after);
-		rockettest_check_expr_true(parse_status == W_DATA_FORMAT_ERROR);
+		rockettest_check_expr_true(get_config_id_value(&invalid_len_msg,
+													   &config_id_after,
+													   &config_value_after) == W_DATA_FORMAT_ERROR);
 
 		return test_passed;
 	}
@@ -388,9 +384,9 @@ public:
 		std::uint16_t config_id_after;
 		std::uint16_t config_value_after;
 
-		w_status_t parse_status =
-			get_config_id_value(&invalid_type_msg, &config_id_after, &config_value_after);
-		rockettest_check_expr_true(parse_status == W_INVALID_PARAM);
+		rockettest_check_expr_true(get_config_id_value(&invalid_type_msg,
+													   &config_id_after,
+													   &config_value_after) == W_INVALID_PARAM);
 
 		return test_passed;
 	}
