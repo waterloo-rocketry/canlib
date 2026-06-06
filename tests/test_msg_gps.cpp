@@ -60,7 +60,10 @@ public:
 
 		type_after = get_message_type(&msg);
 		timestamp_after = get_timestamp(&msg);
-		get_gps_time(&msg, &utc_hours_after, &utc_mins_after, &utc_secs_after, &utc_dsecs_after);
+		rockettest_check_expr_true(
+			get_gps_time(
+				&msg, &utc_hours_after, &utc_mins_after, &utc_secs_after, &utc_dsecs_after) ==
+			W_SUCCESS);
 
 		rockettest_check_expr_true(type_after == MSG_GPS_TIMESTAMP);
 		rockettest_check_expr_true(timestamp_after == timestamp_before);
@@ -71,18 +74,19 @@ public:
 
 		can_msg_t invalid_type_msg = msg;
 		invalid_type_msg.sid = build_sid(prio_before, MSG_GPS_LATITUDE, 0);
-		w_status_t parse_status = get_gps_time(&invalid_type_msg,
-											   &utc_hours_after,
-											   &utc_mins_after,
-											   &utc_secs_after,
-											   &utc_dsecs_after);
-		rockettest_check_expr_true(parse_status == W_INVALID_PARAM);
+		rockettest_check_expr_true(get_gps_time(&invalid_type_msg,
+												&utc_hours_after,
+												&utc_mins_after,
+												&utc_secs_after,
+												&utc_dsecs_after) == W_INVALID_PARAM);
 
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.data_len = 5;
-		parse_status = get_gps_time(
-			&invalid_len_msg, &utc_hours_after, &utc_mins_after, &utc_secs_after, &utc_dsecs_after);
-		rockettest_check_expr_true(parse_status == W_DATA_FORMAT_ERROR);
+		rockettest_check_expr_true(get_gps_time(&invalid_len_msg,
+												&utc_hours_after,
+												&utc_mins_after,
+												&utc_secs_after,
+												&utc_dsecs_after) == W_DATA_FORMAT_ERROR);
 
 		return test_passed;
 	}
@@ -142,7 +146,9 @@ public:
 
 		type_after = get_message_type(&msg);
 		timestamp_after = get_timestamp(&msg);
-		get_gps_lat(&msg, &degrees_after, &minutes_after, &dminutes_after, &direction_after);
+		rockettest_check_expr_true(
+			get_gps_lat(&msg, &degrees_after, &minutes_after, &dminutes_after, &direction_after) ==
+			W_SUCCESS);
 
 		rockettest_check_expr_true(type_after == MSG_GPS_LATITUDE);
 		rockettest_check_expr_true(timestamp_after == timestamp_before);
@@ -153,15 +159,19 @@ public:
 
 		can_msg_t invalid_type_msg = msg;
 		invalid_type_msg.sid = build_sid(prio_before, MSG_GPS_TIMESTAMP, 0);
-		w_status_t parse_status = get_gps_lat(
-			&invalid_type_msg, &degrees_after, &minutes_after, &dminutes_after, &direction_after);
-		rockettest_check_expr_true(parse_status == W_INVALID_PARAM);
+		rockettest_check_expr_true(get_gps_lat(&invalid_type_msg,
+											   &degrees_after,
+											   &minutes_after,
+											   &dminutes_after,
+											   &direction_after) == W_INVALID_PARAM);
 
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.data_len = 6;
-		parse_status = get_gps_lat(
-			&invalid_len_msg, &degrees_after, &minutes_after, &dminutes_after, &direction_after);
-		rockettest_check_expr_true(parse_status == W_DATA_FORMAT_ERROR);
+		rockettest_check_expr_true(get_gps_lat(&invalid_len_msg,
+											   &degrees_after,
+											   &minutes_after,
+											   &dminutes_after,
+											   &direction_after) == W_DATA_FORMAT_ERROR);
 
 		return test_passed;
 	}
@@ -221,7 +231,9 @@ public:
 
 		type_after = get_message_type(&msg);
 		timestamp_after = get_timestamp(&msg);
-		get_gps_lon(&msg, &degrees_after, &minutes_after, &dminutes_after, &direction_after);
+		rockettest_check_expr_true(
+			get_gps_lon(&msg, &degrees_after, &minutes_after, &dminutes_after, &direction_after) ==
+			W_SUCCESS);
 
 		rockettest_check_expr_true(type_after == MSG_GPS_LONGITUDE);
 		rockettest_check_expr_true(timestamp_after == timestamp_before);
@@ -232,16 +244,19 @@ public:
 
 		can_msg_t invalid_type_msg = msg;
 		invalid_type_msg.sid = build_sid(prio_before, MSG_GPS_TIMESTAMP, 0);
-		w_status_t parse_status = get_gps_lon(
-			&invalid_type_msg, &degrees_after, &minutes_after, &dminutes_after, &direction_after);
-		;
-		rockettest_check_expr_true(parse_status == W_INVALID_PARAM);
+		rockettest_check_expr_true(get_gps_lon(&invalid_type_msg,
+											   &degrees_after,
+											   &minutes_after,
+											   &dminutes_after,
+											   &direction_after) == W_INVALID_PARAM);
 
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.data_len = 6;
-		parse_status = get_gps_lon(
-			&invalid_len_msg, &degrees_after, &minutes_after, &dminutes_after, &direction_after);
-		rockettest_check_expr_true(parse_status == W_DATA_FORMAT_ERROR);
+		rockettest_check_expr_true(get_gps_lon(&invalid_len_msg,
+											   &degrees_after,
+											   &minutes_after,
+											   &dminutes_after,
+											   &direction_after) == W_DATA_FORMAT_ERROR);
 
 		return test_passed;
 	}
@@ -287,7 +302,8 @@ public:
 
 		type_after = get_message_type(&msg);
 		timestamp_after = get_timestamp(&msg);
-		get_gps_alt(&msg, &altitude_after, &daltitude_after);
+		rockettest_check_expr_true(get_gps_alt(&msg, &altitude_after, &daltitude_after) ==
+								   W_SUCCESS);
 
 		rockettest_check_expr_true(type_after == MSG_GPS_ALTITUDE);
 		rockettest_check_expr_true(timestamp_after == timestamp_before);
@@ -296,13 +312,14 @@ public:
 
 		can_msg_t invalid_type_msg = msg;
 		invalid_type_msg.sid = build_sid(prio_before, MSG_GPS_TIMESTAMP, 0);
-		w_status_t parse_status = get_gps_alt(&invalid_type_msg, &altitude_after, &daltitude_after);
-		rockettest_check_expr_true(parse_status == W_INVALID_PARAM);
+		rockettest_check_expr_true(
+			get_gps_alt(&invalid_type_msg, &altitude_after, &daltitude_after) == W_INVALID_PARAM);
 
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.data_len = 6;
-		parse_status = get_gps_alt(&invalid_len_msg, &altitude_after, &daltitude_after);
-		rockettest_check_expr_true(parse_status == W_DATA_FORMAT_ERROR);
+		rockettest_check_expr_true(get_gps_alt(&invalid_len_msg,
+											   &altitude_after,
+											   &daltitude_after) == W_DATA_FORMAT_ERROR);
 
 		return test_passed;
 	}
@@ -346,7 +363,7 @@ public:
 
 		type_after = get_message_type(&msg);
 		timestamp_after = get_timestamp(&msg);
-		get_gps_info(&msg, &num_sat_after, &quality_after);
+		rockettest_check_expr_true(get_gps_info(&msg, &num_sat_after, &quality_after) == W_SUCCESS);
 
 		rockettest_check_expr_true(type_after == MSG_GPS_INFO);
 		rockettest_check_expr_true(timestamp_after == timestamp_before);
@@ -355,13 +372,13 @@ public:
 
 		can_msg_t invalid_type_msg = msg;
 		invalid_type_msg.sid = build_sid(prio_before, MSG_GPS_TIMESTAMP, 0);
-		w_status_t parse_status = get_gps_info(&invalid_type_msg, &num_sat_after, &quality_after);
-		rockettest_check_expr_true(parse_status == W_INVALID_PARAM);
+		rockettest_check_expr_true(
+			get_gps_info(&invalid_type_msg, &num_sat_after, &quality_after) == W_INVALID_PARAM);
 
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.data_len = 3;
-		parse_status = get_gps_info(&invalid_len_msg, &num_sat_after, &quality_after);
-		rockettest_check_expr_true(parse_status == W_DATA_FORMAT_ERROR);
+		rockettest_check_expr_true(get_gps_info(&invalid_len_msg, &num_sat_after, &quality_after) ==
+								   W_DATA_FORMAT_ERROR);
 
 		return test_passed;
 	}
