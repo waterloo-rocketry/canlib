@@ -72,3 +72,55 @@ public:
 };
 
 telemetry_info_message_test telemetry_info_message_test_inst;
+
+class telemetry_state_switch_message_test : rockettest_test {
+public:
+	telemetry_state_switch_message_test()
+		: rockettest_test("telemetry_state_switch_message_test") {}
+
+	bool run_test() override {
+		bool test_passed = true;
+
+		can_msg_t msg;
+
+		can_msg_prio_t prio_before = rockettest_rand_field<can_msg_prio_t, 0x3>();
+		std::uint16_t timestamp_before = rockettest_rand_field<std::uint16_t>();
+		std::uint8_t channel_id_before = rockettest_rand_field<std::uint8_t>();
+
+		build_telemetry_state_switch_msg(prio_before, timestamp_before, channel_id_before, &msg);
+
+		std::uint8_t channel_id_extracted;
+
+		channel_id_extracted = static_cast<std::uint8_t>(msg.sid & 0xff);
+
+		rockettest_check_expr_true(msg.data_len == 2);
+		rockettest_check_expr_true(channel_id_extracted == channel_id_before);
+
+		can_msg_type_t type_after;
+		std::uint16_t timestamp_after;
+		std::uint8_t channel_id_after;
+
+		type_after = get_message_type(&msg);
+		timestamp_after = get_timestamp(&msg);
+		rockettest_check_expr_true(get_telemetry_state_switch_msg(&msg, &channel_id_after) ==
+								   W_SUCCESS);
+
+		rockettest_check_expr_true(type_after == MSG_TELEMETRY_STATE_SWITCH);
+		rockettest_check_expr_true(timestamp_after == timestamp_before);
+		rockettest_check_expr_true(channel_id_after == channel_id_before);
+
+		can_msg_t invalid_type_msg = msg;
+		invalid_type_msg.sid = build_sid(prio_before, MSG_SENSOR_ANALOG32, 0);
+		rockettest_check_expr_true(get_telemetry_state_switch_msg(
+									   &invalid_type_msg, &channel_id_after) == W_INVALID_PARAM);
+
+		can_msg_t invalid_len_msg = msg;
+		invalid_len_msg.data_len = 3;
+		rockettest_check_expr_true(get_telemetry_state_switch_msg(
+									   &invalid_len_msg, &channel_id_after) == W_DATA_FORMAT_ERROR);
+
+		return test_passed;
+	}
+};
+
+telemetry_state_switch_message_test telemetry_state_switch_message_test_inst;

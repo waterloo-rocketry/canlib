@@ -603,6 +603,18 @@ public:
 		rockettest_check_assert_triggered(
 			[] { get_telemetry_info_msg(nullptr, nullptr, nullptr, nullptr); });
 
+		rockettest_check_assert_triggered([] {
+			build_telemetry_state_switch_msg(
+				rockettest_rand_field<can_msg_prio_t, 0x3>(), 0, 0, nullptr);
+		});
+
+		rockettest_check_assert_triggered(
+			[] { get_telemetry_state_switch_msg(nullptr, notnullptr<uint8_t>()); });
+		rockettest_check_assert_triggered(
+			[] { get_telemetry_state_switch_msg(notnullptr<can_msg_t>(), nullptr); });
+
+		rockettest_check_assert_triggered([] { get_telemetry_state_switch_msg(nullptr, nullptr); });
+
 		// -----------------------
 		// safe_ring_buffer tests
 		// -----------------------
