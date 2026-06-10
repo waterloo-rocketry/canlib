@@ -41,3 +41,30 @@ w_status_t get_telemetry_info_msg(const can_msg_t *msg, uint8_t *channel_id, uin
 
 	return W_SUCCESS;
 }
+
+void build_telemetry_state_switch_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t channel_id,
+									  can_msg_t *output) {
+	w_assert(output);
+
+	output->sid = build_sid(prio, MSG_TELEMETRY_STATE_SWITCH, channel_id);
+	write_timestamp(timestamp, output);
+
+	output->data_len = 2;
+}
+
+w_status_t get_telemetry_state_switch_msg(const can_msg_t *msg, uint8_t *channel_id) {
+	w_assert(msg);
+	w_assert(channel_id);
+
+	*channel_id = get_message_metadata(msg);
+
+	if (get_message_type(msg) != MSG_TELEMETRY_STATE_SWITCH) {
+		return W_INVALID_PARAM;
+	}
+
+	if (msg->data_len != 2) {
+		return W_DATA_FORMAT_ERROR;
+	}
+
+	return W_SUCCESS;
+}
