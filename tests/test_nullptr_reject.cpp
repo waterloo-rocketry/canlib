@@ -1,6 +1,7 @@
 #include <cstdint>
 
 #include "can.h"
+#include "message_types.h"
 #include "rockettest.hpp"
 
 #include "message/msg_actuator.h"
@@ -83,25 +84,37 @@ public:
 		// msg_canards tests
 		// -----------------------
 		rockettest_check_assert_triggered([] {
-			build_canard_firmware_error_msg(
-				rockettest_rand_field<can_msg_prio_t, 0x3>(), 0, 0, 0, 0, nullptr);
+			build_canard_firmware_error_msg(rockettest_rand_field<can_msg_prio_t, 0x3>(),
+											0,
+											CANARDS_MODULE_ID_ADC,
+											0,
+											CANARDS_HEALTH_SEVERITY_HEALTH_ERROR,
+											nullptr);
 		});
 
 		rockettest_check_assert_triggered([] {
-			get_canard_firmware_error_msg(
-				nullptr, notnullptr<uint8_t>(), notnullptr<uint32_t>(), notnullptr<uint8_t>());
+			get_canard_firmware_error_msg(nullptr,
+										  notnullptr<can_canards_module_id_t>(),
+										  notnullptr<uint32_t>(),
+										  notnullptr<can_canards_health_severity_t>());
 		});
 		rockettest_check_assert_triggered([] {
-			get_canard_firmware_error_msg(
-				notnullptr<can_msg_t>(), nullptr, notnullptr<uint32_t>(), notnullptr<uint8_t>());
+			get_canard_firmware_error_msg(notnullptr<can_msg_t>(),
+										  nullptr,
+										  notnullptr<uint32_t>(),
+										  notnullptr<can_canards_health_severity_t>());
 		});
 		rockettest_check_assert_triggered([] {
-			get_canard_firmware_error_msg(
-				notnullptr<can_msg_t>(), notnullptr<uint8_t>(), nullptr, notnullptr<uint8_t>());
+			get_canard_firmware_error_msg(notnullptr<can_msg_t>(),
+										  notnullptr<can_canards_module_id_t>(),
+										  nullptr,
+										  notnullptr<can_canards_health_severity_t>());
 		});
 		rockettest_check_assert_triggered([] {
-			get_canard_firmware_error_msg(
-				notnullptr<can_msg_t>(), notnullptr<uint8_t>(), notnullptr<uint32_t>(), nullptr);
+			get_canard_firmware_error_msg(notnullptr<can_msg_t>(),
+										  notnullptr<can_canards_module_id_t>(),
+										  notnullptr<uint32_t>(),
+										  nullptr);
 		});
 
 		rockettest_check_assert_triggered(
@@ -585,15 +598,15 @@ public:
 
 		rockettest_check_assert_triggered([] {
 			get_telemetry_info_msg(
-				nullptr, notnullptr<uint8_t>(), notnullptr<uint8_t>(), notnullptr<uint8_t>());
+				nullptr, notnullptr<uint8_t>(), notnullptr<uint8_t>(), notnullptr<int8_t>());
 		});
 		rockettest_check_assert_triggered([] {
 			get_telemetry_info_msg(
-				notnullptr<can_msg_t>(), nullptr, notnullptr<uint8_t>(), notnullptr<uint8_t>());
+				notnullptr<can_msg_t>(), nullptr, notnullptr<uint8_t>(), notnullptr<int8_t>());
 		});
 		rockettest_check_assert_triggered([] {
 			get_telemetry_info_msg(
-				notnullptr<can_msg_t>(), notnullptr<uint8_t>(), nullptr, notnullptr<uint8_t>());
+				notnullptr<can_msg_t>(), notnullptr<uint8_t>(), nullptr, notnullptr<int8_t>());
 		});
 		rockettest_check_assert_triggered([] {
 			get_telemetry_info_msg(

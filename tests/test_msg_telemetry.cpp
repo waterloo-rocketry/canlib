@@ -20,14 +20,14 @@ public:
 		std::uint16_t timestamp_before = rockettest_rand_field<std::uint16_t>();
 		std::uint8_t channel_id_before = rockettest_rand_field<std::uint8_t>();
 		std::uint8_t lqi_before = rockettest_rand_field<std::uint8_t>();
-		std::uint8_t rssi_before = rockettest_rand_field<std::uint8_t>();
+		std::int8_t rssi_before = rockettest_rand_field<std::int8_t>();
 
 		build_telemetry_info_msg(
 			prio_before, timestamp_before, channel_id_before, lqi_before, rssi_before, &msg);
 
 		std::uint8_t channel_id_extracted;
 		std::uint8_t lqi_extracted;
-		std::uint8_t rssi_extracted;
+		std::int8_t rssi_extracted;
 
 		channel_id_extracted = static_cast<std::uint8_t>(msg.sid & 0xff);
 		lqi_extracted = msg.data[2];
@@ -42,7 +42,7 @@ public:
 		std::uint16_t timestamp_after;
 		std::uint8_t channel_id_after;
 		std::uint8_t lqi_after;
-		std::uint8_t rssi_after;
+		std::int8_t rssi_after;
 
 		type_after = get_message_type(&msg);
 		timestamp_after = get_timestamp(&msg);
