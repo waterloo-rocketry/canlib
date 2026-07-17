@@ -24,7 +24,7 @@ extern "C" {
  * @param output Output message buffer
  */
 void build_telemetry_info_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t channel_id,
-							  uint8_t lqi, uint8_t rssi, can_msg_t *output);
+							  uint8_t lqi, int8_t rssi, can_msg_t *output);
 
 /*
  * @brief Decode a telemetry info message
@@ -38,7 +38,7 @@ void build_telemetry_info_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t c
  * MSG_TELEMETRY_INFO, W_DATA_FORMAT_ERROR if message data length is not 4
  */
 w_status_t get_telemetry_info_msg(const can_msg_t *msg, uint8_t *channel_id, uint8_t *lqi,
-								  uint8_t *rssi);
+								  int8_t *rssi);
 
 /*
  * @brief Builds a telemetry state switch message
