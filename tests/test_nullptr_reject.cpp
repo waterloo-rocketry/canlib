@@ -585,15 +585,15 @@ public:
 
 		rockettest_check_assert_triggered([] {
 			get_telemetry_info_msg(
-				nullptr, notnullptr<uint8_t>(), notnullptr<uint8_t>(), notnullptr<uint8_t>());
+				nullptr, notnullptr<uint8_t>(), notnullptr<uint8_t>(), notnullptr<int8_t>());
 		});
 		rockettest_check_assert_triggered([] {
 			get_telemetry_info_msg(
-				notnullptr<can_msg_t>(), nullptr, notnullptr<uint8_t>(), notnullptr<uint8_t>());
+				notnullptr<can_msg_t>(), nullptr, notnullptr<uint8_t>(), notnullptr<int8_t>());
 		});
 		rockettest_check_assert_triggered([] {
 			get_telemetry_info_msg(
-				notnullptr<can_msg_t>(), notnullptr<uint8_t>(), nullptr, notnullptr<uint8_t>());
+				notnullptr<can_msg_t>(), notnullptr<uint8_t>(), nullptr, notnullptr<int8_t>());
 		});
 		rockettest_check_assert_triggered([] {
 			get_telemetry_info_msg(
