@@ -23,8 +23,9 @@ extern "C" {
  * @param severity Error severity
  * @param output Output message buffer
  */
-void build_canard_firmware_error_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t module_id,
-									 uint32_t error_bitfield, uint8_t severity, can_msg_t *output);
+void build_canard_firmware_error_msg(can_msg_prio_t prio, uint16_t timestamp,
+									 can_canards_module_id_t module_id, uint32_t error_bitfield,
+									 can_canards_health_severity_t severity, can_msg_t *output);
 
 /*
  * @brief Decode a canard firmware error message
@@ -37,8 +38,9 @@ void build_canard_firmware_error_msg(can_msg_prio_t prio, uint16_t timestamp, ui
  * @return W_SUCCESS if message parsed successfully, W_INVALID_PARAM if message type is not
  * MSG_CANARD_FIRMWARE_ERROR, W_DATA_FORMAT_ERROR if message data length is not 7
  */
-w_status_t get_canard_firmware_error_msg(const can_msg_t *msg, uint8_t *module_id,
-										 uint32_t *error_bitfield, uint8_t *severity);
+w_status_t get_canard_firmware_error_msg(const can_msg_t *msg, can_canards_module_id_t *module_id,
+										 uint32_t *error_bitfield,
+										 can_canards_health_severity_t *severity);
 
 #ifdef __cplusplus
 }

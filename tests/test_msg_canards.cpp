@@ -18,9 +18,11 @@ public:
 
 		can_msg_prio_t prio_before = rockettest_rand_field<can_msg_prio_t, 0x3>();
 		std::uint16_t timestamp_before = rockettest_rand_field<std::uint16_t>();
-		std::uint8_t module_id_before = rockettest_rand_field<std::uint8_t>();
+		can_canards_module_id_t module_id_before =
+			rockettest_rand_field<can_canards_module_id_t, 0xff>();
 		std::uint32_t error_bitfield_before = rockettest_rand_field<std::uint32_t>();
-		std::uint8_t severity_before = rockettest_rand_field<std::uint8_t>();
+		can_canards_health_severity_t severity_before =
+			rockettest_rand_field<can_canards_health_severity_t, 0xff>();
 
 		build_canard_firmware_error_msg(prio_before,
 										timestamp_before,
@@ -29,16 +31,16 @@ public:
 										severity_before,
 										&msg);
 
-		std::uint8_t module_id_extracted;
+		can_canards_module_id_t module_id_extracted;
 		std::uint32_t error_bitfield_extracted;
-		std::uint8_t severity_extracted;
+		can_canards_health_severity_t severity_extracted;
 
-		module_id_extracted = static_cast<std::uint8_t>(msg.sid & 0xff);
+		module_id_extracted = (can_canards_module_id_t) static_cast<std::uint8_t>(msg.sid & 0xff);
 		error_bitfield_extracted = (static_cast<std::uint32_t>(msg.data[2]) << 24) |
 								   (static_cast<std::uint32_t>(msg.data[3]) << 16) |
 								   (static_cast<std::uint32_t>(msg.data[4]) << 8) |
 								   (static_cast<std::uint32_t>(msg.data[5]) << 0);
-		severity_extracted = msg.data[6];
+		severity_extracted = (can_canards_health_severity_t)msg.data[6];
 
 		rockettest_check_expr_true(msg.data_len == 7);
 		rockettest_check_expr_true(module_id_extracted == module_id_before);
@@ -47,9 +49,9 @@ public:
 
 		can_msg_type_t type_after;
 		std::uint16_t timestamp_after;
-		std::uint8_t module_id_after;
+		can_canards_module_id_t module_id_after;
 		std::uint32_t error_bitfield_after;
-		std::uint8_t severity_after;
+		can_canards_health_severity_t severity_after;
 
 		type_after = get_message_type(&msg);
 		timestamp_after = get_timestamp(&msg);
