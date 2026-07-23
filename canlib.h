@@ -20,7 +20,7 @@
 #include "util/can_tx_buffer.h"
 #include "util/timing_util.h"
 
-#if (defined(STM32H733xx) || defined(STM32H750xx))
+#if (defined(STM32H723xx) || defined(STM32H733xx) || defined(STM32H750xx) || defined(STM32H753xx))
 
 #include "stm32h7/stm32h7_can.h"
 
