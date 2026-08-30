@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
 			default:
 				std::cout << "Usage: unit_test [-s random_seed] [test_names..]" << std::endl;
 				std::cout << "If random_seed is not provided then current time is used as seed"
-						  << std::endl;
+				          << std::endl;
 				std::cout << "If test_names are not provided then all tests will run" << std::endl;
 				return EXIT_FAILURE;
 		}
@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
 			} else {
 				all_passed = false;
 				std::cout << CONSOLE_COLOUR_RED << "NOT FOUND " << CONSOLE_COLOUR_RESET
-						  << argv[optind] << std::endl;
+				          << argv[optind] << std::endl;
 			}
 		}
 

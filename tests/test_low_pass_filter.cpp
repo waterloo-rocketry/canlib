@@ -61,10 +61,8 @@ public:
 			result = update_low_pass(alpha, new_input_value, &low_pass_value);
 			rockettest_check_expr_true(result == W_SUCCESS);
 			// Print the current iteration and values
-			printf("Iteration %2d: Low-Pass Value = %.4f | Expected ~ %.4f\n",
-				   i,
-				   low_pass_value,
-				   expected);
+			printf("Iteration %2d: Low-Pass Value = %.4f | Expected ~ %.4f\n", i, low_pass_value,
+			       expected);
 			// Verify the correctness of the low-pass update
 			rockettest_check_expr_true(fabs(low_pass_value - expected) < EPSILON);
 		}

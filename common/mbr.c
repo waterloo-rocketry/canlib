@@ -3,8 +3,8 @@
 #include "common.h"
 #include "mbr.h"
 
-#define BOOT_SIGNATURE_OFFSET 0x1FE
-#define MBR_PT_OFFSET 0x1BE
+#define BOOT_SIGNATURE_OFFSET 0x1fe
+#define MBR_PT_OFFSET 0x1be
 #define MBR_PT_SIZE 16
 #define MBR_TYPE_OFF 4
 #define MBR_LBA_OFF 8
@@ -17,7 +17,7 @@ w_status_t mbr_parse(uint8_t *first_sector, uint8_t partition_type, uint32_t *se
 	// Boot signature starts at 0x01FE in the first sector
 	uint8_t *boot_signature = first_sector + BOOT_SIGNATURE_OFFSET;
 	// Boot signature check
-	if (boot_signature[0] != 0x55 || boot_signature[1] != 0xAA) {
+	if (boot_signature[0] != 0x55 || boot_signature[1] != 0xaa) {
 		return W_FAILURE;
 	}
 
@@ -33,8 +33,8 @@ w_status_t mbr_parse(uint8_t *first_sector, uint8_t partition_type, uint32_t *se
 		uint8_t type = entry[MBR_TYPE_OFF];
 		if (type == partition_type) {
 			*sector_lba = (uint32_t)entry[MBR_LBA_OFF] | ((uint32_t)entry[MBR_LBA_OFF + 1] << 8) |
-						  ((uint32_t)entry[MBR_LBA_OFF + 2] << 16) |
-						  ((uint32_t)entry[MBR_LBA_OFF + 3] << 24);
+			              ((uint32_t)entry[MBR_LBA_OFF + 2] << 16) |
+			              ((uint32_t)entry[MBR_LBA_OFF + 3] << 24);
 			return W_SUCCESS;
 		}
 	}
