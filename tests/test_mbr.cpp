@@ -20,8 +20,8 @@ public:
 
 		// Example first sector
 		uint8_t first_sector[512] = {0};
-		uint8_t *entry = first_sector + 0x1BE;
-		uint8_t *boot_signature = first_sector + 0x1FE;
+		uint8_t *entry = first_sector + 0x1be;
+		uint8_t *boot_signature = first_sector + 0x1fe;
 
 		entry[0] = 0x80; // boot flag
 		entry[4] = partition_type; // partition type
@@ -33,31 +33,31 @@ public:
 
 		// Test with invalid both bytes of boot signature
 		rockettest_check_expr_true(mbr_parse(first_sector, partition_type, &sector_lba) ==
-								   W_FAILURE);
+		                           W_FAILURE);
 
-		boot_signature[1] = 0xAA;
+		boot_signature[1] = 0xaa;
 		// Test with invalid first byte of boot signature
 		rockettest_check_expr_true(mbr_parse(first_sector, partition_type, &sector_lba) ==
-								   W_FAILURE);
+		                           W_FAILURE);
 
 		boot_signature[0] = 0x55;
 		boot_signature[1] = 0x00;
 		// Test with invalid second byte of boot signature
 		rockettest_check_expr_true(mbr_parse(first_sector, partition_type, &sector_lba) ==
-								   W_FAILURE);
+		                           W_FAILURE);
 
 		boot_signature[0] = 0x55;
-		boot_signature[1] = 0xAA;
+		boot_signature[1] = 0xaa;
 
 		// Test with valid input
 		rockettest_check_expr_true(mbr_parse(first_sector, partition_type, &sector_lba) ==
-								   W_SUCCESS);
+		                           W_SUCCESS);
 		// Test with invalid input (NULL first sector)
 		rockettest_check_expr_true(mbr_parse(nullptr, partition_type, &sector_lba) ==
-								   W_INVALID_PARAM);
+		                           W_INVALID_PARAM);
 		// Test with invalid input (NULL LBA)
 		rockettest_check_expr_true(mbr_parse(first_sector, partition_type, nullptr) ==
-								   W_INVALID_PARAM);
+		                           W_INVALID_PARAM);
 		// Test with a partition type that cannot be found
 		rockettest_check_expr_true(mbr_parse(first_sector, 0x06, &sector_lba) == W_FAILURE);
 

@@ -19,16 +19,16 @@
 #define rockettest_check_expr_true(expr)                                                           \
 	if (!(expr)) {                                                                                 \
 		std::cout << CONSOLE_COLOUR_RED << "E: " << CONSOLE_COLOUR_RESET                           \
-				  << "Expression should be true " << __FILE__ << ':' << __LINE__ << ' ' << #expr   \
-				  << std::endl;                                                                    \
+		          << "Expression should be true " << __FILE__ << ':' << __LINE__ << ' ' << #expr   \
+		          << std::endl;                                                                    \
 		test_passed = false;                                                                       \
 	}
 
 #define rockettest_check_assert_triggered(funccall)                                                \
 	if (!rockettest_check_assert_sjlj((funccall))) {                                               \
 		std::cout << CONSOLE_COLOUR_RED << "E: " << CONSOLE_COLOUR_RESET                           \
-				  << "Rocketlib w_assert did not trigger on " << __FILE__ << ':' << __LINE__       \
-				  << ' ' << #funccall << std::endl;                                                \
+		          << "Rocketlib w_assert did not trigger on " << __FILE__ << ':' << __LINE__       \
+		          << ' ' << #funccall << std::endl;                                                \
 		test_passed = false;                                                                       \
 	}
 
@@ -68,12 +68,12 @@ T rockettest_rand_field_with_exclude(T exclude) {
 // Generate a random number in [min,max)
 template <typename T> T rockettest_rand_range(T min, T max) {
 	return static_cast<T>((std::rand() % (static_cast<int>(max) - static_cast<int>(min))) +
-						  static_cast<int>(min));
+	                      static_cast<int>(min));
 }
 
 template <typename T> T rockettest_rand_range_with_exclude(T min, T max, T exclude) {
 	T rn = static_cast<T>((std::rand() % (static_cast<int>(max) - static_cast<int>(min))) +
-						  static_cast<int>(min));
+	                      static_cast<int>(min));
 	if (rn == exclude) {
 		rn += 1;
 		if (rn == max) {
