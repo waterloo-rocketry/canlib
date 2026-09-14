@@ -9,7 +9,7 @@
 #include "msg_gps.h"
 
 void build_gps_time_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t utc_hours,
-						uint8_t utc_mins, uint8_t utc_secs, uint8_t utc_dsecs, can_msg_t *output) {
+                        uint8_t utc_mins, uint8_t utc_secs, uint8_t utc_dsecs, can_msg_t *output) {
 	w_assert(output);
 
 	output->sid = build_sid(prio, MSG_GPS_TIMESTAMP, 0);
@@ -24,7 +24,7 @@ void build_gps_time_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t utc_hou
 }
 
 void build_gps_lat_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t degrees, uint8_t minutes,
-					   uint16_t dminutes, uint8_t direction, can_msg_t *output) {
+                       uint16_t dminutes, uint8_t direction, can_msg_t *output) {
 	w_assert(output);
 
 	output->sid = build_sid(prio, MSG_GPS_LATITUDE, 0);
@@ -33,14 +33,14 @@ void build_gps_lat_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t degrees,
 	output->data[2] = degrees;
 	output->data[3] = minutes;
 	output->data[4] = dminutes >> 8;
-	output->data[5] = dminutes & 0xFF;
+	output->data[5] = dminutes & 0xff;
 	output->data[6] = direction;
 
 	output->data_len = 7;
 }
 
 void build_gps_lon_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t degrees, uint8_t minutes,
-					   uint16_t dminutes, uint8_t direction, can_msg_t *output) {
+                       uint16_t dminutes, uint8_t direction, can_msg_t *output) {
 	w_assert(output);
 
 	output->sid = build_sid(prio, MSG_GPS_LONGITUDE, 0);
@@ -49,14 +49,14 @@ void build_gps_lon_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t degrees,
 	output->data[2] = degrees;
 	output->data[3] = minutes;
 	output->data[4] = dminutes >> 8;
-	output->data[5] = dminutes & 0xFF;
+	output->data[5] = dminutes & 0xff;
 	output->data[6] = direction;
 
 	output->data_len = 7;
 }
 
 void build_gps_alt_msg(can_msg_prio_t prio, uint16_t timestamp, uint32_t altitude,
-					   uint8_t daltitude, can_msg_t *output) {
+                       uint8_t daltitude, can_msg_t *output) {
 	w_assert(output);
 
 	output->sid = build_sid(prio, MSG_GPS_ALTITUDE, 0);
@@ -72,7 +72,7 @@ void build_gps_alt_msg(can_msg_prio_t prio, uint16_t timestamp, uint32_t altitud
 }
 
 void build_gps_info_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t num_sat, uint8_t quality,
-						can_msg_t *output) {
+                        can_msg_t *output) {
 	w_assert(output);
 
 	output->sid = build_sid(prio, MSG_GPS_INFO, 0);
@@ -85,7 +85,7 @@ void build_gps_info_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t num_sat
 }
 
 w_status_t get_gps_time(const can_msg_t *msg, uint8_t *utc_hours, uint8_t *utc_mins,
-						uint8_t *utc_secs, uint8_t *utc_dsecs) {
+                        uint8_t *utc_secs, uint8_t *utc_dsecs) {
 	w_assert(msg);
 	w_assert(utc_hours);
 	w_assert(utc_mins);
@@ -109,7 +109,7 @@ w_status_t get_gps_time(const can_msg_t *msg, uint8_t *utc_hours, uint8_t *utc_m
 }
 
 w_status_t get_gps_lat(const can_msg_t *msg, uint8_t *degrees, uint8_t *minutes, uint16_t *dminutes,
-					   uint8_t *direction) {
+                       uint8_t *direction) {
 	w_assert(msg);
 	w_assert(degrees);
 	w_assert(minutes);
@@ -133,7 +133,7 @@ w_status_t get_gps_lat(const can_msg_t *msg, uint8_t *degrees, uint8_t *minutes,
 }
 
 w_status_t get_gps_lon(const can_msg_t *msg, uint8_t *degrees, uint8_t *minutes, uint16_t *dminutes,
-					   uint8_t *direction) {
+                       uint8_t *direction) {
 	w_assert(msg);
 	w_assert(degrees);
 	w_assert(minutes);
@@ -162,7 +162,7 @@ w_status_t get_gps_alt(const can_msg_t *msg, uint32_t *altitude, uint8_t *daltit
 	w_assert(daltitude);
 
 	*altitude = ((uint32_t)msg->data[2] << 24) | ((uint32_t)msg->data[3] << 16) |
-				((uint32_t)msg->data[4] << 8) | msg->data[5];
+	            ((uint32_t)msg->data[4] << 8) | msg->data[5];
 	*daltitude = msg->data[6];
 
 	if (get_message_type(msg) != MSG_GPS_ALTITUDE) {

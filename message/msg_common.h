@@ -28,8 +28,8 @@ static inline uint32_t build_sid(can_msg_prio_t prio, can_msg_type_t msg_type, u
 	w_assert(((uint32_t)BOARD_INST_UNIQUE_ID & 0xffffffc0) == 0);
 
 	return (((uint32_t)prio) << 27) | (((uint32_t)msg_type) << 20) |
-		   (((uint32_t)BOARD_TYPE_UNIQUE_ID) << 14) | (((uint32_t)BOARD_INST_UNIQUE_ID) << 8) |
-		   metadata;
+	       (((uint32_t)BOARD_TYPE_UNIQUE_ID) << 14) | (((uint32_t)BOARD_INST_UNIQUE_ID) << 8) |
+	       metadata;
 }
 
 #else
@@ -44,8 +44,8 @@ static inline uint32_t build_sid(can_msg_prio_t prio, can_msg_type_t msg_type, u
 	w_assert(((uint32_t)board_inst_unique_id & 0xffffffc0) == 0);
 
 	return (((uint32_t)prio) << 27) | (((uint32_t)msg_type) << 20) |
-		   (((uint32_t)board_type_unique_id) << 14) | (((uint32_t)board_inst_unique_id) << 8) |
-		   metadata;
+	       (((uint32_t)board_type_unique_id) << 14) | (((uint32_t)board_inst_unique_id) << 8) |
+	       metadata;
 }
 
 #endif

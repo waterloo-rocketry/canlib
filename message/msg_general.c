@@ -10,7 +10,7 @@
 #include "msg_general.h"
 
 void build_general_board_status_msg(can_msg_prio_t prio, uint16_t timestamp,
-									uint32_t board_error_bitfield, can_msg_t *output) {
+                                    uint32_t board_error_bitfield, can_msg_t *output) {
 	w_assert(output);
 
 	output->sid = build_sid(prio, MSG_GENERAL_BOARD_STATUS, 0);
@@ -23,7 +23,7 @@ void build_general_board_status_msg(can_msg_prio_t prio, uint16_t timestamp,
 }
 
 void build_reset_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t board_type_id,
-					 uint8_t board_inst_id, can_msg_t *output) {
+                     uint8_t board_inst_id, can_msg_t *output) {
 	w_assert(output);
 
 	output->sid = build_sid(prio, MSG_RESET_CMD, 0);
@@ -34,7 +34,7 @@ void build_reset_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t board_type
 }
 
 void build_debug_raw_msg(can_msg_prio_t prio, uint16_t timestamp, const uint8_t *data,
-						 can_msg_t *output) {
+                         can_msg_t *output) {
 	w_assert(data);
 	w_assert(output);
 
@@ -46,8 +46,8 @@ void build_debug_raw_msg(can_msg_prio_t prio, uint16_t timestamp, const uint8_t 
 }
 
 void build_config_set_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t board_type_id,
-						  uint8_t board_inst_id, uint16_t config_id, uint16_t config_value,
-						  can_msg_t *output) {
+                          uint8_t board_inst_id, uint16_t config_id, uint16_t config_value,
+                          can_msg_t *output) {
 	w_assert(output);
 
 	output->sid = build_sid(prio, MSG_CONFIG_SET, 0);
@@ -63,7 +63,7 @@ void build_config_set_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t board
 }
 
 void build_config_status_msg(can_msg_prio_t prio, uint16_t timestamp, uint16_t config_id,
-							 uint16_t config_value, can_msg_t *output) {
+                             uint16_t config_value, can_msg_t *output) {
 	w_assert(output);
 
 	output->sid = build_sid(prio, MSG_CONFIG_STATUS, 0);
@@ -95,7 +95,7 @@ w_status_t get_general_board_status(const can_msg_t *msg, uint32_t *board_error_
 }
 
 w_status_t get_reset_board_id(const can_msg_t *msg, uint8_t *board_type_id,
-							  uint8_t *board_inst_id) {
+                              uint8_t *board_inst_id) {
 	w_assert(msg);
 	w_assert(board_type_id);
 	w_assert(board_inst_id);
@@ -164,7 +164,7 @@ w_status_t get_debug_raw_data(const can_msg_t *msg, uint8_t *data) {
 }
 
 w_status_t get_config_set_target_board(const can_msg_t *msg, uint8_t *board_type_id,
-									   uint8_t *board_inst_id) {
+                                       uint8_t *board_inst_id) {
 	w_assert(msg);
 	w_assert(board_type_id);
 	w_assert(board_inst_id);

@@ -9,7 +9,7 @@
 #include "msg_common.h"
 
 void build_actuator_cmd_msg(can_msg_prio_t prio, uint16_t timestamp, can_actuator_id_t actuator_id,
-							can_actuator_state_t actuator_cmd, can_msg_t *output) {
+                            can_actuator_state_t actuator_cmd, can_msg_t *output) {
 	w_assert(output);
 
 	output->sid = build_sid(prio, MSG_ACTUATOR_CMD, actuator_id);
@@ -20,9 +20,9 @@ void build_actuator_cmd_msg(can_msg_prio_t prio, uint16_t timestamp, can_actuato
 }
 
 void build_actuator_status_msg(can_msg_prio_t prio, uint16_t timestamp,
-							   can_actuator_id_t actuator_id,
-							   can_actuator_state_t actuator_cmd_state,
-							   can_actuator_state_t actuator_curr_state, can_msg_t *output) {
+                               can_actuator_id_t actuator_id,
+                               can_actuator_state_t actuator_cmd_state,
+                               can_actuator_state_t actuator_curr_state, can_msg_t *output) {
 	w_assert(output);
 
 	output->sid = build_sid(prio, MSG_ACTUATOR_STATUS, actuator_id);
@@ -59,7 +59,7 @@ w_status_t get_actuator_id(const can_msg_t *msg, can_actuator_id_t *actuator_id)
 }
 
 w_status_t get_curr_actuator_state(const can_msg_t *msg,
-								   can_actuator_state_t *curr_actuator_state) {
+                                   can_actuator_state_t *curr_actuator_state) {
 	w_assert(msg);
 	w_assert(curr_actuator_state);
 

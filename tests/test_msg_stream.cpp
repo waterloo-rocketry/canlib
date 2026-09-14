@@ -11,7 +11,7 @@
 
 namespace {
 
-	constexpr std::uint32_t kMax24BitValue = (1u << 24) - 1;
+	constexpr std::uint32_t kMax24BitValue = (1U << 24) - 1;
 
 }
 
@@ -44,7 +44,7 @@ public:
 		std::uint32_t total_size_out = 0;
 		std::uint32_t tx_size_out = 0;
 		rockettest_check_expr_true(get_stream_status(&msg, &total_size_out, &tx_size_out) ==
-								   W_SUCCESS);
+		                           W_SUCCESS);
 		rockettest_check_expr_true(total_size_out == total_size);
 		rockettest_check_expr_true(tx_size_out == tx_size);
 
@@ -55,9 +55,8 @@ public:
 
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.data_len = 7;
-		rockettest_check_expr_true(get_stream_status(&invalid_len_msg,
-													 &total_size_out,
-													 &tx_size_out) == W_DATA_FORMAT_ERROR);
+		rockettest_check_expr_true(get_stream_status(&invalid_len_msg, &total_size_out,
+		                                             &tx_size_out) == W_DATA_FORMAT_ERROR);
 
 		return test_passed;
 	}
@@ -108,21 +107,18 @@ public:
 		invalid_len_msg.sid = build_sid(prio, MSG_STREAM_DATA, seq_id);
 		// Too short data_len
 		invalid_len_msg.data_len = 2;
-		rockettest_check_expr_true(
-			get_stream_data(&invalid_len_msg, &seq_id_out, payload_out, &payload_len_out) ==
-			W_DATA_FORMAT_ERROR);
+		rockettest_check_expr_true(get_stream_data(&invalid_len_msg, &seq_id_out, payload_out,
+		                                           &payload_len_out) == W_DATA_FORMAT_ERROR);
 		// Too long data_len
 		invalid_len_msg.data_len = 9;
-		rockettest_check_expr_true(
-			get_stream_data(&invalid_len_msg, &seq_id_out, payload_out, &payload_len_out) ==
-			W_DATA_FORMAT_ERROR);
+		rockettest_check_expr_true(get_stream_data(&invalid_len_msg, &seq_id_out, payload_out,
+		                                           &payload_len_out) == W_DATA_FORMAT_ERROR);
 
 		can_msg_t invalid_type_msg = msg;
 		invalid_type_msg.sid = build_sid(prio, MSG_STREAM_RETRY, seq_id);
 		invalid_type_msg.data_len = msg.data_len;
-		rockettest_check_expr_true(
-			get_stream_data(&invalid_type_msg, &seq_id_out, payload_out, &payload_len_out) ==
-			W_INVALID_PARAM);
+		rockettest_check_expr_true(get_stream_data(&invalid_type_msg, &seq_id_out, payload_out,
+		                                           &payload_len_out) == W_INVALID_PARAM);
 
 		return test_passed;
 	}
@@ -155,12 +151,12 @@ public:
 		can_msg_t invalid_type_msg = msg;
 		invalid_type_msg.sid = build_sid(prio, MSG_STREAM_STATUS, seq_id);
 		rockettest_check_expr_true(get_stream_retry_seq_id(&invalid_type_msg, &seq_id_out) ==
-								   W_INVALID_PARAM);
+		                           W_INVALID_PARAM);
 
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.data_len = 3;
 		rockettest_check_expr_true(get_stream_retry_seq_id(&invalid_len_msg, &seq_id_out) ==
-								   W_DATA_FORMAT_ERROR);
+		                           W_DATA_FORMAT_ERROR);
 
 		return test_passed;
 	}

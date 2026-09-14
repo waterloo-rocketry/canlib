@@ -9,8 +9,8 @@
 #include "msg_sensor.h"
 
 void build_analog_sensor_16bit_msg(can_msg_prio_t prio, uint16_t timestamp,
-								   can_analog_sensor_id_t sensor_id, uint16_t sensor_data,
-								   can_msg_t *output) {
+                                   can_analog_sensor_id_t sensor_id, uint16_t sensor_data,
+                                   can_msg_t *output) {
 	w_assert(output);
 
 	output->sid = build_sid(prio, MSG_SENSOR_ANALOG16, sensor_id);
@@ -23,8 +23,8 @@ void build_analog_sensor_16bit_msg(can_msg_prio_t prio, uint16_t timestamp,
 }
 
 void build_analog_sensor_32bit_msg(can_msg_prio_t prio, uint16_t timestamp,
-								   can_analog_sensor_id_t sensor_id, uint32_t sensor_data,
-								   can_msg_t *output) {
+                                   can_analog_sensor_id_t sensor_id, uint32_t sensor_data,
+                                   can_msg_t *output) {
 	w_assert(output);
 
 	output->sid = build_sid(prio, MSG_SENSOR_ANALOG32, sensor_id);
@@ -39,9 +39,9 @@ void build_analog_sensor_32bit_msg(can_msg_prio_t prio, uint16_t timestamp,
 }
 
 void build_3d_analog_sensor_16bit_msg(can_msg_prio_t prio, uint16_t timestamp,
-									  can_dem_3d_sensor_id_t sensor_id, uint16_t sensor_data_x,
-									  uint16_t sensor_data_y, uint16_t sensor_data_z,
-									  can_msg_t *output) {
+                                      can_dem_3d_sensor_id_t sensor_id, uint16_t sensor_data_x,
+                                      uint16_t sensor_data_y, uint16_t sensor_data_z,
+                                      can_msg_t *output) {
 	w_assert(output);
 
 	output->sid = build_sid(prio, MSG_SENSOR_3D_ANALOG16, sensor_id);
@@ -58,8 +58,8 @@ void build_3d_analog_sensor_16bit_msg(can_msg_prio_t prio, uint16_t timestamp,
 }
 
 void build_2d_analog_sensor_24bit_msg(can_msg_prio_t prio, uint16_t timestamp,
-									  can_dem_2d_sensor_id_t sensor_id, uint32_t sensor_data_x,
-									  uint32_t sensor_data_y, can_msg_t *output) {
+                                      can_dem_2d_sensor_id_t sensor_id, uint32_t sensor_data_x,
+                                      uint32_t sensor_data_y, can_msg_t *output) {
 	w_assert(output);
 	w_assert((sensor_data_x & 0xff000000) == 0);
 	w_assert((sensor_data_y & 0xff000000) == 0);
@@ -82,7 +82,7 @@ bool msg_is_analog_sensor(const can_msg_t *msg) {
 
 	uint16_t type = get_message_type(msg);
 	if (type == MSG_SENSOR_ANALOG16 || type == MSG_SENSOR_ANALOG32 ||
-		type == MSG_SENSOR_3D_ANALOG16 || type == MSG_SENSOR_2D_ANALOG24) {
+	    type == MSG_SENSOR_3D_ANALOG16 || type == MSG_SENSOR_2D_ANALOG24) {
 		return true;
 	} else {
 		return false;
@@ -90,7 +90,7 @@ bool msg_is_analog_sensor(const can_msg_t *msg) {
 }
 
 w_status_t get_analog_sensor_data_16bit(const can_msg_t *msg, can_analog_sensor_id_t *sensor_id,
-										uint16_t *output_data) {
+                                        uint16_t *output_data) {
 	w_assert(msg);
 	w_assert(sensor_id);
 	w_assert(output_data);
@@ -110,14 +110,14 @@ w_status_t get_analog_sensor_data_16bit(const can_msg_t *msg, can_analog_sensor_
 }
 
 w_status_t get_analog_sensor_data_32bit(const can_msg_t *msg, can_analog_sensor_id_t *sensor_id,
-										uint32_t *output_data) {
+                                        uint32_t *output_data) {
 	w_assert(msg);
 	w_assert(sensor_id);
 	w_assert(output_data);
 
 	*sensor_id = (can_analog_sensor_id_t)get_message_metadata(msg);
 	*output_data = ((uint32_t)msg->data[2] << 24) | ((uint32_t)msg->data[3] << 16) |
-				   ((uint32_t)msg->data[4] << 8) | msg->data[5];
+	               ((uint32_t)msg->data[4] << 8) | msg->data[5];
 
 	if (get_message_type(msg) != MSG_SENSOR_ANALOG32) {
 		return W_INVALID_PARAM;
@@ -131,8 +131,8 @@ w_status_t get_analog_sensor_data_32bit(const can_msg_t *msg, can_analog_sensor_
 }
 
 w_status_t get_3d_analog_sensor_data_16bit(const can_msg_t *msg, can_dem_3d_sensor_id_t *sensor_id,
-										   uint16_t *output_data_x, uint16_t *output_data_y,
-										   uint16_t *output_data_z) {
+                                           uint16_t *output_data_x, uint16_t *output_data_y,
+                                           uint16_t *output_data_z) {
 	w_assert(msg);
 	w_assert(sensor_id);
 	w_assert(output_data_x);
@@ -156,7 +156,7 @@ w_status_t get_3d_analog_sensor_data_16bit(const can_msg_t *msg, can_dem_3d_sens
 }
 
 w_status_t get_2d_analog_sensor_data_24bit(const can_msg_t *msg, can_dem_2d_sensor_id_t *sensor_id,
-										   uint32_t *sensor_data_x, uint32_t *sensor_data_y) {
+                                           uint32_t *sensor_data_x, uint32_t *sensor_data_y) {
 	w_assert(msg);
 	w_assert(sensor_id);
 	w_assert(sensor_data_x);
