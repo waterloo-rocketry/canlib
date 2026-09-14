@@ -9,10 +9,10 @@
 #include "msg_stream.h"
 
 // Fields are 24-bit big-endian.
-#define STREAM_SIZE_MAX 0xFFFFFFu
+#define STREAM_SIZE_MAX 0xffffffU
 
 void build_stream_status_msg(can_msg_prio_t prio, uint16_t timestamp, uint32_t total_size,
-							 uint32_t tx_size, can_msg_t *output) {
+                             uint32_t tx_size, can_msg_t *output) {
 	w_assert(output);
 	w_assert(total_size <= STREAM_SIZE_MAX);
 	w_assert(tx_size <= STREAM_SIZE_MAX);
@@ -20,17 +20,17 @@ void build_stream_status_msg(can_msg_prio_t prio, uint16_t timestamp, uint32_t t
 	output->sid = build_sid(prio, MSG_STREAM_STATUS, 0);
 	write_timestamp(timestamp, output);
 
-	output->data[2] = (uint8_t)((total_size >> 16) & 0xFF);
-	output->data[3] = (uint8_t)((total_size >> 8) & 0xFF);
-	output->data[4] = (uint8_t)(total_size & 0xFF);
-	output->data[5] = (uint8_t)((tx_size >> 16) & 0xFF);
-	output->data[6] = (uint8_t)((tx_size >> 8) & 0xFF);
-	output->data[7] = (uint8_t)(tx_size & 0xFF);
+	output->data[2] = (uint8_t)((total_size >> 16) & 0xff);
+	output->data[3] = (uint8_t)((total_size >> 8) & 0xff);
+	output->data[4] = (uint8_t)(total_size & 0xff);
+	output->data[5] = (uint8_t)((tx_size >> 16) & 0xff);
+	output->data[6] = (uint8_t)((tx_size >> 8) & 0xff);
+	output->data[7] = (uint8_t)(tx_size & 0xff);
 	output->data_len = 8;
 }
 
 void build_stream_data_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t seq_id,
-						   const uint8_t *payload, uint8_t payload_len, can_msg_t *output) {
+                           const uint8_t *payload, uint8_t payload_len, can_msg_t *output) {
 	w_assert(output);
 	w_assert(payload);
 	w_assert(payload_len <= STREAM_DATA_MAX_PAYLOAD_LEN);
@@ -44,7 +44,7 @@ void build_stream_data_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t seq_
 }
 
 void build_stream_retry_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t seq_id,
-							can_msg_t *output) {
+                            can_msg_t *output) {
 	w_assert(output);
 
 	output->sid = build_sid(prio, MSG_STREAM_RETRY, seq_id);
@@ -73,7 +73,7 @@ w_status_t get_stream_status(const can_msg_t *msg, uint32_t *total_size, uint32_
 }
 
 w_status_t get_stream_data(const can_msg_t *msg, uint8_t *seq_id, uint8_t *payload,
-						   uint8_t *payload_len) {
+                           uint8_t *payload_len) {
 	w_assert(msg);
 	w_assert(seq_id);
 	w_assert(payload);

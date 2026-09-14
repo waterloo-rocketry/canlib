@@ -23,13 +23,8 @@ public:
 		std::uint8_t utc_secs_before = rockettest_rand_field<std::uint8_t, 0xff>(); // byte 4
 		std::uint8_t utc_dsecs_before = rockettest_rand_field<std::uint8_t, 0xff>(); // byte 5
 
-		build_gps_time_msg(prio_before,
-						   timestamp_before,
-						   utc_hours_before,
-						   utc_mins_before,
-						   utc_secs_before,
-						   utc_dsecs_before,
-						   &msg);
+		build_gps_time_msg(prio_before, timestamp_before, utc_hours_before, utc_mins_before,
+		                   utc_secs_before, utc_dsecs_before, &msg);
 
 		std::uint16_t timestamp_extracted;
 		std::uint8_t utc_hours_extracted;
@@ -60,10 +55,8 @@ public:
 
 		type_after = get_message_type(&msg);
 		timestamp_after = get_timestamp(&msg);
-		rockettest_check_expr_true(
-			get_gps_time(
-				&msg, &utc_hours_after, &utc_mins_after, &utc_secs_after, &utc_dsecs_after) ==
-			W_SUCCESS);
+		rockettest_check_expr_true(get_gps_time(&msg, &utc_hours_after, &utc_mins_after,
+		                                        &utc_secs_after, &utc_dsecs_after) == W_SUCCESS);
 
 		rockettest_check_expr_true(type_after == MSG_GPS_TIMESTAMP);
 		rockettest_check_expr_true(timestamp_after == timestamp_before);
@@ -74,19 +67,15 @@ public:
 
 		can_msg_t invalid_type_msg = msg;
 		invalid_type_msg.sid = build_sid(prio_before, MSG_GPS_LATITUDE, 0);
-		rockettest_check_expr_true(get_gps_time(&invalid_type_msg,
-												&utc_hours_after,
-												&utc_mins_after,
-												&utc_secs_after,
-												&utc_dsecs_after) == W_INVALID_PARAM);
+		rockettest_check_expr_true(get_gps_time(&invalid_type_msg, &utc_hours_after,
+		                                        &utc_mins_after, &utc_secs_after,
+		                                        &utc_dsecs_after) == W_INVALID_PARAM);
 
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.data_len = 5;
-		rockettest_check_expr_true(get_gps_time(&invalid_len_msg,
-												&utc_hours_after,
-												&utc_mins_after,
-												&utc_secs_after,
-												&utc_dsecs_after) == W_DATA_FORMAT_ERROR);
+		rockettest_check_expr_true(get_gps_time(&invalid_len_msg, &utc_hours_after, &utc_mins_after,
+		                                        &utc_secs_after,
+		                                        &utc_dsecs_after) == W_DATA_FORMAT_ERROR);
 
 		return test_passed;
 	}
@@ -110,13 +99,8 @@ public:
 		std::uint16_t dminutes_before = rockettest_rand_field<std::uint16_t>();
 		std::uint8_t direction_before = rockettest_rand_field<std::uint8_t, 0xff>();
 
-		build_gps_lat_msg(prio_before,
-						  timestamp_before,
-						  degrees_before,
-						  minutes_before,
-						  dminutes_before,
-						  direction_before,
-						  &msg);
+		build_gps_lat_msg(prio_before, timestamp_before, degrees_before, minutes_before,
+		                  dminutes_before, direction_before, &msg);
 
 		std::uint16_t timestamp_extracted;
 		std::uint8_t degrees_extracted;
@@ -146,9 +130,8 @@ public:
 
 		type_after = get_message_type(&msg);
 		timestamp_after = get_timestamp(&msg);
-		rockettest_check_expr_true(
-			get_gps_lat(&msg, &degrees_after, &minutes_after, &dminutes_after, &direction_after) ==
-			W_SUCCESS);
+		rockettest_check_expr_true(get_gps_lat(&msg, &degrees_after, &minutes_after,
+		                                       &dminutes_after, &direction_after) == W_SUCCESS);
 
 		rockettest_check_expr_true(type_after == MSG_GPS_LATITUDE);
 		rockettest_check_expr_true(timestamp_after == timestamp_before);
@@ -159,19 +142,15 @@ public:
 
 		can_msg_t invalid_type_msg = msg;
 		invalid_type_msg.sid = build_sid(prio_before, MSG_GPS_TIMESTAMP, 0);
-		rockettest_check_expr_true(get_gps_lat(&invalid_type_msg,
-											   &degrees_after,
-											   &minutes_after,
-											   &dminutes_after,
-											   &direction_after) == W_INVALID_PARAM);
+		rockettest_check_expr_true(get_gps_lat(&invalid_type_msg, &degrees_after, &minutes_after,
+		                                       &dminutes_after,
+		                                       &direction_after) == W_INVALID_PARAM);
 
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.data_len = 6;
-		rockettest_check_expr_true(get_gps_lat(&invalid_len_msg,
-											   &degrees_after,
-											   &minutes_after,
-											   &dminutes_after,
-											   &direction_after) == W_DATA_FORMAT_ERROR);
+		rockettest_check_expr_true(get_gps_lat(&invalid_len_msg, &degrees_after, &minutes_after,
+		                                       &dminutes_after,
+		                                       &direction_after) == W_DATA_FORMAT_ERROR);
 
 		return test_passed;
 	}
@@ -195,13 +174,8 @@ public:
 		std::uint16_t dminutes_before = rockettest_rand_field<std::uint16_t>();
 		std::uint8_t direction_before = rockettest_rand_field<std::uint8_t, 0xff>();
 
-		build_gps_lon_msg(prio_before,
-						  timestamp_before,
-						  degrees_before,
-						  minutes_before,
-						  dminutes_before,
-						  direction_before,
-						  &msg);
+		build_gps_lon_msg(prio_before, timestamp_before, degrees_before, minutes_before,
+		                  dminutes_before, direction_before, &msg);
 
 		std::uint16_t timestamp_extracted;
 		std::uint8_t degrees_extracted;
@@ -231,9 +205,8 @@ public:
 
 		type_after = get_message_type(&msg);
 		timestamp_after = get_timestamp(&msg);
-		rockettest_check_expr_true(
-			get_gps_lon(&msg, &degrees_after, &minutes_after, &dminutes_after, &direction_after) ==
-			W_SUCCESS);
+		rockettest_check_expr_true(get_gps_lon(&msg, &degrees_after, &minutes_after,
+		                                       &dminutes_after, &direction_after) == W_SUCCESS);
 
 		rockettest_check_expr_true(type_after == MSG_GPS_LONGITUDE);
 		rockettest_check_expr_true(timestamp_after == timestamp_before);
@@ -244,19 +217,15 @@ public:
 
 		can_msg_t invalid_type_msg = msg;
 		invalid_type_msg.sid = build_sid(prio_before, MSG_GPS_TIMESTAMP, 0);
-		rockettest_check_expr_true(get_gps_lon(&invalid_type_msg,
-											   &degrees_after,
-											   &minutes_after,
-											   &dminutes_after,
-											   &direction_after) == W_INVALID_PARAM);
+		rockettest_check_expr_true(get_gps_lon(&invalid_type_msg, &degrees_after, &minutes_after,
+		                                       &dminutes_after,
+		                                       &direction_after) == W_INVALID_PARAM);
 
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.data_len = 6;
-		rockettest_check_expr_true(get_gps_lon(&invalid_len_msg,
-											   &degrees_after,
-											   &minutes_after,
-											   &dminutes_after,
-											   &direction_after) == W_DATA_FORMAT_ERROR);
+		rockettest_check_expr_true(get_gps_lon(&invalid_len_msg, &degrees_after, &minutes_after,
+		                                       &dminutes_after,
+		                                       &direction_after) == W_DATA_FORMAT_ERROR);
 
 		return test_passed;
 	}
@@ -286,8 +255,8 @@ public:
 
 		timestamp_extracted = (static_cast<std::uint16_t>(msg.data[0]) << 8) | msg.data[1];
 		altitude_extracted = (static_cast<std::uint32_t>(msg.data[2]) << 24) |
-							 (static_cast<std::uint32_t>(msg.data[3]) << 16) |
-							 (static_cast<std::uint32_t>(msg.data[4]) << 8) | msg.data[5];
+		                     (static_cast<std::uint32_t>(msg.data[3]) << 16) |
+		                     (static_cast<std::uint32_t>(msg.data[4]) << 8) | msg.data[5];
 		daltitude_extracted = msg.data[6];
 
 		rockettest_check_expr_true(msg.data_len == 7);
@@ -303,7 +272,7 @@ public:
 		type_after = get_message_type(&msg);
 		timestamp_after = get_timestamp(&msg);
 		rockettest_check_expr_true(get_gps_alt(&msg, &altitude_after, &daltitude_after) ==
-								   W_SUCCESS);
+		                           W_SUCCESS);
 
 		rockettest_check_expr_true(type_after == MSG_GPS_ALTITUDE);
 		rockettest_check_expr_true(timestamp_after == timestamp_before);
@@ -317,9 +286,8 @@ public:
 
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.data_len = 6;
-		rockettest_check_expr_true(get_gps_alt(&invalid_len_msg,
-											   &altitude_after,
-											   &daltitude_after) == W_DATA_FORMAT_ERROR);
+		rockettest_check_expr_true(get_gps_alt(&invalid_len_msg, &altitude_after,
+		                                       &daltitude_after) == W_DATA_FORMAT_ERROR);
 
 		return test_passed;
 	}
@@ -378,7 +346,7 @@ public:
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.data_len = 3;
 		rockettest_check_expr_true(get_gps_info(&invalid_len_msg, &num_sat_after, &quality_after) ==
-								   W_DATA_FORMAT_ERROR);
+		                           W_DATA_FORMAT_ERROR);
 
 		return test_passed;
 	}

@@ -20,17 +20,17 @@ public:
 		can_msg_prio_t prio_before = rockettest_rand_field<can_msg_prio_t, 0x3>();
 		std::uint16_t timestamp_before = rockettest_rand_field<std::uint16_t>();
 		std::uint32_t board_error_bitfield_before = rockettest_rand_field<std::uint32_t>();
-		build_general_board_status_msg(
-			prio_before, timestamp_before, board_error_bitfield_before, &msg);
+		build_general_board_status_msg(prio_before, timestamp_before, board_error_bitfield_before,
+		                               &msg);
 
 		std::uint16_t timestamp_extracted;
 		std::uint32_t board_error_bitfield_extracted;
 
 		timestamp_extracted = (static_cast<std::uint16_t>(msg.data[0]) << 8) | msg.data[1];
 		board_error_bitfield_extracted = (static_cast<std::uint32_t>(msg.data[2]) << 24) |
-										 (static_cast<std::uint32_t>(msg.data[3]) << 16) |
-										 (static_cast<std::uint32_t>(msg.data[4]) << 8) |
-										 (static_cast<std::uint32_t>(msg.data[5]) << 0);
+		                                 (static_cast<std::uint32_t>(msg.data[3]) << 16) |
+		                                 (static_cast<std::uint32_t>(msg.data[4]) << 8) |
+		                                 (static_cast<std::uint32_t>(msg.data[5]) << 0);
 
 		rockettest_check_expr_true(msg.data_len == 6);
 		rockettest_check_expr_true(timestamp_extracted == timestamp_before);
@@ -43,7 +43,7 @@ public:
 		type_after = get_message_type(&msg);
 		timestamp_after = get_timestamp(&msg);
 		rockettest_check_expr_true(get_general_board_status(&msg, &board_error_bitfield_after) ==
-								   W_SUCCESS);
+		                           W_SUCCESS);
 
 		rockettest_check_expr_true(type_after == MSG_GENERAL_BOARD_STATUS);
 		rockettest_check_expr_true(timestamp_after == timestamp_before);
@@ -118,12 +118,10 @@ public:
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.data_len = 3;
 
-		rockettest_check_expr_true(get_reset_board_id(&invalid_type_msg,
-													  &board_type_id_after,
-													  &board_inst_id_after) == W_INVALID_PARAM);
-		rockettest_check_expr_true(get_reset_board_id(&invalid_len_msg,
-													  &board_type_id_after,
-													  &board_inst_id_after) == W_DATA_FORMAT_ERROR);
+		rockettest_check_expr_true(get_reset_board_id(&invalid_type_msg, &board_type_id_after,
+		                                              &board_inst_id_after) == W_INVALID_PARAM);
+		rockettest_check_expr_true(get_reset_board_id(&invalid_len_msg, &board_type_id_after,
+		                                              &board_inst_id_after) == W_DATA_FORMAT_ERROR);
 
 		// Test check_board_need_reset()
 		// Tests are compiled with BOARD_TYPE_UNIQUE_ID=BOARD_TYPE_ID_ARMING and
@@ -152,15 +150,15 @@ public:
 		rockettest_check_expr_true(!board_need_reset);
 
 		// Type not matching
-		build_reset_msg(
-			prio, timestamp_before, BOARD_TYPE_ID_ALTIMETER, BOARD_INST_UNIQUE_ID, &msg);
+		build_reset_msg(prio, timestamp_before, BOARD_TYPE_ID_ALTIMETER, BOARD_INST_UNIQUE_ID,
+		                &msg);
 		rockettest_check_expr_true(check_board_need_reset(&msg, &board_need_reset) == W_SUCCESS);
 		rockettest_check_expr_true(!board_need_reset);
 
 		rockettest_check_expr_true(check_board_need_reset(&invalid_type_msg, &board_need_reset) ==
-								   W_INVALID_PARAM);
+		                           W_INVALID_PARAM);
 		rockettest_check_expr_true(check_board_need_reset(&invalid_len_msg, &board_need_reset) ==
-								   W_DATA_FORMAT_ERROR);
+		                           W_DATA_FORMAT_ERROR);
 
 		return test_passed;
 	}
@@ -213,12 +211,12 @@ public:
 		can_msg_t invalid_type_msg = msg;
 		invalid_type_msg.sid = build_sid(prio, MSG_GENERAL_BOARD_STATUS, 0);
 		rockettest_check_expr_true(get_debug_raw_data(&invalid_type_msg, data_after) ==
-								   W_INVALID_PARAM);
+		                           W_INVALID_PARAM);
 
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.data_len = 7;
 		rockettest_check_expr_true(get_debug_raw_data(&invalid_len_msg, data_after) ==
-								   W_DATA_FORMAT_ERROR);
+		                           W_DATA_FORMAT_ERROR);
 
 		return test_passed;
 	}
@@ -241,13 +239,8 @@ public:
 		std::uint8_t board_inst_id_before = rockettest_rand_field<std::uint8_t, 0xff>();
 		std::uint16_t config_id_before = rockettest_rand_field<std::uint16_t>();
 		std::uint16_t config_value_before = rockettest_rand_field<std::uint16_t>();
-		build_config_set_msg(prio,
-							 timestamp_before,
-							 board_type_id_before,
-							 board_inst_id_before,
-							 config_id_before,
-							 config_value_before,
-							 &msg);
+		build_config_set_msg(prio, timestamp_before, board_type_id_before, board_inst_id_before,
+		                     config_id_before, config_value_before, &msg);
 
 		std::uint16_t timestamp_extracted;
 		std::uint8_t board_type_id_extracted;
@@ -275,9 +268,8 @@ public:
 		std::uint16_t config_value_after;
 
 		type_after = get_message_type(&msg);
-		rockettest_check_expr_true(get_config_set_target_board(&msg,
-															   &board_type_id_after,
-															   &board_inst_id_after) == W_SUCCESS);
+		rockettest_check_expr_true(get_config_set_target_board(&msg, &board_type_id_after,
+		                                                       &board_inst_id_after) == W_SUCCESS);
 		rockettest_check_expr_true(
 			get_config_id_value(&msg, &config_id_after, &config_value_after) == W_SUCCESS);
 
@@ -290,18 +282,16 @@ public:
 		can_msg_t invalid_type_msg = msg;
 		invalid_type_msg.sid = build_sid(prio, MSG_CONFIG_STATUS, 0);
 		rockettest_check_expr_true(
-			get_config_set_target_board(
-				&invalid_type_msg, &board_type_id_after, &board_inst_id_after) == W_INVALID_PARAM);
+			get_config_set_target_board(&invalid_type_msg, &board_type_id_after,
+			                            &board_inst_id_after) == W_INVALID_PARAM);
 
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.data_len = 7;
-		rockettest_check_expr_true(get_config_set_target_board(&invalid_len_msg,
-															   &board_type_id_after,
-															   &board_inst_id_after) ==
-								   W_DATA_FORMAT_ERROR);
-		rockettest_check_expr_true(get_config_id_value(&invalid_len_msg,
-													   &config_id_after,
-													   &config_value_after) == W_DATA_FORMAT_ERROR);
+		rockettest_check_expr_true(
+			get_config_set_target_board(&invalid_len_msg, &board_type_id_after,
+			                            &board_inst_id_after) == W_DATA_FORMAT_ERROR);
+		rockettest_check_expr_true(get_config_id_value(&invalid_len_msg, &config_id_after,
+		                                               &config_value_after) == W_DATA_FORMAT_ERROR);
 
 		return test_passed;
 	}
@@ -322,8 +312,8 @@ public:
 		std::uint16_t timestamp_before = rockettest_rand_field<std::uint16_t>();
 		std::uint16_t config_id_before = rockettest_rand_field<std::uint16_t>();
 		std::uint16_t config_value_before = rockettest_rand_field<std::uint16_t>();
-		build_config_status_msg(
-			prio, timestamp_before, config_id_before, config_value_before, &msg);
+		build_config_status_msg(prio, timestamp_before, config_id_before, config_value_before,
+		                        &msg);
 
 		std::uint16_t timestamp_extracted;
 		std::uint16_t config_id_extracted;
@@ -352,9 +342,8 @@ public:
 
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.data_len = 5;
-		rockettest_check_expr_true(get_config_id_value(&invalid_len_msg,
-													   &config_id_after,
-													   &config_value_after) == W_DATA_FORMAT_ERROR);
+		rockettest_check_expr_true(get_config_id_value(&invalid_len_msg, &config_id_after,
+		                                               &config_value_after) == W_DATA_FORMAT_ERROR);
 
 		return test_passed;
 	}
@@ -375,8 +364,8 @@ public:
 		std::uint16_t timestamp_before = rockettest_rand_field<std::uint16_t>();
 		std::uint16_t config_id_before = rockettest_rand_field<std::uint16_t>();
 		std::uint16_t config_value_before = rockettest_rand_field<std::uint16_t>();
-		build_config_status_msg(
-			prio, timestamp_before, config_id_before, config_value_before, &msg);
+		build_config_status_msg(prio, timestamp_before, config_id_before, config_value_before,
+		                        &msg);
 
 		can_msg_t invalid_type_msg = msg;
 		invalid_type_msg.sid = build_sid(prio, MSG_GENERAL_BOARD_STATUS, 0);
@@ -384,9 +373,8 @@ public:
 		std::uint16_t config_id_after;
 		std::uint16_t config_value_after;
 
-		rockettest_check_expr_true(get_config_id_value(&invalid_type_msg,
-													   &config_id_after,
-													   &config_value_after) == W_INVALID_PARAM);
+		rockettest_check_expr_true(get_config_id_value(&invalid_type_msg, &config_id_after,
+		                                               &config_value_after) == W_INVALID_PARAM);
 
 		return test_passed;
 	}

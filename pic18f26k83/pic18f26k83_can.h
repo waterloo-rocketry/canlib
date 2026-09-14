@@ -23,7 +23,7 @@
  * to the right values.
  */
 void pic18f26k83_can_init(const can_timing_t *timing,
-						  void (*receive_callback)(const can_msg_t *message));
+                          void (*receive_callback)(const can_msg_t *message));
 
 /**
  * @brief Send a CAN message

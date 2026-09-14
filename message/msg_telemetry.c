@@ -9,7 +9,7 @@
 #include "msg_telemetry.h"
 
 void build_telemetry_info_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t channel_id,
-							  uint8_t lqi, int8_t rssi, can_msg_t *output) {
+                              uint8_t lqi, int8_t rssi, can_msg_t *output) {
 	w_assert(output);
 
 	output->sid = build_sid(prio, MSG_TELEMETRY_INFO, channel_id);
@@ -21,7 +21,7 @@ void build_telemetry_info_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t c
 }
 
 w_status_t get_telemetry_info_msg(const can_msg_t *msg, uint8_t *channel_id, uint8_t *lqi,
-								  int8_t *rssi) {
+                                  int8_t *rssi) {
 	w_assert(msg);
 	w_assert(channel_id);
 	w_assert(lqi);
@@ -43,7 +43,7 @@ w_status_t get_telemetry_info_msg(const can_msg_t *msg, uint8_t *channel_id, uin
 }
 
 void build_telemetry_state_switch_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t channel_id,
-									  can_msg_t *output) {
+                                      can_msg_t *output) {
 	w_assert(output);
 
 	output->sid = build_sid(prio, MSG_TELEMETRY_STATE_SWITCH, channel_id);

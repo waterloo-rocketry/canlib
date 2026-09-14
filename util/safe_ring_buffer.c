@@ -44,7 +44,7 @@ bool srb_is_full(const srb_ctx_t *ctx) {
 	w_assert(ctx);
 
 	if ((ctx->wr_idx + 1 == ctx->rd_idx) ||
-		(ctx->wr_idx + 1 == ctx->max_elements && ctx->rd_idx == 0)) {
+	    (ctx->wr_idx + 1 == ctx->max_elements && ctx->rd_idx == 0)) {
 		return true;
 	} else {
 		return false;

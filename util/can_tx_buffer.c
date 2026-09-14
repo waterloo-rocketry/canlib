@@ -18,7 +18,7 @@ static srb_ctx_t buf;
 static cbl_ctx_t ctx;
 
 void txb_init(void *pool, size_t pool_size, void (*can_send)(const can_msg_t *),
-			  bool (*can_tx_ready)(void)) {
+              bool (*can_tx_ready)(void)) {
 	w_assert(pool);
 	w_assert(can_send);
 	w_assert(can_tx_ready);

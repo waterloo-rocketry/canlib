@@ -19,26 +19,26 @@ extern "C" {
  * This function may need to be modified to better hide the internals.
  */
 void build_general_board_status_msg(can_msg_prio_t prio, uint16_t timestamp,
-									uint32_t board_error_bitfield, can_msg_t *output);
+                                    uint32_t board_error_bitfield, can_msg_t *output);
 
 /*
  * Used to Reset a CAN board
  */
 void build_reset_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t board_type_id,
-					 uint8_t board_inst_id, can_msg_t *output);
+                     uint8_t board_inst_id, can_msg_t *output);
 
 /*
  * Copies first 6 bytes of data
  */
 void build_debug_raw_msg(can_msg_prio_t prio, uint16_t timestamp, const uint8_t *data,
-						 can_msg_t *output);
+                         can_msg_t *output);
 
 void build_config_set_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t board_type_id,
-						  uint8_t board_inst_id, uint16_t config_id, uint16_t config_value,
-						  can_msg_t *output);
+                          uint8_t board_inst_id, uint16_t config_id, uint16_t config_value,
+                          can_msg_t *output);
 
 void build_config_status_msg(can_msg_prio_t prio, uint16_t timestamp, uint16_t config_id,
-							 uint16_t config_value, can_msg_t *output);
+                             uint16_t config_value, can_msg_t *output);
 
 w_status_t get_general_board_status(const can_msg_t *msg, uint32_t *board_error_bitfield);
 
@@ -53,7 +53,7 @@ w_status_t check_board_need_reset(const can_msg_t *msg, bool *board_need_reset);
 w_status_t get_debug_raw_data(const can_msg_t *msg, uint8_t *data);
 
 w_status_t get_config_set_target_board(const can_msg_t *msg, uint8_t *board_type_id,
-									   uint8_t *board_inst_id);
+                                       uint8_t *board_inst_id);
 
 w_status_t get_config_id_value(const can_msg_t *msg, uint16_t *config_id, uint16_t *config_value);
 

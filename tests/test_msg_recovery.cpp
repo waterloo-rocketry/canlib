@@ -22,8 +22,8 @@ public:
 		can_alt_arm_state_t alt_arm_state_before =
 			rockettest_rand_field<can_alt_arm_state_t, 0xff>();
 
-		build_alt_arm_cmd_msg(
-			prio_before, timestamp_before, alt_id_before, alt_arm_state_before, &msg);
+		build_alt_arm_cmd_msg(prio_before, timestamp_before, alt_id_before, alt_arm_state_before,
+		                      &msg);
 
 		can_altimeter_id_t alt_id_extracted;
 		can_alt_arm_state_t alt_arm_state_extracted;
@@ -43,7 +43,7 @@ public:
 		type_after = get_message_type(&msg);
 		timestamp_after = get_timestamp(&msg);
 		rockettest_check_expr_true(get_alt_arm_state(&msg, &alt_id_after, &alt_arm_state_after) ==
-								   W_SUCCESS);
+		                           W_SUCCESS);
 
 		rockettest_check_expr_true(type_after == MSG_ALT_ARM_CMD);
 		rockettest_check_expr_true(timestamp_after == timestamp_before);
@@ -52,9 +52,8 @@ public:
 
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.data_len = 2;
-		rockettest_check_expr_true(get_alt_arm_state(&invalid_len_msg,
-													 &alt_id_after,
-													 &alt_arm_state_after) == W_DATA_FORMAT_ERROR);
+		rockettest_check_expr_true(get_alt_arm_state(&invalid_len_msg, &alt_id_after,
+		                                             &alt_arm_state_after) == W_DATA_FORMAT_ERROR);
 
 		return test_passed;
 	}
@@ -79,13 +78,8 @@ public:
 		std::uint16_t v_drogue_before = rockettest_rand_field<std::uint16_t>();
 		std::uint16_t v_main_before = rockettest_rand_field<std::uint16_t>();
 
-		build_alt_arm_status_msg(prio_before,
-								 timestamp_before,
-								 alt_id_before,
-								 alt_arm_state_before,
-								 v_drogue_before,
-								 v_main_before,
-								 &msg);
+		build_alt_arm_status_msg(prio_before, timestamp_before, alt_id_before, alt_arm_state_before,
+		                         v_drogue_before, v_main_before, &msg);
 
 		can_altimeter_id_t alt_id_extracted;
 		can_alt_arm_state_t alt_arm_state_extracted;
@@ -114,9 +108,9 @@ public:
 		timestamp_after = get_timestamp(&msg);
 
 		rockettest_check_expr_true(get_alt_arm_state(&msg, &alt_id_after, &alt_arm_state_after) ==
-								   W_SUCCESS);
+		                           W_SUCCESS);
 		rockettest_check_expr_true(get_pyro_voltage_data(&msg, &v_drogue_after, &v_main_after) ==
-								   W_SUCCESS);
+		                           W_SUCCESS);
 
 		rockettest_check_expr_true(type_after == MSG_ALT_ARM_STATUS);
 		rockettest_check_expr_true(timestamp_after == timestamp_before);
@@ -128,19 +122,16 @@ public:
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.data_len = 6;
 
-		rockettest_check_expr_true(get_alt_arm_state(&invalid_len_msg,
-													 &alt_id_after,
-													 &alt_arm_state_after) == W_DATA_FORMAT_ERROR);
+		rockettest_check_expr_true(get_alt_arm_state(&invalid_len_msg, &alt_id_after,
+		                                             &alt_arm_state_after) == W_DATA_FORMAT_ERROR);
 
-		rockettest_check_expr_true(get_pyro_voltage_data(&invalid_len_msg,
-														 &v_drogue_after,
-														 &v_main_after) == W_DATA_FORMAT_ERROR);
+		rockettest_check_expr_true(get_pyro_voltage_data(&invalid_len_msg, &v_drogue_after,
+		                                                 &v_main_after) == W_DATA_FORMAT_ERROR);
 
 		can_msg_t invalid_type_msg = msg;
 		invalid_type_msg.sid = build_sid(prio_before, MSG_ALT_ARM_CMD, alt_id_before);
-		rockettest_check_expr_true(get_pyro_voltage_data(&invalid_type_msg,
-														 &v_drogue_after,
-														 &v_main_after) == W_INVALID_PARAM);
+		rockettest_check_expr_true(get_pyro_voltage_data(&invalid_type_msg, &v_drogue_after,
+		                                                 &v_main_after) == W_INVALID_PARAM);
 
 		return test_passed;
 	}
@@ -165,22 +156,16 @@ public:
 		std::uint16_t v_drogue_before = rockettest_rand_field<std::uint16_t>();
 		std::uint16_t v_main_before = rockettest_rand_field<std::uint16_t>();
 
-		build_alt_arm_status_msg(prio_before,
-								 timestamp_before,
-								 alt_id_before,
-								 alt_arm_state_before,
-								 v_drogue_before,
-								 v_main_before,
-								 &msg);
+		build_alt_arm_status_msg(prio_before, timestamp_before, alt_id_before, alt_arm_state_before,
+		                         v_drogue_before, v_main_before, &msg);
 
 		can_altimeter_id_t alt_id_after;
 		can_alt_arm_state_t alt_arm_state_after;
 
 		can_msg_t invalid_type_msg = msg;
 		invalid_type_msg.sid = build_sid(prio_before, MSG_GENERAL_BOARD_STATUS, alt_id_before);
-		rockettest_check_expr_true(get_alt_arm_state(&invalid_type_msg,
-													 &alt_id_after,
-													 &alt_arm_state_after) == W_INVALID_PARAM);
+		rockettest_check_expr_true(get_alt_arm_state(&invalid_type_msg, &alt_id_after,
+		                                             &alt_arm_state_after) == W_INVALID_PARAM);
 
 		return test_passed;
 	}

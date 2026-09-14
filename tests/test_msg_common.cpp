@@ -49,13 +49,13 @@ public:
 		// msg type tests
 		rockettest_check_assert_triggered([] {
 			static_cast<void>(build_sid(static_cast<can_msg_prio_t>(0x4),
-										rockettest_rand_field<can_msg_type_t, 0x7f>(),
-										rockettest_rand_field<uint8_t>()));
+			                            rockettest_rand_field<can_msg_type_t, 0x7f>(),
+			                            rockettest_rand_field<uint8_t>()));
 		});
 		rockettest_check_assert_triggered([] {
 			static_cast<void>(build_sid(rockettest_rand_field<can_msg_prio_t, 0x3>(),
-										static_cast<can_msg_type_t>(0x80),
-										rockettest_rand_field<uint8_t>()));
+			                            static_cast<can_msg_type_t>(0x80),
+			                            rockettest_rand_field<uint8_t>()));
 		});
 
 		return test_passed;
