@@ -8,7 +8,7 @@
 #include "msg_recovery.h"
 
 void build_alt_arm_cmd_msg(can_msg_prio_t prio, uint16_t timestamp, can_altimeter_id_t alt_id,
-						   can_alt_arm_state_t arm_cmd, can_msg_t *output) {
+                           can_alt_arm_state_t arm_cmd, can_msg_t *output) {
 	w_assert(output);
 
 	output->sid = build_sid(prio, MSG_ALT_ARM_CMD, alt_id);
@@ -19,8 +19,8 @@ void build_alt_arm_cmd_msg(can_msg_prio_t prio, uint16_t timestamp, can_altimete
 }
 
 void build_alt_arm_status_msg(can_msg_prio_t prio, uint16_t timestamp, can_altimeter_id_t alt_id,
-							  can_alt_arm_state_t arm_state, uint16_t v_drogue, uint16_t v_main,
-							  can_msg_t *output) {
+                              can_alt_arm_state_t arm_state, uint16_t v_drogue, uint16_t v_main,
+                              can_msg_t *output) {
 	w_assert(output);
 
 	output->sid = build_sid(prio, MSG_ALT_ARM_STATUS, alt_id);
@@ -29,16 +29,16 @@ void build_alt_arm_status_msg(can_msg_prio_t prio, uint16_t timestamp, can_altim
 	output->data[2] = arm_state;
 	// drogue voltage
 	output->data[3] = v_drogue >> 8; // 8 msb
-	output->data[4] = v_drogue & 0x00FF; // 8 lsb
+	output->data[4] = v_drogue & 0x00ff; // 8 lsb
 	// main voltage
 	output->data[5] = v_main >> 8; // 8 msb
-	output->data[6] = v_main & 0x00FF; // 8 lsb
+	output->data[6] = v_main & 0x00ff; // 8 lsb
 
 	output->data_len = 7;
 }
 
 w_status_t get_alt_arm_state(const can_msg_t *msg, can_altimeter_id_t *alt_id,
-							 can_alt_arm_state_t *arm_state) {
+                             can_alt_arm_state_t *arm_state) {
 	w_assert(msg);
 	w_assert(alt_id);
 	w_assert(arm_state);

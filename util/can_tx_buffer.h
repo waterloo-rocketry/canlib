@@ -20,7 +20,7 @@ extern "C" {
  * message, otherwise it returns false
  */
 void txb_init(void *pool, size_t pool_size, void (*can_send)(const can_msg_t *),
-			  bool (*can_tx_ready)(void));
+              bool (*can_tx_ready)(void));
 
 /**
  * @brief Buffers message.

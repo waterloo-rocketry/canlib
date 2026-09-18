@@ -15,7 +15,7 @@ static void (*can_rcv_cb)(const can_msg_t *message);
  * is being used must be set to the right values.
  */
 void pic18f26k83_can_init(const can_timing_t *timing,
-						  void (*receive_callback)(const can_msg_t *message)) {
+                          void (*receive_callback)(const can_msg_t *message)) {
 	// keep track of callback, we use it in interrupts
 	can_rcv_cb = receive_callback;
 
@@ -90,7 +90,7 @@ void pic18f26k83_can_send(const can_msg_t *message) {
 	}
 
 	// argument checking
-	if (message->data_len > 8 || message->sid > 0x1FFFFFFF) {
+	if (message->data_len > 8 || message->sid > 0x1fffffff) {
 		return;
 	}
 

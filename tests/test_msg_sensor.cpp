@@ -9,7 +9,7 @@
 
 namespace {
 
-	constexpr std::uint32_t kMax24BitValue = (1u << 24) - 1;
+	constexpr std::uint32_t kMax24BitValue = (1U << 24) - 1;
 
 }
 
@@ -28,8 +28,8 @@ public:
 			rockettest_rand_field<can_analog_sensor_id_t, 0xff>();
 		std::uint16_t sensor_data_before = rockettest_rand_field<std::uint16_t>();
 
-		build_analog_sensor_16bit_msg(
-			prio_before, timestamp_before, sensor_id_before, sensor_data_before, &msg);
+		build_analog_sensor_16bit_msg(prio_before, timestamp_before, sensor_id_before,
+		                              sensor_data_before, &msg);
 
 		can_analog_sensor_id_t sensor_id_extracted;
 		std::uint16_t sensor_data_extracted;
@@ -94,17 +94,17 @@ public:
 			(static_cast<std::uint32_t>(rockettest_rand_field<uint16_t>()) << 16) |
 			rockettest_rand_field<uint16_t>();
 
-		build_analog_sensor_32bit_msg(
-			prio_before, timestamp_before, sensor_id_before, sensor_data_before, &msg);
+		build_analog_sensor_32bit_msg(prio_before, timestamp_before, sensor_id_before,
+		                              sensor_data_before, &msg);
 
 		can_analog_sensor_id_t sensor_id_extracted;
 		std::uint32_t sensor_data_extracted;
 
 		sensor_id_extracted = static_cast<can_analog_sensor_id_t>(msg.sid & 0xff);
 		sensor_data_extracted = (static_cast<std::uint32_t>(msg.data[2]) << 24) |
-								(static_cast<std::uint32_t>(msg.data[3]) << 16) |
-								(static_cast<std::uint32_t>(msg.data[4]) << 8) |
-								(static_cast<std::uint32_t>(msg.data[5]) << 0);
+		                        (static_cast<std::uint32_t>(msg.data[3]) << 16) |
+		                        (static_cast<std::uint32_t>(msg.data[4]) << 8) |
+		                        (static_cast<std::uint32_t>(msg.data[5]) << 0);
 
 		rockettest_check_expr_true(msg.data_len == 6);
 		rockettest_check_expr_true(sensor_id_extracted == sensor_id_before);
@@ -164,13 +164,9 @@ public:
 		std::uint16_t sensor_data_y_before = rockettest_rand_field<std::uint16_t>();
 		std::uint16_t sensor_data_z_before = rockettest_rand_field<std::uint16_t>();
 
-		build_3d_analog_sensor_16bit_msg(prio_before,
-										 timestamp_before,
-										 sensor_id_before,
-										 sensor_data_x_before,
-										 sensor_data_y_before,
-										 sensor_data_z_before,
-										 &msg);
+		build_3d_analog_sensor_16bit_msg(prio_before, timestamp_before, sensor_id_before,
+		                                 sensor_data_x_before, sensor_data_y_before,
+		                                 sensor_data_z_before, &msg);
 
 		can_dem_3d_sensor_id_t sensor_id_extracted;
 		std::uint16_t sensor_data_x_extracted;
@@ -199,12 +195,9 @@ public:
 		msg_is_sensor_data_after = msg_is_analog_sensor(&msg);
 		type_after = get_message_type(&msg);
 		timestamp_after = get_timestamp(&msg);
-		rockettest_check_expr_true(get_3d_analog_sensor_data_16bit(&msg,
-																   &sensor_id_after,
-																   &sensor_data_x_after,
-																   &sensor_data_y_after,
-																   &sensor_data_z_after) ==
-								   W_SUCCESS);
+		rockettest_check_expr_true(get_3d_analog_sensor_data_16bit(
+									   &msg, &sensor_id_after, &sensor_data_x_after,
+									   &sensor_data_y_after, &sensor_data_z_after) == W_SUCCESS);
 
 		rockettest_check_expr_true(msg_is_sensor_data_after == true);
 		rockettest_check_expr_true(type_after == MSG_SENSOR_3D_ANALOG16);
@@ -216,21 +209,17 @@ public:
 
 		can_msg_t invalid_type_msg = msg;
 		invalid_type_msg.sid = build_sid(prio_before, MSG_SENSOR_2D_ANALOG24, sensor_id_before);
-		rockettest_check_expr_true(get_3d_analog_sensor_data_16bit(&invalid_type_msg,
-																   &sensor_id_after,
-																   &sensor_data_x_after,
-																   &sensor_data_y_after,
-																   &sensor_data_z_after) ==
-								   W_INVALID_PARAM);
+		rockettest_check_expr_true(
+			get_3d_analog_sensor_data_16bit(&invalid_type_msg, &sensor_id_after,
+			                                &sensor_data_x_after, &sensor_data_y_after,
+			                                &sensor_data_z_after) == W_INVALID_PARAM);
 
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.data_len = 7;
-		rockettest_check_expr_true(get_3d_analog_sensor_data_16bit(&invalid_len_msg,
-																   &sensor_id_after,
-																   &sensor_data_x_after,
-																   &sensor_data_y_after,
-																   &sensor_data_z_after) ==
-								   W_DATA_FORMAT_ERROR);
+		rockettest_check_expr_true(
+			get_3d_analog_sensor_data_16bit(&invalid_len_msg, &sensor_id_after,
+			                                &sensor_data_x_after, &sensor_data_y_after,
+			                                &sensor_data_z_after) == W_DATA_FORMAT_ERROR);
 
 		return test_passed;
 	}
@@ -255,12 +244,8 @@ public:
 		std::uint32_t sensor_data_x_before = rockettest_rand_field<std::uint32_t, kMax24BitValue>();
 		std::uint32_t sensor_data_y_before = rockettest_rand_field<std::uint32_t, kMax24BitValue>();
 
-		build_2d_analog_sensor_24bit_msg(prio_before,
-										 timestamp_before,
-										 sensor_id_before,
-										 sensor_data_x_before,
-										 sensor_data_y_before,
-										 &msg);
+		build_2d_analog_sensor_24bit_msg(prio_before, timestamp_before, sensor_id_before,
+		                                 sensor_data_x_before, sensor_data_y_before, &msg);
 
 		can_dem_2d_sensor_id_t sensor_id_extracted;
 		std::uint32_t sensor_data_x_extracted;
@@ -288,8 +273,8 @@ public:
 		type_after = get_message_type(&msg);
 		timestamp_after = get_timestamp(&msg);
 		rockettest_check_expr_true(
-			get_2d_analog_sensor_data_24bit(
-				&msg, &sensor_id_after, &sensor_data_x_after, &sensor_data_y_after) == W_SUCCESS);
+			get_2d_analog_sensor_data_24bit(&msg, &sensor_id_after, &sensor_data_x_after,
+			                                &sensor_data_y_after) == W_SUCCESS);
 
 		rockettest_check_expr_true(msg_is_sensor_data_after == true);
 		rockettest_check_expr_true(type_after == MSG_SENSOR_2D_ANALOG24);
@@ -300,35 +285,25 @@ public:
 
 		std::uint32_t invalid_sensor_data = kMax24BitValue + 1;
 		rockettest_check_assert_triggered([=]() mutable {
-			build_2d_analog_sensor_24bit_msg(prio_before,
-											 timestamp_before,
-											 sensor_id_before,
-											 invalid_sensor_data,
-											 sensor_data_y_before,
-											 &msg);
+			build_2d_analog_sensor_24bit_msg(prio_before, timestamp_before, sensor_id_before,
+			                                 invalid_sensor_data, sensor_data_y_before, &msg);
 		});
 		rockettest_check_assert_triggered([=]() mutable {
-			build_2d_analog_sensor_24bit_msg(prio_before,
-											 timestamp_before,
-											 sensor_id_before,
-											 sensor_data_x_before,
-											 invalid_sensor_data,
-											 &msg);
+			build_2d_analog_sensor_24bit_msg(prio_before, timestamp_before, sensor_id_before,
+			                                 sensor_data_x_before, invalid_sensor_data, &msg);
 		});
 
 		can_msg_t invalid_type_msg = msg;
 		invalid_type_msg.sid = build_sid(prio_before, MSG_SENSOR_ANALOG32, sensor_id_before);
-		rockettest_check_expr_true(
-			get_2d_analog_sensor_data_24bit(
-				&invalid_type_msg, &sensor_id_after, &sensor_data_x_after, &sensor_data_y_after) ==
-			W_INVALID_PARAM);
+		rockettest_check_expr_true(get_2d_analog_sensor_data_24bit(
+									   &invalid_type_msg, &sensor_id_after, &sensor_data_x_after,
+									   &sensor_data_y_after) == W_INVALID_PARAM);
 
 		can_msg_t invalid_len_msg = msg;
 		invalid_len_msg.data_len = 7;
-		rockettest_check_expr_true(
-			get_2d_analog_sensor_data_24bit(
-				&invalid_len_msg, &sensor_id_after, &sensor_data_x_after, &sensor_data_y_after) ==
-			W_DATA_FORMAT_ERROR);
+		rockettest_check_expr_true(get_2d_analog_sensor_data_24bit(
+									   &invalid_len_msg, &sensor_id_after, &sensor_data_x_after,
+									   &sensor_data_y_after) == W_DATA_FORMAT_ERROR);
 
 		return test_passed;
 	}

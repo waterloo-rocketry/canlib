@@ -18,7 +18,7 @@ extern "C" {
  * minutes, seconds, and deci-seconds.
  */
 void build_gps_time_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t utc_hours,
-						uint8_t utc_mins, uint8_t utc_secs, uint8_t utc_dsecs, can_msg_t *output);
+                        uint8_t utc_mins, uint8_t utc_secs, uint8_t utc_dsecs, can_msg_t *output);
 
 /*
  * Used to send GPS latitude data. The format is degrees, minutes, and
@@ -26,7 +26,7 @@ void build_gps_time_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t utc_hou
  * Direction is either 'N' or 'S'
  */
 void build_gps_lat_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t degrees, uint8_t minutes,
-					   uint16_t dminutes, uint8_t direction, can_msg_t *output);
+                       uint16_t dminutes, uint8_t direction, can_msg_t *output);
 
 /*
  * Used to send GPS longitude data. The format is degrees, minutes, and
@@ -34,28 +34,28 @@ void build_gps_lat_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t degrees,
  * Direction is either 'E' or 'W'
  */
 void build_gps_lon_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t degrees, uint8_t minutes,
-					   uint16_t dminutes, uint8_t direction, can_msg_t *output);
+                       uint16_t dminutes, uint8_t direction, can_msg_t *output);
 
 /*
  * Used to send GPS altitude data. Altitude is broken into integral
  * and decimal parts.
  */
 void build_gps_alt_msg(can_msg_prio_t prio, uint16_t timestamp, uint32_t altitude,
-					   uint8_t daltitude, can_msg_t *output);
+                       uint8_t daltitude, can_msg_t *output);
 
 /*
  * Used to send general GPS info. Currently sends the number of
  * satellites used to obtain a reading and the quality indicator.
  */
 void build_gps_info_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t num_sat, uint8_t quality,
-						can_msg_t *output);
+                        can_msg_t *output);
 
 /*
  * Gets GPS UTC time information. Format is UTC hours, minutes,
  * seconds, and deci-seconds.
  */
 w_status_t get_gps_time(const can_msg_t *msg, uint8_t *utc_hours, uint8_t *utc_mins,
-						uint8_t *utc_secs, uint8_t *utc_dsecs);
+                        uint8_t *utc_secs, uint8_t *utc_dsecs);
 
 /*
  * Gets GPS latitude information. Format is degrees, minutes,
@@ -63,7 +63,7 @@ w_status_t get_gps_time(const can_msg_t *msg, uint8_t *utc_hours, uint8_t *utc_m
  * parts. The direction is either 'N' or 'S'.
  */
 w_status_t get_gps_lat(const can_msg_t *msg, uint8_t *degrees, uint8_t *minutes, uint16_t *dminutes,
-					   uint8_t *direction);
+                       uint8_t *direction);
 
 /*
  * Gets GPS longitude information. Format is degrees, minutes,
@@ -71,7 +71,7 @@ w_status_t get_gps_lat(const can_msg_t *msg, uint8_t *degrees, uint8_t *minutes,
  * parts. The direction is either 'E' or 'W'.
  */
 w_status_t get_gps_lon(const can_msg_t *msg, uint8_t *degrees, uint8_t *minutes, uint16_t *dminutes,
-					   uint8_t *direction);
+                       uint8_t *direction);
 
 /*
  * Gets GPS altitude information. The altitude reading is broken

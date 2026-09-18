@@ -9,7 +9,7 @@ static void (*can_rcv_cb)(const can_msg_t *message);
 static FDCAN_HandleTypeDef *fdcan_handle;
 
 bool stm32h7_can_init(FDCAN_HandleTypeDef *handle,
-					  void (*receive_callback)(const can_msg_t *message)) {
+                      void (*receive_callback)(const can_msg_t *message)) {
 	// bind user callback function and fdcan handle
 	can_rcv_cb = receive_callback;
 	fdcan_handle = handle;

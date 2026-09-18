@@ -24,8 +24,8 @@ public:
 		can_actuator_state_t actuator_state_before =
 			rockettest_rand_field<can_actuator_state_t, 0xff>();
 
-		build_actuator_cmd_msg(
-			prio_before, timestamp_before, actuator_id_before, actuator_state_before, &msg);
+		build_actuator_cmd_msg(prio_before, timestamp_before, actuator_id_before,
+		                       actuator_state_before, &msg);
 
 		can_actuator_id_t actuator_id_extracted;
 		can_actuator_state_t actuator_state_extracted;
@@ -46,7 +46,7 @@ public:
 		timestamp_after = get_timestamp(&msg);
 		rockettest_check_expr_true(get_actuator_id(&msg, &actuator_id_after) == W_SUCCESS);
 		rockettest_check_expr_true(get_cmd_actuator_state(&msg, &actuator_state_after) ==
-								   W_SUCCESS);
+		                           W_SUCCESS);
 
 		rockettest_check_expr_true(type_after == MSG_ACTUATOR_CMD);
 		rockettest_check_expr_true(timestamp_after == timestamp_before);
@@ -57,7 +57,7 @@ public:
 		invalid_len_msg.data_len = 2;
 
 		rockettest_check_expr_true(get_actuator_id(&invalid_len_msg, &actuator_id_after) ==
-								   W_DATA_FORMAT_ERROR);
+		                           W_DATA_FORMAT_ERROR);
 		rockettest_check_expr_true(
 			get_cmd_actuator_state(&invalid_len_msg, &actuator_state_after) == W_DATA_FORMAT_ERROR);
 
@@ -84,12 +84,8 @@ public:
 		can_actuator_state_t actuator_cmd_state_before =
 			rockettest_rand_field<can_actuator_state_t, 0xff>();
 
-		build_actuator_status_msg(prio_before,
-								  timestamp_before,
-								  actuator_id_before,
-								  actuator_cmd_state_before,
-								  actuator_curr_state_before,
-								  &msg);
+		build_actuator_status_msg(prio_before, timestamp_before, actuator_id_before,
+		                          actuator_cmd_state_before, actuator_curr_state_before, &msg);
 
 		can_actuator_id_t actuator_id_extracted;
 		can_actuator_state_t actuator_curr_state_extracted;
@@ -114,9 +110,9 @@ public:
 		timestamp_after = get_timestamp(&msg);
 		rockettest_check_expr_true(get_actuator_id(&msg, &actuator_id_after) == W_SUCCESS);
 		rockettest_check_expr_true(get_curr_actuator_state(&msg, &actuator_curr_state_after) ==
-								   W_SUCCESS);
+		                           W_SUCCESS);
 		rockettest_check_expr_true(get_cmd_actuator_state(&msg, &actuator_cmd_state_after) ==
-								   W_SUCCESS);
+		                           W_SUCCESS);
 
 		rockettest_check_expr_true(type_after == MSG_ACTUATOR_STATUS);
 		rockettest_check_expr_true(timestamp_after == timestamp_before);
@@ -128,7 +124,7 @@ public:
 		invalid_len_msg.data_len = 3;
 
 		rockettest_check_expr_true(get_actuator_id(&invalid_len_msg, &actuator_id_after) ==
-								   W_DATA_FORMAT_ERROR);
+		                           W_DATA_FORMAT_ERROR);
 		rockettest_check_expr_true(
 			get_curr_actuator_state(&invalid_len_msg, &actuator_curr_state_after) ==
 			W_DATA_FORMAT_ERROR);
@@ -163,8 +159,8 @@ public:
 		can_actuator_state_t actuator_state_before =
 			rockettest_rand_field<can_actuator_state_t, 0xff>();
 
-		build_actuator_cmd_msg(
-			prio_before, timestamp_before, actuator_id_before, actuator_state_before, &msg);
+		build_actuator_cmd_msg(prio_before, timestamp_before, actuator_id_before,
+		                       actuator_state_before, &msg);
 
 		can_actuator_id_t actuator_id_after;
 		can_actuator_state_t actuator_state_after;
@@ -173,7 +169,7 @@ public:
 		invalid_type_msg.sid = build_sid(prio_before, MSG_GENERAL_BOARD_STATUS, actuator_id_before);
 
 		rockettest_check_expr_true(get_actuator_id(&invalid_type_msg, &actuator_id_after) ==
-								   W_INVALID_PARAM);
+		                           W_INVALID_PARAM);
 		rockettest_check_expr_true(
 			get_cmd_actuator_state(&invalid_type_msg, &actuator_state_after) == W_INVALID_PARAM);
 

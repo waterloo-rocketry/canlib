@@ -9,8 +9,8 @@
 #include "msg_common.h"
 
 void build_canard_firmware_error_msg(can_msg_prio_t prio, uint16_t timestamp,
-									 can_canards_module_id_t module_id, uint32_t error_bitfield,
-									 can_canards_health_severity_t severity, can_msg_t *output) {
+                                     can_canards_module_id_t module_id, uint32_t error_bitfield,
+                                     can_canards_health_severity_t severity, can_msg_t *output) {
 	w_assert(output);
 
 	output->sid = build_sid(prio, MSG_CANARD_FIRMWARE_ERROR, module_id);
@@ -25,8 +25,8 @@ void build_canard_firmware_error_msg(can_msg_prio_t prio, uint16_t timestamp,
 }
 
 w_status_t get_canard_firmware_error_msg(const can_msg_t *msg, can_canards_module_id_t *module_id,
-										 uint32_t *error_bitfield,
-										 can_canards_health_severity_t *severity) {
+                                         uint32_t *error_bitfield,
+                                         can_canards_health_severity_t *severity) {
 	w_assert(msg);
 	w_assert(module_id);
 	w_assert(error_bitfield);
@@ -34,7 +34,7 @@ w_status_t get_canard_firmware_error_msg(const can_msg_t *msg, can_canards_modul
 
 	*module_id = (can_canards_module_id_t)get_message_metadata(msg);
 	*error_bitfield = ((uint32_t)msg->data[2] << 24) | ((uint32_t)msg->data[3] << 16) |
-					  ((uint32_t)msg->data[4] << 8) | (uint32_t)msg->data[5];
+	                  ((uint32_t)msg->data[4] << 8) | (uint32_t)msg->data[5];
 	*severity = (can_canards_health_severity_t)msg->data[6];
 
 	if (get_message_type(msg) != MSG_CANARD_FIRMWARE_ERROR) {
