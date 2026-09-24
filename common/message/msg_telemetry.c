@@ -5,8 +5,8 @@
 
 #include "can.h"
 #include "message_types.h"
-#include "msg_common.h"
-#include "msg_telemetry.h"
+#include "message/msg_common.h"
+#include "message/msg_telemetry.h"
 
 void build_telemetry_info_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t channel_id,
                               uint8_t lqi, int8_t rssi, can_msg_t *output) {

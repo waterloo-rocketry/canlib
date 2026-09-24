@@ -5,8 +5,8 @@
 
 #include "can.h"
 #include "message_types.h"
-#include "msg_common.h"
-#include "msg_sensor.h"
+#include "message/msg_common.h"
+#include "message/msg_sensor.h"
 
 void build_analog_sensor_16bit_msg(can_msg_prio_t prio, uint16_t timestamp,
                                    can_analog_sensor_id_t sensor_id, uint16_t sensor_data,

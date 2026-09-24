@@ -6,8 +6,8 @@
 
 #include "can.h"
 #include "message_types.h"
-#include "msg_common.h"
-#include "msg_general.h"
+#include "message/msg_common.h"
+#include "message/msg_general.h"
 
 void build_general_board_status_msg(can_msg_prio_t prio, uint16_t timestamp,
                                     uint32_t board_error_bitfield, can_msg_t *output) {
