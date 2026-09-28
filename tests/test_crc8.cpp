@@ -1,7 +1,7 @@
 #include <cstdint>
 
 #include "common/common.h"
-#include "crc8.h"
+#include "common/crc8.h"
 
 #include "rockettest.hpp"
 

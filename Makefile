@@ -2,14 +2,14 @@ COMMON_C_SRCS := \
 	common/crc8.c \
 	common/low_pass_filter.c \
 	logging/mbr.c \
-	can_message/msg_actuator.c \
-	can_message/msg_canards.c \
-	can_message/msg_general.c \
-	can_message/msg_gps.c \
-	can_message/msg_recovery.c \
-	can_message/msg_sensor.c \
-	can_message/msg_stream.c \
-	can_message/msg_telemetry.c \
+	can/msg_actuator.c \
+	can/msg_canards.c \
+	can/msg_general.c \
+	can/msg_gps.c \
+	can/msg_recovery.c \
+	can/msg_sensor.c \
+	can/msg_stream.c \
+	can/msg_telemetry.c \
 	buffer/can_rcv_buffer.c \
 	buffer/can_tx_buffer.c \
 	buffer/safe_ring_buffer.c \

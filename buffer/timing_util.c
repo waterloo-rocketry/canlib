@@ -2,7 +2,7 @@
 
 #include "common/common.h"
 
-#include "can_message/can.h"
+#include "can/can.h"
 #include "timing_util.h"
 
 #if (CANLIB_BIT_TIME_US != 4)

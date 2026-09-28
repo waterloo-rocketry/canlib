@@ -8,15 +8,15 @@
  *
  * The whole goal of this module is allowing you to write application code that
  * doesn't have to concern itself with ISR vs main thread code. If you set
- * buffer_received_can_message as the can callback, then you can dequeue the
+ * buffer_received_can as the can callback, then you can dequeue the
  * buffered messages from the main thread without worrying about missing any
  * messages from the bus.
  *
  * The ring buffer is designed to be pseudo-thread safe. None of the functions
  * are rentrant, and there are no locking or atomic mechanisms, but flags are
  * used to show whether a particular memory element contains valid data. This
- * should allow the writer function (buffer_received_can_message) and the reader
- * function (get_buffered_can_message) to operate from separate contexts (the
+ * should allow the writer function (buffer_received_can) and the reader
+ * function (get_buffered_can) to operate from separate contexts (the
  * former can be run in the ISR and the latter in the main thread) without any
  * problems.
  */
@@ -26,7 +26,7 @@
 
 #include "common/common.h"
 
-#include "can_message/can.h"
+#include "can/can.h"
 
 #ifdef __cplusplus
 extern "C" {

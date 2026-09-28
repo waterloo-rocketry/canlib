@@ -6,7 +6,7 @@
 
 #include "common/common.h"
 
-#include "can_message/can.h"
+#include "can/can.h"
 
 #ifdef __cplusplus
 extern "C" {

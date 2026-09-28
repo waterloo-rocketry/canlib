@@ -4,10 +4,10 @@
 #include "common/common.h"
 #include "rockettest.hpp"
 
-#include "can_message/can.h"
-#include "can_message/msg_common.h"
-#include "can_message/msg_stream.h"
-#include "can_message/can_message_defs.h"
+#include "can/can.h"
+#include "can/msg_common.h"
+#include "can/msg_stream.h"
+#include "can/can_message_defs.h"
 
 namespace {
 

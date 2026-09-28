@@ -4,8 +4,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "can_message/can.h"
-#include "can_message/can_message_defs.h"
+#include "can/can.h"
+#include "can/can_message_defs.h"
 
 #include "common/common.h"
 

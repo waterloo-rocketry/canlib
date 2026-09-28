@@ -1,7 +1,7 @@
 #ifndef CANLIB_DSPIC33E_CAN_H
 #define CANLIB_DSPIC33E_CAN_H
 
-#include "can_message/can.h"
+#include "can/can.h"
 
 #ifdef __cplusplus
 #error "C++ is not supported"

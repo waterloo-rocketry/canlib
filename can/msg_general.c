@@ -4,10 +4,10 @@
 
 #include "common/common.h"
 
-#include "can_message/can.h"
-#include "can_message/can_message_defs.h"
-#include "can_message/msg_common.h"
-#include "can_message/msg_general.h"
+#include "can/can.h"
+#include "can/can_message_defs.h"
+#include "can/msg_common.h"
+#include "can/msg_general.h"
 
 void build_general_board_status_msg(can_msg_prio_t prio, uint16_t timestamp,
                                     uint32_t board_error_bitfield, can_msg_t *output) {

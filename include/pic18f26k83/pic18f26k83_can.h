@@ -3,7 +3,7 @@
 
 #include <stdbool.h>
 
-#include "can_message/can.h"
+#include "can/can.h"
 
 #ifdef __cplusplus
 #error "C++ is not supported"
