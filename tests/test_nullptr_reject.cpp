@@ -1,22 +1,22 @@
 #include <cstdint>
 
-#include "can.h"
-#include "message_types.h"
+#include "can/can.h"
+#include "can/can_message_defs.h"
 #include "rockettest.hpp"
 
-#include "message/msg_actuator.h"
-#include "message/msg_canards.h"
-#include "message/msg_common.h"
-#include "message/msg_general.h"
-#include "message/msg_gps.h"
-#include "message/msg_recovery.h"
-#include "message/msg_sensor.h"
-#include "message/msg_stream.h"
-#include "message/msg_telemetry.h"
-#include "util/can_rcv_buffer.h"
-#include "util/can_tx_buffer.h"
-#include "util/safe_ring_buffer.h"
-#include "util/timing_util.h"
+#include "buffer/can_rcv_buffer.h"
+#include "buffer/can_tx_buffer.h"
+#include "buffer/safe_ring_buffer.h"
+#include "can/msg_actuator.h"
+#include "can/msg_canards.h"
+#include "can/msg_common.h"
+#include "can/msg_general.h"
+#include "can/msg_gps.h"
+#include "can/msg_recovery.h"
+#include "can/msg_sensor.h"
+#include "can/msg_stream.h"
+#include "can/msg_telemetry.h"
+#include "can/can_timing_util.h"
 
 namespace {
 

@@ -136,7 +136,7 @@ void pic18f26k83_can_handle_interrupt() {
 		return;
 	}
 
-	// handle a received message by stuffing it into a can_message_t
+	// handle a received message by stuffing it into a can_t
 	// and calling the application code provided callback
 	if (PIR5bits.RXB0IF) {
 		can_msg_t rcvd_msg;

@@ -2,10 +2,10 @@
 
 #include "rockettest.hpp"
 
-#include "can.h"
-#include "message/msg_common.h"
-#include "message/msg_sensor.h"
-#include "message_types.h"
+#include "can/can.h"
+#include "can/msg_common.h"
+#include "can/msg_sensor.h"
+#include "can/can_message_defs.h"
 
 namespace {
 
