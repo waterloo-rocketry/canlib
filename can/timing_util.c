@@ -3,7 +3,7 @@
 #include "common/common.h"
 
 #include "can/can.h"
-#include "timing_util.h"
+#include "can/can_timing_util.h"
 
 #if (CANLIB_BIT_TIME_US != 4)
 #warning "the bit time that can.h is expecting is not what timing_util is expecting"

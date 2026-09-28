@@ -16,7 +16,7 @@
 #include "can/msg_sensor.h"
 #include "can/msg_stream.h"
 #include "can/msg_telemetry.h"
-#include "util/timing_util.h"
+#include "can/can_timing_util.h"
 
 namespace {
 

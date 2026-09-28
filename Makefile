@@ -13,7 +13,7 @@ COMMON_C_SRCS := \
 	buffer/can_rcv_buffer.c \
 	buffer/can_tx_buffer.c \
 	buffer/safe_ring_buffer.c \
-	buffer/timing_util.c
+	can/timing_util.c
 
 COMMON_C_HEADERS := \
 	include/common.h \
