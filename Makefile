@@ -1,19 +1,19 @@
 COMMON_C_SRCS := \
 	common/crc8.c \
 	common/low_pass_filter.c \
-	common/mbr.c \
-	common/message/msg_actuator.c \
-	common/message/msg_canards.c \
-	common/message/msg_general.c \
-	common/message/msg_gps.c \
-	common/message/msg_recovery.c \
-	common/message/msg_sensor.c \
-	common/message/msg_stream.c \
-	common/message/msg_telemetry.c \
-	util/can_rcv_buffer.c \
-	util/can_tx_buffer.c \
-	util/safe_ring_buffer.c \
-	util/timing_util.c
+	logging/mbr.c \
+	can_message/msg_actuator.c \
+	can_message/msg_canards.c \
+	can_message/msg_general.c \
+	can_message/msg_gps.c \
+	can_message/msg_recovery.c \
+	can_message/msg_sensor.c \
+	can_message/msg_stream.c \
+	can_message/msg_telemetry.c \
+	buffer/can_rcv_buffer.c \
+	buffer/can_tx_buffer.c \
+	buffer/safe_ring_buffer.c \
+	buffer/timing_util.c
 
 COMMON_C_HEADERS := \
 	include/common.h \

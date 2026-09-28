@@ -1,6 +1,6 @@
 #include <stdint.h>
 
-#include "common.h"
+#include "common/common.h"
 #include "mbr.h"
 
 #include "rockettest.hpp"

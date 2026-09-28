@@ -3,8 +3,8 @@
 #include <cstdlib>
 #include <queue>
 
-#include "can.h"
-#include "common.h"
+#include "can_message/can.h"
+#include "common/common.h"
 #include "rockettest.hpp"
 
 #include "util/can_rcv_buffer.h"

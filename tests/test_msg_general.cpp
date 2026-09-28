@@ -1,12 +1,12 @@
 #include <cstdint>
 
-#include "common.h"
+#include "common/common.h"
 #include "rockettest.hpp"
 
-#include "can.h"
-#include "message/msg_common.h"
-#include "message/msg_general.h"
-#include "message_types.h"
+#include "can_message/can.h"
+#include "can_message/msg_common.h"
+#include "can_message/msg_general.h"
+#include "can_message/can_message_defs.h"
 
 class general_status_message_test : rockettest_test {
 public:

@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "can.h"
+#include "can_message/can.h"
 
 #ifdef __cplusplus
 #error "C++ is not supported"

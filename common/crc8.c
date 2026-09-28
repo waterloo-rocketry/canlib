@@ -1,7 +1,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include "common.h"
+#include "common/common.h"
 
 // crc table used for calculation
 static uint8_t table[256] = {

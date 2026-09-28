@@ -2,10 +2,10 @@
 
 #include "rockettest.hpp"
 
-#include "can.h"
-#include "message/msg_common.h"
-#include "message/msg_telemetry.h"
-#include "message_types.h"
+#include "can_message/can.h"
+#include "can_message/msg_common.h"
+#include "can_message/msg_telemetry.h"
+#include "can_message/can_message_defs.h"
 
 class telemetry_info_message_test : rockettest_test {
 public:

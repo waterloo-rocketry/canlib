@@ -1,7 +1,7 @@
-#include "common.h"
+#include "common/common.h"
 #include "rockettest.hpp"
 
-#include "can.h"
+#include "can_message/can.h"
 #include "util/timing_util.h"
 
 class timing_util_test : public rockettest_test {
