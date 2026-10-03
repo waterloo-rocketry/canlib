@@ -4,7 +4,7 @@
 #include "rockettest.hpp"
 
 #include "can.h"
-#include "message/msg_common.h"
+#include "can_message/msg_common.h"
 
 class timestamp_test : rockettest_test {
 public:

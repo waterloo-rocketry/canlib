@@ -3,8 +3,8 @@
 #include "rockettest.hpp"
 
 #include "can.h"
-#include "message/msg_common.h"
-#include "message/msg_recovery.h"
+#include "can_message/msg_common.h"
+#include "can_message/msg_recovery.h"
 #include "message_types.h"
 
 class recovery_cmd_message_test : rockettest_test {

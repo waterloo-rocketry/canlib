@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "common.h"
+#include "common/common.h"
 
 #include "safe_ring_buffer.h"
 

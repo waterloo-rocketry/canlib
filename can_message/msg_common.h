@@ -7,7 +7,7 @@
 #include "can.h"
 #include "message_types.h"
 
-#include "common.h"
+#include "common/common.h"
 
 #ifndef CANLIB_DYNAMIC_BOARD_ID
 

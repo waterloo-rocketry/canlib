@@ -1,12 +1,12 @@
 #include <cstddef>
 #include <cstdint>
 
-#include "common.h"
+#include "common/common.h"
 #include "rockettest.hpp"
 
 #include "can.h"
-#include "message/msg_actuator.h"
-#include "message/msg_common.h"
+#include "can_message/msg_actuator.h"
+#include "can_message/msg_common.h"
 #include "message_types.h"
 
 class actuator_cmd_message_test : rockettest_test {

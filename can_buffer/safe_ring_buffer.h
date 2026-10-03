@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#include "common.h"
+#include "common/common.h"
 
 /*
  * Context variable for the module. This allows you to initialize multiple

@@ -1,6 +1,6 @@
 #include <stddef.h>
 
-#include "common.h"
+#include "common/common.h"
 
 #include "can.h"
 #include "can_tx_buffer.h"

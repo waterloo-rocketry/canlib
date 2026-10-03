@@ -1,7 +1,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "common.h"
+#include "common/common.h"
 
 #include "can.h"
 #include "message_types.h"
