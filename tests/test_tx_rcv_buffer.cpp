@@ -4,11 +4,11 @@
 #include <queue>
 
 #include "can.h"
-#include "common.h"
+#include "common/common.h"
 #include "rockettest.hpp"
 
-#include "util/can_rcv_buffer.h"
-#include "util/can_tx_buffer.h"
+#include "can_buffer/can_rcv_buffer.h"
+#include "can_buffer/can_tx_buffer.h"
 
 // Tx Buffer Test
 

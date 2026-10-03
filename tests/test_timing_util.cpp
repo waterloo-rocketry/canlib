@@ -1,8 +1,8 @@
-#include "common.h"
+#include "common/common.h"
 #include "rockettest.hpp"
 
 #include "can.h"
-#include "util/timing_util.h"
+#include "can_buffer/timing_util.h"
 
 class timing_util_test : public rockettest_test {
 public:

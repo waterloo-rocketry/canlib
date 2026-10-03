@@ -3,8 +3,8 @@
 #include "rockettest.hpp"
 
 #include "can.h"
-#include "message/msg_canards.h"
-#include "message/msg_common.h"
+#include "can_message/msg_canards.h"
+#include "can_message/msg_common.h"
 #include "message_types.h"
 
 class canard_firmware_error_message_test : rockettest_test {

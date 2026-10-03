@@ -1,12 +1,12 @@
 #include <cstdint>
 #include <cstring>
 
-#include "common.h"
+#include "common/common.h"
 #include "rockettest.hpp"
 
 #include "can.h"
-#include "message/msg_common.h"
-#include "message/msg_stream.h"
+#include "can_message/msg_common.h"
+#include "can_message/msg_stream.h"
 #include "message_types.h"
 
 namespace {
