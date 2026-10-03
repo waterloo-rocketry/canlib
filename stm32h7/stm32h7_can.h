@@ -5,7 +5,7 @@
 
 #include "stm32h7xx_hal.h"
 
-#include "can.h"
+#include "can_message/can.h"
 
 #ifdef __cplusplus
 extern "C" {

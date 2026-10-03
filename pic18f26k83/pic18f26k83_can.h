@@ -3,7 +3,9 @@
 
 #include <stdbool.h>
 
-#include "can.h"
+#include "can_message/can.h"
+
+#include "timing_util.h"
 
 #ifdef __cplusplus
 #error "C++ is not supported"

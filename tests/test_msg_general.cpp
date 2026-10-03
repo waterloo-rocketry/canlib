@@ -3,10 +3,10 @@
 #include "common/common.h"
 #include "rockettest.hpp"
 
-#include "can.h"
+#include "can_message/can.h"
 #include "can_message/msg_common.h"
 #include "can_message/msg_general.h"
-#include "message_types.h"
+#include "can_message/packet_format.h"
 
 class general_status_message_test : rockettest_test {
 public:

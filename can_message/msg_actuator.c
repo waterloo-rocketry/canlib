@@ -3,8 +3,8 @@
 
 #include "common/common.h"
 
-#include "can.h"
-#include "message_types.h"
+#include "can_message/can.h"
+#include "can_message/packet_format.h"
 #include "msg_actuator.h"
 #include "msg_common.h"
 

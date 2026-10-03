@@ -1,13 +1,12 @@
 #include <cstdint>
 
-#include "can.h"
-#include "message_types.h"
+#include "can_message/can.h"
+#include "can_message/packet_format.h"
 #include "rockettest.hpp"
 
 #include "can_buffer/can_rcv_buffer.h"
 #include "can_buffer/can_tx_buffer.h"
 #include "can_buffer/safe_ring_buffer.h"
-#include "can_buffer/timing_util.h"
 #include "can_message/msg_actuator.h"
 #include "can_message/msg_canards.h"
 #include "can_message/msg_common.h"
@@ -17,6 +16,7 @@
 #include "can_message/msg_sensor.h"
 #include "can_message/msg_stream.h"
 #include "can_message/msg_telemetry.h"
+#include "pic18f26k83/timing_util.h"
 
 namespace {
 

@@ -6,11 +6,32 @@
 
 #include "common/common.h"
 
-#include "can.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#define CANLIB_BIT_TIME_US 4
+
+// Timing parameters
+typedef struct {
+	// BaudRate Prescaler
+	uint8_t brp;
+	// Synchronization Jump Width
+	uint8_t sjw;
+
+	// sample once or three times
+	uint8_t sam;
+	// phase segment 1 bits
+	uint8_t seg1ph;
+	// phase segment 2 bits
+	uint8_t seg2ph;
+	// propagation time segment bits
+	uint8_t prseg;
+
+	// Phase segment 2 time select bit. If true, then use seg2ph,
+	// otherwise take minimum viable phase length
+	bool btlmode;
+} can_timing_t;
 
 /**
  * @brief Generate CAN bus timing setting for PIC microcontrollers

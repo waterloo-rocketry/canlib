@@ -2,6 +2,7 @@
 #include <xc.h>
 
 #include "pic18f26k83_can.h"
+#include "timing_util.h"
 
 static void (*can_rcv_cb)(const can_msg_t *message);
 

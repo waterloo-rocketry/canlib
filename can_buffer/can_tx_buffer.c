@@ -2,7 +2,7 @@
 
 #include "common/common.h"
 
-#include "can.h"
+#include "can_message/can.h"
 #include "can_tx_buffer.h"
 #include "safe_ring_buffer.h"
 

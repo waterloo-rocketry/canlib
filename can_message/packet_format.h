@@ -1,7 +1,7 @@
 // Auto generated file, do not edit directly
 
-#ifndef CANLIB_MESSAGE_TYPES_H
-#define CANLIB_MESSAGE_TYPES_H
+#ifndef CANLIB_PACKET_FORAMT_H
+#define CANLIB_PACKET_FORAMT_H
 
 // Message Priority
 typedef enum {

@@ -1,9 +1,9 @@
 #include <cstdint>
 
-#include "message_types.h"
+#include "can_message/packet_format.h"
 #include "rockettest.hpp"
 
-#include "can.h"
+#include "can_message/can.h"
 #include "can_message/msg_common.h"
 
 class timestamp_test : rockettest_test {
