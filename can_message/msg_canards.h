@@ -1,5 +1,5 @@
-#ifndef CANLIB_CANARDS_H
-#define CANLIB_CANARDS_H
+#ifndef ROCKETLIB_CANARDS_H
+#define ROCKETLIB_CANARDS_H
 
 #include <stdbool.h>
 #include <stdint.h>

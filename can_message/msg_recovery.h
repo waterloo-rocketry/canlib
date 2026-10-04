@@ -1,5 +1,5 @@
-#ifndef CANLIB_RECOVERY_H
-#define CANLIB_RECOVERY_H
+#ifndef ROCKETLIB_RECOVERY_H
+#define ROCKETLIB_RECOVERY_H
 
 #include <stdbool.h>
 #include <stdint.h>

@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 #include "common/common.h"
-#include "low_pass_filter.h"
+#include "common/low_pass_filter.h"
 
 #include "rockettest.hpp"
 

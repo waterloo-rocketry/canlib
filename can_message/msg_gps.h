@@ -1,5 +1,5 @@
-#ifndef CANLIB_GPS_H
-#define CANLIB_GPS_H
+#ifndef ROCKETLIB_GPS_H
+#define ROCKETLIB_GPS_H
 
 #include <stdbool.h>
 #include <stdint.h>

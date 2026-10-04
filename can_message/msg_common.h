@@ -1,5 +1,5 @@
-#ifndef CANLIB_COMMON_H
-#define CANLIB_COMMON_H
+#ifndef ROCKETLIB_MSG_COMMON_H
+#define ROCKETLIB_MSG_COMMON_H
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -9,7 +9,7 @@
 
 #include "common/common.h"
 
-#ifndef CANLIB_DYNAMIC_BOARD_ID
+#ifndef CAN_DYNAMIC_BOARD_ID
 
 #ifndef BOARD_TYPE_UNIQUE_ID
 #warning BOARD_TYPE_UNIQUE_ID not defined, please set that up in project
@@ -91,7 +91,7 @@ static inline uint16_t get_timestamp(const can_msg_t *msg) {
 }
 
 // Dynamic board ID specific function
-#ifdef CANLIB_DYNAMIC_BOARD_ID
+#ifdef CAN_DYNAMIC_BOARD_ID
 
 static inline void set_board_id(uint8_t board_type_id, uint8_t board_inst_id) {
 	w_assert(((uint32_t)board_type_id & 0xc0) == 0);

@@ -2,13 +2,13 @@
 
 #include "common/common.h"
 
-#include "timing_util.h"
+#include "pic18f26k83_can_timing_util.h"
 
-#if (CANLIB_BIT_TIME_US != 4)
+#if (CAN_BIT_TIME_US != 4)
 #warning "the bit time that can.h is expecting is not what timing_util is expecting"
 #endif
 
-w_status_t can_generate_timing_params(uint32_t system_freq, can_timing_t *timing) {
+w_status_t pic18f26k83_can_generate_timing_params(uint32_t system_freq, can_timing_t *timing) {
 	w_assert(timing);
 
 	// this function is designed to create a bit time of 4 microseconds

@@ -1,11 +1,11 @@
-#ifndef CANLIB_PIC18F26K83_CAN_H
-#define CANLIB_PIC18F26K83_CAN_H
+#ifndef ROCKETLIB_PIC18F26K83_CAN_H
+#define ROCKETLIB_PIC18F26K83_CAN_H
 
 #include <stdbool.h>
 
 #include "can_message/can.h"
 
-#include "timing_util.h"
+#include "pic18f26k83_can_timing_util.h"
 
 #ifdef __cplusplus
 #error "C++ is not supported"

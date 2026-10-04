@@ -1,5 +1,5 @@
-#ifndef CANLIB_CAN_RCV_BUFFER_H
-#define CANLIB_CAN_RCV_BUFFER_H
+#ifndef ROCKETLIB_CAN_RCV_BUFFER_H
+#define ROCKETLIB_CAN_RCV_BUFFER_H
 
 /**
  * @file can_rcv_buffer.h

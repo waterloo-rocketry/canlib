@@ -119,13 +119,13 @@ CLANG_FORMAT := clang-format
 ###########################################
 
 COMMON_C_OBJS = $(patsubst %.c,$(BUILD_DIR)/%.o,$(COMMON_C_SRCS))
-COMMON_C_DEPS = $(COMMON_C_SRCS:.c=.d)
+COMMON_C_DEPS = $(patsubst %.c,$(BUILD_DIR)/%.d,$(COMMON_C_SRCS))
 
 PIC18_C_OBJS = $(patsubst %.c,$(BUILD_DIR)/%.o,$(PIC18_C_SRCS))
-PIC18_C_DEPS = $(PIC18_C_SRCS:.c=.d)
+PIC18_C_DEPS = $(patsubst %.c,$(BUILD_DIR)/%.d,$(PIC18_C_SRCS))
 
 CPP_OBJS = $(patsubst %.cpp,$(BUILD_DIR)/%.o,$(CPP_SRCS))
-CPP_DEPS = $(CPP_SRCS:.cpp=.d)
+CPP_DEPS = $(patsubst %.cpp,$(BUILD_DIR)/%.d,$(CPP_SRCS))
 
 ######################
 # Object files compile

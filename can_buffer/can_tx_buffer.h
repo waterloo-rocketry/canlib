@@ -1,5 +1,5 @@
-#ifndef CANLIB_CAN_TX_BUFFER_H
-#define CANLIB_CAN_TX_BUFFER_H
+#ifndef ROCKETLIB_CAN_TX_BUFFER_H
+#define ROCKETLIB_CAN_TX_BUFFER_H
 
 #include <stdbool.h>
 #include <stddef.h>

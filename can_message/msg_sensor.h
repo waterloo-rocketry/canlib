@@ -1,5 +1,5 @@
-#ifndef CANLIB_SENSOR_H
-#define CANLIB_SENSOR_H
+#ifndef ROCKETLIB_SENSOR_H
+#define ROCKETLIB_SENSOR_H
 
 #include <stdbool.h>
 #include <stdint.h>

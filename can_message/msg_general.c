@@ -128,7 +128,7 @@ w_status_t check_board_need_reset(const can_msg_t *msg, bool *board_need_reset) 
 		return status;
 	}
 
-#ifndef CANLIB_DYNAMIC_BOARD_ID
+#ifndef CAN_DYNAMIC_BOARD_ID
 	const uint8_t board_type_unique_id = BOARD_TYPE_UNIQUE_ID;
 	const uint8_t board_inst_unique_id = BOARD_INST_UNIQUE_ID;
 #endif

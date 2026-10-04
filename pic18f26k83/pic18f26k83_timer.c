@@ -1,6 +1,6 @@
 #include <xc.h>
 
-#include "timer.h"
+#include "pic18f26k83_timer.h"
 
 /*
  * Magic numbers: timer is driven on a 500kHz clock and is 8 bits.

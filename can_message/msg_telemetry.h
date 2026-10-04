@@ -1,5 +1,5 @@
-#ifndef CANLIB_TELEMETRY_H
-#define CANLIB_TELEMETRY_H
+#ifndef ROCKETLIB_TELEMETRY_H
+#define ROCKETLIB_TELEMETRY_H
 
 #include <stdbool.h>
 #include <stdint.h>

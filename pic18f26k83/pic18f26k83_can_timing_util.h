@@ -1,5 +1,5 @@
-#ifndef CANLIB_TIMING_UTIL_H
-#define CANLIB_TIMING_UTIL_H
+#ifndef ROCKETLIB_TIMING_UTIL_H
+#define ROCKETLIB_TIMING_UTIL_H
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -10,7 +10,7 @@
 extern "C" {
 #endif
 
-#define CANLIB_BIT_TIME_US 4
+#define CAN_BIT_TIME_US 4
 
 // Timing parameters
 typedef struct {
@@ -39,7 +39,7 @@ typedef struct {
  * @param timing buffer to write timing parameters to
  * @return `W_SUCCESS` if system_freq is valid and parameters have been written to `timing`
  */
-w_status_t can_generate_timing_params(uint32_t system_freq, can_timing_t *timing);
+w_status_t pic18f26k83_can_generate_timing_params(uint32_t system_freq, can_timing_t *timing);
 
 #ifdef __cplusplus
 }

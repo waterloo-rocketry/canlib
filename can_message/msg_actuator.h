@@ -1,5 +1,5 @@
-#ifndef CANLIB_ACTUATOR_H
-#define CANLIB_ACTUATOR_H
+#ifndef ROCKETLIB_ACTUATOR_H
+#define ROCKETLIB_ACTUATOR_H
 
 #include <stdbool.h>
 #include <stdint.h>

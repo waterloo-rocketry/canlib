@@ -1,5 +1,5 @@
-#ifndef CANLIB_STREAM_H
-#define CANLIB_STREAM_H
+#ifndef ROCKETLIB_STREAM_H
+#define ROCKETLIB_STREAM_H
 
 #include <stdbool.h>
 #include <stdint.h>

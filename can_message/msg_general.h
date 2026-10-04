@@ -1,5 +1,5 @@
-#ifndef CANLIB_GENERAL_H
-#define CANLIB_GENERAL_H
+#ifndef ROCKETLIB_GENERAL_H
+#define ROCKETLIB_GENERAL_H
 
 #include <stdbool.h>
 #include <stdint.h>

@@ -1,5 +1,5 @@
-#ifndef CANLIB_MCP2515_H
-#define CANLIB_MCP2515_H
+#ifndef ROCKETLIB_MCP2515_H
+#define ROCKETLIB_MCP2515_H
 
 #include <stdbool.h>
 #include <stdint.h>

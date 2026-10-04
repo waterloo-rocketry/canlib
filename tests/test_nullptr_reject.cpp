@@ -16,7 +16,7 @@
 #include "can_message/msg_sensor.h"
 #include "can_message/msg_stream.h"
 #include "can_message/msg_telemetry.h"
-#include "pic18f26k83/timing_util.h"
+#include "pic18f26k83/pic18f26k83_can_timing_util.h"
 
 namespace {
 
@@ -580,7 +580,8 @@ public:
 		// -----------------------
 		// timing_util tests
 		// -----------------------
-		rockettest_check_assert_triggered([] { can_generate_timing_params(48000000, nullptr); });
+		rockettest_check_assert_triggered(
+			[] { pic18f26k83_can_generate_timing_params(48000000, nullptr); });
 		return test_passed;
 	}
 };
