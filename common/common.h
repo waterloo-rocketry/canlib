@@ -1,11 +1,15 @@
 #ifndef ROCKETLIB_COMMON_H
 #define ROCKETLIB_COMMON_H
 
-/// @brief Rocketlib major release number, shall be design cycle year
-#define ROCKETLIB_VERSION_MAJOR 2026
+/// @brief Rocketlib major release number, shall be the design cycle year
+#define ROCKETLIB_VERSION_MAJOR 2027
 
-/// @brief Rocketlib minor release number, shall be the Nth release of the design cycle
+/// @brief Rocketlib minor release number, shall be the RocketCAN protocol version
 #define ROCKETLIB_VERSION_MINOR 1
+
+/// @brief Rocketlib patch release number, shall be the n-th revision of this library that does not
+/// involve RocketCAN protocol change
+#define ROCKETLIB_VERSION_PATCH 0
 
 typedef float float32_t;
 typedef double float64_t;
