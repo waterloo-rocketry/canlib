@@ -3,8 +3,7 @@
 #include <cstdio>
 #include <limits>
 
-#include "common/common.h"
-#include "common/mathops.h"
+#include "rocketlib.h"
 
 #include "rockettest.hpp"
 

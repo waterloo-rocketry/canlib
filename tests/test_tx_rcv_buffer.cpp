@@ -3,12 +3,9 @@
 #include <cstdlib>
 #include <queue>
 
-#include "can_message/can.h"
-#include "common/common.h"
 #include "rockettest.hpp"
 
-#include "can_buffer/can_rcv_buffer.h"
-#include "can_buffer/can_tx_buffer.h"
+#include "rocketlib.h"
 
 // Tx Buffer Test
 

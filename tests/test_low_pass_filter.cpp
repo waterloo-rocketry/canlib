@@ -4,8 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "common/common.h"
-#include "common/low_pass_filter.h"
+#include "rocketlib.h"
 
 #include "rockettest.hpp"
 

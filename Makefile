@@ -15,6 +15,7 @@ COMMON_C_SRCS := \
 	logging/mbr.c \
 	pic18f26k83/pic18f26k83_can_timing_util.c
 
+# rocketlib.h is intentional not included to avoid clang-tidy misc-include-cleaner error
 COMMON_C_HEADERS := \
 	can_buffer/can_rcv_buffer.h \
 	can_buffer/can_tx_buffer.h \

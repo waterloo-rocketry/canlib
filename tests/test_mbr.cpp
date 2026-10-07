@@ -1,7 +1,6 @@
 #include <stdint.h>
 
-#include "common/common.h"
-#include "logging/mbr.h"
+#include "rocketlib.h"
 
 #include "rockettest.hpp"
 

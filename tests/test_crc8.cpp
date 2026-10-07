@@ -1,7 +1,6 @@
 #include <cstdint>
 
-#include "common/common.h"
-#include "common/crc8.h"
+#include "rocketlib.h"
 
 #include "rockettest.hpp"
 
