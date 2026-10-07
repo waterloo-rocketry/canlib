@@ -3,7 +3,7 @@
 
 #include "common/common.h"
 
-#include "safe_ring_buffer.h"
+#include "can_buffer/safe_ring_buffer.h"
 
 static size_t get_offset_bytes(const srb_ctx_t *ctx, size_t index) {
 	w_assert(ctx);

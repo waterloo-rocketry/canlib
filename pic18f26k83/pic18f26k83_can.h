@@ -5,7 +5,7 @@
 
 #include "can_message/can.h"
 
-#include "pic18f26k83_can_timing_util.h"
+#include "pic18f26k83/pic18f26k83_can_timing_util.h"
 
 #ifdef __cplusplus
 #error "C++ is not supported"

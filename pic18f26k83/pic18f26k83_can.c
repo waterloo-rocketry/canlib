@@ -1,8 +1,8 @@
 #include <string.h>
 #include <xc.h>
 
-#include "pic18f26k83_can.h"
-#include "pic18f26k83_can_timing_util.h"
+#include "pic18f26k83/pic18f26k83_can.h"
+#include "pic18f26k83/pic18f26k83_can_timing_util.h"
 
 static void (*can_rcv_cb)(const can_msg_t *message);
 

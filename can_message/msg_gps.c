@@ -4,9 +4,9 @@
 #include "common/common.h"
 
 #include "can_message/can.h"
+#include "can_message/msg_common.h"
+#include "can_message/msg_gps.h"
 #include "can_message/packet_format.h"
-#include "msg_common.h"
-#include "msg_gps.h"
 
 void build_gps_time_msg(can_msg_prio_t prio, uint16_t timestamp, uint8_t utc_hours,
                         uint8_t utc_mins, uint8_t utc_secs, uint8_t utc_dsecs, can_msg_t *output) {

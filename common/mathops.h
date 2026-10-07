@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#include "common.h"
+#include "common/common.h"
 
 /**
  * @brief Clamps a 32 bit unsigned integer between a lower and upper bound.

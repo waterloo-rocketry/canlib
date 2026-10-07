@@ -2,9 +2,9 @@
 
 #include "common/common.h"
 
+#include "can_buffer/can_tx_buffer.h"
+#include "can_buffer/safe_ring_buffer.h"
 #include "can_message/can.h"
-#include "can_tx_buffer.h"
-#include "safe_ring_buffer.h"
 
 typedef struct {
 	void (*can_send_fp)(const can_msg_t *);

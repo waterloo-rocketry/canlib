@@ -1,7 +1,7 @@
 #include <stdint.h>
 
 #include "common/common.h"
-#include "mbr.h"
+#include "logging/mbr.h"
 
 #define BOOT_SIGNATURE_OFFSET 0x1fe
 #define MBR_PT_OFFSET 0x1be

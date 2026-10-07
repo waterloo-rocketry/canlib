@@ -2,7 +2,7 @@
 
 #include "common/common.h"
 
-#include "pic18f26k83_can_timing_util.h"
+#include "pic18f26k83/pic18f26k83_can_timing_util.h"
 
 #if (CAN_BIT_TIME_US != 4)
 #warning "the bit time that can.h is expecting is not what timing_util is expecting"

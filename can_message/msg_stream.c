@@ -4,9 +4,9 @@
 #include "common/common.h"
 
 #include "can_message/can.h"
+#include "can_message/msg_common.h"
+#include "can_message/msg_stream.h"
 #include "can_message/packet_format.h"
-#include "msg_common.h"
-#include "msg_stream.h"
 
 // Fields are 24-bit big-endian.
 #define STREAM_SIZE_MAX 0xffffffU

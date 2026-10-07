@@ -4,9 +4,9 @@
 #include "common/common.h"
 
 #include "can_message/can.h"
+#include "can_message/msg_canards.h"
+#include "can_message/msg_common.h"
 #include "can_message/packet_format.h"
-#include "msg_canards.h"
-#include "msg_common.h"
 
 void build_canard_firmware_error_msg(can_msg_prio_t prio, uint16_t timestamp,
                                      can_canards_module_id_t module_id, uint32_t error_bitfield,

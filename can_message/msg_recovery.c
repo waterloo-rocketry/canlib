@@ -3,9 +3,9 @@
 #include "common/common.h"
 
 #include "can_message/can.h"
+#include "can_message/msg_common.h"
+#include "can_message/msg_recovery.h"
 #include "can_message/packet_format.h"
-#include "msg_common.h"
-#include "msg_recovery.h"
 
 void build_alt_arm_cmd_msg(can_msg_prio_t prio, uint16_t timestamp, can_altimeter_id_t alt_id,
                            can_alt_arm_state_t arm_cmd, can_msg_t *output) {

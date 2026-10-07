@@ -4,9 +4,9 @@
 #include "common/common.h"
 
 #include "can_message/can.h"
+#include "can_message/msg_common.h"
+#include "can_message/msg_sensor.h"
 #include "can_message/packet_format.h"
-#include "msg_common.h"
-#include "msg_sensor.h"
 
 void build_analog_sensor_16bit_msg(can_msg_prio_t prio, uint16_t timestamp,
                                    can_analog_sensor_id_t sensor_id, uint16_t sensor_data,

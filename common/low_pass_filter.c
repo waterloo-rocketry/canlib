@@ -1,8 +1,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include "common.h"
-#include "low_pass_filter.h"
+#include "common/common.h"
+#include "common/low_pass_filter.h"
 
 /**
  * @brief Initializes the low-pass filter by calculating and storing the alpha value

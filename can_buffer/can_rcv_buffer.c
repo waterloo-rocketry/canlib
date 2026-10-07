@@ -2,9 +2,9 @@
 
 #include "common/common.h"
 
+#include "can_buffer/can_rcv_buffer.h"
+#include "can_buffer/safe_ring_buffer.h"
 #include "can_message/can.h"
-#include "can_rcv_buffer.h"
-#include "safe_ring_buffer.h"
 
 static srb_ctx_t buf;
 static bool overflow_flag;
