@@ -1,11 +1,11 @@
-#ifndef CANLIB_STM32H7_CAN_H
-#define CANLIB_STM32H7_CAN_H
+#ifndef ROCKETLIB_STM32H7_CAN_H
+#define ROCKETLIB_STM32H7_CAN_H
 
 #include <stdbool.h>
 
 #include "stm32h7xx_hal.h"
 
-#include "can.h"
+#include "can_message/can.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -1,22 +1,9 @@
 #include <cstdint>
 
-#include "can.h"
-#include "message_types.h"
 #include "rockettest.hpp"
 
-#include "message/msg_actuator.h"
-#include "message/msg_canards.h"
-#include "message/msg_common.h"
-#include "message/msg_general.h"
-#include "message/msg_gps.h"
-#include "message/msg_recovery.h"
-#include "message/msg_sensor.h"
-#include "message/msg_stream.h"
-#include "message/msg_telemetry.h"
-#include "util/can_rcv_buffer.h"
-#include "util/can_tx_buffer.h"
-#include "util/safe_ring_buffer.h"
-#include "util/timing_util.h"
+#include "pic18f26k83/pic18f26k83_can_timing_util.h"
+#include "rocketlib.h"
 
 namespace {
 
@@ -580,7 +567,8 @@ public:
 		// -----------------------
 		// timing_util tests
 		// -----------------------
-		rockettest_check_assert_triggered([] { can_generate_timing_params(48000000, nullptr); });
+		rockettest_check_assert_triggered(
+			[] { pic18f26k83_can_generate_timing_params(48000000, nullptr); });
 		return test_passed;
 	}
 };

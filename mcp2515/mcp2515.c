@@ -1,6 +1,6 @@
 #include <stdint.h>
 
-#include "can.h"
+#include "can_message/can.h"
 
 #include "mcp2515.h"
 #include "mcp2515_regs.h"
